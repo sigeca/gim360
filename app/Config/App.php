@@ -16,7 +16,46 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'http://localhost:8080/';
+    public string $baseURL = 'http://localhost/gim360/public/';
+
+    /**
+     * Constructor para auto-detección dinámica de dominio en la nube o local.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // Detección automática y dinámica de baseURL si se ejecuta en un servidor web
+        if (php_sapi_name() !== 'cli' && !empty($_SERVER['HTTP_HOST'])) {
+            $currentHost = $_SERVER['HTTP_HOST'];
+            [$hostOnly] = explode(':', $currentHost, 2);
+
+            // Obtener el host configurado en baseURL (por ejemplo 'localhost')
+            $configuredHost = parse_url($this->baseURL, PHP_URL_HOST);
+
+            // Si el host configurado es localhost/127.0.0.1 y el usuario accede desde otro dominio/IP en la nube,
+            // o si baseURL está vacío, adaptamos la URL al host y protocolo real
+            if ($configuredHost === 'localhost' || $configuredHost === '127.0.0.1' || empty($configuredHost)) {
+                $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+                    || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
+                    || (isset($_SERVER['HTTP_X_FORWARDED_SSL']) && $_SERVER['HTTP_X_FORWARDED_SSL'] === 'on')
+                    || (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] == 443);
+                $scheme = $isHttps ? 'https://' : 'http://';
+
+                // Detectar el subdirectorio base donde está alojado el proyecto
+                $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+                $scriptDir  = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+                $subDir     = ($scriptDir === '' || $scriptDir === '.') ? '' : $scriptDir;
+
+                $this->baseURL = rtrim($scheme . $currentHost . $subDir, '/') . '/';
+            }
+
+            // Registrar el host actual como permitido para que CodeIgniter no lo descarte
+            if (!in_array($hostOnly, $this->allowedHostnames, true)) {
+                $this->allowedHostnames[] = $hostOnly;
+            }
+        }
+    }
 
     /**
      * Allowed Hostnames in the Site URL other than the hostname in the baseURL.
