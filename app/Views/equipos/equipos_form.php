@@ -1,0 +1,138 @@
+<?= $this->extend('layout/main') ?>
+
+<?= $this->section('content') ?>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card card-custom bg-white">
+            <div class="card-header bg-white py-3 border-bottom">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-gear-wide-connected text-primary me-2"></i>Registrar Nuevo Equipo
+                    </h5>
+                    <a href="<?= base_url('equipos/listar') ?>" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1"></i>Volver
+                    </a>
+                </div>
+            </div>
+            <div class="card-body p-4">
+
+                <form method="post" action="<?= base_url('equipos/save') ?>">
+                    <?= csrf_field() ?>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="codigo" class="form-label fw-semibold">Código <span class="text-danger">*</span></label>
+                            <input type="text" name="codigo" id="codigo" class="form-control font-monospace" placeholder="Ej: EQ-004" value="<?= old('codigo') ?>" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="nombre" class="form-label fw-semibold">Nombre del Equipo <span class="text-danger">*</span></label>
+                            <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ej: Banco Plano Olímpico" value="<?= old('nombre') ?>" required>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="id_tipo" class="form-label fw-semibold">Tipo / Categoría</label>
+                            <select name="id_tipo" id="id_tipo" class="form-select">
+                                <option value="">-- Seleccionar Tipo --</option>
+                                <?php foreach ($tipos as $idT => $tipoNombre): ?>
+                                    <option value="<?= $idT ?>" <?= (old('id_tipo') == $idT) ? 'selected' : '' ?>>
+                                        <?= esc($tipoNombre) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_marca" class="form-label fw-semibold">Marca</label>
+                            <select name="id_marca" id="id_marca" class="form-select">
+                                <option value="">-- Seleccionar Marca --</option>
+                                <?php foreach ($marcas as $idM => $marcaNombre): ?>
+                                    <option value="<?= $idM ?>" <?= (old('id_marca') == $idM) ? 'selected' : '' ?>>
+                                        <?= esc($marcaNombre) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="modelo" class="form-label fw-semibold">Modelo</label>
+                            <input type="text" name="modelo" id="modelo" class="form-control" placeholder="Ej: Pro Bench X1" value="<?= old('modelo') ?>">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="numero_serie" class="form-label fw-semibold">Número de Serie</label>
+                            <input type="text" name="numero_serie" id="numero_serie" class="form-control font-monospace" placeholder="Ej: SN-2024-998" value="<?= old('numero_serie') ?>">
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="id_ubicacion" class="form-label fw-semibold">Ubicación en Gimnasio</label>
+                            <select name="id_ubicacion" id="id_ubicacion" class="form-select">
+                                <option value="">-- Seleccionar Ubicación --</option>
+                                <?php foreach ($ubicaciones as $idU => $ubiNombre): ?>
+                                    <option value="<?= $idU ?>" <?= (old('id_ubicacion') == $idU) ? 'selected' : '' ?>>
+                                        <?= esc($ubiNombre) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="id_estado" class="form-label fw-semibold">Estado del Equipo</label>
+                            <select name="id_estado" id="id_estado" class="form-select">
+                                <?php foreach ($estados as $idE => $estNombre): ?>
+                                    <option value="<?= $idE ?>" <?= (old('id_estado', 1) == $idE) ? 'selected' : '' ?>>
+                                        <?= esc($estNombre) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label for="fecha_adquisicion" class="form-label fw-semibold">Fecha de Adquisición</label>
+                            <input type="date" name="fecha_adquisicion" id="fecha_adquisicion" class="form-control" value="<?= old('fecha_adquisicion', date('Y-m-d')) ?>">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="valor_adquisicion" class="form-label fw-semibold">Valor de Adquisición ($)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" step="0.01" name="valor_adquisicion" id="valor_adquisicion" class="form-control" placeholder="0.00" value="<?= old('valor_adquisicion') ?>">
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="activo" class="form-label fw-semibold">Disponibilidad</label>
+                            <select name="activo" id="activo" class="form-select">
+                                <option value="1" <?= (old('activo', 1) == 1) ? 'selected' : '' ?>>Activo / En Servicio</option>
+                                <option value="0" <?= (old('activo') === '0') ? 'selected' : '' ?>>Inactivo / Retirado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label fw-semibold">Descripción Técnica</label>
+                        <textarea name="descripcion" id="descripcion" rows="2" class="form-control" placeholder="Características, dimensiones, capacidad máxima..."><?= old('descripcion') ?></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="observaciones" class="form-label fw-semibold">Observaciones / Mantenimiento</label>
+                        <textarea name="observaciones" id="observaciones" rows="2" class="form-control" placeholder="Frecuencia de mantenimiento, repuestos necesarios..."><?= old('observaciones') ?></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                        <a href="<?= base_url('equipos') ?>" class="btn btn-light border px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-4 fw-bold">
+                            <i class="bi bi-save me-1"></i> Guardar Equipo
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<?= $this->endSection() ?>
