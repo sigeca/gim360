@@ -91,11 +91,104 @@ if ($conn->connect_error) {
     // Probar seleccionar BD
     $dbSelected = $conn->select_db($db);
     if (!$dbSelected) {
-        echo "<tr><td>Seleccionar base '{$db}'</td><td>" . badge(false, '', "No existe la base de datos '{$db}'. Debes importarla: mysql -u {$user} -p -e 'CREATE DATABASE {$db};' &amp;&amp; mysql -u {$user} -p {$db} &lt; gim360.sql") . "</td></tr>";
+        echo "<tr><td>Seleccionar base '{$db}'</td><td>" . badge(false, '', "No existe la base de datos '{$db}'.") . "</td></tr>";
     } else {
+        // Ejecutar migración si se solicita
+        if (isset($_GET['migrar']) || isset($_POST['migrar'])) {
+            $migrationSql = "
+CREATE TABLE IF NOT EXISTS `motivoentrenamiento` (
+  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `objetivo` text DEFAULT NULL,
+  PRIMARY KEY (`idmotivoentrenamiento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS `rutinaejecicio` (
+  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idrutinaejercicio`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `rutinaejercicio` AS 
+SELECT `idrutinaejercicio`, `nombre` FROM `rutinaejecicio`;
+
+CREATE TABLE IF NOT EXISTS `programaentrenamiento` (
+  `idprogramaentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `idmotivoentrenamiento` int(11) NOT NULL,
+  `idrutinaejercicio` int(11) NOT NULL,
+  `idejercicio` int(11) NOT NULL,
+  PRIMARY KEY (`idprogramaentrenamiento`),
+  KEY `fk_pe_motivo` (`idmotivoentrenamiento`),
+  KEY `fk_pe_rutina` (`idrutinaejercicio`),
+  KEY `fk_pe_ejercicio` (`idejercicio`),
+  CONSTRAINT `fk_pe_motivo` FOREIGN KEY (`idmotivoentrenamiento`) REFERENCES `motivoentrenamiento` (`idmotivoentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pe_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pe_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT IGNORE INTO `motivoentrenamiento` (`idmotivoentrenamiento`, `nombre`, `objetivo`) VALUES
+(1, 'Hipertrofia Muscular', 'Aumento de masa muscular mediante sobrecarga progresiva y volumen de entrenamiento.'),
+(2, 'Pérdida de Peso y Definición', 'Reducción del porcentaje graso manteniendo la masa muscular magra.'),
+(3, 'Fuerza y Potencia Máxima', 'Desarrollo de fuerza neuromuscular y capacidad de levantamiento en rangos bajos de repetición.'),
+(4, 'Salud y Acondicionamiento General', 'Mejora de la salud cardiovascular, resistencia física y movilidad articular diaria.'),
+(5, 'Aumento de Resistencia Cardiovascular', 'Entrenamientos orientados a optimizar la capacidad aeróbica y resistencia general.');
+
+INSERT IGNORE INTO `rutinaejecicio` (`idrutinaejercicio`, `nombre`) VALUES
+(1, 'Full Body Principiante'),
+(2, 'Tren Superior Hipertrofia'),
+(3, 'Tren Inferior Potencia'),
+(4, 'Cardio HIIT Quema Grasa'),
+(5, 'Movilidad y Core Estabilidad');
+
+INSERT IGNORE INTO `programaentrenamiento` (`idprogramaentrenamiento`, `idmotivoentrenamiento`, `idrutinaejercicio`, `idejercicio`) VALUES
+(1, 1, 1, 1),
+(2, 1, 1, 2),
+(3, 1, 2, 4),
+(4, 1, 2, 5),
+(5, 2, 4, 9),
+(6, 2, 4, 8),
+(7, 3, 5, 3),
+(8, 3, 5, 1),
+(9, 4, 3, 10),
+(10, 5, 1, 11);
+";
+            if ($conn->multi_query($migrationSql)) {
+                do {
+                    if ($resMulti = $conn->store_result()) {
+                        $resMulti->free();
+                    }
+                } while ($conn->more_results() && $conn->next_result());
+                echo "<div style='background:#dcfce7;border:1px solid #86efac;color:#166534;padding:12px;border-radius:6px;margin:15px 0;font-weight:bold;'>✓ ¡Tablas y registros creados exitosamente!</div>";
+            } else {
+                echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Error al crear tablas: " . htmlspecialchars($conn->error) . "</div>";
+            }
+        }
+
         $res = $conn->query("SHOW TABLES");
         $tableCount = $res ? $res->num_rows : 0;
-        echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount > 0, "OK ({$tableCount} tablas encontradas)", "Existe pero está vacía (0 tablas). Importa gim360.sql") . "</td></tr>";
+        $existingTables = [];
+        if ($res) {
+            while ($row = $res->fetch_array()) {
+                $existingTables[] = strtolower($row[0]);
+            }
+        }
+        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'programaentrenamiento'];
+        $missingTables = array_diff($requiredTables, $existingTables);
+
+        echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount >= 16 && empty($missingTables), "OK ({$tableCount} tablas encontradas)", "Incompleta ({$tableCount} tablas encontradas)") . "</td></tr>";
+
+        if (!empty($missingTables)) {
+            echo "<tr><td colspan='2' style='background:#fef2f2;padding:15px;'>";
+            echo "<p style='color:#b91c1c;margin:0 0 10px 0;font-weight:bold;'>⚠️ ¡Faltan las siguientes tablas requeridas: " . implode(', ', $missingTables) . "!</p>";
+            echo "<p style='margin:0 0 12px 0;font-size:14px;color:#4b5563;'>Este es el motivo exacto del error <code>Whoops!</code> en la página de inicio de GIM360.</p>";
+            echo "<a href='?migrar=1' style='background:#0284c7;color:#fff;text-decoration:none;padding:10px 18px;border-radius:6px;font-weight:bold;display:inline-block;'>⚡ Crear tablas faltantes ahora (1 Clic)</a>";
+            echo "</td></tr>";
+        } else {
+            echo "<tr><td colspan='2' style='background:#f0fdf4;padding:12px;'>";
+            echo "<span style='color:#166534;font-weight:bold;'>✓ Todas las tablas requeridas están presentes.</span> ";
+            echo "<a href='./' style='background:#10b981;color:#fff;text-decoration:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-left:15px;display:inline-block;'>Ir a GIM360</a>";
+            echo "</td></tr>";
+        }
     }
     $conn->close();
 }
