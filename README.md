@@ -61,12 +61,26 @@ Luego ingresar a: `http://localhost:8080/`
 ## 🛠️ Configuración de Base de Datos
 
 Archivo `.env` y `app/Config/Database.php`:
-- **Hostname:** `localhost`
-- **Database:** `gim360`
-- **Username:** `root`
+- **Hostname:** `localhost` (o el host provisto por su proveedor en la nube)
+- **Database:** `gim360` (o el nombre de base de datos asignado en la nube)
+- **Username:** `root` (o su usuario en la nube)
 - **Password:** `PIWIIB1234`
 - **DBDriver:** `MySQLi`
 - **Port:** `3306`
+
+### ☁️ Importación a Base de Datos en la Nube
+El script [`gim360.sql`](file:///var/www/html/gim360/gim360.sql) está 100% optimizado para la nube (sin `LOCK TABLES`, sin `DEFINER`, ordenado por dependencias relacionales y transaccional).
+
+**Opción A: Vía Terminal / SSH (AWS RDS, DigitalOcean, Railway, VPS, etc.)**
+```bash
+mysql -h <HOST_NUBE> -P <PUERTO> -u <USUARIO> -p <NOMBRE_BD> < gim360.sql
+```
+
+**Opción B: Vía phpMyAdmin / cPanel / Web GUI**
+1. Ingrese a **phpMyAdmin** en su hosting o proveedor cloud.
+2. Seleccione su base de datos.
+3. Vaya a la pestaña **Importar** (Import).
+4. Seleccione el archivo `gim360.sql` y presione **Continuar** (Go).
 
 ---
 

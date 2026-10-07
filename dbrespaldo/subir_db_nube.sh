@@ -197,12 +197,20 @@ else
 
     "$DUMP_BIN" "${DUMP_LOCAL_AUTH[@]}" \
         --single-transaction \
+        --skip-add-locks \
         --quick \
         --routines \
         --triggers \
         --hex-blob \
         --default-character-set=utf8mb4 \
         "$LOCAL_DB_NAME" > "$BACKUP_FILE"
+
+    # Limpiar incompatibilidades para la nube (LOCK TABLES, DEFINER, sandbox)
+    sed -i '/\/\*M!999999\\- enable the sandbox mode \*\//d' "$BACKUP_FILE" 2>/dev/null || true
+    sed -i -E 's/DEFINER=`[^`]+`@`[^`]+`//g' "$BACKUP_FILE" 2>/dev/null || true
+    sed -i -E 's/DEFINER=[^ ]+//g' "$BACKUP_FILE" 2>/dev/null || true
+    sed -i -E '/LOCK TABLES `[^`]+` WRITE;/d' "$BACKUP_FILE" 2>/dev/null || true
+    sed -i -E '/UNLOCK TABLES;/d' "$BACKUP_FILE" 2>/dev/null || true
 
     if [ ! -s "$BACKUP_FILE" ]; then
         echo -e "${RED}[ERROR] El respaldo generado está vacío.${NC}"

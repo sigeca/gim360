@@ -1,9 +1,28 @@
-/*M!999999\- enable the sandbox mode */ 
--- MariaDB dump 10.19  Distrib 10.11.18-MariaDB, for Linux (x86_64)
+-- =============================================================================
+-- GIM360 - SCRIPT DE BASE DE DATOS OPTIMIZADO PARA LA NUBE
+-- =============================================================================
+-- Compatible con:
+--   - MySQL 5.7 / 8.0 / 8.4
+--   - MariaDB 10.3 a 11.x
+--   - Plataformas Cloud: AWS RDS / Aurora, Google Cloud SQL, Azure Database,
+--     DigitalOcean Managed DB, PlanetScale, Railway, Supabase / Neon,
+--     Aiven, Clever Cloud, Render, Hostinger, cPanel / phpMyAdmin.
 --
--- Host: localhost    Database: gim360
--- ------------------------------------------------------
--- Server version	10.11.18-MariaDB
+-- Optimizaciones y compatibilidad garantizada:
+--   ✓ Sin 'LOCK TABLES' / 'UNLOCK TABLES' (previene error 1044 Access Denied)
+--   ✓ Sin 'DEFINER=root@localhost' en vistas (previene error 1227 Super privilege)
+--   ✓ Sin directivas propietarias de MariaDB CLI ('/*M!999999\-...')
+--   ✓ Orden estricto por dependencias relacionales (padres antes que hijos)
+--   ✓ Eliminación inicial en orden inverso de dependencias (hijos antes que padres)
+--   ✓ Desactivación temporal y reactivación segura de claves foráneas
+--   ✓ Juego de caracteres utf8mb4 completo (soporte emojis y tildes en español)
+--   ✓ Ejecución segura dentro de transacción (START TRANSACTION ... COMMIT)
+-- =============================================================================
+
+-- Si su proveedor le permite crear la base de datos y desea hacerlo automáticamente,
+-- descomente las siguientes 2 líneas:
+-- CREATE DATABASE IF NOT EXISTS `gim360` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
+-- USE `gim360`;
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -16,98 +35,201 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+START TRANSACTION;
+
 --
--- Table structure for table `cliente`
+-- 1. Limpieza previa en orden inverso de dependencias (hijos -> padres)
+--
+DROP VIEW IF EXISTS `rutinaejercicio`;
+DROP TABLE IF EXISTS `programaentrenamiento`;
+DROP TABLE IF EXISTS `ejerciciocliente`;
+DROP TABLE IF EXISTS `visitasgim`;
+DROP TABLE IF EXISTS `generopersona`;
+DROP TABLE IF EXISTS `estadocivilpersona`;
+DROP TABLE IF EXISTS `direccion`;
+DROP TABLE IF EXISTS `correo`;
+DROP TABLE IF EXISTS `cliente`;
+DROP TABLE IF EXISTS `persona`;
+DROP TABLE IF EXISTS `ejercicio`;
+DROP TABLE IF EXISTS `equipos`;
+DROP TABLE IF EXISTS `rutinaejecicio`;
+DROP TABLE IF EXISTS `motivoentrenamiento`;
+DROP TABLE IF EXISTS `genero`;
+DROP TABLE IF EXISTS `estadocivil`;
+DROP TABLE IF EXISTS `sexo`;
+
+--
+-- Table structure for table `sexo`
 --
 
-DROP TABLE IF EXISTS `cliente`;
+DROP TABLE IF EXISTS `sexo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cliente` (
-  `idcliente` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  PRIMARY KEY (`idcliente`),
-  UNIQUE KEY `idpersona` (`idpersona`),
-  CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+CREATE TABLE `sexo` (
+  `idsexo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idsexo`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sexo`
+--
+
+/*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
+INSERT INTO `sexo` VALUES
+(1,'Masculino'),
+(2,'Femenino'),
+(3,'Intersexual');
+/*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
+
+--
+-- Table structure for table `estadocivil`
+--
+
+DROP TABLE IF EXISTS `estadocivil`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadocivil` (
+  `idestadocivil` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idestadocivil`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadocivil`
+--
+
+/*!40000 ALTER TABLE `estadocivil` DISABLE KEYS */;
+INSERT INTO `estadocivil` VALUES
+(1,'Soltero/a'),
+(2,'Casado/a'),
+(3,'Divorciado/a'),
+(4,'Viudo/a'),
+(5,'Unión de Hecho');
+/*!40000 ALTER TABLE `estadocivil` ENABLE KEYS */;
+
+--
+-- Table structure for table `genero`
+--
+
+DROP TABLE IF EXISTS `genero`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `genero` (
+  `idgenero` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idgenero`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `genero`
+--
+
+/*!40000 ALTER TABLE `genero` DISABLE KEYS */;
+INSERT INTO `genero` VALUES
+(1,'Cisgénero Masculino'),
+(2,'Cisgénero Femenino'),
+(3,'Transgénero'),
+(4,'No Binario'),
+(5,'Otro');
+/*!40000 ALTER TABLE `genero` ENABLE KEYS */;
+
+--
+-- Table structure for table `motivoentrenamiento`
+--
+
+DROP TABLE IF EXISTS `motivoentrenamiento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `motivoentrenamiento` (
+  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `objetivo` text DEFAULT NULL,
+  PRIMARY KEY (`idmotivoentrenamiento`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `motivoentrenamiento`
+--
+
+/*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
+INSERT INTO `motivoentrenamiento` VALUES
+(1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.'),
+(2,'Pérdida de Grasa y Definición','Reducir el porcentaje de grasa corporal preservando la masa muscular a través de déficit calórico y circuitos metabólicos.'),
+(3,'Fuerza Máxima y Potencia','Desarrollar niveles máximos de fuerza en levantamientos básicos (sentadilla, press banca, peso muerto) y ejercicios pliométricos.'),
+(4,'Acondicionamiento Físico y Salud','Mejorar la capacidad cardiovascular, resistencia muscular y bienestar general para optimizar la calidad de vida diaria.'),
+(5,'Rehabilitación y Movilidad Funcional','Recuperación de lesiones, corrección postural y fortalecimiento articular bajo supervisión kinésica y técnica controlada.');
+/*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
+
+--
+-- Table structure for table `rutinaejecicio`
+--
+
+DROP TABLE IF EXISTS `rutinaejecicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaejecicio` (
+  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idrutinaejercicio`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `cliente`
+-- Dumping data for table `rutinaejecicio`
 --
 
-LOCK TABLES `cliente` WRITE;
-/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES
-(1,1),
-(2,2),
-(6,7);
-/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
-UNLOCK TABLES;
+/*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
+INSERT INTO `rutinaejecicio` VALUES
+(1,'Full Body Principiante'),
+(2,'Torso / Pierna Intermedio'),
+(3,'Push / Pull / Legs (PPL) Avanzado'),
+(4,'Circuito Funcional HIIT'),
+(5,'Rutina de Fuerza 5x5');
+/*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
 
 --
--- Table structure for table `correo`
+-- Table structure for table `equipos`
 --
 
-DROP TABLE IF EXISTS `correo`;
+DROP TABLE IF EXISTS `equipos`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `correo` (
-  `idcorreo` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `correo` varchar(150) NOT NULL,
-  `fechaoptencion` date DEFAULT NULL,
-  PRIMARY KEY (`idcorreo`),
-  KEY `fk_correo_persona` (`idpersona`),
-  CONSTRAINT `fk_correo_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+CREATE TABLE `equipos` (
+  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(30) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `id_tipo` int(11) DEFAULT NULL,
+  `id_marca` int(11) DEFAULT NULL,
+  `modelo` varchar(80) DEFAULT NULL,
+  `numero_serie` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `id_ubicacion` int(11) DEFAULT NULL,
+  `fecha_adquisicion` date DEFAULT NULL,
+  `valor_adquisicion` decimal(10,2) DEFAULT NULL,
+  `id_estado` int(11) DEFAULT 1,
+  `activo` tinyint(1) DEFAULT 1,
+  `observaciones` text DEFAULT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_equipo`),
+  UNIQUE KEY `codigo` (`codigo`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `correo`
+-- Dumping data for table `equipos`
 --
 
-LOCK TABLES `correo` WRITE;
-/*!40000 ALTER TABLE `correo` DISABLE KEYS */;
-INSERT INTO `correo` VALUES
-(1,1,'carlos.mendoza@email.com','2024-01-10'),
-(2,1,'cmendoza_gym@hotmail.com','2024-02-15'),
-(3,2,'maria.torres@gmail.com','2024-03-01'),
-(4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
-(8,7,'educaysoft@gmail.com','2026-10-06');
-/*!40000 ALTER TABLE `correo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `direccion`
---
-
-DROP TABLE IF EXISTS `direccion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `direccion` (
-  `iddireccion` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `direccion` varchar(255) NOT NULL,
-  PRIMARY KEY (`iddireccion`),
-  KEY `fk_direccion_persona` (`idpersona`),
-  CONSTRAINT `fk_direccion_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `direccion`
---
-
-LOCK TABLES `direccion` WRITE;
-/*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
-INSERT INTO `direccion` VALUES
-(1,1,'Av. 9 de Octubre y Malecón Simón Bolívar 102'),
-(2,2,'Calle Sucre y Rocafuerte, Barrio Las Palmas'),
-(3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
-(7,7,'tachina');
-/*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
-UNLOCK TABLES;
+/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
+INSERT INTO `equipos` VALUES
+(1,'EQ-001','Caminadora Profesional ProRun',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
+(2,'EQ-002','Bicicleta Estática Spinning Pro',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
+(3,'EQ-003','Prensa de Piernas 45 Grados',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34');
+/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
 
 --
 -- Table structure for table `ejercicio`
@@ -130,7 +252,6 @@ CREATE TABLE `ejercicio` (
 -- Dumping data for table `ejercicio`
 --
 
-LOCK TABLES `ejercicio` WRITE;
 /*!40000 ALTER TABLE `ejercicio` DISABLE KEYS */;
 INSERT INTO `ejercicio` VALUES
 (1,'Sentadilla Trasera con Barra (Inicio)','Un movimiento compuesto de tren inferior que trabaja cuádriceps, glúteos e isquiotibiales.\n\nInstrucciones de ejecución:\n1. Coloca la barra sobre tus trapecios superiores.\n2. Desrackea y da un paso atrás, con los pies al ancho de los hombros.\n3. Contrae el core y haz la sentadilla hasta que los muslos queden paralelos.\n4. Empuja a través de los talones para volver a la posición de pie.\n5. Repite.\n\nConsejos técnicos:\n• Mantén el pecho arriba durante todo el movimiento.\n• Empuja las rodillas hacia afuera en línea con los dedos de los pies.\n\nMúsculos principales: gluteus_maximus, quadriceps','https://www.youtube.com/watch?v=bEv6CCg2BC8','squat-start.webp'),
@@ -1191,7 +1312,220 @@ INSERT INTO `ejercicio` VALUES
 (1057,'Curl Zottman (Inicio)','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl-start.webp'),
 (1058,'Test Ejercicio Salto','Prueba de descripcion',NULL,'jump-squat-start.webp');
 /*!40000 ALTER TABLE `ejercicio` ENABLE KEYS */;
-UNLOCK TABLES;
+
+--
+-- Table structure for table `persona`
+--
+
+DROP TABLE IF EXISTS `persona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `persona` (
+  `idpersona` int(11) NOT NULL AUTO_INCREMENT,
+  `cedula` varchar(20) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `nombres` varchar(100) NOT NULL,
+  `fechanacimiento` date DEFAULT NULL,
+  `idsexo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idpersona`),
+  UNIQUE KEY `cedula` (`cedula`),
+  KEY `fk_persona_sexo` (`idsexo`),
+  CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `persona`
+--
+
+/*!40000 ALTER TABLE `persona` DISABLE KEYS */;
+INSERT INTO `persona` VALUES
+(1,'0801234567','Mendoza Reyes','Carlos Alberto','1995-04-12',1),
+(2,'0807654321','Torres Loor','María Fernanda','1998-09-25',2),
+(3,'0912345678','Castillo Ortiz','Juan Diego','2000-01-15',1),
+(7,'08016017','Francis Quinde','Stalin Adalberto','1980-07-01',1);
+/*!40000 ALTER TABLE `persona` ENABLE KEYS */;
+
+--
+-- Table structure for table `cliente`
+--
+
+DROP TABLE IF EXISTS `cliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cliente` (
+  `idcliente` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  PRIMARY KEY (`idcliente`),
+  UNIQUE KEY `idpersona` (`idpersona`),
+  CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cliente`
+--
+
+/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
+INSERT INTO `cliente` VALUES
+(1,1),
+(2,2),
+(6,7);
+/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
+
+--
+-- Table structure for table `correo`
+--
+
+DROP TABLE IF EXISTS `correo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `correo` (
+  `idcorreo` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `correo` varchar(150) NOT NULL,
+  `fechaoptencion` date DEFAULT NULL,
+  PRIMARY KEY (`idcorreo`),
+  KEY `fk_correo_persona` (`idpersona`),
+  CONSTRAINT `fk_correo_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `correo`
+--
+
+/*!40000 ALTER TABLE `correo` DISABLE KEYS */;
+INSERT INTO `correo` VALUES
+(1,1,'carlos.mendoza@email.com','2024-01-10'),
+(2,1,'cmendoza_gym@hotmail.com','2024-02-15'),
+(3,2,'maria.torres@gmail.com','2024-03-01'),
+(4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
+(8,7,'educaysoft@gmail.com','2026-10-06');
+/*!40000 ALTER TABLE `correo` ENABLE KEYS */;
+
+--
+-- Table structure for table `direccion`
+--
+
+DROP TABLE IF EXISTS `direccion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `direccion` (
+  `iddireccion` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `direccion` varchar(255) NOT NULL,
+  PRIMARY KEY (`iddireccion`),
+  KEY `fk_direccion_persona` (`idpersona`),
+  CONSTRAINT `fk_direccion_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `direccion`
+--
+
+/*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
+INSERT INTO `direccion` VALUES
+(1,1,'Av. 9 de Octubre y Malecón Simón Bolívar 102'),
+(2,2,'Calle Sucre y Rocafuerte, Barrio Las Palmas'),
+(3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
+(7,7,'tachina');
+/*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
+
+--
+-- Table structure for table `estadocivilpersona`
+--
+
+DROP TABLE IF EXISTS `estadocivilpersona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadocivilpersona` (
+  `idestadocivilpersona` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `idestadocivil` int(11) NOT NULL,
+  PRIMARY KEY (`idestadocivilpersona`),
+  KEY `fk_ecp_persona` (`idpersona`),
+  KEY `fk_ecp_estadocivil` (`idestadocivil`),
+  CONSTRAINT `fk_ecp_estadocivil` FOREIGN KEY (`idestadocivil`) REFERENCES `estadocivil` (`idestadocivil`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_ecp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadocivilpersona`
+--
+
+/*!40000 ALTER TABLE `estadocivilpersona` DISABLE KEYS */;
+INSERT INTO `estadocivilpersona` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,1),
+(6,7,2);
+/*!40000 ALTER TABLE `estadocivilpersona` ENABLE KEYS */;
+
+--
+-- Table structure for table `generopersona`
+--
+
+DROP TABLE IF EXISTS `generopersona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `generopersona` (
+  `idgeneropersona` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `idgenero` int(11) NOT NULL,
+  PRIMARY KEY (`idgeneropersona`),
+  KEY `fk_gp_persona` (`idpersona`),
+  KEY `fk_gp_genero` (`idgenero`),
+  CONSTRAINT `fk_gp_genero` FOREIGN KEY (`idgenero`) REFERENCES `genero` (`idgenero`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_gp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `generopersona`
+--
+
+/*!40000 ALTER TABLE `generopersona` DISABLE KEYS */;
+INSERT INTO `generopersona` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,1),
+(6,7,1);
+/*!40000 ALTER TABLE `generopersona` ENABLE KEYS */;
+
+--
+-- Table structure for table `visitasgim`
+--
+
+DROP TABLE IF EXISTS `visitasgim`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `visitasgim` (
+  `idvisitasgim` int(11) NOT NULL AUTO_INCREMENT,
+  `idcliente` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `horaingreso` time NOT NULL,
+  `horasalida` time DEFAULT NULL,
+  PRIMARY KEY (`idvisitasgim`),
+  KEY `idx_visitasgim_cliente` (`idcliente`),
+  KEY `idx_visitasgim_fecha` (`fecha`),
+  CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `visitasgim`
+--
+
+/*!40000 ALTER TABLE `visitasgim` DISABLE KEYS */;
+INSERT INTO `visitasgim` VALUES
+(1,1,'2026-10-01','07:15:00','08:30:00'),
+(2,2,'2026-10-02','18:00:00','19:45:00'),
+(3,1,'2026-10-05','06:45:00','08:00:00'),
+(4,2,'2026-10-05','19:00:00','21:15:00');
+/*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
 
 --
 -- Table structure for table `ejerciciocliente`
@@ -1219,7 +1553,6 @@ CREATE TABLE `ejerciciocliente` (
 -- Dumping data for table `ejerciciocliente`
 --
 
-LOCK TABLES `ejerciciocliente` WRITE;
 /*!40000 ALTER TABLE `ejerciciocliente` DISABLE KEYS */;
 INSERT INTO `ejerciciocliente` VALUES
 (1,1,1,'2026-10-01',25),
@@ -1229,237 +1562,6 @@ INSERT INTO `ejerciciocliente` VALUES
 (5,5,1,'2026-10-05',20),
 (7,635,6,'2026-10-06',20);
 /*!40000 ALTER TABLE `ejerciciocliente` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `equipos`
---
-
-DROP TABLE IF EXISTS `equipos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `equipos` (
-  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
-  `codigo` varchar(30) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `id_tipo` int(11) DEFAULT NULL,
-  `id_marca` int(11) DEFAULT NULL,
-  `modelo` varchar(80) DEFAULT NULL,
-  `numero_serie` varchar(100) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  `id_ubicacion` int(11) DEFAULT NULL,
-  `fecha_adquisicion` date DEFAULT NULL,
-  `valor_adquisicion` decimal(10,2) DEFAULT NULL,
-  `id_estado` int(11) DEFAULT 1,
-  `activo` tinyint(1) DEFAULT 1,
-  `observaciones` text DEFAULT NULL,
-  `fecha_registro` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_equipo`),
-  UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `equipos`
---
-
-LOCK TABLES `equipos` WRITE;
-/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
-INSERT INTO `equipos` VALUES
-(1,'EQ-001','Caminadora Profesional ProRun',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
-(2,'EQ-002','Bicicleta Estática Spinning Pro',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
-(3,'EQ-003','Prensa de Piernas 45 Grados',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34');
-/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `estadocivil`
---
-
-DROP TABLE IF EXISTS `estadocivil`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estadocivil` (
-  `idestadocivil` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idestadocivil`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estadocivil`
---
-
-LOCK TABLES `estadocivil` WRITE;
-/*!40000 ALTER TABLE `estadocivil` DISABLE KEYS */;
-INSERT INTO `estadocivil` VALUES
-(1,'Soltero/a'),
-(2,'Casado/a'),
-(3,'Divorciado/a'),
-(4,'Viudo/a'),
-(5,'Unión de Hecho');
-/*!40000 ALTER TABLE `estadocivil` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `estadocivilpersona`
---
-
-DROP TABLE IF EXISTS `estadocivilpersona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estadocivilpersona` (
-  `idestadocivilpersona` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `idestadocivil` int(11) NOT NULL,
-  PRIMARY KEY (`idestadocivilpersona`),
-  KEY `fk_ecp_persona` (`idpersona`),
-  KEY `fk_ecp_estadocivil` (`idestadocivil`),
-  CONSTRAINT `fk_ecp_estadocivil` FOREIGN KEY (`idestadocivil`) REFERENCES `estadocivil` (`idestadocivil`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_ecp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estadocivilpersona`
---
-
-LOCK TABLES `estadocivilpersona` WRITE;
-/*!40000 ALTER TABLE `estadocivilpersona` DISABLE KEYS */;
-INSERT INTO `estadocivilpersona` VALUES
-(1,1,1),
-(2,2,2),
-(3,3,1),
-(6,7,2);
-/*!40000 ALTER TABLE `estadocivilpersona` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `genero`
---
-
-DROP TABLE IF EXISTS `genero`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `genero` (
-  `idgenero` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idgenero`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `genero`
---
-
-LOCK TABLES `genero` WRITE;
-/*!40000 ALTER TABLE `genero` DISABLE KEYS */;
-INSERT INTO `genero` VALUES
-(1,'Cisgénero Masculino'),
-(2,'Cisgénero Femenino'),
-(3,'Transgénero'),
-(4,'No Binario'),
-(5,'Otro');
-/*!40000 ALTER TABLE `genero` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `generopersona`
---
-
-DROP TABLE IF EXISTS `generopersona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `generopersona` (
-  `idgeneropersona` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `idgenero` int(11) NOT NULL,
-  PRIMARY KEY (`idgeneropersona`),
-  KEY `fk_gp_persona` (`idpersona`),
-  KEY `fk_gp_genero` (`idgenero`),
-  CONSTRAINT `fk_gp_genero` FOREIGN KEY (`idgenero`) REFERENCES `genero` (`idgenero`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_gp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `generopersona`
---
-
-LOCK TABLES `generopersona` WRITE;
-/*!40000 ALTER TABLE `generopersona` DISABLE KEYS */;
-INSERT INTO `generopersona` VALUES
-(1,1,1),
-(2,2,2),
-(3,3,1),
-(6,7,1);
-/*!40000 ALTER TABLE `generopersona` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `motivoentrenamiento`
---
-
-DROP TABLE IF EXISTS `motivoentrenamiento`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `motivoentrenamiento` (
-  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `objetivo` text DEFAULT NULL,
-  PRIMARY KEY (`idmotivoentrenamiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `motivoentrenamiento`
---
-
-LOCK TABLES `motivoentrenamiento` WRITE;
-/*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
-INSERT INTO `motivoentrenamiento` VALUES
-(1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.'),
-(2,'Pérdida de Grasa y Definición','Reducir el porcentaje de grasa corporal preservando la masa muscular a través de déficit calórico y circuitos metabólicos.'),
-(3,'Fuerza Máxima y Potencia','Desarrollar niveles máximos de fuerza en levantamientos básicos (sentadilla, press banca, peso muerto) y ejercicios pliométricos.'),
-(4,'Acondicionamiento Físico y Salud','Mejorar la capacidad cardiovascular, resistencia muscular y bienestar general para optimizar la calidad de vida diaria.'),
-(5,'Rehabilitación y Movilidad Funcional','Recuperación de lesiones, corrección postural y fortalecimiento articular bajo supervisión kinésica y técnica controlada.');
-/*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `persona`
---
-
-DROP TABLE IF EXISTS `persona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `persona` (
-  `idpersona` int(11) NOT NULL AUTO_INCREMENT,
-  `cedula` varchar(20) NOT NULL,
-  `apellidos` varchar(100) NOT NULL,
-  `nombres` varchar(100) NOT NULL,
-  `fechanacimiento` date DEFAULT NULL,
-  `idsexo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idpersona`),
-  UNIQUE KEY `cedula` (`cedula`),
-  KEY `fk_persona_sexo` (`idsexo`),
-  CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `persona`
---
-
-LOCK TABLES `persona` WRITE;
-/*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES
-(1,'0801234567','Mendoza Reyes','Carlos Alberto','1995-04-12',1),
-(2,'0807654321','Torres Loor','María Fernanda','1998-09-25',2),
-(3,'0912345678','Castillo Ortiz','Juan Diego','2000-01-15',1),
-(7,'08016017','Francis Quinde','Stalin Adalberto','1980-07-01',1);
-/*!40000 ALTER TABLE `persona` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `programaentrenamiento`
@@ -1487,7 +1589,6 @@ CREATE TABLE `programaentrenamiento` (
 -- Dumping data for table `programaentrenamiento`
 --
 
-LOCK TABLES `programaentrenamiento` WRITE;
 /*!40000 ALTER TABLE `programaentrenamiento` DISABLE KEYS */;
 INSERT INTO `programaentrenamiento` VALUES
 (1,1,1,1),
@@ -1501,130 +1602,18 @@ INSERT INTO `programaentrenamiento` VALUES
 (9,4,3,10),
 (10,5,1,11);
 /*!40000 ALTER TABLE `programaentrenamiento` ENABLE KEYS */;
-UNLOCK TABLES;
 
---
--- Table structure for table `rutinaejecicio`
---
+-- =============================================================================
+-- Vista `rutinaejercicio` (compatibilidad de alias, sin DEFINER restringido)
+-- =============================================================================
+DROP VIEW IF EXISTS `rutinaejercicio`;
+CREATE VIEW `rutinaejercicio` AS 
+SELECT `idrutinaejercicio`, `nombre` 
+FROM `rutinaejecicio`;
 
-DROP TABLE IF EXISTS `rutinaejecicio`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `rutinaejecicio` (
-  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idrutinaejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
+COMMIT;
 
---
--- Dumping data for table `rutinaejecicio`
---
-
-LOCK TABLES `rutinaejecicio` WRITE;
-/*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
-INSERT INTO `rutinaejecicio` VALUES
-(1,'Full Body Principiante'),
-(2,'Torso / Pierna Intermedio'),
-(3,'Push / Pull / Legs (PPL) Avanzado'),
-(4,'Circuito Funcional HIIT'),
-(5,'Rutina de Fuerza 5x5');
-/*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Temporary table structure for view `rutinaejercicio`
---
-
-DROP TABLE IF EXISTS `rutinaejercicio`;
-/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8mb4;
-/*!50001 CREATE VIEW `rutinaejercicio` AS SELECT
- NULL AS `idrutinaejercicio`,
- NULL AS `nombre` */;
-SET character_set_client = @saved_cs_client;
-
---
--- Table structure for table `sexo`
---
-
-DROP TABLE IF EXISTS `sexo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sexo` (
-  `idsexo` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idsexo`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sexo`
---
-
-LOCK TABLES `sexo` WRITE;
-/*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
-INSERT INTO `sexo` VALUES
-(1,'Masculino'),
-(2,'Femenino'),
-(3,'Intersexual');
-/*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `visitasgim`
---
-
-DROP TABLE IF EXISTS `visitasgim`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `visitasgim` (
-  `idvisitasgim` int(11) NOT NULL AUTO_INCREMENT,
-  `idcliente` int(11) NOT NULL,
-  `fecha` date NOT NULL,
-  `horaingreso` time NOT NULL,
-  `horasalida` time DEFAULT NULL,
-  PRIMARY KEY (`idvisitasgim`),
-  KEY `idx_visitasgim_cliente` (`idcliente`),
-  KEY `idx_visitasgim_fecha` (`fecha`),
-  CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `visitasgim`
---
-
-LOCK TABLES `visitasgim` WRITE;
-/*!40000 ALTER TABLE `visitasgim` DISABLE KEYS */;
-INSERT INTO `visitasgim` VALUES
-(1,1,'2026-10-01','07:15:00','08:30:00'),
-(2,2,'2026-10-02','18:00:00','19:45:00'),
-(3,1,'2026-10-05','06:45:00','08:00:00'),
-(4,2,'2026-10-05','19:00:00','21:15:00');
-/*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Final view structure for view `rutinaejercicio`
---
-
-/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
-/*!50001 SET @saved_cs_client          = @@character_set_client */;
-/*!50001 SET @saved_cs_results         = @@character_set_results */;
-/*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb3 */;
-/*!50001 SET character_set_results     = utf8mb3 */;
-/*!50001 SET collation_connection      = utf8mb3_general_ci */;
-/*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
-/*!50001 SET character_set_client      = @saved_cs_client */;
-/*!50001 SET character_set_results     = @saved_cs_results */;
-/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
@@ -1633,4 +1622,6 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-07  7:06:15
+-- =============================================================================
+-- FIN DEL SCRIPT GIM360 - IMPORTACIÓN EN LA NUBE COMPLETADA CON ÉXITO
+-- =============================================================================

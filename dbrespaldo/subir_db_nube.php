@@ -120,7 +120,7 @@ if ($customFile) {
     echo "[2/4] Generando volcado con mysqldump...\n";
     $passArg = !empty($localPass) ? "-p" . escapeshellarg($localPass) : "";
     $dumpCmd = sprintf(
-        "mysqldump -h %s -P %d -u %s %s --single-transaction --quick --routines --triggers --hex-blob --default-character-set=utf8mb4 %s > %s",
+        "mysqldump -h %s -P %d -u %s %s --single-transaction --skip-add-locks --quick --routines --triggers --hex-blob --default-character-set=utf8mb4 %s > %s",
         escapeshellarg($localHost),
         $localPort,
         escapeshellarg($localUser),
@@ -133,6 +133,15 @@ if ($customFile) {
     if ($returnCode !== 0 || !file_exists($backupFile) || filesize($backupFile) === 0) {
         die("[ERROR] Falló la ejecución de mysqldump (Código: {$returnCode})\n");
     }
+
+    // Limpiar incompatibilidades para la nube (LOCK TABLES, DEFINER, sandbox)
+    $sqlContent = file_get_contents($backupFile);
+    $sqlContent = preg_replace('/\/\*M!999999\\\\- enable the sandbox mode \*\/\s*/', '', $sqlContent);
+    $sqlContent = preg_replace('/DEFINER=`[^`]+`@`[^`]+`/', '', $sqlContent);
+    $sqlContent = preg_replace('/DEFINER=[^ ]+/', '', $sqlContent);
+    $sqlContent = preg_replace('/LOCK TABLES `[^`]+` WRITE;\n/', '', $sqlContent);
+    $sqlContent = preg_replace('/UNLOCK TABLES;\n/', '', $sqlContent);
+    file_put_contents($backupFile, $sqlContent);
 
     $sizeMb = round(filesize($backupFile) / (1024 * 1024), 2);
     echo "[OK] Respaldo generado con éxito: {$backupFile} ({$sizeMb} MB)\n";
