@@ -17,6 +17,13 @@ El sistema gestiona 9 tablas normalizadas con claves foráneas e integridad refe
 7. **`estadocivilpersona`**: `idestadocivilpersona`, `idpersona`, `idestadocivil`
 8. **`genero`**: `idgenero`, `nombre`
 9. **`generopersona`**: `idgeneropersona`, `idpersona`, `idgenero`
+10. **`visitasgim`**: `idvisitasgim`, `idcliente`, `fecha`, `horallegada`, `horasalida`
+11. **`equipos`**: `id_equipo`, `codigo`, `nombre`, `descripcion`...
+12. **`ejercicio`**: `idejercicio`, `nombre`, `descripcion`, `urlvideo`, `imagen`
+13. **`ejerciciocliente`**: `idejerciciocliente`, `idejercicio`, `idcliente`, `fecha`, `duracionminutos`
+14. **`motivoentrenamiento`**: `idmotivoentrenamiento`, `nombre`, `objetivo`
+15. **`rutinaejecicio`**: `idrutinaejercicio`, `nombre`
+16. **`programaentrenamiento`**: `idprogramaentrenamiento`, `idmotivoentrenamiento`, `idrutinaejercicio`, `idejercicio`
 
 El script completo de creación y datos iniciales se encuentra en [gim360.sql](file:///var/www/html/gim360/gim360.sql).
 
@@ -34,6 +41,13 @@ El proyecto está ubicado en `/var/www/html/gim360`:
 - **Catálogo de Sexos:** [http://localhost/gim360/index.php/sexo](http://localhost/gim360/index.php/sexo)
 - **Catálogo Estados Civiles:** [http://localhost/gim360/index.php/estadocivil](http://localhost/gim360/index.php/estadocivil)
 - **Catálogo Géneros:** [http://localhost/gim360/index.php/genero](http://localhost/gim360/index.php/genero)
+- **Visitas al Gimnasio:** [http://localhost/gim360/index.php/visitasgim](http://localhost/gim360/index.php/visitasgim)
+- **Equipos y Máquinas:** [http://localhost/gim360/index.php/equipos](http://localhost/gim360/index.php/equipos)
+- **Catálogo de Ejercicios:** [http://localhost/gim360/index.php/ejercicio](http://localhost/gim360/index.php/ejercicio)
+- **Ejercicios de Clientes:** [http://localhost/gim360/index.php/ejerciciocliente](http://localhost/gim360/index.php/ejerciciocliente)
+- **Motivos de Entrenamiento:** [http://localhost/gim360/index.php/motivoentrenamiento](http://localhost/gim360/index.php/motivoentrenamiento)
+- **Rutinas de Ejercicio:** [http://localhost/gim360/index.php/rutinaejecicio](http://localhost/gim360/index.php/rutinaejecicio)
+- **Programas de Entrenamiento:** [http://localhost/gim360/index.php/programaentrenamiento](http://localhost/gim360/index.php/programaentrenamiento)
 
 ### 2. A través de CodeIgniter Spark
 Si desea ejecutar el servidor de desarrollo integrado de CodeIgniter:
@@ -70,6 +84,13 @@ Archivo `.env` y `app/Config/Database.php`:
 | **Géneros** | `genero` | `Genero.php` | Catálogo de identidades de género |
 | **Estado Civil - Persona** | `estadocivilpersona` | `EstadoCivilPersona.php` | Gestión de asignaciones entre personas y estados civiles |
 | **Género - Persona** | `generopersona` | `GeneroPersona.php` | Gestión de asignaciones entre personas e identidades de género |
+| **Motivos de Entrenamiento** | `motivoentrenamiento` | `MotivoEntrenamiento.php` | Catálogo y metas de entrenamiento con descripción de objetivos |
+| **Rutinas de Ejercicio** | `rutinaejecicio` | `RutinaEjecicio.php` | Catálogo y nombres de planes/rutinas de ejercicios |
+| **Visitas al Gimnasio** | `visitasgim` | `VisitasGim.php` | Control de asistencia con horas de llegada y salida |
+| **Equipos y Máquinas** | `equipos` | `Equipos.php` | Inventario de equipos con código, marcas y estado |
+| **Ejercicios** | `ejercicio` | `Ejercicio.php` | Catálogo de ejercicios físicos con videos y descripciones |
+| **Ejercicios Clientes** | `ejerciciocliente` | `EjercicioCliente.php` | Historial y tiempos de entrenamiento por cliente |
+| **Programas de Entrenamiento** | `programaentrenamiento` | `ProgramaEntrenamiento.php` | Estructuración integral asociando motivo, rutina y ejercicios |
 
 ---
 

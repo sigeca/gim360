@@ -15,6 +15,9 @@ use App\Models\VisitasGimModel;
 use App\Models\EquipoModel;
 use App\Models\EjercicioModel;
 use App\Models\EjercicioClienteModel;
+use App\Models\MotivoEntrenamientoModel;
+use App\Models\RutinaEjecicioModel;
+use App\Models\ProgramaEntrenamientoModel;
 
 class Home extends BaseController
 {
@@ -33,23 +36,29 @@ class Home extends BaseController
         $equipoModel           = new EquipoModel();
         $ejercicioModel        = new EjercicioModel();
         $ejercicioClienteModel = new EjercicioClienteModel();
+        $motivoModel           = new MotivoEntrenamientoModel();
+        $rutinaModel           = new RutinaEjecicioModel();
+        $peModel               = new ProgramaEntrenamientoModel();
 
         $data = [
             'title' => 'Dashboard | GIM360',
             'counts' => [
-                'persona'            => $personaModel->countAllResults(),
-                'cliente'            => $clienteModel->countAllResults(),
-                'correo'             => $correoModel->countAllResults(),
-                'direccion'          => $direccionModel->countAllResults(),
-                'sexo'               => $sexoModel->countAllResults(),
-                'estadocivil'        => $ecModel->countAllResults(),
-                'estadocivilpersona' => $ecpModel->countAllResults(),
-                'genero'             => $generoModel->countAllResults(),
-                'generopersona'      => $gpModel->countAllResults(),
-                'visitasgim'         => $visitasGimModel->countAllResults(),
-                'equipos'            => $equipoModel->countAllResults(),
-                'ejercicio'          => $ejercicioModel->countAllResults(),
-                'ejerciciocliente'   => $ejercicioClienteModel->countAllResults(),
+                'persona'              => $personaModel->countAllResults(),
+                'cliente'              => $clienteModel->countAllResults(),
+                'correo'               => $correoModel->countAllResults(),
+                'direccion'            => $direccionModel->countAllResults(),
+                'sexo'                 => $sexoModel->countAllResults(),
+                'estadocivil'          => $ecModel->countAllResults(),
+                'estadocivilpersona'   => $ecpModel->countAllResults(),
+                'genero'               => $generoModel->countAllResults(),
+                'generopersona'        => $gpModel->countAllResults(),
+                'visitasgim'           => $visitasGimModel->countAllResults(),
+                'equipos'              => $equipoModel->countAllResults(),
+                'ejercicio'            => $ejercicioModel->countAllResults(),
+                'ejerciciocliente'     => $ejercicioClienteModel->countAllResults(),
+                'motivoentrenamiento'  => $motivoModel->countAllResults(),
+                'rutinaejecicio'       => $rutinaModel->countAllResults(),
+                'programaentrenamiento'=> $peModel->countAllResults(),
             ],
             'recentPersonas'   => $personaModel->getPersonasWithRelations(),
             'recentVisitas'    => $visitasGimModel->getVisitasWithDetails(),

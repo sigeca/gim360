@@ -22,6 +22,10 @@ $modulos = [
     'equipos'            => 'Equipos',
     'ejercicio'          => 'Ejercicio',
     'ejerciciocliente'   => 'EjercicioCliente',
+    'motivoentrenamiento'  => 'MotivoEntrenamiento',
+    'rutinaejecicio'       => 'RutinaEjecicio',
+    'rutinaejercicio'      => 'RutinaEjecicio',
+    'programaentrenamiento'=> 'ProgramaEntrenamiento',
 ];
 
 foreach ($modulos as $slug => $controller) {

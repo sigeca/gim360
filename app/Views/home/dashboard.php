@@ -263,6 +263,63 @@
             </div>
         </div>
     </div>
+
+    <!-- 14. motivoentrenamiento -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-warning">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">14. Motivo Entrenamiento</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['motivoentrenamiento'] ?></h3>
+                    <small class="text-muted">Metas y propósitos de entrenamiento</small>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning fs-3">
+                    <i class="bi bi-bullseye"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('motivoentrenamiento') ?>" class="text-decoration-none small fw-semibold text-warning">Gestionar motivos <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 15. rutinaejecicio -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">15. Rutina Ejercicio</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['rutinaejecicio'] ?></h3>
+                    <small class="text-muted">Planes y rutinas de entrenamiento</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-calendar2-week"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('rutinaejecicio') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar rutinas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 16. programaentrenamiento -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-success">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">16. Programa Entrenamiento</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['programaentrenamiento'] ?></h3>
+                    <small class="text-muted">Relación motivo, rutina y ejercicios</small>
+                </div>
+                <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success fs-3">
+                    <i class="bi bi-clipboard2-pulse"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('programaentrenamiento') ?>" class="text-decoration-none small fw-semibold text-success">Gestionar programas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Tabla de Personas Registradas -->

@@ -1397,6 +1397,36 @@ INSERT INTO `generopersona` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `motivoentrenamiento`
+--
+
+DROP TABLE IF EXISTS `motivoentrenamiento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `motivoentrenamiento` (
+  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `objetivo` text DEFAULT NULL,
+  PRIMARY KEY (`idmotivoentrenamiento`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `motivoentrenamiento`
+--
+
+LOCK TABLES `motivoentrenamiento` WRITE;
+/*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
+INSERT INTO `motivoentrenamiento` VALUES
+(1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.'),
+(2,'Pérdida de Grasa y Definición','Reducir el porcentaje de grasa corporal preservando la masa muscular a través de déficit calórico y circuitos metabólicos.'),
+(3,'Fuerza Máxima y Potencia','Desarrollar niveles máximos de fuerza en levantamientos básicos (sentadilla, press banca, peso muerto) y ejercicios pliométricos.'),
+(4,'Acondicionamiento Físico y Salud','Mejorar la capacidad cardiovascular, resistencia muscular y bienestar general para optimizar la calidad de vida diaria.'),
+(5,'Rehabilitación y Movilidad Funcional','Recuperación de lesiones, corrección postural y fortalecimiento articular bajo supervisión kinésica y técnica controlada.');
+/*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `persona`
 --
 
@@ -1430,6 +1460,90 @@ INSERT INTO `persona` VALUES
 (7,'08016017','Francis Quinde','Stalin Adalberto','1980-07-01',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `programaentrenamiento`
+--
+
+DROP TABLE IF EXISTS `programaentrenamiento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `programaentrenamiento` (
+  `idprogramaentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `idmotivoentrenamiento` int(11) NOT NULL,
+  `idrutinaejercicio` int(11) NOT NULL,
+  `idejercicio` int(11) NOT NULL,
+  PRIMARY KEY (`idprogramaentrenamiento`),
+  KEY `fk_pe_motivo` (`idmotivoentrenamiento`),
+  KEY `fk_pe_rutina` (`idrutinaejercicio`),
+  KEY `fk_pe_ejercicio` (`idejercicio`),
+  CONSTRAINT `fk_pe_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pe_motivo` FOREIGN KEY (`idmotivoentrenamiento`) REFERENCES `motivoentrenamiento` (`idmotivoentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pe_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `programaentrenamiento`
+--
+
+LOCK TABLES `programaentrenamiento` WRITE;
+/*!40000 ALTER TABLE `programaentrenamiento` DISABLE KEYS */;
+INSERT INTO `programaentrenamiento` VALUES
+(1,1,1,1),
+(2,1,1,2),
+(3,1,2,4),
+(4,1,2,5),
+(5,2,4,9),
+(6,2,4,8),
+(7,3,5,3),
+(8,3,5,1),
+(9,4,3,10),
+(10,5,1,11);
+/*!40000 ALTER TABLE `programaentrenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `rutinaejecicio`
+--
+
+DROP TABLE IF EXISTS `rutinaejecicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaejecicio` (
+  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idrutinaejercicio`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaejecicio`
+--
+
+LOCK TABLES `rutinaejecicio` WRITE;
+/*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
+INSERT INTO `rutinaejecicio` VALUES
+(1,'Full Body Principiante'),
+(2,'Torso / Pierna Intermedio'),
+(3,'Push / Pull / Legs (PPL) Avanzado'),
+(4,'Circuito Funcional HIIT'),
+(5,'Rutina de Fuerza 5x5');
+/*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `rutinaejercicio`
+--
+
+DROP TABLE IF EXISTS `rutinaejercicio`;
+/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaejercicio` AS SELECT
+ NULL AS `idrutinaejercicio`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `sexo`
@@ -1493,8 +1607,22 @@ INSERT INTO `visitasgim` VALUES
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'gim360'
+-- Final view structure for view `rutinaejercicio`
 --
+
+/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -1505,4 +1633,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-06 11:48:53
+-- Dump completed on 2026-10-07  7:06:15

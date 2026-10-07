@@ -235,9 +235,12 @@ $groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive;
 $isEquiposActive = (strpos($uri, 'equipos') === 0);
 $groupEquiposOpen = $isEquiposActive;
 
-$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'ejerciciocliente') === false);
+$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'ejerciciocliente') === false && strpos($uri, 'rutinaejercicio') === false);
 $isEjercicioClienteActive = (strpos($uri, 'ejerciciocliente') === 0);
-$groupEntrenamientoOpen = $isEjercicioActive || $isEjercicioClienteActive;
+$isMotivoActive = (strpos($uri, 'motivoentrenamiento') === 0);
+$isRutinaActive = (strpos($uri, 'rutinaejecicio') === 0 || strpos($uri, 'rutinaejercicio') === 0);
+$isProgramaActive = (strpos($uri, 'programaentrenamiento') === 0);
+$groupEntrenamientoOpen = $isEjercicioActive || $isEjercicioClienteActive || $isMotivoActive || $isRutinaActive || $isProgramaActive;
 
 $isCorreoActive = (strpos($uri, 'correo') === 0);
 $isDireccionActive = (strpos($uri, 'direccion') === 0);
@@ -368,6 +371,18 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('ejerciciocliente') ?>" class="submenu-link <?= $isEjercicioClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-person-walking text-primary"></i>
                             <span>Ejercicios de Clientes</span>
+                        </a>
+                        <a href="<?= base_url('motivoentrenamiento') ?>" class="submenu-link <?= $isMotivoActive ? 'active' : '' ?>">
+                            <i class="bi bi-bullseye text-warning"></i>
+                            <span>Motivos de Entrenamiento</span>
+                        </a>
+                        <a href="<?= base_url('rutinaejecicio') ?>" class="submenu-link <?= $isRutinaActive ? 'active' : '' ?>">
+                            <i class="bi bi-calendar2-week text-info"></i>
+                            <span>Rutinas de Ejercicio</span>
+                        </a>
+                        <a href="<?= base_url('programaentrenamiento') ?>" class="submenu-link <?= $isProgramaActive ? 'active' : '' ?>">
+                            <i class="bi bi-clipboard2-pulse text-success"></i>
+                            <span>Programa de Entrenamiento</span>
                         </a>
                     </div>
                 </div>
