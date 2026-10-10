@@ -4,23 +4,17 @@ namespace App\Controllers;
 
 use App\Models\ProgramaEntrenamientoModel;
 use App\Models\MotivoEntrenamientoModel;
-use App\Models\RutinaEjecicioModel;
-use App\Models\EjercicioModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class ProgramaEntrenamiento extends BaseController
 {
     protected ProgramaEntrenamientoModel $peModel;
     protected MotivoEntrenamientoModel $motivoModel;
-    protected RutinaEjecicioModel $rutinaModel;
-    protected EjercicioModel $ejercicioModel;
 
     public function __construct()
     {
-        $this->peModel        = new ProgramaEntrenamientoModel();
-        $this->motivoModel    = new MotivoEntrenamientoModel();
-        $this->rutinaModel    = new RutinaEjecicioModel();
-        $this->ejercicioModel = new EjercicioModel();
+        $this->peModel     = new ProgramaEntrenamientoModel();
+        $this->motivoModel = new MotivoEntrenamientoModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -38,18 +32,10 @@ class ProgramaEntrenamiento extends BaseController
             $programa = $last ? $this->peModel->getProgramaWithDetails($last['idprogramaentrenamiento']) : null;
         }
 
-        $youtubeId = null;
-        if (!empty($programa['ejercicio_urlvideo'])) {
-            if (preg_match('/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/', $programa['ejercicio_urlvideo'], $matches)) {
-                $youtubeId = $matches[1];
-            }
-        }
-
         $data = [
-            'title'     => 'Ficha de Programa de Entrenamiento',
-            'programa'  => $programa,
-            'youtubeId' => $youtubeId,
-            'module'    => 'programaentrenamiento',
+            'title'    => 'Ficha de Programa de Entrenamiento',
+            'programa' => $programa,
+            'module'   => 'programaentrenamiento',
         ];
 
         return view('programaentrenamiento/programaentrenamiento_record', $data);
@@ -98,19 +84,13 @@ class ProgramaEntrenamiento extends BaseController
     // Vista de formulario para nuevo registro
     public function add()
     {
-        $idmotivoPreselected   = $this->request->getGet('idmotivo');
-        $idrutinaPreselected   = $this->request->getGet('idrutina');
-        $idejercicioPreselected = $this->request->getGet('idejercicio');
+        $idmotivoPreselected = $this->request->getGet('idmotivo') ?? $this->request->getGet('idmotivoentrenamiento');
 
         $data = [
-            'title'                  => 'Crear Programa de Entrenamiento',
-            'motivos'                => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
-            'rutinas'                => $this->rutinaModel->orderBy('nombre', 'ASC')->findAll(),
-            'ejercicios'             => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
-            'idmotivoPreselected'    => $idmotivoPreselected,
-            'idrutinaPreselected'    => $idrutinaPreselected,
-            'idejercicioPreselected' => $idejercicioPreselected,
-            'module'                 => 'programaentrenamiento',
+            'title'               => 'Crear Programa de Entrenamiento',
+            'motivos'             => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
+            'idmotivoPreselected' => $idmotivoPreselected,
+            'module'              => 'programaentrenamiento',
         ];
 
         return view('programaentrenamiento/programaentrenamiento_form', $data);
@@ -119,9 +99,8 @@ class ProgramaEntrenamiento extends BaseController
     public function save()
     {
         $rules = [
+            'nombre'                => 'required|min_length[3]|max_length[100]',
             'idmotivoentrenamiento' => 'required|is_natural_no_zero',
-            'idrutinaejercicio'     => 'required|is_natural_no_zero',
-            'idejercicio'           => 'required|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
@@ -129,9 +108,8 @@ class ProgramaEntrenamiento extends BaseController
         }
 
         $id = $this->peModel->insert([
-            'idmotivoentrenamiento' => $this->request->getPost('idmotivoentrenamiento'),
-            'idrutinaejercicio'     => $this->request->getPost('idrutinaejercicio'),
-            'idejercicio'           => $this->request->getPost('idejercicio'),
+            'nombre'                => trim($this->request->getPost('nombre')),
+            'idmotivoentrenamiento' => (int)$this->request->getPost('idmotivoentrenamiento'),
         ]);
 
         return redirect()->to(base_url('programaentrenamiento/actual/' . $id))->with('success', 'Programa de entrenamiento registrado exitosamente.');
@@ -146,12 +124,10 @@ class ProgramaEntrenamiento extends BaseController
         }
 
         $data = [
-            'title'      => 'Editar Programa de Entrenamiento #' . $id,
-            'programa'   => $programa,
-            'motivos'    => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
-            'rutinas'    => $this->rutinaModel->orderBy('nombre', 'ASC')->findAll(),
-            'ejercicios' => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
-            'module'     => 'programaentrenamiento',
+            'title'    => 'Editar Programa de Entrenamiento #' . $id,
+            'programa' => $programa,
+            'motivos'  => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
+            'module'   => 'programaentrenamiento',
         ];
 
         return view('programaentrenamiento/programaentrenamiento_edit', $data);
@@ -165,9 +141,8 @@ class ProgramaEntrenamiento extends BaseController
         }
 
         $rules = [
+            'nombre'                => 'required|min_length[3]|max_length[100]',
             'idmotivoentrenamiento' => 'required|is_natural_no_zero',
-            'idrutinaejercicio'     => 'required|is_natural_no_zero',
-            'idejercicio'           => 'required|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
@@ -175,9 +150,8 @@ class ProgramaEntrenamiento extends BaseController
         }
 
         $this->peModel->update($id, [
-            'idmotivoentrenamiento' => $this->request->getPost('idmotivoentrenamiento'),
-            'idrutinaejercicio'     => $this->request->getPost('idrutinaejercicio'),
-            'idejercicio'           => $this->request->getPost('idejercicio'),
+            'nombre'                => trim($this->request->getPost('nombre')),
+            'idmotivoentrenamiento' => (int)$this->request->getPost('idmotivoentrenamiento'),
         ]);
 
         return redirect()->to(base_url('programaentrenamiento/actual/' . $id))->with('success', 'Programa de entrenamiento actualizado exitosamente.');

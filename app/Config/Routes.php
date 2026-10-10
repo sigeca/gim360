@@ -25,7 +25,22 @@ $modulos = [
     'motivoentrenamiento'  => 'MotivoEntrenamiento',
     'rutinaejecicio'       => 'RutinaEjecicio',
     'rutinaejercicio'      => 'RutinaEjecicio',
+    'planejercicio'        => 'PlanEjercicio',
+    'rutinaplan'           => 'RutinaPlan',
+    'rutina-plan'          => 'RutinaPlan',
+    'musculo'              => 'Musculo',
+    'musculos'             => 'Musculo',
+    'musculoejercicio'     => 'MusculoEjercicio',
+    'musculo-ejercicio'    => 'MusculoEjercicio',
     'programaentrenamiento'=> 'ProgramaEntrenamiento',
+    'estadoprogramacliente'=> 'EstadoProgramaCliente',
+    'estado-programa-cliente' => 'EstadoProgramaCliente',
+    'programacliente'      => 'ProgramaCliente',
+    'programa-cliente'     => 'ProgramaCliente',
+    'ejercicioequipo'      => 'EjercicioEquipo',
+    'ejercicio-equipo'     => 'EjercicioEquipo',
+    'rutinaprograma'       => 'RutinaPrograma',
+    'rutina-programa'      => 'RutinaPrograma',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -54,7 +69,22 @@ foreach ($modulos as $slug => $controller) {
 
         // Rutas adicionales para ejercicio
         if ($controller === 'Ejercicio') {
-            $routes->get('imagen/(:any)', 'Ejercicio::imagen/$1');
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Ejercicio::imagen/$1');
+            $routes->post('asignarMusculo/(:num)', 'Ejercicio::asignarMusculo/$1');
+            $routes->post('quitarMusculo/(:num)/(:num)', 'Ejercicio::quitarMusculo/$1/$2');
+            $routes->post('asignarEquipo/(:num)', 'Ejercicio::asignarEquipo/$1');
+            $routes->post('quitarEquipo/(:num)/(:num)', 'Ejercicio::quitarEquipo/$1/$2');
+        }
+
+        // Rutas adicionales para equipos
+        if ($controller === 'Equipos') {
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Equipos::imagen/$1');
+        }
+
+        // Rutas adicionales para musculo
+        if ($controller === 'Musculo') {
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Musculo::imagen/$1');
+            $routes->get('galeria', 'Musculo::galeria');
         }
     });
 }

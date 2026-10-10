@@ -28,6 +28,10 @@ class RutinaEjecicio extends BaseController
     public function actual($id = null)
     {
         $rutina = $id ? $this->rutinaModel->find($id) : $this->rutinaModel->elultimo();
+        if ($rutina) {
+            $rutina['planes'] = (new \App\Models\RutinaPlanModel())->getPlanesByRutina((int)$rutina['idrutinaejercicio']);
+            $rutina['programas'] = (new \App\Models\RutinaProgramaModel())->getProgramasByRutina((int)$rutina['idrutinaejercicio']);
+        }
 
         $data = [
             'title'  => 'Ficha de Rutina de Ejercicio',
@@ -41,45 +45,25 @@ class RutinaEjecicio extends BaseController
     public function elprimero()
     {
         $rutina = $this->rutinaModel->elprimero();
-        $data = [
-            'title'  => 'Ficha de Rutina de Ejercicio - Primer Registro',
-            'rutina' => $rutina,
-            'module' => $this->getModuleSlug(),
-        ];
-        return view('rutinaejecicio/rutinaejecicio_record', $data);
+        return $this->actual($rutina ? $rutina['idrutinaejercicio'] : null);
     }
 
     public function elultimo()
     {
         $rutina = $this->rutinaModel->elultimo();
-        $data = [
-            'title'  => 'Ficha de Rutina de Ejercicio - Último Registro',
-            'rutina' => $rutina,
-            'module' => $this->getModuleSlug(),
-        ];
-        return view('rutinaejecicio/rutinaejecicio_record', $data);
+        return $this->actual($rutina ? $rutina['idrutinaejercicio'] : null);
     }
 
     public function siguiente($id)
     {
         $rutina = $this->rutinaModel->siguiente($id);
-        $data = [
-            'title'  => 'Ficha de Rutina de Ejercicio',
-            'rutina' => $rutina,
-            'module' => $this->getModuleSlug(),
-        ];
-        return view('rutinaejecicio/rutinaejecicio_record', $data);
+        return $this->actual($rutina ? $rutina['idrutinaejercicio'] : $id);
     }
 
     public function anterior($id)
     {
         $rutina = $this->rutinaModel->anterior($id);
-        $data = [
-            'title'  => 'Ficha de Rutina de Ejercicio',
-            'rutina' => $rutina,
-            'module' => $this->getModuleSlug(),
-        ];
-        return view('rutinaejecicio/rutinaejecicio_record', $data);
+        return $this->actual($rutina ? $rutina['idrutinaejercicio'] : $id);
     }
 
     // Vista para listar todos los registros

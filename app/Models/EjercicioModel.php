@@ -47,4 +47,84 @@ class EjercicioModel extends Model
 
         return $builder->findAll();
     }
+
+    /**
+     * Obtiene los músculos asociados a un ejercicio específico
+     */
+    public function getMusculos(int $idejercicio): array
+    {
+        return $this->db->table('musculoejercicio me')
+            ->select('me.idmusculoejecicio, me.idmusculo, m.nombre, m.imagen')
+            ->join('musculo m', 'm.idmusculo = me.idmusculo', 'inner')
+            ->where('me.idejercicio', $idejercicio)
+            ->orderBy('m.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Obtiene en lote los músculos asociados a un conjunto de ejercicios
+     */
+    public function getMusculosBatch(array $idejercicios): array
+    {
+        if (empty($idejercicios)) {
+            return [];
+        }
+
+        $rows = $this->db->table('musculoejercicio me')
+            ->select('me.idejercicio, me.idmusculoejecicio, me.idmusculo, m.nombre, m.imagen')
+            ->join('musculo m', 'm.idmusculo = me.idmusculo', 'inner')
+            ->whereIn('me.idejercicio', $idejercicios)
+            ->orderBy('m.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['idejercicio']][] = $row;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Obtiene los equipos/máquinas asociados a un ejercicio específico
+     */
+    public function getEquipos(int $idejercicio): array
+    {
+        return $this->db->table('ejercicioequipo ee')
+            ->select('ee.idejercicioequipo, ee.idejercicio, ee.idequipo, 
+                      eq.codigo, eq.nombre, eq.imagen, eq.modelo, eq.id_tipo, eq.id_estado, eq.id_ubicacion')
+            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->where('ee.idejercicio', $idejercicio)
+            ->orderBy('eq.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Obtiene en lote los equipos asociados a un conjunto de ejercicios
+     */
+    public function getEquiposBatch(array $idejercicios): array
+    {
+        if (empty($idejercicios)) {
+            return [];
+        }
+
+        $rows = $this->db->table('ejercicioequipo ee')
+            ->select('ee.idejercicio, ee.idejercicioequipo, ee.idequipo, 
+                      eq.codigo, eq.nombre, eq.imagen, eq.modelo, eq.id_tipo')
+            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->whereIn('ee.idejercicio', $idejercicios)
+            ->orderBy('eq.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[$row['idejercicio']][] = $row;
+        }
+
+        return $result;
+    }
 }

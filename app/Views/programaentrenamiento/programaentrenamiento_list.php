@@ -21,7 +21,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por motivo, rutina o nombre del ejercicio...">
+                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por nombre de programa, motivo, rutina o ejercicio...">
                 </div>
             </div>
             <div class="col-md-2 d-grid d-md-flex gap-2">
@@ -41,45 +41,43 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">ID</th>
+                        <th>Nombre del Programa</th>
                         <th>Motivo de Entrenamiento</th>
-                        <th>Rutina de Ejercicio</th>
-                        <th>Ejercicio Asignado</th>
+                        <th>Rutinas Asignadas</th>
+                        <th class="text-center">Total Planes</th>
                         <th class="text-end pe-4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($programas)): ?>
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
+                            <td colspan="6" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($programas as $p): ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-muted">#<?= $p['idprogramaentrenamiento'] ?></td>
                                 <td>
+                                    <a href="<?= base_url('programaentrenamiento/actual/' . $p['idprogramaentrenamiento']) ?>" class="fw-bold text-dark text-decoration-none">
+                                        <?= esc($p['nombre'] ?? 'Sin nombre') ?>
+                                    </a>
+                                </td>
+                                <td>
                                     <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-2">
                                         <i class="bi bi-bullseye text-warning me-1"></i><?= esc($p['motivo_nombre']) ?>
                                     </span>
                                 </td>
                                 <td>
-                                    <span class="badge bg-info-subtle text-info-emphasis border border-info px-3 py-2">
-                                        <i class="bi bi-calendar2-week text-info me-1"></i><?= esc($p['rutina_nombre']) ?>
-                                    </span>
+                                    <a href="<?= base_url('rutinaprograma?q=' . urlencode($p['nombre'])) ?>" class="text-decoration-none" title="Ver rutinas asignadas a este programa">
+                                        <span class="badge bg-info-subtle text-info-emphasis border border-info px-3 py-2">
+                                            <i class="bi bi-collection-play text-info me-1"></i><?= (int)($p['total_rutinas'] ?? 0) ?> <?= (int)($p['total_rutinas'] ?? 0) === 1 ? 'rutina' : 'rutinas' ?>
+                                        </span>
+                                    </a>
                                 </td>
-                                <td>
-                                    <div class="d-flex align-items-center gap-2">
-                                        <?php if (!empty($p['ejercicio_imagen'])): ?>
-                                            <img src="<?= base_url('ejercicio/imagen/' . esc($p['ejercicio_imagen'])) ?>" 
-                                                 alt="" 
-                                                 class="rounded border" 
-                                                 style="width: 38px; height: 38px; object-fit: cover;">
-                                        <?php else: ?>
-                                            <div class="bg-light rounded border d-flex align-items-center justify-content-center text-muted" style="width: 38px; height: 38px;">
-                                                <i class="bi bi-fire text-danger"></i>
-                                            </div>
-                                        <?php endif; ?>
-                                        <span class="fw-semibold text-dark"><?= esc($p['ejercicio_nombre']) ?></span>
-                                    </div>
+                                <td class="text-center">
+                                    <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2">
+                                        <i class="bi bi-card-checklist me-1"></i><?= (int)($p['total_planes'] ?? 0) ?> <?= (int)($p['total_planes'] ?? 0) === 1 ? 'plan' : 'planes' ?>
+                                    </span>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm">

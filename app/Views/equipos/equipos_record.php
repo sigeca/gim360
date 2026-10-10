@@ -35,13 +35,42 @@
                     </div>
                 </div>
                 <div class="card-body p-4">
-                    <div class="row g-4 mb-3">
-                        <div class="col-md-6">
+                    <div class="row g-4 mb-4 align-items-start">
+                        <!-- Panel de Imagen del Equipo -->
+                        <div class="col-md-5 col-lg-4 text-center">
+                            <div class="p-3 bg-light rounded-4 border shadow-sm position-relative">
+                                <?php if (!empty($equipo['imagen'])): ?>
+                                    <div class="position-relative bg-white rounded-3 p-2 border mb-2">
+                                        <img src="<?= base_url('repositorio/images/equipment/' . esc($equipo['imagen'])) ?>" 
+                                             onerror="this.onerror=null; this.src='<?= base_url('equipos/imagen/' . esc($equipo['imagen'])) ?>';"
+                                             alt="<?= esc($equipo['nombre']) ?>" 
+                                             class="img-fluid rounded" 
+                                             style="max-height: 280px; width: 100%; object-fit: contain;">
+                                    </div>
+                                    <div class="small text-muted text-break text-start mb-2">
+                                        <i class="bi bi-file-earmark-image me-1"></i><code><?= esc($equipo['imagen']) ?></code>
+                                    </div>
+                                    <div class="d-grid">
+                                        <a href="<?= base_url('equipos/imagen/' . esc($equipo['imagen'])) ?>" target="_blank" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-arrows-fullscreen me-1"></i>Ver en tamaño completo
+                                        </a>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="py-5 text-muted">
+                                        <i class="bi bi-image fs-1 d-block mb-2"></i>
+                                        <span>Sin imagen registrada</span>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+
+                        <!-- Detalles Principales del Equipo -->
+                        <div class="col-md-7 col-lg-8">
                             <table class="table table-bordered align-middle mb-0">
                                 <tbody>
                                     <tr>
-                                        <th class="table-light w-40 text-muted">ID Equipo</th>
-                                        <td class="fw-bold text-muted"><?= $equipo['id_equipo'] ?></td>
+                                        <th class="table-light w-35 text-muted">ID Equipo</th>
+                                        <td class="fw-bold text-muted">#<?= $equipo['id_equipo'] ?></td>
                                     </tr>
                                     <tr>
                                         <th class="table-light text-muted">Código Interno</th>
@@ -49,7 +78,7 @@
                                     </tr>
                                     <tr>
                                         <th class="table-light text-muted">Nombre del Equipo</th>
-                                        <td class="fw-bold text-dark"><?= esc($equipo['nombre']) ?></td>
+                                        <td class="fw-bold text-dark fs-5"><?= esc($equipo['nombre']) ?></td>
                                     </tr>
                                     <tr>
                                         <th class="table-light text-muted">Tipo / Categoría</th>
@@ -69,24 +98,6 @@
                                     <tr>
                                         <th class="table-light text-muted">Modelo</th>
                                         <td><?= !empty($equipo['modelo']) ? esc($equipo['modelo']) : '<span class="text-muted">-</span>' ?></td>
-                                    </tr>
-                                    <tr>
-                                        <th class="table-light text-muted">Número de Serie</th>
-                                        <td class="font-monospace text-muted"><?= !empty($equipo['numero_serie']) ? esc($equipo['numero_serie']) : '-' ?></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="col-md-6">
-                            <table class="table table-bordered align-middle mb-0">
-                                <tbody>
-                                    <tr>
-                                        <th class="table-light w-40 text-muted">Ubicación en Gimnasio</th>
-                                        <td>
-                                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
-                                            <?= esc($ubicaciones[$equipo['id_ubicacion']] ?? 'No asignada') ?>
-                                        </td>
                                     </tr>
                                     <tr>
                                         <th class="table-light text-muted">Estado Operativo</th>
@@ -109,7 +120,44 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <th class="table-light text-muted">Fecha de Adquisición</th>
+                                        <th class="table-light text-muted">Ubicación en Gimnasio</th>
+                                        <td>
+                                            <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                                            <?= esc($ubicaciones[$equipo['id_ubicacion']] ?? 'No asignada') ?>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Datos Complementarios y Registro -->
+                    <div class="row g-4 mb-3">
+                        <div class="col-md-6">
+                            <table class="table table-bordered align-middle mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th class="table-light w-40 text-muted">Número de Serie</th>
+                                        <td class="font-monospace text-muted"><?= !empty($equipo['numero_serie']) ? esc($equipo['numero_serie']) : '-' ?></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light text-muted">Archivo de Imagen</th>
+                                        <td class="text-secondary font-monospace small">
+                                            <?= !empty($equipo['imagen']) ? esc($equipo['imagen']) : '<span class="text-muted">-</span>' ?>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th class="table-light text-muted">Origen del Repositorio</th>
+                                        <td class="small text-muted font-monospace">repositorio/images/equipment/</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered align-middle mb-0">
+                                <tbody>
+                                    <tr>
+                                        <th class="table-light w-40 text-muted">Fecha de Adquisición</th>
                                         <td>
                                             <?= !empty($equipo['fecha_adquisicion']) ? '<i class="bi bi-calendar3 me-1 text-muted"></i>' . date('d/m/Y', strtotime($equipo['fecha_adquisicion'])) : '<span class="text-muted">-</span>' ?>
                                         </td>

@@ -15,6 +15,7 @@ class EquipoModel extends Model
     protected $allowedFields    = [
         'codigo',
         'nombre',
+        'imagen',
         'id_tipo',
         'id_marca',
         'modelo',
@@ -31,6 +32,7 @@ class EquipoModel extends Model
     protected $validationRules = [
         'codigo'            => 'required|min_length[2]|max_length[30]|is_unique[equipos.codigo,id_equipo,{id_equipo}]',
         'nombre'            => 'required|min_length[2]|max_length[100]',
+        'imagen'            => 'permit_empty|max_length[255]',
         'id_tipo'           => 'permit_empty|is_natural_no_zero',
         'id_marca'          => 'permit_empty|is_natural_no_zero',
         'id_ubicacion'      => 'permit_empty|is_natural_no_zero',
@@ -107,11 +109,35 @@ class EquipoModel extends Model
             $builder->groupStart()
                     ->like('codigo', $search)
                     ->orLike('nombre', $search)
+                    ->orLike('imagen', $search)
                     ->orLike('modelo', $search)
                     ->orLike('numero_serie', $search)
                     ->groupEnd();
         }
 
         return $builder->findAll();
+    }
+
+    public function getAvailableImages(): array
+    {
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+        $folder = $baseDir . '/repositorio/images/equipment';
+        if (!is_dir($folder)) {
+            $folder = $baseDir . '/repositorio/image/equipment';
+        }
+
+        if (!is_dir($folder)) {
+            return [];
+        }
+
+        $files = scandir($folder);
+        $images = [];
+        foreach ($files as $file) {
+            if ($file !== '.' && $file !== '..' && preg_match('/\.(webp|png|jpg|jpeg|svg)$/i', $file)) {
+                $images[] = $file;
+            }
+        }
+        sort($images);
+        return $images;
     }
 }

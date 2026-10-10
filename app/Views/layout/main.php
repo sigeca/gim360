@@ -235,12 +235,20 @@ $groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive;
 $isEquiposActive = (strpos($uri, 'equipos') === 0);
 $groupEquiposOpen = $isEquiposActive;
 
-$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'ejerciciocliente') === false && strpos($uri, 'rutinaejercicio') === false);
+$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'ejerciciocliente') === false && strpos($uri, 'rutinaejercicio') === false && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false);
 $isEjercicioClienteActive = (strpos($uri, 'ejerciciocliente') === 0);
 $isMotivoActive = (strpos($uri, 'motivoentrenamiento') === 0);
 $isRutinaActive = (strpos($uri, 'rutinaejecicio') === 0 || strpos($uri, 'rutinaejercicio') === 0);
+$isPlanEjercicioActive = (strpos($uri, 'planejercicio') === 0);
+$isRutinaPlanActive = (strpos($uri, 'rutinaplan') === 0 || strpos($uri, 'rutina-plan') === 0);
+$isMusculoActive = (strpos($uri, 'musculo') === 0 || strpos($uri, 'musculos') === 0);
+$isMusculoEjercicioActive = (strpos($uri, 'musculoejercicio') === 0 || strpos($uri, 'musculo-ejercicio') === 0);
+$isEjercicioEquipoActive = (strpos($uri, 'ejercicioequipo') === 0 || strpos($uri, 'ejercicio-equipo') === 0);
 $isProgramaActive = (strpos($uri, 'programaentrenamiento') === 0);
-$groupEntrenamientoOpen = $isEjercicioActive || $isEjercicioClienteActive || $isMotivoActive || $isRutinaActive || $isProgramaActive;
+$isRutinaProgramaActive = (strpos($uri, 'rutinaprograma') === 0 || strpos($uri, 'rutina-programa') === 0);
+$isProgramaClienteActive = (strpos($uri, 'programacliente') === 0 || strpos($uri, 'programa-cliente') === 0);
+$isEstadoProgramaClienteActive = (strpos($uri, 'estadoprogramacliente') === 0 || strpos($uri, 'estado-programa-cliente') === 0);
+$groupEntrenamientoOpen = $isEjercicioActive || $isEjercicioClienteActive || $isMotivoActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isProgramaClienteActive || $isEstadoProgramaClienteActive;
 
 $isCorreoActive = (strpos($uri, 'correo') === 0);
 $isDireccionActive = (strpos($uri, 'direccion') === 0);
@@ -368,6 +376,18 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-card-list text-danger"></i>
                             <span>Catálogo Ejercicios</span>
                         </a>
+                        <a href="<?= base_url('musculo') ?>" class="submenu-link <?= $isMusculoActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-arms-up text-danger"></i>
+                            <span>Catálogo Músculos</span>
+                        </a>
+                        <a href="<?= base_url('musculoejercicio') ?>" class="submenu-link <?= $isMusculoEjercicioActive ? 'active' : '' ?>">
+                            <i class="bi bi-diagram-3-fill text-warning"></i>
+                            <span>Músculos y Ejercicios</span>
+                        </a>
+                        <a href="<?= base_url('ejercicioequipo') ?>" class="submenu-link <?= $isEjercicioEquipoActive ? 'active' : '' ?>">
+                            <i class="bi bi-gear-wide-connected text-info"></i>
+                            <span>Ejercicios y Equipos</span>
+                        </a>
                         <a href="<?= base_url('ejerciciocliente') ?>" class="submenu-link <?= $isEjercicioClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-person-walking text-primary"></i>
                             <span>Ejercicios de Clientes</span>
@@ -380,9 +400,29 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-calendar2-week text-info"></i>
                             <span>Rutinas de Ejercicio</span>
                         </a>
+                        <a href="<?= base_url('planejercicio') ?>" class="submenu-link <?= $isPlanEjercicioActive ? 'active' : '' ?>">
+                            <i class="bi bi-card-checklist text-primary"></i>
+                            <span>Planes de Ejercicio</span>
+                        </a>
+                        <a href="<?= base_url('rutinaplan') ?>" class="submenu-link <?= $isRutinaPlanActive ? 'active' : '' ?>">
+                            <i class="bi bi-diagram-3 text-warning"></i>
+                            <span>Rutinas y Planes</span>
+                        </a>
                         <a href="<?= base_url('programaentrenamiento') ?>" class="submenu-link <?= $isProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-clipboard2-pulse text-success"></i>
                             <span>Programa de Entrenamiento</span>
+                        </a>
+                        <a href="<?= base_url('rutinaprograma') ?>" class="submenu-link <?= $isRutinaProgramaActive ? 'active' : '' ?>">
+                            <i class="bi bi-collection-play text-info"></i>
+                            <span>Rutinas en Programas</span>
+                        </a>
+                        <a href="<?= base_url('programacliente') ?>" class="submenu-link <?= $isProgramaClienteActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-lines-fill text-primary"></i>
+                            <span>Programas de Clientes</span>
+                        </a>
+                        <a href="<?= base_url('estadoprogramacliente') ?>" class="submenu-link <?= $isEstadoProgramaClienteActive ? 'active' : '' ?>">
+                            <i class="bi bi-flag text-info"></i>
+                            <span>Estados de Programa</span>
                         </a>
                     </div>
                 </div>

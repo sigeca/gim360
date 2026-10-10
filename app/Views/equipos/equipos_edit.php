@@ -31,6 +31,36 @@
                         </div>
                     </div>
 
+                    <!-- Archivo de Imagen del Repositorio -->
+                    <div class="row g-3 mb-3 align-items-center">
+                        <div class="col-md-7">
+                            <label for="imagenSelect" class="form-label fw-semibold">
+                                <i class="bi bi-image me-1"></i>Imagen en <code>repositorio/images/equipment</code>
+                            </label>
+                            <select name="imagen" id="imagenSelect" class="form-select">
+                                <option value="">-- Sin imagen asignada --</option>
+                                <?php if (!empty($availableImages)): ?>
+                                    <?php foreach ($availableImages as $img): ?>
+                                        <option value="<?= esc($img) ?>" <?= (old('imagen', $equipo['imagen']) === $img) ? 'selected' : '' ?>>
+                                            <?= esc($img) ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </select>
+                            <div class="form-text">Selecciona o cambia la foto del equipo desde el repositorio multimedia.</div>
+                        </div>
+                        <div class="col-md-5 text-center">
+                            <label class="form-label fw-semibold small text-muted d-block mb-1">Vista previa</label>
+                            <div class="p-2 bg-light rounded border d-flex align-items-center justify-content-center" style="min-height: 120px;">
+                                <img id="previewImg" src="" alt="Vista previa" class="img-fluid rounded" style="max-height: 105px; display: none;">
+                                <div id="noPreviewText" class="text-muted small">
+                                    <i class="bi bi-image fs-3 d-block mb-1"></i>
+                                    <span>Sin previsualización</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="id_tipo" class="form-label fw-semibold">Tipo / Categoría</label>
@@ -134,5 +164,35 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('imagenSelect');
+    const preview = document.getElementById('previewImg');
+    const noPreview = document.getElementById('noPreviewText');
+    const baseUrl = '<?= base_url('repositorio/images/equipment/placeholder.webp') ?>'.replace('placeholder.webp', '');
+    const fallbackUrl = '<?= base_url('equipos/imagen') ?>/';
+
+    function updatePreview() {
+        if (select && select.value) {
+            preview.onerror = function() {
+                this.onerror = null;
+                this.src = fallbackUrl + encodeURIComponent(select.value);
+            };
+            preview.src = baseUrl + encodeURIComponent(select.value);
+            preview.style.display = 'block';
+            if (noPreview) noPreview.style.display = 'none';
+        } else {
+            if (preview) preview.style.display = 'none';
+            if (noPreview) noPreview.style.display = 'block';
+        }
+    }
+
+    if (select) {
+        select.addEventListener('change', updatePreview);
+        updatePreview();
+    }
+});
+</script>
 
 <?= $this->endSection() ?>

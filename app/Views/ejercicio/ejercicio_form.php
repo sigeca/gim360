@@ -26,15 +26,6 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="urlvideo" class="form-label fw-semibold">URL de Video Tutorial / Demostración</label>
-                        <div class="input-group">
-                            <span class="input-group-text"><i class="bi bi-youtube text-danger"></i></span>
-                            <input type="url" name="urlvideo" id="urlvideo" class="form-control" placeholder="https://www.youtube.com/watch?v=..." value="<?= old('urlvideo') ?>">
-                        </div>
-                        <small class="text-muted">Enlace a YouTube, Vimeo o video demostrativo.</small>
-                    </div>
-
-                    <div class="mb-3">
                         <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-file-earmark-image text-danger"></i></span>
@@ -43,6 +34,75 @@
                         <small class="text-muted">Archivo .webp en el repositorio de imágenes del gimnasio.</small>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="urlvideo" class="form-label fw-semibold">URL de Video Tutorial / Demostración</label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-youtube text-danger"></i></span>
+                            <input type="url" name="urlvideo" id="urlvideo" class="form-control" placeholder="https://www.youtube.com/watch?v=..." value="<?= old('urlvideo') ?>">
+                        </div>
+                        <small class="text-muted">Enlace a YouTube, Vimeo o video demostrativo.</small>
+                    </div>
+
+                    <!-- Selección de Músculos Involucrados -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold d-block">
+                            <i class="bi bi-person-arms-up text-danger me-1"></i>Músculos Afectados / Involucrados
+                        </label>
+                        <small class="text-muted d-block mb-2">Marque los músculos que son estimulados por este nuevo ejercicio:</small>
+                        <div class="p-3 bg-light rounded border" style="max-height: 260px; overflow-y: auto;">
+                            <div class="row g-2">
+                                <?php foreach ($todosLosMusculos as $tm): ?>
+                                    <?php $checked = in_array($tm['idmusculo'], (array)old('musculos', [])); ?>
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="form-check p-2 bg-white rounded border d-flex align-items-center gap-2">
+                                            <input class="form-check-input ms-0 me-2" type="checkbox" name="musculos[]" value="<?= $tm['idmusculo'] ?>" id="musc_<?= $tm['idmusculo'] ?>" <?= $checked ? 'checked' : '' ?>>
+                                            <label class="form-check-label d-flex align-items-center gap-2 w-100 cursor-pointer small" for="musc_<?= $tm['idmusculo'] ?>">
+                                                <img src="<?= base_url('repositorio/images/muscles/' . esc($tm['imagen'])) ?>" 
+                                                     onerror="this.onerror=null; this.src='<?= base_url('uploads/muscles/' . esc($tm['imagen'])) ?>';"
+                                                     alt="<?= esc($tm['nombre']) ?>" 
+                                                     style="width: 24px; height: 24px; object-fit: contain;">
+                                                <span class="text-truncate fw-semibold"><?= esc($tm['nombre']) ?></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Selección de Equipamiento / Máquinas Requeridas -->
+                    <div class="mb-4">
+                        <label class="form-label fw-semibold d-block">
+                            <i class="bi bi-gear-wide-connected text-primary me-1"></i>Equipamiento / Máquinas Utilizadas
+                        </label>
+                        <small class="text-muted d-block mb-2">Marque las máquinas, aparatos o implementos empleados en este ejercicio:</small>
+                        <div class="p-3 bg-light rounded border" style="max-height: 260px; overflow-y: auto;">
+                            <div class="row g-2">
+                                <?php foreach ($todosLosEquipos as $te): ?>
+                                    <?php $checkedEq = in_array($te['id_equipo'], (array)old('equipos', [])); ?>
+                                    <div class="col-sm-6 col-md-4">
+                                        <div class="form-check p-2 bg-white rounded border d-flex align-items-center gap-2">
+                                            <input class="form-check-input ms-0 me-2" type="checkbox" name="equipos[]" value="<?= $te['id_equipo'] ?>" id="eq_<?= $te['id_equipo'] ?>" <?= $checkedEq ? 'checked' : '' ?>>
+                                            <label class="form-check-label d-flex align-items-center gap-2 w-100 cursor-pointer small" for="eq_<?= $te['id_equipo'] ?>">
+                                                <?php if (!empty($te['imagen'])): ?>
+                                                    <img src="<?= base_url('repositorio/images/equipment/' . esc($te['imagen'])) ?>" 
+                                                         onerror="this.onerror=null; this.src='<?= base_url('equipos/imagen/' . esc($te['imagen'])) ?>';"
+                                                         alt="<?= esc($te['nombre']) ?>" 
+                                                         style="width: 24px; height: 24px; object-fit: contain;">
+                                                <?php endif; ?>
+                                                <div class="text-truncate">
+                                                    <span class="badge bg-secondary-subtle text-secondary border font-monospace me-1"><?= esc($te['codigo']) ?></span>
+                                                    <span class="fw-semibold"><?= esc($te['nombre']) ?></span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Descripción y Ejecución Técnica (A lo último) -->
                     <div class="mb-4">
                         <label for="descripcion" class="form-label fw-semibold">Descripción y Ejecución Técnica</label>
                         <textarea name="descripcion" id="descripcion" rows="4" class="form-control" placeholder="Detalle la postura adecuada, músculos involucrados, rango de movimiento y precauciones..."><?= old('descripcion') ?></textarea>

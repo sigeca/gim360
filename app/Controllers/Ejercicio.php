@@ -49,12 +49,25 @@ class Ejercicio extends BaseController
             }
         }
 
+        // Músculos asignados y catálogo de músculos
+        $musculos = $ejercicio ? $this->ejercicioModel->getMusculos((int)$ejercicio['idejercicio']) : [];
+        $todosLosMusculos = (new \App\Models\MusculoModel())->orderBy('nombre', 'ASC')->findAll();
+
+        // Equipos asignados y catálogo de equipos
+        $equipos = $ejercicio ? $this->ejercicioModel->getEquipos((int)$ejercicio['idejercicio']) : [];
+        $todosLosEquipos = (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll();
+
         $data = [
-            'title'           => 'Ficha Técnica de Ejercicio: ' . ($ejercicio['nombre'] ?? ''),
-            'ejercicio'       => $ejercicio,
-            'parejaEjercicio' => $parejaEjercicio,
-            'youtubeId'       => $youtubeId,
-            'module'          => 'ejercicio',
+            'title'            => 'Ficha Técnica de Ejercicio: ' . ($ejercicio['nombre'] ?? ''),
+            'ejercicio'        => $ejercicio,
+            'parejaEjercicio'  => $parejaEjercicio,
+            'youtubeId'        => $youtubeId,
+            'musculos'         => $musculos,
+            'todosLosMusculos' => $todosLosMusculos,
+            'equipos'          => $equipos,
+            'todosLosEquipos'  => $todosLosEquipos,
+            'tiposEquipo'      => \App\Models\EquipoModel::getTipos(),
+            'module'           => 'ejercicio',
         ];
 
         return view('ejercicio/ejercicio_record', $data);
@@ -90,13 +103,18 @@ class Ejercicio extends BaseController
         $search     = $this->request->getGet('q');
         $ejercicios = $this->ejercicioModel->getEjercicios($search, 20);
 
+        // Cargar músculos asociados en lote para optimizar consultas
+        $ids = array_column($ejercicios, 'idejercicio');
+        $musculosBatch = $this->ejercicioModel->getMusculosBatch($ids);
+
         $data = [
-            'title'      => 'Catálogo de Ejercicios',
-            'ejercicios' => $ejercicios,
-            'pager'      => $this->ejercicioModel->pager,
-            'search'     => $search,
-            'total'      => $this->ejercicioModel->pager ? $this->ejercicioModel->pager->getTotal() : count($ejercicios),
-            'module'     => 'ejercicio',
+            'title'         => 'Catálogo de Ejercicios',
+            'ejercicios'    => $ejercicios,
+            'musculosBatch' => $musculosBatch,
+            'pager'         => $this->ejercicioModel->pager,
+            'search'        => $search,
+            'total'         => $this->ejercicioModel->pager ? $this->ejercicioModel->pager->getTotal() : count($ejercicios),
+            'module'        => 'ejercicio',
         ];
 
         return view('ejercicio/ejercicio_list', $data);
@@ -110,7 +128,8 @@ class Ejercicio extends BaseController
         }
 
         $cleanFilename = basename($filename);
-        $path = '/var/www/html/gim360/repositorio/ejercicios/repdb-free/images/flat/' . $cleanFilename;
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+        $path = $baseDir . '/repositorio/ejercicios/repdb-free/images/flat/' . $cleanFilename;
 
         if (!file_exists($path)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Imagen no encontrada.");
@@ -126,8 +145,12 @@ class Ejercicio extends BaseController
     public function add()
     {
         $data = [
-            'title'  => 'Registrar Nuevo Ejercicio',
-            'module' => 'ejercicio',
+            'title'             => 'Registrar Nuevo Ejercicio',
+            'todosLosMusculos'  => (new \App\Models\MusculoModel())->orderBy('nombre', 'ASC')->findAll(),
+            'musculosAsignados' => [],
+            'todosLosEquipos'   => (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll(),
+            'equiposAsignados'  => [],
+            'module'            => 'ejercicio',
         ];
 
         return view('ejercicio/ejercicio_form', $data);
@@ -153,6 +176,18 @@ class Ejercicio extends BaseController
             'imagen'      => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
+        // Sincronizar músculos seleccionados
+        $musculos = (array) ($this->request->getPost('musculos') ?? []);
+        if (!empty($musculos)) {
+            (new \App\Models\MusculoEjercicioModel())->syncMusculosForEjercicio($id, $musculos);
+        }
+
+        // Sincronizar equipos seleccionados
+        $equipos = (array) ($this->request->getPost('equipos') ?? []);
+        if (!empty($equipos)) {
+            (new \App\Models\EjercicioEquipoModel())->syncEquiposForEjercicio($id, $equipos);
+        }
+
         return redirect()->to(base_url('ejercicio/actual/' . $id))->with('success', 'Ejercicio registrado exitosamente.');
     }
 
@@ -164,10 +199,26 @@ class Ejercicio extends BaseController
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Ejercicio no encontrado.");
         }
 
+        $musculoEjercicioModel = new \App\Models\MusculoEjercicioModel();
+        $musculosAsignados = array_column(
+            $musculoEjercicioModel->where('idejercicio', $id)->findAll(),
+            'idmusculo'
+        );
+
+        $ejercicioEquipoModel = new \App\Models\EjercicioEquipoModel();
+        $equiposAsignados = array_column(
+            $ejercicioEquipoModel->where('idejercicio', $id)->findAll(),
+            'idequipo'
+        );
+
         $data = [
-            'title'     => 'Editar Ejercicio: ' . $ejercicio['nombre'],
-            'ejercicio' => $ejercicio,
-            'module'    => 'ejercicio',
+            'title'             => 'Editar Ejercicio: ' . $ejercicio['nombre'],
+            'ejercicio'         => $ejercicio,
+            'todosLosMusculos'  => (new \App\Models\MusculoModel())->orderBy('nombre', 'ASC')->findAll(),
+            'musculosAsignados' => $musculosAsignados,
+            'todosLosEquipos'   => (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll(),
+            'equiposAsignados'  => $equiposAsignados,
+            'module'            => 'ejercicio',
         ];
 
         return view('ejercicio/ejercicio_edit', $data);
@@ -198,7 +249,51 @@ class Ejercicio extends BaseController
             'imagen'      => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
+        // Sincronizar músculos seleccionados
+        $musculos = (array) ($this->request->getPost('musculos') ?? []);
+        (new \App\Models\MusculoEjercicioModel())->syncMusculosForEjercicio($id, $musculos);
+
+        // Sincronizar equipos seleccionados
+        $equipos = (array) ($this->request->getPost('equipos') ?? []);
+        (new \App\Models\EjercicioEquipoModel())->syncEquiposForEjercicio($id, $equipos);
+
         return redirect()->to(base_url('ejercicio/actual/' . $id))->with('success', 'Ejercicio actualizado exitosamente.');
+    }
+
+    // Asignar un músculo al ejercicio directamente
+    public function asignarMusculo($idejercicio)
+    {
+        $idmusculo = (int) $this->request->getPost('idmusculo');
+        if ($idmusculo > 0) {
+            (new \App\Models\MusculoEjercicioModel())->addMusculoToEjercicio((int)$idejercicio, $idmusculo);
+            return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('success', 'Músculo asignado exitosamente.');
+        }
+        return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('error', 'Seleccione un músculo válido.');
+    }
+
+    // Desvincular un músculo del ejercicio
+    public function quitarMusculo($idejercicio, $idmusculo)
+    {
+        (new \App\Models\MusculoEjercicioModel())->removeMusculoFromEjercicio((int)$idejercicio, (int)$idmusculo);
+        return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('success', 'Músculo desvinculado del ejercicio.');
+    }
+
+    // Asignar un equipo al ejercicio directamente
+    public function asignarEquipo($idejercicio)
+    {
+        $idequipo = (int) $this->request->getPost('idequipo');
+        if ($idequipo > 0) {
+            (new \App\Models\EjercicioEquipoModel())->addEquipoToEjercicio((int)$idejercicio, $idequipo);
+            return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('success', 'Equipo asignado al ejercicio exitosamente.');
+        }
+        return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('error', 'Seleccione un equipo válido.');
+    }
+
+    // Desvincular un equipo del ejercicio
+    public function quitarEquipo($idejercicio, $idequipo)
+    {
+        (new \App\Models\EjercicioEquipoModel())->removeEquipoFromEjercicio((int)$idejercicio, (int)$idequipo);
+        return redirect()->to(base_url('ejercicio/actual/' . $idejercicio))->with('success', 'Equipo desvinculado del ejercicio.');
     }
 
     public function delete($id)

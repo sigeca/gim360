@@ -91,6 +91,24 @@
                                             <small class="text-muted ms-1 font-monospace" style="font-size: 0.75rem;"><?= esc($ej['imagen']) ?></small>
                                         <?php endif; ?>
                                     </div>
+                                    <?php $mList = $musculosBatch[$ej['idejercicio']] ?? []; ?>
+                                    <?php if (!empty($mList)): ?>
+                                        <div class="d-flex align-items-center gap-1 flex-wrap mt-2">
+                                            <span class="small text-muted me-1" style="font-size: 0.72rem;"><i class="bi bi-person-arms-up text-danger"></i> Músculos:</span>
+                                            <?php foreach ($mList as $musc): ?>
+                                                <a href="<?= base_url('musculo/actual/' . $musc['idmusculo']) ?>" 
+                                                   title="<?= esc($musc['nombre']) ?>" 
+                                                   class="badge bg-light text-dark border d-inline-flex align-items-center gap-1 py-1 px-2 text-decoration-none"
+                                                   style="font-size: 0.72rem;">
+                                                    <img src="<?= base_url('repositorio/images/muscles/' . esc($musc['imagen'])) ?>" 
+                                                         onerror="this.onerror=null; this.src='<?= base_url('uploads/muscles/' . esc($musc['imagen'])) ?>';"
+                                                         alt="<?= esc($musc['nombre']) ?>" 
+                                                         style="width: 16px; height: 16px; object-fit: contain;">
+                                                    <span><?= esc($musc['nombre']) ?></span>
+                                                </a>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <small class="text-secondary text-truncate d-inline-block" style="max-width: 320px;">

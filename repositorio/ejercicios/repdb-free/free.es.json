@@ -58,7 +58,7 @@
         "outer thigh",
         "abductor muscles"
       ],
-      "image": "abductors.webp"
+      "image": "abductores.webp"
     },
     "adductors": {
       "name": "Aductores",
@@ -70,7 +70,7 @@
         "adductor muscles",
         "groin"
       ],
-      "image": "adductors.webp"
+      "image": "aductores.webp"
     },
     "anterior_deltoid": {
       "name": "Deltoides Anterior",
@@ -82,7 +82,7 @@
         "front delt",
         "anterior deltoid"
       ],
-      "image": "anterior-deltoid.webp"
+      "image": "deltoides-anterior.webp"
     },
     "biceps_brachii": {
       "name": "Bíceps",
@@ -94,7 +94,7 @@
         "biceps muscle",
         "guns"
       ],
-      "image": "biceps-brachii.webp"
+      "image": "biceps-braquial.webp"
     },
     "brachialis": {
       "name": "Braquial",
@@ -104,7 +104,7 @@
         "brachialis muscle",
         "lower bicep"
       ],
-      "image": "brachialis.webp"
+      "image": "braquial.webp"
     },
     "brachioradialis": {
       "name": "Braquiorradial",
@@ -114,7 +114,7 @@
         "brachioradialis muscle",
         "forearm flexor"
       ],
-      "image": "brachioradialis.webp"
+      "image": "braquiorradial.webp"
     },
     "erector_spinae": {
       "name": "Erector Espinal",
@@ -126,7 +126,7 @@
         "lower back muscles",
         "back extensors"
       ],
-      "image": "erector-spinae.webp"
+      "image": "erector-espinal.webp"
     },
     "forearms": {
       "name": "Antebrazos",
@@ -137,7 +137,7 @@
         "forearm",
         "wrist flexors and extensors"
       ],
-      "image": "forearm-flexors.webp"
+      "image": "flexores-del-antebrazo.webp"
     },
     "forearm_extensors": {
       "name": "Extensores del Antebrazo",
@@ -149,7 +149,7 @@
         "forearm extensors",
         "outer forearm"
       ],
-      "image": "forearm-extensors.webp"
+      "image": "extensores-del-antebrazo.webp"
     },
     "forearm_flexors": {
       "name": "Flexores del Antebrazo",
@@ -161,7 +161,7 @@
         "forearm flexors",
         "inner forearm"
       ],
-      "image": "forearm-flexors.webp"
+      "image": "flexores-del-antebrazo.webp"
     },
     "gastrocnemius": {
       "name": "Gemelos",
@@ -173,7 +173,7 @@
         "gastrocnemius",
         "gastroc"
       ],
-      "image": "gastrocnemius.webp"
+      "image": "gastrocnemio.webp"
     },
     "gluteus_maximus": {
       "name": "Glúteo Mayor",
@@ -186,7 +186,7 @@
         "buttocks",
         "butt"
       ],
-      "image": "gluteus-maximus.webp"
+      "image": "gluteo-mayor.webp"
     },
     "gluteus_medius": {
       "name": "Glúteo Medio",
@@ -198,7 +198,7 @@
         "side glute",
         "hip abductor glute"
       ],
-      "image": "gluteus-medius.webp"
+      "image": "gluteo-medio.webp"
     },
     "hamstrings": {
       "name": "Isquiotibiales",
@@ -210,7 +210,7 @@
         "posterior thigh",
         "biceps femoris"
       ],
-      "image": "hamstrings.webp"
+      "image": "isquiotibiales.webp"
     },
     "hip_flexors": {
       "name": "Flexores de Cadera",
@@ -223,7 +223,7 @@
         "iliacus",
         "hip flexors"
       ],
-      "image": "hip-flexors.webp"
+      "image": "flexores-de-cadera.webp"
     },
     "lateral_deltoid": {
       "name": "Deltoides Lateral",
@@ -236,7 +236,7 @@
         "medial deltoid",
         "lateral deltoid"
       ],
-      "image": "lateral-deltoid.webp"
+      "image": "deltoides-lateral.webp"
     },
     "latissimus_dorsi": {
       "name": "Dorsal Ancho",
@@ -249,7 +249,7 @@
         "latissimus",
         "back wings"
       ],
-      "image": "latissimus-dorsi.webp"
+      "image": "dorsal-ancho.webp"
     },
     "quadratus_lumborum": {
       "name": "Cuadrado Lumbar",
@@ -261,7 +261,7 @@
         "lateral lower back",
         "hip hiker"
       ],
-      "image": "erector-spinae.webp"
+      "image": "erector-espinal.webp"
     },
     "obliques": {
       "name": "Oblicuos",
@@ -274,7 +274,7 @@
         "external oblique",
         "internal oblique"
       ],
-      "image": "obliques.webp"
+      "image": "oblicuos.webp"
     },
     "pectoralis_major": {
       "name": "Pectoral Mayor",
@@ -287,7 +287,7 @@
         "pectoralis",
         "chest muscles"
       ],
-      "image": "pectoralis-major.webp"
+      "image": "pectoral-mayor.webp"
     },
     "posterior_deltoid": {
       "name": "Deltoides Posterior",
@@ -300,7 +300,7 @@
         "back delt",
         "posterior deltoid"
       ],
-      "image": "posterior-deltoid.webp"
+      "image": "deltoides-posterior.webp"
     },
     "quadriceps": {
       "name": "Cuádriceps",
@@ -313,7 +313,7 @@
         "quadriceps femoris",
         "front thigh"
       ],
-      "image": "quadriceps.webp"
+      "image": "cuadriceps.webp"
     },
     "rectus_abdominis": {
       "name": "Recto Abdominal",
@@ -326,7 +326,7 @@
         "abdominals",
         "stomach muscles"
       ],
-      "image": "rectus-abdominis.webp"
+      "image": "recto-abdominal.webp"
     },
     "rhomboids": {
       "name": "Romboides",
@@ -339,7 +339,7 @@
         "rhomboid minor",
         "upper back"
       ],
-      "image": "rhomboids.webp"
+      "image": "romboides.webp"
     },
     "serratus_anterior": {
       "name": "Serrato Anterior",
@@ -351,7 +351,7 @@
         "boxer's muscle",
         "rib muscles"
       ],
-      "image": "serratus-anterior.webp"
+      "image": "serrato-anterior.webp"
     },
     "supraspinatus": {
       "name": "Supraespinoso",
@@ -362,7 +362,7 @@
         "rotator cuff",
         "shoulder stabilizer"
       ],
-      "image": "lateral-deltoid.webp"
+      "image": "deltoides-lateral.webp"
     },
     "soleus": {
       "name": "Sóleo",
@@ -373,7 +373,7 @@
         "deep calf",
         "soleus muscle"
       ],
-      "image": "soleus.webp"
+      "image": "soleo.webp"
     },
     "transverse_abdominis": {
       "name": "Transverso Abdominal",
@@ -386,7 +386,7 @@
         "inner core",
         "tvA"
       ],
-      "image": "transverse-abdominis.webp"
+      "image": "transverso-abdominal.webp"
     },
     "trapezius": {
       "name": "Trapecio",
@@ -400,7 +400,7 @@
         "lower traps",
         "mid traps"
       ],
-      "image": "trapezius.webp"
+      "image": "trapecio.webp"
     },
     "triceps_brachii": {
       "name": "Tríceps",
@@ -413,7 +413,7 @@
         "horseshoe",
         "tris"
       ],
-      "image": "triceps-brachii.webp"
+      "image": "triceps-braquial.webp"
     }
   },
   "equipment": {
@@ -430,7 +430,7 @@
         "seated ab machine",
         "ab coaster"
       ],
-      "image": "ab-crunch-machine.webp"
+      "image": "maquina-crunch-abdominal.webp"
     },
     "ab_wheel": {
       "name": "Rueda abdominal",
@@ -444,7 +444,7 @@
         "ab wheel roller",
         "power wheel"
       ],
-      "image": "ab-wheel.webp"
+      "image": "rueda-abdominal.webp"
     },
     "air_bike": {
       "name": "Bicicleta de aire",
@@ -459,7 +459,7 @@
         "rogue echo bike",
         "schwinn airdyne"
       ],
-      "image": "air-bike.webp"
+      "image": "bicicleta-de-aire.webp"
     },
     "assisted_pullup_machine": {
       "name": "Máquina de dominadas asistidas",
@@ -478,7 +478,7 @@
         "pullup assist machine",
         "assisted weight machine"
       ],
-      "image": "assisted-pullup-machine.webp"
+      "image": "maquina-de-dominadas-asistidas.webp"
     },
     "back_extension_machine": {
       "name": "Máquina de extensión de espalda",
@@ -495,7 +495,7 @@
         "lumbar extension",
         "roman chair"
       ],
-      "image": "back-extension-machine.webp"
+      "image": "maquina-de-extension-de-espalda.webp"
     },
     "barbell": {
       "name": "Barra",
@@ -509,7 +509,7 @@
         "olympic bar",
         "power bar"
       ],
-      "image": "barbell.webp"
+      "image": "barra.webp"
     },
     "battle_rope": {
       "name": "Cuerda de batalla",
@@ -524,7 +524,7 @@
         "training rope",
         "conditioning rope"
       ],
-      "image": "battle-rope.webp"
+      "image": "cuerda-de-batalla.webp"
     },
     "bicep_curl_machine": {
       "name": "Máquina curl de bíceps",
@@ -539,7 +539,7 @@
         "curl machine",
         "seated bicep curl"
       ],
-      "image": "bicep-curl-machine.webp"
+      "image": "maquina-curl-de-biceps.webp"
     },
     "cable": {
       "name": "Polea",
@@ -555,7 +555,7 @@
         "pulley machine",
         "cable tower"
       ],
-      "image": "cable.webp"
+      "image": "polea.webp"
     },
     "chest_fly_machine": {
       "name": "Máquina de aperturas de pecho",
@@ -571,7 +571,7 @@
         "seated fly",
         "pec fly machine"
       ],
-      "image": "chest-fly-machine.webp"
+      "image": "maquina-de-aperturas-de-pecho.webp"
     },
     "chest_press_machine": {
       "name": "Máquina press de pecho",
@@ -592,7 +592,7 @@
         "supine chest press",
         "machine bench press"
       ],
-      "image": "chest-press-machine.webp"
+      "image": "maquina-press-de-pecho.webp"
     },
     "climbing_rope": {
       "name": "Cuerda de escalada",
@@ -607,7 +607,7 @@
         "hemp rope",
         "manila rope"
       ],
-      "image": "climbing-rope.webp"
+      "image": "cuerda-de-escalada.webp"
     },
     "decline_bench": {
       "name": "Banco declinado",
@@ -622,7 +622,7 @@
         "sit-up bench",
         "ab bench"
       ],
-      "image": "decline-bench.webp"
+      "image": "banco-declinado.webp"
     },
     "dip_machine": {
       "name": "Máquina de fondos",
@@ -639,7 +639,7 @@
         "seated dip",
         "assisted dip machine"
       ],
-      "image": "dip-machine.webp"
+      "image": "maquina-de-fondos.webp"
     },
     "dip_station": {
       "name": "Estación de fondos",
@@ -655,7 +655,7 @@
         "dip stand",
         "p-bars"
       ],
-      "image": "dip-station.webp"
+      "image": "estacion-de-fondos.webp"
     },
     "donkey_calf_raise_machine": {
       "name": "Máquina de elevaciones de pantorrilla a la burra",
@@ -670,7 +670,7 @@
         "hip-loaded calf raise",
         "donkey raise machine"
       ],
-      "image": "donkey-calf-raise-machine.webp"
+      "image": "maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp"
     },
     "dumbbell": {
       "name": "Mancuerna",
@@ -684,7 +684,7 @@
         "rubber dumbbell",
         "hand weight"
       ],
-      "image": "dumbbell.webp"
+      "image": "mancuerna.webp"
     },
     "elliptical": {
       "name": "Elíptica",
@@ -699,7 +699,7 @@
         "x-trainer",
         "glide trainer"
       ],
-      "image": "elliptical.webp"
+      "image": "eliptica.webp"
     },
     "ez_bar": {
       "name": "Barra Z",
@@ -714,7 +714,7 @@
         "cambered bar",
         "zig-zag bar"
       ],
-      "image": "ez-bar.webp"
+      "image": "barra-z.webp"
     },
     "flat_bench": {
       "name": "Banco plano",
@@ -728,7 +728,7 @@
         "utility bench",
         "adjustable bench (flat)"
       ],
-      "image": "flat-bench.webp"
+      "image": "banco-plano.webp"
     },
     "glute_ham_developer": {
       "name": "Banco GHD",
@@ -746,7 +746,7 @@
         "russian glute ham",
         "hyperextension bench"
       ],
-      "image": "glute-ham-developer.webp"
+      "image": "banco-ghd.webp"
     },
     "hack_squat": {
       "name": "Máquina hack squat",
@@ -765,7 +765,7 @@
         "v squat",
         "v-squat machine"
       ],
-      "image": "hack-squat.webp"
+      "image": "maquina-hack-squat.webp"
     },
     "hip_abduction_machine": {
       "name": "Máquina de abducción de cadera",
@@ -781,7 +781,7 @@
         "glute medius machine",
         "hip abductor"
       ],
-      "image": "hip-abduction-machine.webp"
+      "image": "maquina-de-abduccion-de-cadera.webp"
     },
     "hip_adduction_machine": {
       "name": "Máquina de aducción de cadera",
@@ -797,7 +797,7 @@
         "groin machine",
         "hip adductor"
       ],
-      "image": "hip-adduction-machine.webp"
+      "image": "maquina-de-aduccion-de-cadera.webp"
     },
     "hip_thrust_machine": {
       "name": "Máquina hip thrust",
@@ -814,7 +814,7 @@
         "plate-loaded hip thrust",
         "glute thrust machine"
       ],
-      "image": "hip-thrust-machine.webp"
+      "image": "maquina-hip-thrust.webp"
     },
     "incline_bench": {
       "name": "Banco inclinado",
@@ -827,7 +827,7 @@
         "adjustable incline bench",
         "adjustable bench (incline)"
       ],
-      "image": "incline-bench.webp"
+      "image": "banco-inclinado.webp"
     },
     "jump_rope": {
       "name": "Cuerda de saltar",
@@ -840,7 +840,7 @@
         "speed rope",
         "cardio rope"
       ],
-      "image": "jump-rope.webp"
+      "image": "cuerda-de-saltar.webp"
     },
     "kettlebell": {
       "name": "Kettlebell",
@@ -853,7 +853,7 @@
         "competition kettlebell",
         "girya"
       ],
-      "image": "kettlebell.webp"
+      "image": "pesa-rusa.webp"
     },
     "landmine": {
       "name": "Landmine",
@@ -885,7 +885,7 @@
         "lat machine",
         "pull down machine"
       ],
-      "image": "lat-pulldown-machine.webp"
+      "image": "maquina-jalon-al-pecho.webp"
     },
     "lateral_raise_machine": {
       "name": "Máquina de elevaciones laterales",
@@ -901,7 +901,7 @@
         "delt raise machine",
         "shoulder raise machine"
       ],
-      "image": "lateral-raise-machine.webp"
+      "image": "maquina-de-elevaciones-laterales.webp"
     },
     "leg_curl": {
       "name": "Curl femoral",
@@ -918,7 +918,7 @@
         "prone leg curl",
         "hamstring machine"
       ],
-      "image": "leg-curl.webp"
+      "image": "curl-femoral.webp"
     },
     "leg_extension": {
       "name": "Extensión de piernas",
@@ -932,7 +932,7 @@
         "quad extension",
         "knee extension"
       ],
-      "image": "leg-extension.webp"
+      "image": "extension-de-piernas.webp"
     },
     "leg_press": {
       "name": "Prensa de piernas",
@@ -949,7 +949,7 @@
         "plate-loaded leg press",
         "sled leg press"
       ],
-      "image": "leg-press.webp"
+      "image": "prensa-de-piernas.webp"
     },
     "loop_band": {
       "name": "Banda de resistencia circular",
@@ -965,7 +965,7 @@
         "glute band",
         "mini loop band"
       ],
-      "image": "loop-band.webp"
+      "image": "banda-de-resistencia-circular.webp"
     },
     "medicine_ball": {
       "name": "Balón medicinal",
@@ -980,7 +980,7 @@
         "dynamax ball",
         "soft medicine ball"
       ],
-      "image": "medicine-ball.webp"
+      "image": "balon-medicinal.webp"
     },
     "pec_deck": {
       "name": "Pec deck",
@@ -1013,7 +1013,7 @@
         "plate loaded delt raise",
         "iso lateral lateral raise"
       ],
-      "image": "plate-loaded-lateral-raise-machine.webp"
+      "image": "maquina-de-elevaciones-laterales-de-discos.webp"
     },
     "plates": {
       "name": "Discos",
@@ -1026,7 +1026,7 @@
         "iron plate",
         "45lb plate"
       ],
-      "image": "plates.webp"
+      "image": "discos.webp"
     },
     "plyo_box": {
       "name": "Caja pliométrica",
@@ -1042,7 +1042,7 @@
         "soft plyo box",
         "3-in-1 box"
       ],
-      "image": "plyo-box.webp"
+      "image": "caja-pliometrica.webp"
     },
     "preacher_curl_machine": {
       "name": "Máquina curl predicador",
@@ -1057,7 +1057,7 @@
         "preacher curl",
         "scott curl machine"
       ],
-      "image": "preacher-curl-machine.webp"
+      "image": "maquina-curl-predicador.webp"
     },
     "pull_up_bar": {
       "name": "Barra de dominadas",
@@ -1073,7 +1073,7 @@
         "pull up bar",
         "doorway bar"
       ],
-      "image": "pull-up-bar.webp"
+      "image": "barra-de-dominadas.webp"
     },
     "resistance_band": {
       "name": "Banda elástica",
@@ -1089,7 +1089,7 @@
         "tubing band",
         "long resistance band"
       ],
-      "image": "resistance-band.webp"
+      "image": "banda-elastica.webp"
     },
     "rings": {
       "name": "Anillas",
@@ -1104,7 +1104,7 @@
         "wood rings",
         "olympic rings"
       ],
-      "image": "rings.webp"
+      "image": "anillas.webp"
     },
     "rower": {
       "name": "Máquina de remo",
@@ -1121,7 +1121,7 @@
         "rowing erg",
         "indoor rower"
       ],
-      "image": "rower.webp"
+      "image": "maquina-de-remo.webp"
     },
     "seated_calf_raise_machine": {
       "name": "Máquina de elevaciones de pantorrilla sentado",
@@ -1135,7 +1135,7 @@
         "soleus machine",
         "seated calf press"
       ],
-      "image": "seated-calf-raise-machine.webp"
+      "image": "maquina-de-elevaciones-de-pantorrilla-sentado.webp"
     },
     "shoulder_press_machine": {
       "name": "Máquina press de hombros",
@@ -1153,7 +1153,7 @@
         "hammer strength shoulder press",
         "plate-loaded shoulder press"
       ],
-      "image": "shoulder-press-machine.webp"
+      "image": "maquina-press-de-hombros.webp"
     },
     "shrug_machine": {
       "name": "Máquina de encogimientos",
@@ -1170,7 +1170,7 @@
         "seated shrug machine",
         "standing shrug machine"
       ],
-      "image": "shrug-machine.webp"
+      "image": "maquina-de-encogimientos.webp"
     },
     "slam_ball": {
       "name": "Balón slam",
@@ -1184,7 +1184,7 @@
         "power slam ball",
         "no-bounce ball"
       ],
-      "image": "slam-ball.webp"
+      "image": "balon-slam.webp"
     },
     "sled": {
       "name": "Trineo",
@@ -1200,7 +1200,7 @@
         "weight sled",
         "dog sled"
       ],
-      "image": "sled.webp"
+      "image": "trineo.webp"
     },
     "smith_machine": {
       "name": "Máquina Smith",
@@ -1213,7 +1213,7 @@
         "fixed barbell",
         "smith press"
       ],
-      "image": "smith-machine.webp"
+      "image": "maquina-smith.webp"
     },
     "stability_ball": {
       "name": "Pelota de estabilidad",
@@ -1230,7 +1230,7 @@
         "gym ball",
         "balance ball"
       ],
-      "image": "stability-ball.webp"
+      "image": "pelota-de-estabilidad.webp"
     },
     "stair_climber": {
       "name": "Máquina escaladora",
@@ -1246,7 +1246,7 @@
         "stepper",
         "step machine"
       ],
-      "image": "stair-climber.webp"
+      "image": "maquina-escaladora.webp"
     },
     "standing_calf_raise_machine": {
       "name": "Máquina de elevaciones de pantorrilla de pie",
@@ -1263,7 +1263,7 @@
         "calf machine",
         "plate-loaded calf raise"
       ],
-      "image": "standing-calf-raise-machine.webp"
+      "image": "maquina-de-elevaciones-de-pantorrilla-de-pie.webp"
     },
     "stationary_bike": {
       "name": "Bicicleta estática",
@@ -1280,7 +1280,7 @@
         "recumbent bike",
         "indoor cycling bike"
       ],
-      "image": "stationary-bike.webp"
+      "image": "bicicleta-estatica.webp"
     },
     "suspension_trainer": {
       "name": "Suspensión TRX",
@@ -1296,7 +1296,7 @@
         "bodyweight straps",
         "inversion straps"
       ],
-      "image": "suspension-trainer.webp"
+      "image": "suspension-trx.webp"
     },
     "trap_bar": {
       "name": "Barra trap",
@@ -1310,7 +1310,7 @@
         "diamond bar",
         "open trap bar"
       ],
-      "image": "trap-bar.webp"
+      "image": "barra-hexagonal.webp"
     },
     "treadmill": {
       "name": "Cinta de correr",
@@ -1325,7 +1325,7 @@
         "curved treadmill",
         "manual treadmill"
       ],
-      "image": "treadmill.webp"
+      "image": "cinta-de-correr.webp"
     },
     "tricep_extension_machine": {
       "name": "Máquina de extensión de tríceps",
@@ -1340,7 +1340,7 @@
         "seated tricep extension",
         "overhead tricep machine"
       ],
-      "image": "tricep-extension-machine.webp"
+      "image": "maquina-de-extension-de-triceps.webp"
     },
     "wrist_roller": {
       "name": "Rodillo de muñeca",
@@ -1353,7 +1353,7 @@
         "wrist winder",
         "rope and weight roller"
       ],
-      "image": "wrist-roller.webp"
+      "image": "rodillo-de-muneca.webp"
     }
   },
   "exercises": [

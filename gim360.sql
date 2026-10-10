@@ -1,28 +1,8 @@
--- =============================================================================
--- GIM360 - SCRIPT DE BASE DE DATOS OPTIMIZADO PARA LA NUBE
--- =============================================================================
--- Compatible con:
---   - MySQL 5.7 / 8.0 / 8.4
---   - MariaDB 10.3 a 11.x
---   - Plataformas Cloud: AWS RDS / Aurora, Google Cloud SQL, Azure Database,
---     DigitalOcean Managed DB, PlanetScale, Railway, Supabase / Neon,
---     Aiven, Clever Cloud, Render, Hostinger, cPanel / phpMyAdmin.
+-- MariaDB dump 10.19  Distrib 10.11.18-MariaDB, for Linux (x86_64)
 --
--- Optimizaciones y compatibilidad garantizada:
---   ✓ Sin 'LOCK TABLES' / 'UNLOCK TABLES' (previene error 1044 Access Denied)
---   ✓ Sin 'DEFINER=root@localhost' en vistas (previene error 1227 Super privilege)
---   ✓ Sin directivas propietarias de MariaDB CLI ('/*M!999999\-...')
---   ✓ Orden estricto por dependencias relacionales (padres antes que hijos)
---   ✓ Eliminación inicial en orden inverso de dependencias (hijos antes que padres)
---   ✓ Desactivación temporal y reactivación segura de claves foráneas
---   ✓ Juego de caracteres utf8mb4 completo (soporte emojis y tildes en español)
---   ✓ Ejecución segura dentro de transacción (START TRANSACTION ... COMMIT)
--- =============================================================================
-
--- Si su proveedor le permite crear la base de datos y desea hacerlo automáticamente,
--- descomente las siguientes 2 líneas:
--- CREATE DATABASE IF NOT EXISTS `gim360` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_spanish_ci;
--- USE `gim360`;
+-- Host: localhost    Database: gim360
+-- ------------------------------------------------------
+-- Server version	10.11.18-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -35,201 +15,223 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-START TRANSACTION;
+--
+-- Temporary table structure for view `EjercicioEquipo`
+--
+
+DROP TABLE IF EXISTS `EjercicioEquipo`;
+/*!50001 DROP VIEW IF EXISTS `EjercicioEquipo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `EjercicioEquipo` AS SELECT
+ NULL AS `idejercicioequipo`,
+ NULL AS `idejercicio`,
+ NULL AS `idequipo` */;
+SET character_set_client = @saved_cs_client;
 
 --
--- 1. Limpieza previa en orden inverso de dependencias (hijos -> padres)
+-- Temporary table structure for view `EstadoProgramaCliente`
 --
-DROP VIEW IF EXISTS `rutinaejercicio`;
-DROP TABLE IF EXISTS `programaentrenamiento`;
-DROP TABLE IF EXISTS `ejerciciocliente`;
-DROP TABLE IF EXISTS `visitasgim`;
-DROP TABLE IF EXISTS `generopersona`;
-DROP TABLE IF EXISTS `estadocivilpersona`;
-DROP TABLE IF EXISTS `direccion`;
-DROP TABLE IF EXISTS `correo`;
+
+DROP TABLE IF EXISTS `EstadoProgramaCliente`;
+/*!50001 DROP VIEW IF EXISTS `EstadoProgramaCliente`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `EstadoProgramaCliente` AS SELECT
+ NULL AS `idestadoprogramacliente`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `Musculo`
+--
+
+DROP TABLE IF EXISTS `Musculo`;
+/*!50001 DROP VIEW IF EXISTS `Musculo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `Musculo` AS SELECT
+ NULL AS `idmusculo`,
+ NULL AS `nombre`,
+ NULL AS `imagen` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `MusculoEjercicio`
+--
+
+DROP TABLE IF EXISTS `MusculoEjercicio`;
+/*!50001 DROP VIEW IF EXISTS `MusculoEjercicio`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `MusculoEjercicio` AS SELECT
+ NULL AS `idmusculoejecicio`,
+ NULL AS `idejercicio`,
+ NULL AS `idmusculo` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `PlanEjercicio`
+--
+
+DROP TABLE IF EXISTS `PlanEjercicio`;
+/*!50001 DROP VIEW IF EXISTS `PlanEjercicio`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `PlanEjercicio` AS SELECT
+ NULL AS `idplanejercicio`,
+ NULL AS `idejercicio`,
+ NULL AS `diassemanas`,
+ NULL AS `repeticiones`,
+ NULL AS `series`,
+ NULL AS `tiempodescanso`,
+ NULL AS `peso` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ProgramaCliente`
+--
+
+DROP TABLE IF EXISTS `ProgramaCliente`;
+/*!50001 DROP VIEW IF EXISTS `ProgramaCliente`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ProgramaCliente` AS SELECT
+ NULL AS `idprogramacliente`,
+ NULL AS `idprogramaentrenamiento`,
+ NULL AS `idcliente`,
+ NULL AS `fechainicio`,
+ NULL AS `idestadoprogramacliente` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ProgramaEntrenamiento`
+--
+
+DROP TABLE IF EXISTS `ProgramaEntrenamiento`;
+/*!50001 DROP VIEW IF EXISTS `ProgramaEntrenamiento`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ProgramaEntrenamiento` AS SELECT
+ NULL AS `idprogramaentrenamiento`,
+ NULL AS `nombre`,
+ NULL AS `idmotivoentrenamiento` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `RutinaPlan`
+--
+
+DROP TABLE IF EXISTS `RutinaPlan`;
+/*!50001 DROP VIEW IF EXISTS `RutinaPlan`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `RutinaPlan` AS SELECT
+ NULL AS `id_rutina_plan`,
+ NULL AS `idrutinaejercicio`,
+ NULL AS `idplanejercicio` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `RutinaPrograma`
+--
+
+DROP TABLE IF EXISTS `RutinaPrograma`;
+/*!50001 DROP VIEW IF EXISTS `RutinaPrograma`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `RutinaPrograma` AS SELECT
+ NULL AS `idrutinaprograma`,
+ NULL AS `idprogramaentrenamiento`,
+ NULL AS `idrutinaejercicio` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `cliente`
+--
+
 DROP TABLE IF EXISTS `cliente`;
-DROP TABLE IF EXISTS `persona`;
-DROP TABLE IF EXISTS `ejercicio`;
-DROP TABLE IF EXISTS `equipos`;
-DROP TABLE IF EXISTS `rutinaejecicio`;
-DROP TABLE IF EXISTS `motivoentrenamiento`;
-DROP TABLE IF EXISTS `genero`;
-DROP TABLE IF EXISTS `estadocivil`;
-DROP TABLE IF EXISTS `sexo`;
-
---
--- Table structure for table `sexo`
---
-
-DROP TABLE IF EXISTS `sexo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `sexo` (
-  `idsexo` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idsexo`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `sexo`
---
-
-/*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
-INSERT INTO `sexo` VALUES
-(1,'Masculino'),
-(2,'Femenino'),
-(3,'Intersexual');
-/*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
-
---
--- Table structure for table `estadocivil`
---
-
-DROP TABLE IF EXISTS `estadocivil`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estadocivil` (
-  `idestadocivil` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idestadocivil`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estadocivil`
---
-
-/*!40000 ALTER TABLE `estadocivil` DISABLE KEYS */;
-INSERT INTO `estadocivil` VALUES
-(1,'Soltero/a'),
-(2,'Casado/a'),
-(3,'Divorciado/a'),
-(4,'Viudo/a'),
-(5,'Unión de Hecho');
-/*!40000 ALTER TABLE `estadocivil` ENABLE KEYS */;
-
---
--- Table structure for table `genero`
---
-
-DROP TABLE IF EXISTS `genero`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `genero` (
-  `idgenero` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idgenero`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `genero`
---
-
-/*!40000 ALTER TABLE `genero` DISABLE KEYS */;
-INSERT INTO `genero` VALUES
-(1,'Cisgénero Masculino'),
-(2,'Cisgénero Femenino'),
-(3,'Transgénero'),
-(4,'No Binario'),
-(5,'Otro');
-/*!40000 ALTER TABLE `genero` ENABLE KEYS */;
-
---
--- Table structure for table `motivoentrenamiento`
---
-
-DROP TABLE IF EXISTS `motivoentrenamiento`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `motivoentrenamiento` (
-  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(100) NOT NULL,
-  `objetivo` text DEFAULT NULL,
-  PRIMARY KEY (`idmotivoentrenamiento`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `motivoentrenamiento`
---
-
-/*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
-INSERT INTO `motivoentrenamiento` VALUES
-(1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.'),
-(2,'Pérdida de Grasa y Definición','Reducir el porcentaje de grasa corporal preservando la masa muscular a través de déficit calórico y circuitos metabólicos.'),
-(3,'Fuerza Máxima y Potencia','Desarrollar niveles máximos de fuerza en levantamientos básicos (sentadilla, press banca, peso muerto) y ejercicios pliométricos.'),
-(4,'Acondicionamiento Físico y Salud','Mejorar la capacidad cardiovascular, resistencia muscular y bienestar general para optimizar la calidad de vida diaria.'),
-(5,'Rehabilitación y Movilidad Funcional','Recuperación de lesiones, corrección postural y fortalecimiento articular bajo supervisión kinésica y técnica controlada.');
-/*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
-
---
--- Table structure for table `rutinaejecicio`
---
-
-DROP TABLE IF EXISTS `rutinaejecicio`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `rutinaejecicio` (
-  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
-  `nombre` varchar(50) NOT NULL,
-  PRIMARY KEY (`idrutinaejercicio`)
+CREATE TABLE `cliente` (
+  `idcliente` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  PRIMARY KEY (`idcliente`),
+  UNIQUE KEY `idpersona` (`idpersona`),
+  CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `rutinaejecicio`
+-- Dumping data for table `cliente`
 --
 
-/*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
-INSERT INTO `rutinaejecicio` VALUES
-(1,'Full Body Principiante'),
-(2,'Torso / Pierna Intermedio'),
-(3,'Push / Pull / Legs (PPL) Avanzado'),
-(4,'Circuito Funcional HIIT'),
-(5,'Rutina de Fuerza 5x5');
-/*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
+/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
+INSERT INTO `cliente` VALUES
+(1,1),
+(2,2),
+(6,7);
+/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
 --
--- Table structure for table `equipos`
+-- Table structure for table `correo`
 --
 
-DROP TABLE IF EXISTS `equipos`;
+DROP TABLE IF EXISTS `correo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `equipos` (
-  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
-  `codigo` varchar(30) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `id_tipo` int(11) DEFAULT NULL,
-  `id_marca` int(11) DEFAULT NULL,
-  `modelo` varchar(80) DEFAULT NULL,
-  `numero_serie` varchar(100) DEFAULT NULL,
-  `descripcion` text DEFAULT NULL,
-  `id_ubicacion` int(11) DEFAULT NULL,
-  `fecha_adquisicion` date DEFAULT NULL,
-  `valor_adquisicion` decimal(10,2) DEFAULT NULL,
-  `id_estado` int(11) DEFAULT 1,
-  `activo` tinyint(1) DEFAULT 1,
-  `observaciones` text DEFAULT NULL,
-  `fecha_registro` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_equipo`),
-  UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+CREATE TABLE `correo` (
+  `idcorreo` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `correo` varchar(150) NOT NULL,
+  `fechaoptencion` date DEFAULT NULL,
+  PRIMARY KEY (`idcorreo`),
+  KEY `fk_correo_persona` (`idpersona`),
+  CONSTRAINT `fk_correo_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `equipos`
+-- Dumping data for table `correo`
 --
 
-/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
-INSERT INTO `equipos` VALUES
-(1,'EQ-001','Caminadora Profesional ProRun',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
-(2,'EQ-002','Bicicleta Estática Spinning Pro',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
-(3,'EQ-003','Prensa de Piernas 45 Grados',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34');
-/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
+/*!40000 ALTER TABLE `correo` DISABLE KEYS */;
+INSERT INTO `correo` VALUES
+(1,1,'carlos.mendoza@email.com','2024-01-10'),
+(2,1,'cmendoza_gym@hotmail.com','2024-02-15'),
+(3,2,'maria.torres@gmail.com','2024-03-01'),
+(4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
+(8,7,'educaysoft@gmail.com','2026-10-06');
+/*!40000 ALTER TABLE `correo` ENABLE KEYS */;
+
+--
+-- Table structure for table `direccion`
+--
+
+DROP TABLE IF EXISTS `direccion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `direccion` (
+  `iddireccion` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `direccion` varchar(255) NOT NULL,
+  PRIMARY KEY (`iddireccion`),
+  KEY `fk_direccion_persona` (`idpersona`),
+  CONSTRAINT `fk_direccion_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `direccion`
+--
+
+/*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
+INSERT INTO `direccion` VALUES
+(1,1,'Av. 9 de Octubre y Malecón Simón Bolívar 102'),
+(2,2,'Calle Sucre y Rocafuerte, Barrio Las Palmas'),
+(3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
+(7,7,'tachina');
+/*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
 
 --
 -- Table structure for table `ejercicio`
@@ -245,7 +247,7 @@ CREATE TABLE `ejercicio` (
   `urlvideo` varchar(255) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=1060 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1061 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1310,222 +1312,9 @@ INSERT INTO `ejercicio` VALUES
 (1055,'Rodillo de Muñeca (Inicio)','Un ejercicio para el antebrazo que consiste en enrollar un peso con la cuerda mediante el giro de las muñecas.\n\nInstrucciones de ejecución:\n1. Agarra el mango del rodillo con los brazos extendidos al frente a la altura de los hombros.\n2. Deja que el peso cuelgue del cordón.\n3. Enrolla el mango hacia adelante con movimientos alternos de muñeca para subir el peso.\n4. Mantén los brazos rectos durante todo el movimiento.\n5. Una vez enrollado por completo, invierte la rotación para bajar el peso.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén los brazos extendidos al frente a la altura de los hombros.\n• Enrolla la cuerda con giros alternos de las muñecas.\n• Invierte la rotación para bajar el peso de forma controlada.\n\nMúsculos principales: forearm_extensors, forearm_flexors',NULL,'wrist-roller-start.webp'),
 (1056,'Curl Zottman (Final)','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl-peak.webp'),
 (1057,'Curl Zottman (Inicio)','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl-start.webp'),
-(1058,'Test Ejercicio Salto','Prueba de descripcion',NULL,'jump-squat-start.webp');
+(1058,'Test Ejercicio Salto','Prueba de descripcion',NULL,'jump-squat-start.webp'),
+(1060,'barbell-reverse-lunge.webp',NULL,NULL,'barbell-reverse-lunge.webp');
 /*!40000 ALTER TABLE `ejercicio` ENABLE KEYS */;
-
---
--- Table structure for table `persona`
---
-
-DROP TABLE IF EXISTS `persona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `persona` (
-  `idpersona` int(11) NOT NULL AUTO_INCREMENT,
-  `cedula` varchar(20) NOT NULL,
-  `apellidos` varchar(100) NOT NULL,
-  `nombres` varchar(100) NOT NULL,
-  `fechanacimiento` date DEFAULT NULL,
-  `idsexo` int(11) DEFAULT NULL,
-  PRIMARY KEY (`idpersona`),
-  UNIQUE KEY `cedula` (`cedula`),
-  KEY `fk_persona_sexo` (`idsexo`),
-  CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `persona`
---
-
-/*!40000 ALTER TABLE `persona` DISABLE KEYS */;
-INSERT INTO `persona` VALUES
-(1,'0801234567','Mendoza Reyes','Carlos Alberto','1995-04-12',1),
-(2,'0807654321','Torres Loor','María Fernanda','1998-09-25',2),
-(3,'0912345678','Castillo Ortiz','Juan Diego','2000-01-15',1),
-(7,'08016017','Francis Quinde','Stalin Adalberto','1980-07-01',1);
-/*!40000 ALTER TABLE `persona` ENABLE KEYS */;
-
---
--- Table structure for table `cliente`
---
-
-DROP TABLE IF EXISTS `cliente`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `cliente` (
-  `idcliente` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  PRIMARY KEY (`idcliente`),
-  UNIQUE KEY `idpersona` (`idpersona`),
-  CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `cliente`
---
-
-/*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
-INSERT INTO `cliente` VALUES
-(1,1),
-(2,2),
-(6,7);
-/*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
-
---
--- Table structure for table `correo`
---
-
-DROP TABLE IF EXISTS `correo`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `correo` (
-  `idcorreo` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `correo` varchar(150) NOT NULL,
-  `fechaoptencion` date DEFAULT NULL,
-  PRIMARY KEY (`idcorreo`),
-  KEY `fk_correo_persona` (`idpersona`),
-  CONSTRAINT `fk_correo_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `correo`
---
-
-/*!40000 ALTER TABLE `correo` DISABLE KEYS */;
-INSERT INTO `correo` VALUES
-(1,1,'carlos.mendoza@email.com','2024-01-10'),
-(2,1,'cmendoza_gym@hotmail.com','2024-02-15'),
-(3,2,'maria.torres@gmail.com','2024-03-01'),
-(4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
-(8,7,'educaysoft@gmail.com','2026-10-06');
-/*!40000 ALTER TABLE `correo` ENABLE KEYS */;
-
---
--- Table structure for table `direccion`
---
-
-DROP TABLE IF EXISTS `direccion`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `direccion` (
-  `iddireccion` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `direccion` varchar(255) NOT NULL,
-  PRIMARY KEY (`iddireccion`),
-  KEY `fk_direccion_persona` (`idpersona`),
-  CONSTRAINT `fk_direccion_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `direccion`
---
-
-/*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
-INSERT INTO `direccion` VALUES
-(1,1,'Av. 9 de Octubre y Malecón Simón Bolívar 102'),
-(2,2,'Calle Sucre y Rocafuerte, Barrio Las Palmas'),
-(3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
-(7,7,'tachina');
-/*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
-
---
--- Table structure for table `estadocivilpersona`
---
-
-DROP TABLE IF EXISTS `estadocivilpersona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `estadocivilpersona` (
-  `idestadocivilpersona` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `idestadocivil` int(11) NOT NULL,
-  PRIMARY KEY (`idestadocivilpersona`),
-  KEY `fk_ecp_persona` (`idpersona`),
-  KEY `fk_ecp_estadocivil` (`idestadocivil`),
-  CONSTRAINT `fk_ecp_estadocivil` FOREIGN KEY (`idestadocivil`) REFERENCES `estadocivil` (`idestadocivil`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_ecp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `estadocivilpersona`
---
-
-/*!40000 ALTER TABLE `estadocivilpersona` DISABLE KEYS */;
-INSERT INTO `estadocivilpersona` VALUES
-(1,1,1),
-(2,2,2),
-(3,3,1),
-(6,7,2);
-/*!40000 ALTER TABLE `estadocivilpersona` ENABLE KEYS */;
-
---
--- Table structure for table `generopersona`
---
-
-DROP TABLE IF EXISTS `generopersona`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `generopersona` (
-  `idgeneropersona` int(11) NOT NULL AUTO_INCREMENT,
-  `idpersona` int(11) NOT NULL,
-  `idgenero` int(11) NOT NULL,
-  PRIMARY KEY (`idgeneropersona`),
-  KEY `fk_gp_persona` (`idpersona`),
-  KEY `fk_gp_genero` (`idgenero`),
-  CONSTRAINT `fk_gp_genero` FOREIGN KEY (`idgenero`) REFERENCES `genero` (`idgenero`) ON UPDATE CASCADE,
-  CONSTRAINT `fk_gp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `generopersona`
---
-
-/*!40000 ALTER TABLE `generopersona` DISABLE KEYS */;
-INSERT INTO `generopersona` VALUES
-(1,1,1),
-(2,2,2),
-(3,3,1),
-(6,7,1);
-/*!40000 ALTER TABLE `generopersona` ENABLE KEYS */;
-
---
--- Table structure for table `visitasgim`
---
-
-DROP TABLE IF EXISTS `visitasgim`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `visitasgim` (
-  `idvisitasgim` int(11) NOT NULL AUTO_INCREMENT,
-  `idcliente` int(11) NOT NULL,
-  `fecha` date NOT NULL,
-  `horaingreso` time NOT NULL,
-  `horasalida` time DEFAULT NULL,
-  PRIMARY KEY (`idvisitasgim`),
-  KEY `idx_visitasgim_cliente` (`idcliente`),
-  KEY `idx_visitasgim_fecha` (`fecha`),
-  CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `visitasgim`
---
-
-/*!40000 ALTER TABLE `visitasgim` DISABLE KEYS */;
-INSERT INTO `visitasgim` VALUES
-(1,1,'2026-10-01','07:15:00','08:30:00'),
-(2,2,'2026-10-02','18:00:00','19:45:00'),
-(3,1,'2026-10-05','06:45:00','08:00:00'),
-(4,2,'2026-10-05','19:00:00','21:15:00');
-/*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
 
 --
 -- Table structure for table `ejerciciocliente`
@@ -1564,6 +1353,4318 @@ INSERT INTO `ejerciciocliente` VALUES
 /*!40000 ALTER TABLE `ejerciciocliente` ENABLE KEYS */;
 
 --
+-- Table structure for table `ejercicioequipo`
+--
+
+DROP TABLE IF EXISTS `ejercicioequipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ejercicioequipo` (
+  `idejercicioequipo` int(11) NOT NULL AUTO_INCREMENT,
+  `idejercicio` int(11) NOT NULL,
+  `idequipo` int(11) NOT NULL,
+  PRIMARY KEY (`idejercicioequipo`),
+  UNIQUE KEY `uk_ejercicio_equipo` (`idejercicio`,`idequipo`),
+  KEY `fk_ee_ejercicio` (`idejercicio`),
+  KEY `fk_ee_equipo` (`idequipo`),
+  CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ejercicioequipo`
+--
+
+/*!40000 ALTER TABLE `ejercicioequipo` DISABLE KEYS */;
+INSERT INTO `ejercicioequipo` VALUES
+(1,1,17),
+(2,1,24),
+(3,2,11),
+(4,2,17),
+(5,2,24),
+(6,3,17),
+(7,3,24),
+(8,4,14),
+(9,5,17),
+(10,7,59),
+(11,8,59),
+(12,9,18),
+(13,10,14),
+(14,11,14),
+(15,14,29),
+(16,15,29),
+(17,16,45);
+/*!40000 ALTER TABLE `ejercicioequipo` ENABLE KEYS */;
+
+--
+-- Table structure for table `equipos`
+--
+
+DROP TABLE IF EXISTS `equipos`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equipos` (
+  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(30) NOT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `imagen` varchar(255) DEFAULT NULL,
+  `id_tipo` int(11) DEFAULT NULL,
+  `id_marca` int(11) DEFAULT NULL,
+  `modelo` varchar(80) DEFAULT NULL,
+  `numero_serie` varchar(100) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `id_ubicacion` int(11) DEFAULT NULL,
+  `fecha_adquisicion` date DEFAULT NULL,
+  `valor_adquisicion` decimal(10,2) DEFAULT NULL,
+  `id_estado` int(11) DEFAULT 1,
+  `activo` tinyint(1) DEFAULT 1,
+  `observaciones` text DEFAULT NULL,
+  `fecha_registro` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`id_equipo`),
+  UNIQUE KEY `codigo` (`codigo`)
+) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipos`
+--
+
+/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
+INSERT INTO `equipos` VALUES
+(1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
+(2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
+(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
+(5,'EQ-004','Anillas de Gimnasia','anillas.webp',4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(6,'EQ-005','Balón Medicinal','balon-medicinal.webp',4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(7,'EQ-006','Balón Slam','balon-slam.webp',4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(8,'EQ-007','Banco Declinado','banco-declinado.webp',3,1,'Gim360 Pro',NULL,'Banco declinado para press de pecho declinado y trabajo de abdominales',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(9,'EQ-008','Banco GHD (Glute Ham Developer)','banco-ghd.webp',2,1,'Gim360 Pro',NULL,'Banco especializado para hipertrofia y fortalecimiento de glúteos e isquiotibiales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(10,'EQ-009','Banco Inclinado','banco-inclinado.webp',3,1,'Gim360 Pro',NULL,'Banco multiposición inclinado para press de pecho superior y hombros',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(11,'EQ-010','Banco Plano Olímpico','banco-plano.webp',3,1,'Gim360 Pro',NULL,'Banco horizontal plano para levantamiento de potencia y press de banca',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(12,'EQ-011','Banda de Resistencia Circular (Loop Band)','banda-de-resistencia-circular.webp',5,1,'Gim360 Pro',NULL,'Banda de látex cerrada para activación de glúteos y calentamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(13,'EQ-012','Banda Elástica de Resistencia','banda-elastica.webp',5,1,'Gim360 Pro',NULL,'Banda elástica con diferentes niveles de resistencia para movilidad y fuerza',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(14,'EQ-013','Barra de Dominadas','barra-de-dominadas.webp',4,1,'Gim360 Pro',NULL,'Estructura metálica para dominadas, agarres pronos, supinos y neutros',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(15,'EQ-014','Barra Hexagonal (Trap Bar)','barra-hexagonal.webp',3,1,'Gim360 Pro',NULL,'Barra con marco hexagonal para peso muerto neutral y encogimientos',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(16,'EQ-015','Barra Z (EZ Bar)','barra-z.webp',3,1,'Gim360 Pro',NULL,'Barra curva ergonómica diseñada para reducir tensión en muñecas durante curls y extensiones',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(17,'EQ-016','Barra Olímpica Estándar (20 kg)','barra.webp',3,1,'Gim360 Pro',NULL,'Barra olímpica de acero con rodamientos y moleteado de competición',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(18,'EQ-017','Bicicleta de Aire (Air Bike)','bicicleta-de-aire.webp',1,1,'Gim360 Pro',NULL,'Bicicleta con resistencia de aire y ventilador para entrenamientos HIIT de máxima intensidad',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(19,'EQ-018','Caja Pliométrica (Plyo Box)','caja-pliometrica.webp',4,1,'Gim360 Pro',NULL,'Cajón de salto multifuncional con 3 alturas ajustables para potencia de salto',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(20,'EQ-019','Cuerda de Batalla (Battle Rope)','cuerda-de-batalla.webp',4,1,'Gim360 Pro',NULL,'Cuerda gruesa de polidacrón para acondicionamiento metabólico y core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(21,'EQ-020','Cuerda de Escalada','cuerda-de-escalada.webp',4,1,'Gim360 Pro',NULL,'Cuerda de cáñamo reforzada suspendida para trepa y fuerza de tracción',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(22,'EQ-021','Cuerda de Saltar de Velocidad','cuerda-de-saltar.webp',1,1,'Gim360 Pro',NULL,'Cuerda de saltar con cable de acero y rodamientos de alta velocidad',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(23,'EQ-022','Máquina de Curl Femoral Tumbado','curl-femoral.webp',2,1,'Gim360 Pro',NULL,'Aparato selectorizado de placas para aislamiento del bíceps femoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(24,'EQ-023','Discos Olímpicos de Peso (Bumper Plates)','discos.webp',3,1,'Gim360 Pro',NULL,'Set de discos de goma maciza de alta densidad para barras olímpicas',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(25,'EQ-024','Máquina Elíptica Profesional','eliptica.webp',1,1,'Gim360 Pro',NULL,'Entrenador elíptico de bajo impacto articular con monitor de frecuencia cardíaca',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(26,'EQ-025','Estación de Fondos y Paralelas','estacion-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Barras paralelas fijas para inmersiones de tríceps y pecho',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(27,'EQ-026','Máquina de Extensión de Piernas (Leg Extension)','extension-de-piernas.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada para desarrollo y aislamiento de cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(28,'EQ-027','Soporte Landmine para Barra','landmine.webp',3,1,'Gim360 Pro',NULL,'Articulación multidireccional fijada al suelo para barra olímpica',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(29,'EQ-028','Mancuernas de Uretano / Goma','mancuerna.webp',3,1,'Gim360 Pro',NULL,'Juego de mancuernas fijas de diferentes pesos para levantamiento libre',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(30,'EQ-029','Máquina de Crunch Abdominal','maquina-crunch-abdominal.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada de placas para sobrecarga progresiva en flexión de tronco',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(31,'EQ-030','Máquina de Curl de Bíceps','maquina-curl-de-biceps.webp',2,1,'Gim360 Pro',NULL,'Máquina de placas para aislamiento concéntrico y excéntrico de bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(32,'EQ-031','Máquina de Curl Predicador','maquina-curl-predicador.webp',2,1,'Gim360 Pro',NULL,'Banco Scott integrado con palancas selectorizadas para brazo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(33,'EQ-032','Máquina de Abducción de Cadera','maquina-de-abduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para fortalecimiento de glúteo medio y cadera hacia afuera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(34,'EQ-033','Máquina de Aducción de Cadera','maquina-de-aduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para trabajo de aductores de muslo hacia adentro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(35,'EQ-034','Máquina de Aperturas de Pecho (Chest Fly)','maquina-de-aperturas-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Aparato de brazos articulados para aducción horizontal de hombro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(36,'EQ-035','Máquina de Dominadas y Fondos Asistidos','maquina-de-dominadas-asistidas.webp',2,1,'Gim360 Pro',NULL,'Torre con plataforma contrapesada para facilitar dominadas y fondos',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(37,'EQ-036','Máquina de Gemelos a la Burra (Donkey Calf)','maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp',2,1,'Gim360 Pro',NULL,'Aparato para flexión plantar de tobillo con tronco flexionado a 90 grados',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(38,'EQ-037','Máquina de Gemelos de Pie (Standing Calf)','maquina-de-elevaciones-de-pantorrilla-de-pie.webp',2,1,'Gim360 Pro',NULL,'Máquina con almohadillas en hombros para hipertrofia del gastrocnemio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(39,'EQ-038','Máquina de Gemelos Sentado (Seated Calf)','maquina-de-elevaciones-de-pantorrilla-sentado.webp',2,1,'Gim360 Pro',NULL,'Aparato con rodillera acolchada para trabajo selectivo del músculo sóleo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(40,'EQ-039','Máquina de Elevaciones Laterales a Discos','maquina-de-elevaciones-laterales-de-discos.webp',2,1,'Gim360 Pro',NULL,'Máquina de palanca de carga directa de discos para deltoides lateral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(41,'EQ-040','Máquina de Elevaciones Laterales (Selectorizada)','maquina-de-elevaciones-laterales.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas guiado para aislamiento del hombro medio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(42,'EQ-041','Máquina de Encogimientos de Hombros','maquina-de-encogimientos.webp',2,1,'Gim360 Pro',NULL,'Palancas de agarre neutro para trapecio superior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(43,'EQ-042','Máquina de Extensión de Espalda / Lumbares','maquina-de-extension-de-espalda.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas para fortalecimiento de erectores espinales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(44,'EQ-043','Máquina de Extensión de Tríceps','maquina-de-extension-de-triceps.webp',2,1,'Gim360 Pro',NULL,'Máquina sentada con soporte de codos para empuje vertical de tríceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(45,'EQ-044','Máquina de Fondos Asistida / Selectorizada','maquina-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Aparato con palancas para press hacia abajo de tríceps y pectoral inferior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(46,'EQ-045','Máquina de Remo Ergométrico (Rower)','maquina-de-remo.webp',1,1,'Gim360 Pro',NULL,'Remo de aire y resistencia magnética para cardio total y espalda',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(47,'EQ-046','Máquina Escaladora (StairMaster)','maquina-escaladora.webp',1,1,'Gim360 Pro',NULL,'Escalera sin fin motorizada para entrenamiento cardiovascular y tren inferior',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(48,'EQ-047','Máquina Hack Squat (Sentadilla Hack)','maquina-hack-squat.webp',2,1,'Gim360 Pro',NULL,'Trineo inclinado con respaldo fijo para sobrecarga en cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(49,'EQ-048','Máquina de Hip Thrust (Empuje de Cadera)','maquina-hip-thrust.webp',2,1,'Gim360 Pro',NULL,'Aparato especializado con cinturón acolchado para extensión de cadera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(50,'EQ-049','Máquina de Jalón al Pecho (Lat Pulldown)','maquina-jalon-al-pecho.webp',2,1,'Gim360 Pro',NULL,'Torre de polea alta con barra para dorsales y bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(51,'EQ-050','Máquina de Press Militar / Hombros','maquina-press-de-hombros.webp',2,1,'Gim360 Pro',NULL,'Aparato convergente para empuje vertical seguro de hombros',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(52,'EQ-051','Máquina de Press de Pecho (Chest Press)','maquina-press-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Máquina con agarres múltiples para empuje horizontal de pectoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(53,'EQ-052','Máquina Smith (Multipower)','maquina-smith.webp',2,1,'Gim360 Pro',NULL,'Estructura con barra olímpica guiada por rieles y ganchos de seguridad',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(54,'EQ-053','Máquina Pec Deck / Contractora de Pectoral','pec-deck.webp',2,1,'Gim360 Pro',NULL,'Máquina clásica de almohadillas en codos para aperturas pectorales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(55,'EQ-054','Pelota Suiza / Fitball','pelota-de-estabilidad.webp',5,1,'Gim360 Pro',NULL,'Balón inflable de PVC anti-explosión para estabilidad, core y rehabilitación',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(56,'EQ-055','Pesa Rusa de Competición (Kettlebell)','pesa-rusa.webp',3,1,'Gim360 Pro',NULL,'Pesa de hierro fundido con asa superior para swings, snatches y cleans',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(57,'EQ-056','Torre de Polea Cruzada (Cable Crossover)','polea.webp',2,1,'Gim360 Pro',NULL,'Estación doble de poleas regulables en altura para cruces y jalones',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02');
+/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
+
+--
+-- Table structure for table `estadocivil`
+--
+
+DROP TABLE IF EXISTS `estadocivil`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadocivil` (
+  `idestadocivil` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idestadocivil`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadocivil`
+--
+
+/*!40000 ALTER TABLE `estadocivil` DISABLE KEYS */;
+INSERT INTO `estadocivil` VALUES
+(1,'Soltero/a'),
+(2,'Casado/a'),
+(3,'Divorciado/a'),
+(4,'Viudo/a'),
+(5,'Unión de Hecho');
+/*!40000 ALTER TABLE `estadocivil` ENABLE KEYS */;
+
+--
+-- Table structure for table `estadocivilpersona`
+--
+
+DROP TABLE IF EXISTS `estadocivilpersona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadocivilpersona` (
+  `idestadocivilpersona` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `idestadocivil` int(11) NOT NULL,
+  PRIMARY KEY (`idestadocivilpersona`),
+  KEY `fk_ecp_persona` (`idpersona`),
+  KEY `fk_ecp_estadocivil` (`idestadocivil`),
+  CONSTRAINT `fk_ecp_estadocivil` FOREIGN KEY (`idestadocivil`) REFERENCES `estadocivil` (`idestadocivil`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_ecp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadocivilpersona`
+--
+
+/*!40000 ALTER TABLE `estadocivilpersona` DISABLE KEYS */;
+INSERT INTO `estadocivilpersona` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,1),
+(6,7,2);
+/*!40000 ALTER TABLE `estadocivilpersona` ENABLE KEYS */;
+
+--
+-- Table structure for table `estadoprogramacliente`
+--
+
+DROP TABLE IF EXISTS `estadoprogramacliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `estadoprogramacliente` (
+  `idestadoprogramacliente` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idestadoprogramacliente`),
+  UNIQUE KEY `uk_epc_nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `estadoprogramacliente`
+--
+
+/*!40000 ALTER TABLE `estadoprogramacliente` DISABLE KEYS */;
+INSERT INTO `estadoprogramacliente` VALUES
+(1,'Activo'),
+(5,'Cancelado'),
+(3,'Completado'),
+(2,'En Espera'),
+(4,'Pausado');
+/*!40000 ALTER TABLE `estadoprogramacliente` ENABLE KEYS */;
+
+--
+-- Table structure for table `genero`
+--
+
+DROP TABLE IF EXISTS `genero`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `genero` (
+  `idgenero` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idgenero`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `genero`
+--
+
+/*!40000 ALTER TABLE `genero` DISABLE KEYS */;
+INSERT INTO `genero` VALUES
+(1,'Cisgénero Masculino'),
+(2,'Cisgénero Femenino'),
+(3,'Transgénero'),
+(4,'No Binario'),
+(5,'Otro');
+/*!40000 ALTER TABLE `genero` ENABLE KEYS */;
+
+--
+-- Table structure for table `generopersona`
+--
+
+DROP TABLE IF EXISTS `generopersona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `generopersona` (
+  `idgeneropersona` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `idgenero` int(11) NOT NULL,
+  PRIMARY KEY (`idgeneropersona`),
+  KEY `fk_gp_persona` (`idpersona`),
+  KEY `fk_gp_genero` (`idgenero`),
+  CONSTRAINT `fk_gp_genero` FOREIGN KEY (`idgenero`) REFERENCES `genero` (`idgenero`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_gp_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `generopersona`
+--
+
+/*!40000 ALTER TABLE `generopersona` DISABLE KEYS */;
+INSERT INTO `generopersona` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,1),
+(6,7,1);
+/*!40000 ALTER TABLE `generopersona` ENABLE KEYS */;
+
+--
+-- Table structure for table `motivoentrenamiento`
+--
+
+DROP TABLE IF EXISTS `motivoentrenamiento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `motivoentrenamiento` (
+  `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `objetivo` text DEFAULT NULL,
+  PRIMARY KEY (`idmotivoentrenamiento`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `motivoentrenamiento`
+--
+
+/*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
+INSERT INTO `motivoentrenamiento` VALUES
+(1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.'),
+(2,'Pérdida de Grasa y Definición','Reducir el porcentaje de grasa corporal preservando la masa muscular a través de déficit calórico y circuitos metabólicos.'),
+(3,'Fuerza Máxima y Potencia','Desarrollar niveles máximos de fuerza en levantamientos básicos (sentadilla, press banca, peso muerto) y ejercicios pliométricos.'),
+(4,'Acondicionamiento Físico y Salud','Mejorar la capacidad cardiovascular, resistencia muscular y bienestar general para optimizar la calidad de vida diaria.'),
+(5,'Rehabilitación y Movilidad Funcional','Recuperación de lesiones, corrección postural y fortalecimiento articular bajo supervisión kinésica y técnica controlada.');
+/*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
+
+--
+-- Table structure for table `musculo`
+--
+
+DROP TABLE IF EXISTS `musculo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `musculo` (
+  `idmusculo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `imagen` varchar(255) NOT NULL,
+  PRIMARY KEY (`idmusculo`),
+  UNIQUE KEY `uk_musculo_nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `musculo`
+--
+
+/*!40000 ALTER TABLE `musculo` DISABLE KEYS */;
+INSERT INTO `musculo` VALUES
+(1,'Abductores','abductores.webp'),
+(2,'Aductores','aductores.webp'),
+(3,'Bíceps Braquial','biceps-braquial.webp'),
+(4,'Braquial','braquial.webp'),
+(5,'Braquiorradial','braquiorradial.webp'),
+(6,'Cuádriceps','cuadriceps.webp'),
+(7,'Deltoides Anterior','deltoides-anterior.webp'),
+(8,'Deltoides Lateral','deltoides-lateral.webp'),
+(9,'Deltoides Posterior','deltoides-posterior.webp'),
+(10,'Dorsal Ancho','dorsal-ancho.webp'),
+(11,'Erector Espinal','erector-espinal.webp'),
+(12,'Extensores del Antebrazo','extensores-del-antebrazo.webp'),
+(13,'Flexores de Cadera','flexores-de-cadera.webp'),
+(14,'Flexores del Antebrazo','flexores-del-antebrazo.webp'),
+(15,'Gastrocnemio (Gemelos)','gastrocnemio.webp'),
+(16,'Glúteo Mayor','gluteo-mayor.webp'),
+(17,'Glúteo Medio','gluteo-medio.webp'),
+(18,'Isquiotibiales','isquiotibiales.webp'),
+(19,'Oblicuos','oblicuos.webp'),
+(20,'Pectoral Mayor','pectoral-mayor.webp'),
+(21,'Recto Abdominal','recto-abdominal.webp'),
+(22,'Romboides','romboides.webp'),
+(23,'Serrato Anterior','serrato-anterior.webp'),
+(24,'Sóleo','soleo.webp'),
+(25,'Transverso Abdominal','transverso-abdominal.webp'),
+(26,'Trapecio','trapecio.webp'),
+(27,'Tríceps Braquial','triceps-braquial.webp');
+/*!40000 ALTER TABLE `musculo` ENABLE KEYS */;
+
+--
+-- Table structure for table `musculoejercicio`
+--
+
+DROP TABLE IF EXISTS `musculoejercicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `musculoejercicio` (
+  `idmusculoejecicio` int(11) NOT NULL AUTO_INCREMENT,
+  `idejercicio` int(11) NOT NULL,
+  `idmusculo` int(11) NOT NULL,
+  PRIMARY KEY (`idmusculoejecicio`),
+  UNIQUE KEY `uk_ejercicio_musculo` (`idejercicio`,`idmusculo`),
+  KEY `fk_me_ejercicio` (`idejercicio`),
+  KEY `fk_me_musculo` (`idmusculo`),
+  CONSTRAINT `fk_me_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_me_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3820 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `musculoejercicio`
+--
+
+/*!40000 ALTER TABLE `musculoejercicio` DISABLE KEYS */;
+INSERT INTO `musculoejercicio` VALUES
+(2,1,6),
+(3,1,11),
+(1,1,16),
+(4,1,18),
+(6,2,7),
+(5,2,20),
+(7,2,27),
+(11,3,6),
+(8,3,11),
+(9,3,16),
+(10,3,18),
+(12,3,26),
+(14,4,3),
+(15,4,9),
+(13,4,10),
+(16,4,22),
+(17,5,7),
+(18,5,8),
+(19,5,26),
+(20,5,27),
+(23,7,7),
+(24,7,10),
+(25,7,19),
+(21,7,21),
+(26,7,23),
+(22,7,25),
+(29,8,7),
+(30,8,10),
+(31,8,19),
+(27,8,21),
+(32,8,23),
+(28,8,25),
+(34,9,6),
+(36,9,10),
+(35,9,16),
+(33,9,18),
+(37,9,20),
+(38,9,21),
+(40,10,3),
+(42,10,9),
+(39,10,10),
+(41,10,14),
+(43,10,22),
+(45,11,3),
+(47,11,9),
+(44,11,10),
+(46,11,14),
+(48,11,22),
+(50,12,7),
+(49,12,20),
+(51,12,21),
+(52,12,23),
+(53,12,27),
+(55,13,7),
+(54,13,20),
+(56,13,21),
+(57,13,23),
+(58,13,27),
+(59,14,7),
+(60,14,8),
+(61,14,23),
+(62,14,26),
+(63,14,27),
+(64,15,7),
+(65,15,8),
+(66,15,23),
+(67,15,26),
+(68,15,27),
+(71,16,7),
+(69,16,20),
+(72,16,22),
+(70,16,27),
+(75,17,7),
+(73,17,20),
+(76,17,22),
+(74,17,27),
+(78,18,3),
+(80,18,9),
+(77,18,10),
+(79,18,14),
+(81,18,22),
+(83,19,3),
+(85,19,9),
+(82,19,10),
+(84,19,14),
+(86,19,22),
+(87,20,11),
+(88,20,16),
+(89,20,18),
+(90,21,11),
+(91,21,16),
+(92,21,18),
+(95,22,7),
+(94,22,10),
+(93,22,11),
+(96,22,16),
+(97,22,21),
+(99,23,15),
+(100,23,16),
+(98,23,18),
+(102,24,15),
+(103,24,16),
+(101,24,18),
+(106,25,7),
+(107,25,13),
+(104,25,19),
+(105,25,21),
+(108,25,23),
+(111,26,7),
+(112,26,13),
+(109,26,19),
+(110,26,21),
+(113,26,23),
+(115,27,3),
+(117,27,9),
+(114,27,10),
+(116,27,14),
+(118,27,22),
+(120,28,3),
+(122,28,9),
+(119,28,10),
+(121,28,14),
+(123,28,22),
+(124,29,9),
+(125,29,22),
+(126,29,26),
+(127,30,9),
+(128,30,22),
+(129,30,26),
+(130,31,2),
+(131,31,18),
+(132,32,15),
+(133,32,24),
+(134,33,15),
+(135,33,24),
+(137,34,7),
+(136,34,20),
+(139,35,16),
+(138,35,17),
+(141,36,16),
+(140,36,17),
+(142,37,16),
+(143,37,17),
+(145,38,16),
+(144,38,17),
+(147,39,16),
+(146,39,17),
+(148,40,16),
+(149,40,17),
+(150,40,18),
+(151,41,16),
+(152,41,17),
+(153,41,18),
+(156,42,11),
+(154,42,16),
+(155,42,18),
+(159,43,11),
+(157,43,16),
+(158,43,18),
+(161,44,15),
+(160,44,18),
+(162,45,16),
+(163,45,17),
+(164,45,18),
+(165,46,16),
+(166,46,17),
+(167,46,18),
+(168,47,1),
+(169,47,16),
+(170,47,17),
+(171,48,16),
+(172,48,18),
+(173,49,16),
+(174,49,18),
+(176,50,9),
+(175,50,10),
+(179,51,6),
+(178,51,16),
+(177,51,17),
+(182,52,6),
+(181,52,16),
+(180,52,17),
+(183,53,9),
+(184,53,22),
+(185,53,26),
+(188,54,11),
+(186,54,16),
+(187,54,18),
+(191,55,11),
+(189,55,16),
+(190,55,18),
+(193,56,16),
+(192,56,17),
+(195,57,16),
+(194,57,17),
+(196,58,7),
+(197,58,20),
+(199,59,6),
+(198,59,16),
+(200,59,17),
+(201,59,18),
+(203,60,6),
+(202,60,16),
+(204,60,17),
+(205,60,18),
+(207,61,15),
+(206,61,18),
+(209,62,15),
+(208,62,18),
+(211,63,16),
+(210,63,17),
+(213,64,16),
+(212,64,17),
+(214,65,2),
+(215,66,2),
+(218,67,6),
+(216,67,16),
+(217,67,17),
+(221,68,6),
+(219,68,16),
+(220,68,17),
+(222,69,6),
+(223,70,6),
+(225,71,10),
+(224,71,27),
+(227,72,10),
+(228,72,19),
+(226,72,21),
+(229,72,25),
+(231,73,10),
+(232,73,19),
+(230,73,21),
+(233,73,25),
+(234,74,15),
+(235,74,24),
+(236,75,15),
+(237,75,24),
+(238,76,3),
+(239,76,4),
+(240,76,14),
+(241,77,3),
+(242,77,4),
+(243,77,14),
+(244,78,7),
+(245,78,8),
+(246,78,20),
+(247,78,23),
+(248,79,7),
+(249,79,8),
+(250,79,20),
+(251,79,23),
+(252,80,16),
+(253,80,18),
+(254,81,16),
+(255,81,18),
+(256,82,27),
+(257,83,27),
+(258,84,3),
+(259,84,4),
+(260,85,3),
+(261,85,4),
+(262,86,10),
+(263,86,20),
+(264,86,27),
+(265,87,10),
+(266,87,20),
+(267,87,27),
+(268,88,9),
+(269,88,10),
+(270,88,22),
+(271,88,26),
+(272,89,9),
+(273,89,10),
+(274,89,22),
+(275,89,26),
+(277,90,6),
+(278,90,11),
+(276,90,16),
+(279,90,17),
+(280,90,18),
+(282,91,6),
+(283,91,11),
+(281,91,16),
+(284,91,17),
+(285,91,18),
+(288,92,3),
+(289,92,9),
+(286,92,10),
+(287,92,22),
+(292,93,3),
+(293,93,9),
+(290,93,10),
+(291,93,22),
+(294,94,14),
+(295,95,14),
+(301,96,6),
+(296,96,7),
+(297,96,10),
+(298,96,14),
+(299,96,16),
+(300,96,19),
+(302,96,21),
+(303,96,26),
+(309,97,6),
+(304,97,7),
+(305,97,10),
+(306,97,14),
+(307,97,16),
+(308,97,19),
+(310,97,21),
+(311,97,26),
+(316,98,6),
+(312,98,7),
+(313,98,8),
+(314,98,10),
+(315,98,14),
+(317,98,21),
+(318,98,26),
+(322,99,6),
+(319,99,7),
+(321,99,19),
+(320,99,21),
+(323,99,27),
+(327,100,6),
+(324,100,7),
+(326,100,19),
+(325,100,21),
+(328,100,27),
+(330,101,14),
+(331,101,22),
+(329,101,26),
+(333,102,14),
+(334,102,22),
+(332,102,26),
+(336,103,9),
+(335,103,10),
+(337,103,22),
+(338,103,26),
+(340,104,9),
+(339,104,10),
+(341,104,22),
+(342,104,26),
+(343,105,7),
+(344,105,8),
+(345,105,26),
+(346,105,27),
+(347,106,7),
+(348,106,8),
+(349,106,26),
+(350,106,27),
+(352,107,3),
+(353,107,9),
+(351,107,10),
+(354,107,22),
+(355,107,26),
+(357,108,3),
+(358,108,9),
+(356,108,10),
+(359,108,22),
+(360,108,26),
+(361,109,2),
+(362,109,18),
+(363,110,15),
+(364,110,24),
+(366,111,6),
+(365,111,13),
+(367,111,16),
+(368,112,15),
+(369,112,24),
+(371,113,7),
+(370,113,20),
+(373,114,10),
+(372,114,11),
+(375,115,6),
+(374,115,13),
+(377,116,7),
+(378,116,20),
+(376,116,27),
+(380,117,7),
+(381,117,20),
+(379,117,27),
+(382,118,16),
+(383,118,17),
+(385,119,11),
+(384,119,18),
+(387,120,9),
+(386,120,10),
+(389,121,13),
+(390,121,19),
+(388,121,21),
+(392,122,13),
+(393,122,19),
+(391,122,21),
+(395,123,7),
+(394,123,20),
+(396,123,27),
+(399,124,3),
+(400,124,9),
+(397,124,10),
+(398,124,22),
+(401,124,26),
+(404,125,3),
+(405,125,9),
+(402,125,10),
+(403,125,22),
+(406,125,26),
+(407,126,10),
+(408,126,20),
+(409,126,23),
+(410,126,27),
+(411,127,10),
+(412,127,20),
+(413,127,23),
+(414,127,27),
+(417,128,9),
+(415,128,10),
+(416,128,20),
+(418,128,23),
+(419,128,27),
+(422,129,9),
+(420,129,10),
+(421,129,20),
+(423,129,23),
+(424,129,27),
+(427,130,3),
+(428,130,9),
+(425,130,10),
+(426,130,22),
+(429,130,26),
+(432,131,3),
+(433,131,9),
+(430,131,10),
+(431,131,22),
+(434,131,26),
+(437,132,3),
+(438,132,9),
+(435,132,10),
+(436,132,22),
+(441,133,3),
+(442,133,9),
+(439,133,10),
+(440,133,22),
+(443,134,3),
+(444,134,4),
+(445,134,14),
+(446,135,3),
+(447,135,4),
+(448,135,14),
+(451,136,13),
+(449,136,19),
+(450,136,21),
+(454,137,13),
+(452,137,19),
+(453,137,21),
+(459,138,9),
+(455,138,11),
+(457,138,16),
+(458,138,19),
+(456,138,21),
+(460,139,11),
+(462,139,16),
+(461,139,25),
+(463,140,11),
+(465,140,16),
+(464,140,25),
+(469,141,6),
+(468,141,11),
+(466,141,13),
+(467,141,21),
+(470,142,15),
+(471,142,24),
+(472,143,15),
+(473,143,24),
+(474,144,11),
+(476,144,16),
+(475,144,18),
+(477,145,11),
+(479,145,16),
+(478,145,18),
+(481,146,7),
+(480,146,8),
+(482,146,26),
+(484,147,7),
+(483,147,8),
+(485,147,26),
+(486,148,7),
+(488,148,23),
+(489,148,26),
+(487,148,27),
+(490,149,7),
+(492,149,23),
+(493,149,26),
+(491,149,27),
+(495,150,6),
+(494,150,16),
+(496,150,18),
+(498,151,6),
+(497,151,16),
+(499,151,18),
+(501,152,6),
+(502,152,11),
+(500,152,16),
+(503,152,17),
+(504,152,18),
+(506,153,6),
+(507,153,11),
+(505,153,16),
+(508,153,17),
+(509,153,18),
+(510,154,11),
+(511,154,16),
+(512,154,18),
+(513,154,20),
+(515,155,6),
+(516,155,15),
+(514,155,16),
+(517,155,18),
+(518,155,24),
+(520,156,6),
+(521,156,15),
+(519,156,16),
+(522,156,18),
+(523,156,24),
+(525,157,6),
+(526,157,11),
+(524,157,16),
+(527,157,17),
+(528,157,18),
+(530,158,6),
+(531,158,11),
+(529,158,16),
+(532,158,17),
+(533,158,18),
+(535,159,6),
+(534,159,16),
+(536,159,18),
+(538,160,6),
+(537,160,16),
+(539,160,18),
+(542,161,6),
+(543,161,7),
+(540,161,16),
+(541,161,20),
+(544,161,21),
+(545,161,27),
+(546,162,2),
+(547,162,13),
+(550,163,3),
+(551,163,9),
+(548,163,10),
+(549,163,22),
+(554,164,3),
+(555,164,9),
+(552,164,10),
+(553,164,22),
+(557,165,7),
+(556,165,20),
+(558,165,23),
+(559,165,27),
+(561,166,7),
+(560,166,20),
+(562,166,23),
+(563,166,27),
+(565,167,19),
+(564,167,21),
+(566,167,25),
+(568,168,19),
+(567,168,21),
+(569,168,25),
+(570,169,3),
+(571,169,4),
+(572,170,3),
+(573,170,4),
+(574,171,9),
+(575,171,22),
+(576,171,26),
+(577,172,9),
+(578,172,22),
+(579,172,26),
+(581,173,7),
+(580,173,20),
+(583,174,7),
+(582,174,20),
+(584,175,7),
+(585,175,8),
+(586,175,20),
+(587,176,7),
+(588,176,8),
+(589,176,20),
+(590,177,3),
+(591,177,4),
+(592,177,5),
+(593,177,14),
+(594,178,3),
+(595,178,4),
+(596,178,5),
+(597,178,14),
+(598,179,16),
+(599,179,18),
+(600,180,16),
+(601,180,18),
+(603,181,7),
+(602,181,8),
+(604,181,26),
+(606,182,7),
+(605,182,8),
+(607,182,26),
+(610,183,7),
+(611,183,11),
+(612,183,17),
+(608,183,19),
+(613,183,21),
+(609,183,25),
+(616,184,7),
+(617,184,11),
+(618,184,17),
+(614,184,19),
+(619,184,21),
+(615,184,25),
+(621,185,9),
+(620,185,27),
+(623,186,9),
+(622,186,27),
+(627,187,3),
+(626,187,7),
+(624,187,8),
+(625,187,26),
+(631,188,3),
+(630,188,7),
+(628,188,8),
+(629,188,26),
+(632,189,14),
+(633,190,14),
+(637,191,6),
+(634,191,11),
+(635,191,13),
+(636,191,20),
+(638,192,13),
+(640,192,19),
+(639,192,21),
+(641,192,25),
+(642,193,13),
+(644,193,19),
+(643,193,21),
+(645,193,25),
+(646,194,13),
+(648,194,19),
+(647,194,21),
+(649,194,25),
+(650,195,13),
+(652,195,19),
+(651,195,21),
+(653,195,25),
+(654,196,11),
+(655,196,21),
+(656,196,25),
+(657,196,26),
+(658,197,11),
+(659,197,22),
+(660,197,26),
+(662,198,6),
+(663,198,7),
+(664,198,11),
+(661,198,16),
+(665,199,3),
+(666,199,4),
+(667,199,5),
+(668,199,11),
+(669,200,3),
+(670,200,4),
+(671,200,5),
+(672,200,11),
+(674,201,7),
+(673,201,20),
+(675,201,27),
+(677,202,7),
+(676,202,20),
+(678,202,27),
+(681,203,3),
+(682,203,9),
+(679,203,10),
+(680,203,22),
+(685,204,3),
+(686,204,9),
+(683,204,10),
+(684,204,22),
+(688,205,9),
+(689,205,22),
+(687,205,26),
+(691,206,9),
+(692,206,22),
+(690,206,26),
+(695,207,3),
+(696,207,9),
+(693,207,10),
+(694,207,22),
+(697,207,26),
+(700,208,3),
+(701,208,9),
+(698,208,10),
+(699,208,22),
+(702,208,26),
+(705,209,3),
+(706,209,9),
+(703,209,10),
+(704,209,22),
+(709,210,3),
+(710,210,9),
+(707,210,10),
+(708,210,22),
+(712,211,10),
+(711,211,11),
+(713,211,26),
+(715,212,22),
+(714,212,26),
+(716,213,3),
+(717,213,10),
+(718,213,22),
+(719,214,3),
+(720,214,10),
+(721,214,22),
+(722,215,1),
+(724,215,16),
+(723,215,17),
+(725,216,1),
+(727,216,16),
+(726,216,17),
+(728,217,1),
+(730,217,16),
+(729,217,17),
+(731,218,20),
+(732,218,27),
+(733,219,20),
+(734,219,27),
+(737,220,6),
+(735,220,7),
+(738,220,11),
+(736,220,16),
+(739,220,26),
+(740,220,27),
+(743,221,6),
+(741,221,7),
+(744,221,11),
+(742,221,16),
+(745,221,26),
+(746,221,27),
+(748,222,6),
+(749,222,7),
+(750,222,11),
+(747,222,16),
+(751,222,18),
+(752,222,26),
+(754,223,6),
+(755,223,7),
+(756,223,11),
+(753,223,16),
+(757,223,18),
+(758,223,26),
+(759,224,3),
+(760,224,4),
+(761,224,5),
+(762,225,3),
+(763,225,4),
+(764,225,5),
+(766,226,7),
+(767,226,20),
+(765,226,27),
+(769,227,7),
+(770,227,20),
+(768,227,27),
+(772,228,7),
+(773,228,20),
+(771,228,27),
+(775,229,7),
+(776,229,20),
+(774,229,27),
+(778,230,7),
+(779,230,20),
+(777,230,27),
+(781,231,7),
+(782,231,20),
+(780,231,27),
+(783,232,3),
+(784,232,4),
+(785,233,3),
+(786,233,4),
+(788,234,7),
+(789,234,20),
+(787,234,27),
+(791,235,7),
+(792,235,20),
+(790,235,27),
+(794,236,3),
+(795,236,4),
+(796,236,9),
+(793,236,10),
+(797,236,22),
+(799,237,3),
+(800,237,4),
+(801,237,9),
+(798,237,10),
+(802,237,22),
+(803,238,3),
+(804,238,10),
+(805,238,22),
+(806,239,3),
+(807,239,10),
+(808,239,22),
+(811,240,7),
+(809,240,20),
+(812,240,23),
+(810,240,27),
+(815,241,7),
+(813,241,20),
+(816,241,23),
+(814,241,27),
+(817,242,6),
+(818,242,16),
+(819,242,18),
+(820,243,6),
+(821,243,16),
+(822,243,18),
+(824,244,13),
+(823,244,21),
+(825,244,25),
+(827,245,13),
+(828,245,19),
+(826,245,21),
+(830,246,13),
+(831,246,19),
+(829,246,21),
+(832,247,3),
+(833,247,4),
+(834,248,3),
+(835,248,4),
+(838,249,2),
+(837,249,6),
+(836,249,16),
+(839,249,18),
+(842,250,2),
+(841,250,6),
+(840,250,16),
+(843,250,18),
+(846,251,9),
+(844,251,16),
+(845,251,17),
+(847,251,27),
+(849,252,7),
+(850,252,16),
+(851,252,20),
+(848,252,27),
+(853,253,7),
+(854,253,16),
+(855,253,20),
+(852,253,27),
+(857,254,6),
+(858,254,11),
+(859,254,13),
+(856,254,16),
+(860,255,19),
+(861,255,21),
+(862,256,19),
+(863,256,21),
+(866,257,3),
+(864,257,4),
+(865,257,5),
+(867,257,14),
+(870,258,3),
+(868,258,4),
+(869,258,5),
+(871,258,14),
+(872,259,9),
+(873,259,22),
+(874,260,7),
+(876,260,21),
+(877,260,23),
+(875,260,27),
+(879,261,19),
+(878,261,21),
+(881,262,19),
+(880,262,21),
+(883,263,6),
+(884,263,11),
+(885,263,13),
+(882,263,16),
+(887,264,7),
+(886,264,20),
+(888,264,27),
+(890,265,7),
+(889,265,20),
+(891,265,27),
+(893,266,7),
+(892,266,20),
+(895,267,7),
+(894,267,20),
+(898,268,2),
+(899,268,11),
+(896,268,16),
+(897,268,18),
+(902,269,2),
+(903,269,11),
+(900,269,16),
+(901,269,18),
+(905,270,6),
+(904,270,16),
+(906,270,18),
+(908,271,6),
+(907,271,16),
+(909,271,18),
+(910,272,7),
+(911,272,8),
+(913,272,11),
+(912,272,19),
+(914,272,23),
+(915,272,25),
+(916,272,26),
+(917,272,27),
+(918,273,10),
+(919,273,20),
+(920,273,27),
+(921,274,10),
+(922,274,20),
+(923,274,27),
+(926,275,3),
+(924,275,4),
+(925,275,12),
+(929,276,3),
+(927,276,4),
+(928,276,12),
+(930,277,12),
+(931,278,12),
+(933,279,22),
+(932,279,26),
+(935,280,22),
+(934,280,26),
+(936,281,27),
+(937,282,27),
+(939,283,6),
+(938,283,16),
+(940,283,18),
+(941,283,19),
+(943,284,6),
+(942,284,16),
+(944,284,18),
+(945,284,19),
+(947,285,6),
+(946,285,16),
+(948,285,18),
+(950,286,6),
+(949,286,16),
+(951,286,18),
+(954,287,2),
+(953,287,6),
+(952,287,16),
+(955,287,17),
+(956,287,18),
+(959,288,2),
+(958,288,6),
+(957,288,16),
+(960,288,17),
+(961,288,18),
+(963,289,7),
+(962,289,20),
+(964,289,27),
+(966,290,7),
+(965,290,20),
+(967,290,27),
+(970,291,13),
+(968,291,21),
+(969,291,25),
+(973,292,13),
+(971,292,21),
+(972,292,25),
+(976,293,13),
+(974,293,21),
+(975,293,25),
+(978,294,10),
+(977,294,14),
+(979,294,21),
+(980,294,26),
+(984,295,6),
+(981,295,11),
+(982,295,16),
+(983,295,18),
+(985,295,26),
+(987,296,7),
+(986,296,20),
+(988,296,27),
+(990,297,7),
+(989,297,20),
+(991,297,27),
+(993,298,7),
+(992,298,20),
+(994,298,27),
+(996,299,7),
+(995,299,20),
+(997,299,27),
+(999,300,7),
+(998,300,20),
+(1000,300,27),
+(1002,301,7),
+(1001,301,20),
+(1003,301,27),
+(1005,302,13),
+(1006,302,19),
+(1004,302,21),
+(1008,303,13),
+(1009,303,19),
+(1007,303,21),
+(1011,304,7),
+(1010,304,20),
+(1013,305,7),
+(1012,305,20),
+(1015,306,7),
+(1014,306,20),
+(1016,306,27),
+(1018,307,7),
+(1017,307,20),
+(1019,307,27),
+(1024,308,6),
+(1023,308,10),
+(1020,308,11),
+(1021,308,16),
+(1022,308,18),
+(1025,308,26),
+(1030,309,6),
+(1029,309,10),
+(1026,309,11),
+(1027,309,16),
+(1028,309,18),
+(1031,309,26),
+(1033,310,7),
+(1032,310,20),
+(1034,310,23),
+(1035,310,27),
+(1037,311,7),
+(1036,311,20),
+(1038,311,23),
+(1039,311,27),
+(1042,312,7),
+(1040,312,20),
+(1043,312,23),
+(1041,312,27),
+(1046,313,7),
+(1044,313,20),
+(1047,313,23),
+(1045,313,27),
+(1050,314,7),
+(1048,314,20),
+(1049,314,27),
+(1053,315,7),
+(1051,315,20),
+(1052,315,27),
+(1054,316,7),
+(1056,316,18),
+(1057,316,23),
+(1055,316,26),
+(1058,317,15),
+(1059,317,24),
+(1060,318,15),
+(1061,318,24),
+(1063,319,7),
+(1062,319,20),
+(1066,320,2),
+(1067,320,11),
+(1064,320,16),
+(1065,320,18),
+(1070,321,2),
+(1071,321,11),
+(1068,321,16),
+(1069,321,18),
+(1072,322,7),
+(1073,322,8),
+(1074,322,11),
+(1075,322,23),
+(1076,322,25),
+(1077,322,26),
+(1078,322,27),
+(1079,323,3),
+(1080,323,4),
+(1081,323,14),
+(1082,324,3),
+(1083,324,4),
+(1084,324,14),
+(1088,325,6),
+(1085,325,7),
+(1086,325,8),
+(1087,325,16),
+(1089,325,21),
+(1090,325,26),
+(1091,325,27),
+(1095,326,6),
+(1092,326,7),
+(1093,326,8),
+(1094,326,16),
+(1096,326,21),
+(1097,326,26),
+(1098,326,27),
+(1101,327,7),
+(1102,327,11),
+(1103,327,14),
+(1099,327,16),
+(1100,327,18),
+(1104,327,26),
+(1107,328,7),
+(1108,328,11),
+(1109,328,14),
+(1105,328,16),
+(1106,328,18),
+(1110,328,26),
+(1115,329,6),
+(1113,329,11),
+(1114,329,14),
+(1111,329,16),
+(1112,329,18),
+(1116,329,26),
+(1121,330,6),
+(1119,330,11),
+(1120,330,14),
+(1117,330,16),
+(1118,330,18),
+(1122,330,26),
+(1127,331,6),
+(1123,331,7),
+(1125,331,11),
+(1124,331,16),
+(1126,331,18),
+(1128,331,26),
+(1133,332,6),
+(1129,332,7),
+(1131,332,11),
+(1130,332,16),
+(1132,332,18),
+(1134,332,26),
+(1136,333,6),
+(1135,333,7),
+(1137,333,16),
+(1138,333,26),
+(1139,333,27),
+(1141,334,6),
+(1140,334,7),
+(1142,334,16),
+(1143,334,26),
+(1144,334,27),
+(1145,335,7),
+(1146,335,8),
+(1147,335,11),
+(1148,335,12),
+(1149,335,23),
+(1150,335,25),
+(1151,335,26),
+(1152,335,27),
+(1153,336,7),
+(1155,336,21),
+(1156,336,23),
+(1157,336,26),
+(1154,336,27),
+(1158,337,7),
+(1160,337,21),
+(1161,337,23),
+(1162,337,26),
+(1159,337,27),
+(1166,338,6),
+(1163,338,7),
+(1165,338,8),
+(1164,338,16),
+(1167,338,27),
+(1171,339,6),
+(1168,339,7),
+(1170,339,8),
+(1169,339,16),
+(1172,339,27),
+(1175,340,3),
+(1173,340,9),
+(1177,340,10),
+(1176,340,11),
+(1174,340,22),
+(1178,340,26),
+(1181,341,3),
+(1179,341,9),
+(1183,341,10),
+(1182,341,11),
+(1180,341,22),
+(1184,341,26),
+(1187,342,3),
+(1185,342,10),
+(1188,342,11),
+(1186,342,22),
+(1189,342,26),
+(1192,343,3),
+(1190,343,10),
+(1193,343,11),
+(1191,343,22),
+(1194,343,26),
+(1196,344,6),
+(1195,344,7),
+(1197,344,16),
+(1198,344,26),
+(1199,344,27),
+(1201,345,6),
+(1200,345,7),
+(1202,345,16),
+(1203,345,26),
+(1204,345,27),
+(1207,346,7),
+(1208,346,11),
+(1209,346,14),
+(1205,346,16),
+(1206,346,18),
+(1210,346,26),
+(1213,347,7),
+(1214,347,11),
+(1215,347,14),
+(1211,347,16),
+(1212,347,18),
+(1216,347,26),
+(1219,348,7),
+(1217,348,13),
+(1218,348,21),
+(1220,348,23),
+(1221,348,25),
+(1224,349,7),
+(1222,349,13),
+(1223,349,21),
+(1225,349,23),
+(1226,349,25),
+(1231,350,10),
+(1229,350,11),
+(1227,350,15),
+(1230,350,16),
+(1228,350,18),
+(1232,351,15),
+(1234,351,18),
+(1233,351,24),
+(1235,352,15),
+(1237,352,18),
+(1236,352,24),
+(1240,353,7),
+(1238,353,13),
+(1241,353,16),
+(1239,353,21),
+(1242,353,23),
+(1245,354,7),
+(1243,354,13),
+(1246,354,16),
+(1244,354,21),
+(1247,354,23),
+(1250,355,6),
+(1248,355,13),
+(1249,355,16),
+(1253,356,6),
+(1251,356,13),
+(1252,356,16),
+(1254,357,7),
+(1256,357,18),
+(1255,357,21),
+(1257,357,23),
+(1258,357,26),
+(1259,358,7),
+(1261,358,18),
+(1260,358,21),
+(1262,358,23),
+(1263,358,26),
+(1264,359,7),
+(1265,359,11),
+(1266,359,20),
+(1267,359,23),
+(1268,359,27),
+(1269,360,7),
+(1270,360,11),
+(1271,360,20),
+(1272,360,23),
+(1273,360,27),
+(1274,361,3),
+(1275,361,4),
+(1276,362,3),
+(1277,362,4),
+(1279,363,11),
+(1280,363,13),
+(1281,363,19),
+(1278,363,21),
+(1282,363,25),
+(1284,364,11),
+(1285,364,13),
+(1286,364,19),
+(1283,364,21),
+(1287,364,25),
+(1290,365,3),
+(1291,365,9),
+(1288,365,10),
+(1289,365,22),
+(1294,366,3),
+(1295,366,9),
+(1292,366,10),
+(1293,366,22),
+(1298,367,14),
+(1296,367,15),
+(1297,367,24),
+(1301,368,14),
+(1299,368,15),
+(1300,368,24),
+(1306,369,6),
+(1305,369,10),
+(1302,369,11),
+(1303,369,16),
+(1304,369,18),
+(1307,369,26),
+(1312,370,6),
+(1311,370,10),
+(1308,370,11),
+(1309,370,16),
+(1310,370,18),
+(1313,370,26),
+(1316,371,3),
+(1314,371,9),
+(1315,371,22),
+(1317,371,26),
+(1320,372,3),
+(1318,372,9),
+(1319,372,22),
+(1321,372,26),
+(1326,373,6),
+(1322,373,14),
+(1324,373,16),
+(1325,373,19),
+(1327,373,21),
+(1323,373,26),
+(1329,374,7),
+(1328,374,20),
+(1330,374,27),
+(1332,375,7),
+(1331,375,20),
+(1333,375,27),
+(1334,376,7),
+(1335,376,8),
+(1336,377,7),
+(1337,377,8),
+(1339,378,6),
+(1340,378,11),
+(1338,378,16),
+(1341,378,18),
+(1342,378,21),
+(1344,379,6),
+(1345,379,11),
+(1343,379,16),
+(1346,379,18),
+(1347,379,21),
+(1350,380,6),
+(1348,380,16),
+(1349,380,18),
+(1353,381,6),
+(1351,381,16),
+(1352,381,18),
+(1355,382,6),
+(1354,382,16),
+(1356,382,17),
+(1357,382,18),
+(1359,383,6),
+(1358,383,16),
+(1360,383,17),
+(1361,383,18),
+(1366,384,6),
+(1362,384,7),
+(1365,384,8),
+(1364,384,16),
+(1367,384,26),
+(1363,384,27),
+(1372,385,6),
+(1368,385,7),
+(1371,385,8),
+(1370,385,16),
+(1373,385,26),
+(1369,385,27),
+(1374,386,9),
+(1375,386,22),
+(1376,386,26),
+(1377,387,9),
+(1378,387,22),
+(1379,387,26),
+(1382,388,11),
+(1383,388,14),
+(1380,388,16),
+(1381,388,18),
+(1386,389,11),
+(1387,389,14),
+(1384,389,16),
+(1385,389,18),
+(1388,390,7),
+(1389,390,8),
+(1390,390,26),
+(1391,390,27),
+(1392,391,7),
+(1393,391,8),
+(1394,391,26),
+(1395,391,27),
+(1397,392,11),
+(1396,392,19),
+(1399,392,25),
+(1401,393,11),
+(1400,393,19),
+(1403,393,25),
+(1409,394,6),
+(1404,394,7),
+(1407,394,11),
+(1405,394,16),
+(1408,394,18),
+(1406,394,26),
+(1415,395,6),
+(1410,395,7),
+(1413,395,11),
+(1411,395,16),
+(1414,395,18),
+(1412,395,26),
+(1417,396,6),
+(1416,396,16),
+(1418,396,17),
+(1419,396,18),
+(1421,397,6),
+(1420,397,16),
+(1422,397,17),
+(1423,397,18),
+(1424,398,27),
+(1425,399,27),
+(1429,400,3),
+(1428,400,7),
+(1426,400,8),
+(1430,400,22),
+(1427,400,26),
+(1434,401,3),
+(1433,401,7),
+(1431,401,8),
+(1435,401,22),
+(1432,401,26),
+(1438,402,7),
+(1436,402,8),
+(1439,402,17),
+(1440,402,18),
+(1437,402,19),
+(1443,403,7),
+(1441,403,8),
+(1444,403,17),
+(1445,403,18),
+(1442,403,19),
+(1447,404,5),
+(1446,404,14),
+(1449,405,5),
+(1448,405,14),
+(1451,406,6),
+(1452,406,9),
+(1450,406,17),
+(1453,406,26),
+(1455,407,2),
+(1454,407,11),
+(1456,407,17),
+(1458,408,6),
+(1461,408,10),
+(1459,408,15),
+(1457,408,16),
+(1460,408,18),
+(1462,408,20),
+(1463,408,24),
+(1464,408,27),
+(1467,409,2),
+(1466,409,6),
+(1468,409,17),
+(1465,409,19),
+(1470,410,7),
+(1469,410,20),
+(1471,410,27),
+(1473,411,7),
+(1472,411,20),
+(1474,411,27),
+(1475,412,3),
+(1476,412,4),
+(1477,412,5),
+(1478,413,3),
+(1479,413,4),
+(1480,413,5),
+(1481,414,7),
+(1482,414,23),
+(1483,415,7),
+(1484,415,23),
+(1485,416,27),
+(1486,417,27),
+(1487,418,27),
+(1488,419,27),
+(1489,420,10),
+(1490,420,20),
+(1491,420,23),
+(1492,420,27),
+(1493,421,10),
+(1494,421,20),
+(1495,421,23),
+(1496,421,27),
+(1499,422,3),
+(1497,422,4),
+(1498,422,12),
+(1502,423,3),
+(1500,423,4),
+(1501,423,12),
+(1503,424,3),
+(1505,424,9),
+(1504,424,10),
+(1506,424,22),
+(1507,424,26),
+(1508,425,3),
+(1510,425,9),
+(1509,425,10),
+(1511,425,22),
+(1512,425,26),
+(1514,426,22),
+(1513,426,26),
+(1516,427,22),
+(1515,427,26),
+(1517,428,3),
+(1518,428,4),
+(1519,428,5),
+(1520,429,3),
+(1521,429,4),
+(1522,429,5),
+(1526,430,3),
+(1525,430,7),
+(1523,430,8),
+(1524,430,26),
+(1530,431,3),
+(1529,431,7),
+(1527,431,8),
+(1528,431,26),
+(1531,432,14),
+(1532,433,14),
+(1533,434,9),
+(1534,434,22),
+(1535,434,26),
+(1536,435,9),
+(1537,435,22),
+(1538,435,26),
+(1541,436,7),
+(1539,436,11),
+(1542,436,13),
+(1540,436,20),
+(1544,437,7),
+(1543,437,20),
+(1545,437,27),
+(1547,438,7),
+(1546,438,20),
+(1548,438,27),
+(1549,439,10),
+(1550,439,20),
+(1551,439,23),
+(1552,439,27),
+(1553,440,10),
+(1554,440,20),
+(1555,440,23),
+(1556,440,27),
+(1558,441,7),
+(1557,441,20),
+(1559,441,27),
+(1561,442,7),
+(1560,442,20),
+(1562,442,27),
+(1563,443,13),
+(1564,443,21),
+(1565,443,25),
+(1566,444,13),
+(1567,444,21),
+(1568,444,25),
+(1572,445,3),
+(1571,445,7),
+(1569,445,10),
+(1573,445,11),
+(1570,445,20),
+(1574,445,21),
+(1576,446,6),
+(1577,446,11),
+(1575,446,16),
+(1578,446,18),
+(1580,447,6),
+(1581,447,11),
+(1579,447,16),
+(1582,447,18),
+(1583,448,2),
+(1585,448,6),
+(1584,448,16),
+(1586,448,24),
+(1587,449,16),
+(1588,449,18),
+(1589,450,16),
+(1590,450,18),
+(1591,451,16),
+(1592,451,18),
+(1594,452,11),
+(1593,452,16),
+(1595,452,17),
+(1596,452,18),
+(1598,453,11),
+(1597,453,16),
+(1599,453,17),
+(1600,453,18),
+(1602,454,11),
+(1601,454,16),
+(1603,454,17),
+(1604,454,18),
+(1606,455,6),
+(1605,455,16),
+(1607,455,18),
+(1609,456,6),
+(1608,456,16),
+(1610,456,18),
+(1611,457,11),
+(1612,457,16),
+(1613,457,18),
+(1614,458,11),
+(1615,458,16),
+(1616,458,18),
+(1617,459,15),
+(1618,459,24),
+(1619,460,15),
+(1620,460,24),
+(1622,461,6),
+(1623,461,15),
+(1621,461,16),
+(1624,461,18),
+(1626,462,6),
+(1627,462,15),
+(1625,462,16),
+(1628,462,18),
+(1631,463,6),
+(1629,463,13),
+(1630,463,16),
+(1634,464,6),
+(1632,464,13),
+(1633,464,16),
+(1638,465,6),
+(1637,465,11),
+(1635,465,17),
+(1636,465,19),
+(1639,466,3),
+(1640,466,4),
+(1641,466,14),
+(1642,467,3),
+(1643,467,4),
+(1644,467,14),
+(1645,468,7),
+(1647,468,8),
+(1648,468,21),
+(1649,468,26),
+(1646,468,27),
+(1650,469,7),
+(1652,469,8),
+(1653,469,21),
+(1654,469,26),
+(1651,469,27),
+(1656,470,6),
+(1658,470,7),
+(1659,470,11),
+(1655,470,16),
+(1660,470,18),
+(1657,470,26),
+(1662,471,6),
+(1664,471,7),
+(1665,471,11),
+(1661,471,16),
+(1666,471,18),
+(1663,471,26),
+(1668,472,6),
+(1670,472,11),
+(1667,472,16),
+(1671,472,18),
+(1669,472,26),
+(1673,473,6),
+(1675,473,11),
+(1672,473,16),
+(1676,473,18),
+(1674,473,26),
+(1677,474,13),
+(1679,474,14),
+(1680,474,19),
+(1678,474,21),
+(1681,475,13),
+(1683,475,14),
+(1684,475,19),
+(1682,475,21),
+(1685,476,13),
+(1687,476,19),
+(1686,476,21),
+(1688,477,13),
+(1690,477,19),
+(1689,477,21),
+(1694,478,10),
+(1693,478,13),
+(1692,478,14),
+(1691,478,21),
+(1698,479,10),
+(1697,479,13),
+(1696,479,14),
+(1695,479,21),
+(1699,480,2),
+(1701,480,11),
+(1700,480,16),
+(1702,480,18),
+(1705,481,2),
+(1703,481,11),
+(1706,481,16),
+(1704,481,18),
+(1709,482,2),
+(1708,482,6),
+(1710,482,11),
+(1707,482,16),
+(1711,482,18),
+(1714,483,2),
+(1713,483,6),
+(1715,483,11),
+(1712,483,16),
+(1716,483,18),
+(1720,484,6),
+(1719,484,15),
+(1717,484,17),
+(1718,484,24),
+(1721,484,25),
+(1722,485,6),
+(1723,485,11),
+(1724,485,13),
+(1727,486,6),
+(1725,486,11),
+(1728,486,14),
+(1726,486,16),
+(1729,486,18),
+(1730,486,26),
+(1733,487,6),
+(1731,487,11),
+(1734,487,14),
+(1732,487,16),
+(1735,487,18),
+(1736,487,26),
+(1739,488,6),
+(1737,488,16),
+(1738,488,18),
+(1742,489,6),
+(1740,489,16),
+(1741,489,18),
+(1744,490,6),
+(1743,490,13),
+(1745,490,15),
+(1746,490,21),
+(1749,491,11),
+(1750,491,19),
+(1747,491,21),
+(1748,491,25),
+(1752,492,1),
+(1751,492,17),
+(1754,493,1),
+(1753,493,17),
+(1755,494,2),
+(1756,495,2),
+(1757,496,16),
+(1758,496,17),
+(1759,496,18),
+(1760,497,16),
+(1761,497,17),
+(1762,497,18),
+(1764,498,13),
+(1765,498,19),
+(1763,498,21),
+(1766,498,25),
+(1768,499,6),
+(1767,499,16),
+(1769,499,18),
+(1771,500,6),
+(1770,500,16),
+(1772,500,18),
+(1775,501,7),
+(1773,501,10),
+(1776,501,16),
+(1774,501,19),
+(1777,501,20),
+(1778,501,21),
+(1779,501,27),
+(1781,502,7),
+(1780,502,20),
+(1782,502,27),
+(1784,503,7),
+(1783,503,20),
+(1785,503,27),
+(1787,504,7),
+(1786,504,20),
+(1788,504,27),
+(1790,505,7),
+(1789,505,20),
+(1791,505,27),
+(1792,506,3),
+(1793,506,4),
+(1794,507,3),
+(1795,507,4),
+(1797,508,7),
+(1796,508,20),
+(1798,508,27),
+(1800,509,7),
+(1799,509,20),
+(1801,509,27),
+(1804,510,3),
+(1803,510,7),
+(1802,510,20),
+(1807,511,3),
+(1806,511,7),
+(1805,511,20),
+(1808,512,3),
+(1809,512,4),
+(1810,512,14),
+(1811,513,3),
+(1812,513,4),
+(1813,513,14),
+(1815,514,7),
+(1814,514,20),
+(1816,514,27),
+(1818,515,7),
+(1817,515,20),
+(1819,515,27),
+(1821,516,6),
+(1822,516,15),
+(1820,516,16),
+(1823,516,18),
+(1824,516,24),
+(1828,517,3),
+(1829,517,9),
+(1825,517,10),
+(1830,517,21),
+(1826,517,22),
+(1827,517,26),
+(1834,518,3),
+(1835,518,9),
+(1831,518,10),
+(1836,518,21),
+(1832,518,22),
+(1833,518,26),
+(1837,519,26),
+(1839,520,13),
+(1840,520,19),
+(1838,520,21),
+(1842,521,13),
+(1843,521,19),
+(1841,521,21),
+(1844,522,11),
+(1846,522,16),
+(1845,522,18),
+(1847,523,11),
+(1849,523,16),
+(1848,523,18),
+(1853,524,6),
+(1852,524,14),
+(1850,524,15),
+(1851,524,24),
+(1855,525,6),
+(1856,525,15),
+(1854,525,16),
+(1857,525,18),
+(1859,526,6),
+(1860,526,15),
+(1858,526,16),
+(1861,526,18),
+(1865,527,1),
+(1866,527,6),
+(1864,527,8),
+(1862,527,15),
+(1863,527,17),
+(1867,527,24),
+(1871,528,1),
+(1872,528,6),
+(1870,528,8),
+(1868,528,15),
+(1869,528,17),
+(1873,528,24),
+(1875,529,6),
+(1874,529,16),
+(1876,529,17),
+(1877,529,18),
+(1879,530,6),
+(1878,530,16),
+(1880,530,17),
+(1881,530,18),
+(1883,531,7),
+(1884,531,20),
+(1882,531,27),
+(1886,532,7),
+(1887,532,20),
+(1885,532,27),
+(1888,533,3),
+(1889,533,4),
+(1890,534,3),
+(1891,534,4),
+(1896,535,6),
+(1892,535,11),
+(1895,535,14),
+(1893,535,16),
+(1894,535,18),
+(1901,536,6),
+(1897,536,11),
+(1900,536,14),
+(1898,536,16),
+(1899,536,18),
+(1906,537,6),
+(1904,537,11),
+(1902,537,14),
+(1905,537,16),
+(1907,537,21),
+(1903,537,26),
+(1909,538,7),
+(1908,538,20),
+(1910,538,27),
+(1912,539,7),
+(1911,539,20),
+(1913,539,27),
+(1915,540,6),
+(1914,540,16),
+(1916,540,17),
+(1917,540,18),
+(1919,541,6),
+(1918,541,16),
+(1920,541,17),
+(1921,541,18),
+(1922,542,8),
+(1923,542,9),
+(1924,542,26),
+(1925,543,8),
+(1926,543,9),
+(1927,543,26),
+(1928,544,3),
+(1929,544,4),
+(1930,544,5),
+(1931,545,3),
+(1932,545,4),
+(1933,545,5),
+(1936,546,6),
+(1934,546,16),
+(1935,546,18),
+(1939,547,6),
+(1937,547,16),
+(1938,547,18),
+(1942,548,2),
+(1943,548,11),
+(1940,548,16),
+(1941,548,18),
+(1946,549,2),
+(1947,549,11),
+(1944,549,16),
+(1945,549,18),
+(1950,550,6),
+(1948,550,7),
+(1949,550,16),
+(1951,550,18),
+(1952,550,21),
+(1953,550,27),
+(1956,551,6),
+(1954,551,7),
+(1955,551,16),
+(1957,551,18),
+(1958,551,21),
+(1959,551,27),
+(1962,552,6),
+(1960,552,7),
+(1961,552,16),
+(1963,552,18),
+(1964,552,19),
+(1965,552,27),
+(1968,553,6),
+(1966,553,7),
+(1967,553,16),
+(1969,553,18),
+(1970,553,19),
+(1971,553,27),
+(1972,554,7),
+(1973,554,8),
+(1976,554,11),
+(1974,554,12),
+(1975,554,19),
+(1977,554,23),
+(1978,554,26),
+(1979,554,27),
+(1980,555,27),
+(1981,556,27),
+(1983,557,6),
+(1982,557,16),
+(1984,557,17),
+(1985,557,18),
+(1986,557,21),
+(1988,558,6),
+(1987,558,16),
+(1989,558,17),
+(1990,558,18),
+(1991,558,21),
+(1992,559,10),
+(1993,559,20),
+(1994,559,23),
+(1995,559,27),
+(1996,560,10),
+(1997,560,20),
+(1998,560,23),
+(1999,560,27),
+(2001,561,6),
+(2000,561,16),
+(2002,561,17),
+(2003,561,18),
+(2004,561,19),
+(2006,562,6),
+(2005,562,16),
+(2007,562,17),
+(2008,562,18),
+(2009,562,19),
+(2010,563,12),
+(2011,564,12),
+(2013,565,6),
+(2012,565,16),
+(2014,565,17),
+(2015,565,18),
+(2016,565,19),
+(2018,566,6),
+(2017,566,16),
+(2019,566,17),
+(2020,566,18),
+(2021,566,19),
+(2023,567,13),
+(2022,567,19),
+(2024,567,21),
+(2026,568,13),
+(2025,568,19),
+(2027,568,21),
+(2029,569,14),
+(2028,569,26),
+(2031,570,14),
+(2030,570,26),
+(2034,571,11),
+(2032,571,16),
+(2035,571,17),
+(2033,571,18),
+(2038,572,11),
+(2036,572,16),
+(2039,572,17),
+(2037,572,18),
+(2040,573,27),
+(2041,574,27),
+(2042,575,6),
+(2043,575,16),
+(2044,576,6),
+(2045,576,16),
+(2048,577,2),
+(2047,577,6),
+(2049,577,11),
+(2046,577,16),
+(2050,577,18),
+(2051,577,26),
+(2054,578,2),
+(2053,578,6),
+(2055,578,11),
+(2052,578,16),
+(2056,578,18),
+(2057,578,26),
+(2058,579,2),
+(2059,579,8),
+(2063,579,9),
+(2061,579,16),
+(2062,579,18),
+(2060,579,26),
+(2064,580,2),
+(2065,580,8),
+(2069,580,9),
+(2067,580,16),
+(2068,580,18),
+(2066,580,26),
+(2071,581,7),
+(2070,581,20),
+(2072,581,27),
+(2074,582,7),
+(2073,582,20),
+(2075,582,27),
+(2078,583,7),
+(2079,583,11),
+(2076,583,16),
+(2077,583,18),
+(2080,583,26),
+(2083,584,7),
+(2084,584,11),
+(2081,584,16),
+(2082,584,18),
+(2085,584,26),
+(2089,585,6),
+(2088,585,11),
+(2086,585,16),
+(2087,585,18),
+(2093,586,6),
+(2092,586,11),
+(2090,586,16),
+(2091,586,18),
+(2098,587,6),
+(2094,587,7),
+(2095,587,16),
+(2097,587,19),
+(2096,587,21),
+(2099,587,27),
+(2104,588,6),
+(2100,588,7),
+(2101,588,16),
+(2103,588,19),
+(2102,588,21),
+(2105,588,27),
+(2106,589,2),
+(2107,589,7),
+(2109,589,11),
+(2110,589,16),
+(2111,589,18),
+(2108,589,19),
+(2112,590,2),
+(2113,590,7),
+(2115,590,11),
+(2116,590,16),
+(2117,590,18),
+(2114,590,19),
+(2118,591,14),
+(2119,592,14),
+(2121,593,7),
+(2120,593,20),
+(2122,593,21),
+(2123,593,27),
+(2125,594,7),
+(2124,594,20),
+(2126,594,21),
+(2127,594,27),
+(2129,595,11),
+(2128,595,16),
+(2131,596,3),
+(2132,596,9),
+(2130,596,10),
+(2133,596,22),
+(2134,596,26),
+(2136,597,3),
+(2137,597,9),
+(2135,597,10),
+(2138,597,22),
+(2139,597,26),
+(2141,598,2),
+(2142,598,6),
+(2140,598,13),
+(2143,599,14),
+(2147,600,6),
+(2146,600,10),
+(2144,600,13),
+(2145,600,21),
+(2148,600,27),
+(2149,601,7),
+(2150,601,20),
+(2151,601,23),
+(2152,601,27),
+(2153,602,7),
+(2154,602,20),
+(2155,602,23),
+(2156,602,27),
+(2158,603,3),
+(2159,603,9),
+(2157,603,10),
+(2160,603,22),
+(2162,604,3),
+(2163,604,9),
+(2161,604,10),
+(2164,604,22),
+(2166,605,7),
+(2165,605,8),
+(2168,606,7),
+(2167,606,8),
+(2170,607,15),
+(2169,607,18),
+(2172,608,15),
+(2171,608,18),
+(2173,609,6),
+(2174,610,6),
+(2176,611,6),
+(2175,611,16),
+(2177,611,18),
+(2179,612,6),
+(2178,612,16),
+(2180,612,18),
+(2182,613,11),
+(2181,613,18),
+(2183,614,2),
+(2184,614,13),
+(2185,614,16),
+(2186,614,18),
+(2190,615,9),
+(2187,615,11),
+(2188,615,16),
+(2189,615,18),
+(2192,616,6),
+(2193,616,11),
+(2191,616,13),
+(2194,616,16),
+(2197,617,13),
+(2196,617,15),
+(2195,617,18),
+(2200,618,13),
+(2199,618,15),
+(2198,618,18),
+(2202,619,6),
+(2203,619,11),
+(2201,619,16),
+(2204,619,17),
+(2205,619,18),
+(2207,620,6),
+(2208,620,11),
+(2206,620,16),
+(2209,620,17),
+(2210,620,18),
+(2211,621,13),
+(2213,621,19),
+(2212,621,21),
+(2214,621,25),
+(2215,622,13),
+(2217,622,19),
+(2216,622,21),
+(2218,622,25),
+(2220,623,7),
+(2219,623,27),
+(2222,624,7),
+(2221,624,27),
+(2223,625,11),
+(2224,625,16),
+(2225,625,18),
+(2226,626,11),
+(2227,626,16),
+(2228,626,18),
+(2229,627,3),
+(2230,627,4),
+(2231,628,3),
+(2232,628,4),
+(2233,629,15),
+(2234,629,24),
+(2235,630,15),
+(2236,630,24),
+(2238,631,7),
+(2237,631,20),
+(2239,631,23),
+(2241,632,7),
+(2240,632,20),
+(2242,632,23),
+(2243,633,3),
+(2244,633,4),
+(2245,634,3),
+(2246,634,4),
+(2248,635,19),
+(2247,635,21),
+(2249,635,25),
+(2251,636,19),
+(2250,636,21),
+(2252,636,25),
+(2253,637,7),
+(2254,637,8),
+(2255,637,26),
+(2256,637,27),
+(2257,638,7),
+(2258,638,8),
+(2259,638,26),
+(2260,638,27),
+(2261,639,27),
+(2262,640,27),
+(2265,641,10),
+(2264,641,16),
+(2266,641,19),
+(2263,641,21),
+(2269,642,10),
+(2268,642,16),
+(2270,642,19),
+(2267,642,21),
+(2274,643,6),
+(2271,643,13),
+(2273,643,19),
+(2272,643,21),
+(2278,644,6),
+(2275,644,13),
+(2277,644,19),
+(2276,644,21),
+(2281,645,6),
+(2279,645,11),
+(2280,645,15),
+(2282,646,8),
+(2284,646,11),
+(2285,646,16),
+(2286,646,18),
+(2283,646,26),
+(2287,647,8),
+(2289,647,11),
+(2290,647,16),
+(2291,647,18),
+(2288,647,26),
+(2295,648,3),
+(2294,648,7),
+(2292,648,10),
+(2296,648,20),
+(2293,648,27),
+(2300,649,3),
+(2299,649,7),
+(2297,649,10),
+(2301,649,20),
+(2298,649,27),
+(2302,650,26),
+(2304,651,3),
+(2306,651,9),
+(2303,651,10),
+(2305,651,14),
+(2307,651,22),
+(2309,652,3),
+(2311,652,9),
+(2308,652,10),
+(2310,652,14),
+(2312,652,22),
+(2314,653,3),
+(2315,653,4),
+(2313,653,10),
+(2316,653,14),
+(2317,653,22),
+(2319,654,3),
+(2320,654,4),
+(2318,654,10),
+(2321,654,14),
+(2322,654,22),
+(2324,655,15),
+(2325,655,16),
+(2323,655,18),
+(2327,656,15),
+(2328,656,16),
+(2326,656,18),
+(2329,657,7),
+(2330,657,8),
+(2331,657,26),
+(2332,657,27),
+(2333,658,7),
+(2334,658,8),
+(2335,658,26),
+(2336,658,27),
+(2341,659,6),
+(2337,659,7),
+(2339,659,8),
+(2338,659,16),
+(2340,659,19),
+(2342,659,27),
+(2347,660,6),
+(2343,660,7),
+(2345,660,8),
+(2344,660,16),
+(2346,660,19),
+(2348,660,27),
+(2353,661,8),
+(2351,661,11),
+(2352,661,14),
+(2349,661,16),
+(2350,661,18),
+(2358,662,8),
+(2356,662,11),
+(2357,662,14),
+(2354,662,16),
+(2355,662,18),
+(2359,663,3),
+(2360,663,4),
+(2361,663,14),
+(2362,664,3),
+(2363,664,4),
+(2364,664,14),
+(2365,665,7),
+(2367,665,8),
+(2366,665,14),
+(2368,665,23),
+(2369,665,27),
+(2370,666,7),
+(2372,666,8),
+(2371,666,14),
+(2373,666,23),
+(2374,666,27),
+(2377,667,7),
+(2375,667,16),
+(2378,667,18),
+(2376,667,20),
+(2379,667,27),
+(2382,668,7),
+(2380,668,16),
+(2383,668,18),
+(2381,668,20),
+(2384,668,27),
+(2386,669,7),
+(2385,669,20),
+(2387,669,27),
+(2389,670,7),
+(2388,670,20),
+(2390,670,27),
+(2392,671,6),
+(2393,671,11),
+(2391,671,16),
+(2394,671,18),
+(2395,671,19),
+(2397,672,6),
+(2398,672,11),
+(2396,672,16),
+(2399,672,18),
+(2400,672,19),
+(2403,673,6),
+(2401,673,7),
+(2402,673,16),
+(2404,673,26),
+(2405,673,27),
+(2408,674,6),
+(2406,674,7),
+(2407,674,16),
+(2409,674,26),
+(2410,674,27),
+(2413,675,3),
+(2414,675,9),
+(2411,675,10),
+(2412,675,22),
+(2415,675,26),
+(2418,676,3),
+(2419,676,9),
+(2416,676,10),
+(2417,676,22),
+(2420,676,26),
+(2421,677,7),
+(2422,677,8),
+(2423,677,19),
+(2424,677,26),
+(2425,677,27),
+(2426,678,7),
+(2427,678,8),
+(2428,678,19),
+(2429,678,26),
+(2430,678,27),
+(2433,679,7),
+(2434,679,11),
+(2431,679,16),
+(2432,679,18),
+(2435,679,19),
+(2438,680,7),
+(2439,680,11),
+(2436,680,16),
+(2437,680,18),
+(2440,680,19),
+(2442,681,9),
+(2441,681,27),
+(2444,682,9),
+(2443,682,27),
+(2445,683,7),
+(2447,683,19),
+(2446,683,20),
+(2448,683,23),
+(2449,683,27),
+(2450,684,7),
+(2452,684,19),
+(2451,684,20),
+(2453,684,23),
+(2454,684,27),
+(2456,685,3),
+(2457,685,9),
+(2455,685,10),
+(2458,685,22),
+(2460,686,3),
+(2461,686,9),
+(2459,686,10),
+(2462,686,22),
+(2465,687,11),
+(2466,687,14),
+(2463,687,16),
+(2467,687,17),
+(2464,687,18),
+(2468,687,19),
+(2471,688,11),
+(2472,688,14),
+(2469,688,16),
+(2473,688,17),
+(2470,688,18),
+(2474,688,19),
+(2477,689,11),
+(2478,689,14),
+(2475,689,16),
+(2479,689,17),
+(2476,689,18),
+(2480,689,19),
+(2483,690,11),
+(2484,690,14),
+(2481,690,16),
+(2485,690,17),
+(2482,690,18),
+(2486,690,19),
+(2488,691,6),
+(2490,691,8),
+(2489,691,11),
+(2487,691,16),
+(2491,691,26),
+(2493,692,6),
+(2495,692,8),
+(2494,692,11),
+(2492,692,16),
+(2496,692,26),
+(2497,693,27),
+(2498,694,27),
+(2500,695,10),
+(2499,695,27),
+(2502,696,3),
+(2503,696,9),
+(2501,696,10),
+(2504,696,22),
+(2505,696,26),
+(2507,697,3),
+(2508,697,9),
+(2506,697,10),
+(2509,697,22),
+(2510,697,26),
+(2512,698,6),
+(2513,698,11),
+(2511,698,16),
+(2514,698,17),
+(2515,698,18),
+(2517,699,6),
+(2518,699,11),
+(2516,699,16),
+(2519,699,17),
+(2520,699,18),
+(2522,700,7),
+(2521,700,20),
+(2523,700,27),
+(2525,701,7),
+(2524,701,20),
+(2526,701,27),
+(2527,702,7),
+(2528,702,20),
+(2529,702,27),
+(2530,703,7),
+(2531,703,20),
+(2532,703,27),
+(2534,704,7),
+(2533,704,20),
+(2535,704,23),
+(2537,705,7),
+(2536,705,20),
+(2538,705,23),
+(2542,706,3),
+(2544,706,9),
+(2539,706,10),
+(2543,706,11),
+(2540,706,22),
+(2541,706,26),
+(2548,707,3),
+(2550,707,9),
+(2545,707,10),
+(2549,707,11),
+(2546,707,22),
+(2547,707,26),
+(2553,708,13),
+(2551,708,16),
+(2552,708,17),
+(2554,709,7),
+(2555,709,8),
+(2556,709,26),
+(2557,709,27),
+(2558,710,7),
+(2559,710,8),
+(2560,710,26),
+(2561,710,27),
+(2565,711,13),
+(2564,711,16),
+(2562,711,17),
+(2563,711,19),
+(2569,712,13),
+(2568,712,16),
+(2566,712,17),
+(2567,712,19),
+(2573,713,9),
+(2570,713,11),
+(2571,713,16),
+(2572,713,18),
+(2574,713,27),
+(2578,714,9),
+(2575,714,11),
+(2576,714,16),
+(2577,714,18),
+(2579,714,27),
+(2582,715,7),
+(2583,715,11),
+(2580,715,16),
+(2581,715,21),
+(2584,715,25),
+(2587,716,7),
+(2588,716,11),
+(2585,716,16),
+(2586,716,21),
+(2589,716,25),
+(2590,717,11),
+(2591,717,18),
+(2592,717,21),
+(2593,718,11),
+(2594,718,18),
+(2595,718,21),
+(2598,719,11),
+(2599,719,13),
+(2596,719,21),
+(2597,719,25),
+(2602,720,11),
+(2603,720,13),
+(2600,720,21),
+(2601,720,25),
+(2606,721,2),
+(2604,721,11),
+(2607,721,18),
+(2605,721,19),
+(2610,722,2),
+(2608,722,11),
+(2611,722,18),
+(2609,722,19),
+(2614,723,7),
+(2612,723,17),
+(2613,723,19),
+(2615,723,25),
+(2618,724,7),
+(2616,724,17),
+(2617,724,19),
+(2619,724,25),
+(2620,725,11),
+(2622,725,18),
+(2621,725,21),
+(2623,725,25),
+(2624,726,11),
+(2626,726,18),
+(2625,726,21),
+(2627,726,25),
+(2629,727,11),
+(2628,727,19),
+(2630,727,25),
+(2632,728,11),
+(2631,728,19),
+(2633,728,25),
+(2635,729,6),
+(2638,729,13),
+(2634,729,16),
+(2636,729,17),
+(2637,729,18),
+(2640,730,6),
+(2643,730,13),
+(2639,730,16),
+(2641,730,17),
+(2642,730,18),
+(2644,731,7),
+(2645,731,20),
+(2646,731,23),
+(2647,731,27),
+(2650,732,11),
+(2648,732,21),
+(2649,732,25),
+(2651,733,15),
+(2652,733,24),
+(2653,734,15),
+(2654,734,24),
+(2658,735,6),
+(2655,735,16),
+(2656,735,17),
+(2657,735,18),
+(2662,736,6),
+(2659,736,16),
+(2660,736,17),
+(2661,736,18),
+(2664,737,7),
+(2663,737,8),
+(2665,737,26),
+(2667,738,7),
+(2666,738,8),
+(2668,738,26),
+(2670,739,14),
+(2669,739,26),
+(2672,740,14),
+(2671,740,26),
+(2673,741,14),
+(2674,741,26),
+(2675,742,14),
+(2676,742,26),
+(2677,743,10),
+(2678,743,20),
+(2679,743,23),
+(2680,743,27),
+(2681,744,10),
+(2682,744,20),
+(2683,744,23),
+(2684,744,27),
+(2685,745,11),
+(2687,745,16),
+(2686,745,18),
+(2688,745,26),
+(2690,746,6),
+(2689,746,16),
+(2691,746,17),
+(2692,746,18),
+(2694,747,6),
+(2693,747,16),
+(2695,747,17),
+(2696,747,18),
+(2697,748,3),
+(2698,748,4),
+(2699,749,3),
+(2700,749,4),
+(2703,750,3),
+(2701,750,4),
+(2702,750,5),
+(2706,751,3),
+(2704,751,4),
+(2705,751,5),
+(2707,752,7),
+(2708,752,20),
+(2709,752,23),
+(2710,752,27),
+(2711,753,7),
+(2712,753,20),
+(2713,753,23),
+(2714,753,27),
+(2716,754,3),
+(2717,754,9),
+(2715,754,10),
+(2718,754,22),
+(2720,755,9),
+(2719,755,10),
+(2721,755,11),
+(2722,755,26),
+(2726,756,6),
+(2723,756,7),
+(2725,756,16),
+(2727,756,26),
+(2724,756,27),
+(2731,757,6),
+(2728,757,7),
+(2730,757,16),
+(2732,757,26),
+(2729,757,27),
+(2735,758,6),
+(2733,758,7),
+(2734,758,8),
+(2736,758,27),
+(2739,759,6),
+(2737,759,7),
+(2738,759,8),
+(2740,759,27),
+(2743,760,7),
+(2741,760,20),
+(2742,760,27),
+(2746,761,7),
+(2744,761,20),
+(2745,761,27),
+(2748,762,11),
+(2749,762,15),
+(2747,762,18),
+(2756,763,10),
+(2750,763,11),
+(2754,763,14),
+(2751,763,16),
+(2752,763,18),
+(2753,763,26),
+(2763,764,10),
+(2757,764,11),
+(2761,764,14),
+(2758,764,16),
+(2759,764,18),
+(2760,764,26),
+(2764,765,9),
+(2765,765,22),
+(2766,765,26),
+(2767,766,9),
+(2768,766,22),
+(2769,766,26),
+(2771,767,13),
+(2772,767,19),
+(2770,767,21),
+(2773,767,25),
+(2775,768,13),
+(2776,768,19),
+(2774,768,21),
+(2777,768,25),
+(2780,769,3),
+(2778,769,4),
+(2779,769,12),
+(2783,770,3),
+(2781,770,4),
+(2782,770,12),
+(2786,771,3),
+(2784,771,10),
+(2787,771,11),
+(2785,771,22),
+(2788,771,26),
+(2791,772,3),
+(2789,772,10),
+(2792,772,11),
+(2790,772,22),
+(2793,772,26),
+(2794,773,3),
+(2796,773,9),
+(2795,773,10),
+(2797,773,22),
+(2798,774,3),
+(2800,774,9),
+(2799,774,10),
+(2801,774,22),
+(2803,775,6),
+(2802,775,16),
+(2804,775,18),
+(2806,776,6),
+(2805,776,16),
+(2807,776,18),
+(2808,777,6),
+(2809,777,13),
+(2810,777,21),
+(2811,778,6),
+(2812,778,13),
+(2813,778,21),
+(2817,779,9),
+(2815,779,11),
+(2816,779,16),
+(2814,779,27),
+(2821,780,9),
+(2819,780,11),
+(2820,780,16),
+(2818,780,27),
+(2825,781,9),
+(2822,781,11),
+(2823,781,16),
+(2824,781,18),
+(2826,781,27),
+(2828,782,11),
+(2827,782,16),
+(2829,782,18),
+(2831,783,11),
+(2830,783,16),
+(2832,783,18),
+(2836,784,9),
+(2833,784,11),
+(2834,784,16),
+(2835,784,18),
+(2837,784,27),
+(2839,785,6),
+(2840,785,11),
+(2841,785,16),
+(2838,785,19),
+(2843,786,6),
+(2844,786,11),
+(2845,786,13),
+(2842,786,19),
+(2847,787,10),
+(2846,787,14),
+(2848,787,21),
+(2849,787,26),
+(2852,788,7),
+(2850,788,20),
+(2851,788,27),
+(2855,789,7),
+(2853,789,20),
+(2854,789,27),
+(2856,790,9),
+(2857,790,22),
+(2858,790,26),
+(2859,791,9),
+(2860,791,22),
+(2861,791,26),
+(2866,792,3),
+(2865,792,7),
+(2862,792,10),
+(2863,792,20),
+(2867,792,22),
+(2864,792,27),
+(2872,793,3),
+(2871,793,7),
+(2868,793,10),
+(2869,793,20),
+(2873,793,22),
+(2870,793,27),
+(2876,794,7),
+(2874,794,20),
+(2877,794,23),
+(2875,794,27),
+(2880,795,7),
+(2878,795,20),
+(2881,795,23),
+(2879,795,27),
+(2884,796,3),
+(2885,796,9),
+(2882,796,10),
+(2883,796,22),
+(2886,796,26),
+(2889,797,3),
+(2890,797,9),
+(2887,797,10),
+(2888,797,22),
+(2891,797,26),
+(2895,798,3),
+(2897,798,9),
+(2892,798,10),
+(2896,798,14),
+(2898,798,21),
+(2893,798,22),
+(2894,798,26),
+(2902,799,3),
+(2904,799,9),
+(2899,799,10),
+(2903,799,14),
+(2905,799,21),
+(2900,799,22),
+(2901,799,26),
+(2908,800,11),
+(2906,800,16),
+(2907,800,18),
+(2911,801,11),
+(2909,801,16),
+(2910,801,18),
+(2913,802,3),
+(2912,802,10),
+(2914,802,14),
+(2915,802,21),
+(2918,803,3),
+(2917,803,6),
+(2916,803,10),
+(2919,803,11),
+(2920,803,16),
+(2921,803,18),
+(2922,803,22),
+(2923,803,26),
+(2926,804,3),
+(2925,804,6),
+(2924,804,10),
+(2927,804,11),
+(2928,804,16),
+(2929,804,18),
+(2930,804,22),
+(2931,804,26),
+(2933,805,6),
+(2936,805,13),
+(2932,805,15),
+(2934,805,16),
+(2935,805,18),
+(2937,805,24),
+(2940,806,13),
+(2938,806,19),
+(2939,806,21),
+(2943,807,13),
+(2941,807,19),
+(2942,807,21),
+(2944,808,11),
+(2945,809,10),
+(2947,809,14),
+(2948,809,22),
+(2946,809,26),
+(2949,810,10),
+(2951,810,14),
+(2952,810,22),
+(2950,810,26),
+(2953,811,13),
+(2955,811,19),
+(2954,811,21),
+(2956,811,25),
+(2957,812,13),
+(2959,812,19),
+(2958,812,21),
+(2960,812,25),
+(2961,813,7),
+(2962,813,8),
+(2963,813,26),
+(2964,813,27),
+(2967,814,3),
+(2969,814,9),
+(2965,814,10),
+(2968,814,11),
+(2966,814,22),
+(2972,815,3),
+(2974,815,9),
+(2970,815,10),
+(2973,815,11),
+(2971,815,22),
+(2976,816,15),
+(2975,816,24),
+(2978,817,15),
+(2977,817,24),
+(2979,818,7),
+(2980,818,8),
+(2981,818,26),
+(2982,818,27),
+(2983,819,7),
+(2984,819,8),
+(2985,819,26),
+(2986,819,27),
+(2987,820,3),
+(2988,820,4),
+(2989,820,5),
+(2990,821,3),
+(2991,821,4),
+(2992,821,5),
+(2994,822,7),
+(2993,822,8),
+(2995,822,26),
+(2997,823,7),
+(2996,823,8),
+(2998,823,26),
+(3000,824,7),
+(2999,824,27),
+(3002,825,7),
+(3001,825,27),
+(3004,826,11),
+(3003,826,18),
+(3006,827,15),
+(3005,827,18),
+(3008,828,15),
+(3007,828,18),
+(3009,829,7),
+(3010,829,8),
+(3011,829,26),
+(3012,829,27),
+(3013,830,7),
+(3014,830,8),
+(3015,830,26),
+(3016,830,27),
+(3017,831,11),
+(3019,831,16),
+(3018,831,19),
+(3020,832,2),
+(3022,832,11),
+(3021,832,18),
+(3024,833,22),
+(3023,833,26),
+(3026,834,22),
+(3025,834,26),
+(3028,835,6),
+(3031,835,13),
+(3027,835,16),
+(3029,835,17),
+(3030,835,18),
+(3033,836,6),
+(3036,836,13),
+(3032,836,16),
+(3034,836,17),
+(3035,836,18),
+(3037,837,1),
+(3038,837,17),
+(3039,838,1),
+(3040,838,17),
+(3041,839,1),
+(3042,839,17),
+(3043,840,2),
+(3044,841,2),
+(3045,842,2),
+(3046,843,8),
+(3048,843,26),
+(3049,844,8),
+(3051,844,26),
+(3054,845,16),
+(3052,845,17),
+(3053,845,19),
+(3055,845,21),
+(3056,845,25),
+(3059,846,16),
+(3057,846,17),
+(3058,846,19),
+(3060,846,21),
+(3061,846,25),
+(3064,847,16),
+(3062,847,17),
+(3063,847,19),
+(3065,847,21),
+(3066,847,25),
+(3069,848,17),
+(3067,848,19),
+(3070,848,21),
+(3068,848,25),
+(3073,849,3),
+(3074,849,9),
+(3071,849,10),
+(3072,849,22),
+(3077,850,3),
+(3078,850,9),
+(3075,850,10),
+(3076,850,22),
+(3081,851,3),
+(3082,851,9),
+(3079,851,10),
+(3080,851,22),
+(3085,852,3),
+(3086,852,9),
+(3083,852,10),
+(3084,852,22),
+(3088,853,19),
+(3087,853,27),
+(3090,854,19),
+(3089,854,27),
+(3093,855,3),
+(3091,855,4),
+(3092,855,5),
+(3094,855,14),
+(3097,856,3),
+(3095,856,4),
+(3096,856,5),
+(3098,856,14),
+(3099,857,7),
+(3100,857,8),
+(3101,857,26),
+(3102,857,27),
+(3103,858,7),
+(3104,858,8),
+(3105,858,26),
+(3106,858,27),
+(3108,859,7),
+(3107,859,8),
+(3109,859,26),
+(3111,860,7),
+(3110,860,8),
+(3112,860,26),
+(3114,861,12),
+(3113,861,27),
+(3116,862,12),
+(3115,862,27),
+(3118,863,7),
+(3117,863,20),
+(3119,863,27),
+(3121,864,7),
+(3120,864,20),
+(3122,864,27),
+(3123,865,15),
+(3124,865,24),
+(3125,866,15),
+(3126,866,24),
+(3127,867,6),
+(3128,868,6),
+(3130,869,11),
+(3129,869,16),
+(3131,869,18),
+(3133,870,11),
+(3132,870,16),
+(3134,870,18),
+(3136,871,11),
+(3135,871,16),
+(3137,871,18),
+(3139,872,15),
+(3138,872,18),
+(3141,873,15),
+(3140,873,18),
+(3143,874,6),
+(3142,874,16),
+(3144,874,18),
+(3146,875,6),
+(3145,875,16),
+(3147,875,18),
+(3150,876,11),
+(3148,876,16),
+(3151,876,17),
+(3149,876,18),
+(3154,877,11),
+(3152,877,16),
+(3155,877,17),
+(3153,877,18),
+(3156,878,13),
+(3158,878,19),
+(3157,878,21),
+(3159,879,13),
+(3161,879,19),
+(3160,879,21),
+(3162,880,27),
+(3163,881,27),
+(3165,882,3),
+(3167,882,9),
+(3164,882,10),
+(3166,882,16),
+(3168,882,22),
+(3169,882,26),
+(3171,883,3),
+(3173,883,9),
+(3170,883,10),
+(3172,883,16),
+(3174,883,22),
+(3175,883,26),
+(3177,884,7),
+(3176,884,20),
+(3178,884,27),
+(3180,885,7),
+(3179,885,20),
+(3181,885,27),
+(3184,886,3),
+(3182,886,10),
+(3185,886,11),
+(3183,886,22),
+(3186,886,26),
+(3189,887,3),
+(3187,887,10),
+(3190,887,11),
+(3188,887,22),
+(3191,887,26),
+(3193,888,6),
+(3192,888,16),
+(3194,888,18),
+(3196,889,6),
+(3195,889,16),
+(3197,889,18),
+(3198,890,15),
+(3199,890,24),
+(3200,891,15),
+(3201,891,24),
+(3203,892,7),
+(3202,892,20),
+(3204,892,27),
+(3206,893,7),
+(3205,893,20),
+(3207,893,27),
+(3209,894,6),
+(3210,894,11),
+(3208,894,16),
+(3211,894,17),
+(3212,894,18),
+(3214,895,6),
+(3215,895,11),
+(3213,895,16),
+(3216,895,17),
+(3217,895,18),
+(3218,896,11),
+(3220,896,16),
+(3219,896,18),
+(3221,897,11),
+(3223,897,16),
+(3222,897,18),
+(3224,898,16),
+(3225,898,17),
+(3226,898,18),
+(3227,899,16),
+(3228,899,17),
+(3229,899,18),
+(3230,900,7),
+(3231,900,20),
+(3232,900,27),
+(3233,901,7),
+(3234,901,20),
+(3235,901,27),
+(3237,902,11),
+(3238,902,16),
+(3236,902,18),
+(3239,902,26),
+(3241,903,11),
+(3242,903,16),
+(3240,903,18),
+(3243,903,26),
+(3244,904,3),
+(3245,904,10),
+(3246,904,11),
+(3247,904,22),
+(3248,904,26),
+(3249,905,3),
+(3250,905,10),
+(3251,905,11),
+(3252,905,22),
+(3253,905,26),
+(3255,906,6),
+(3254,906,16),
+(3256,906,17),
+(3257,906,18),
+(3259,907,6),
+(3258,907,16),
+(3260,907,17),
+(3261,907,18),
+(3262,908,7),
+(3263,908,8),
+(3264,908,26),
+(3265,908,27),
+(3266,909,7),
+(3267,909,8),
+(3268,909,26),
+(3269,909,27),
+(3271,910,14),
+(3270,910,26),
+(3273,911,14),
+(3272,911,26),
+(3275,912,6),
+(3274,912,16),
+(3276,912,18),
+(3278,913,6),
+(3277,913,16),
+(3279,913,18),
+(3281,914,6),
+(3282,914,11),
+(3280,914,16),
+(3283,914,17),
+(3284,914,18),
+(3286,915,6),
+(3287,915,11),
+(3285,915,16),
+(3288,915,17),
+(3289,915,18),
+(3293,916,3),
+(3292,916,7),
+(3290,916,8),
+(3291,916,26),
+(3297,917,3),
+(3296,917,7),
+(3294,917,8),
+(3295,917,26),
+(3299,918,6),
+(3303,918,8),
+(3301,918,11),
+(3298,918,16),
+(3302,918,18),
+(3300,918,26),
+(3305,919,6),
+(3309,919,8),
+(3307,919,11),
+(3304,919,16),
+(3308,919,18),
+(3306,919,26),
+(3310,920,11),
+(3311,920,13),
+(3312,920,20),
+(3313,921,3),
+(3314,921,4),
+(3315,922,3),
+(3316,922,4),
+(3318,923,6),
+(3317,923,7),
+(3319,923,16),
+(3320,923,26),
+(3321,923,27),
+(3323,924,6),
+(3322,924,7),
+(3324,924,16),
+(3325,924,26),
+(3326,924,27),
+(3328,925,6),
+(3327,925,16),
+(3329,925,17),
+(3330,925,18),
+(3332,926,6),
+(3331,926,16),
+(3333,926,17),
+(3334,926,18),
+(3336,927,7),
+(3335,927,20),
+(3337,927,27),
+(3339,928,7),
+(3338,928,20),
+(3340,928,27),
+(3342,929,6),
+(3343,929,11),
+(3341,929,16),
+(3344,929,18),
+(3345,930,16),
+(3346,930,18),
+(3347,930,21),
+(3348,931,16),
+(3349,931,18),
+(3350,931,21),
+(3352,932,7),
+(3353,932,13),
+(3354,932,19),
+(3351,932,21),
+(3355,932,23),
+(3357,933,7),
+(3358,933,13),
+(3359,933,19),
+(3356,933,21),
+(3360,933,23),
+(3362,934,7),
+(3361,934,20),
+(3363,934,21),
+(3364,934,23),
+(3365,934,27),
+(3367,935,7),
+(3366,935,20),
+(3368,935,21),
+(3369,935,23),
+(3370,935,27),
+(3372,936,7),
+(3371,936,20),
+(3373,936,21),
+(3374,936,23),
+(3375,936,27),
+(3377,937,7),
+(3376,937,20),
+(3378,937,21),
+(3379,937,23),
+(3380,937,27),
+(3382,938,6),
+(3381,938,16),
+(3383,938,18),
+(3385,939,6),
+(3384,939,16),
+(3386,939,18),
+(3388,940,6),
+(3389,940,15),
+(3387,940,16),
+(3390,940,17),
+(3391,940,18),
+(3392,940,24),
+(3393,941,15),
+(3394,941,24),
+(3396,942,11),
+(3397,942,15),
+(3395,942,18),
+(3398,943,11),
+(3400,943,16),
+(3399,943,18),
+(3401,944,11),
+(3403,944,16),
+(3402,944,18),
+(3404,945,6),
+(3405,945,13),
+(3407,946,10),
+(3408,946,11),
+(3406,946,19),
+(3410,947,10),
+(3411,947,11),
+(3409,947,19),
+(3413,948,10),
+(3414,948,11),
+(3412,948,19),
+(3418,949,6),
+(3417,949,11),
+(3415,949,16),
+(3416,949,18),
+(3419,950,6),
+(3420,950,15),
+(3421,950,16),
+(3422,950,18),
+(3423,950,24),
+(3425,951,6),
+(3426,951,15),
+(3424,951,16),
+(3427,951,17),
+(3428,951,18),
+(3430,952,6),
+(3431,952,15),
+(3429,952,16),
+(3432,952,17),
+(3433,952,18),
+(3436,953,11),
+(3434,953,16),
+(3435,953,18),
+(3437,953,26),
+(3440,954,11),
+(3438,954,16),
+(3439,954,18),
+(3441,954,26),
+(3443,955,9),
+(3442,955,10),
+(3444,955,27),
+(3446,956,9),
+(3445,956,10),
+(3447,956,27),
+(3448,957,7),
+(3449,957,8),
+(3450,957,20),
+(3451,958,7),
+(3452,958,8),
+(3453,958,20),
+(3454,959,20),
+(3455,959,27),
+(3456,960,20),
+(3457,960,27),
+(3458,961,3),
+(3459,961,4),
+(3460,961,14),
+(3461,962,3),
+(3462,962,4),
+(3463,962,14),
+(3469,963,6),
+(3466,963,11),
+(3464,963,14),
+(3468,963,17),
+(3465,963,19),
+(3470,963,26),
+(3472,964,6),
+(3473,964,11),
+(3471,964,16),
+(3474,964,18),
+(3476,965,6),
+(3477,965,11),
+(3475,965,16),
+(3478,965,18),
+(3480,966,6),
+(3481,966,11),
+(3479,966,16),
+(3482,966,17),
+(3483,966,18),
+(3485,967,6),
+(3486,967,11),
+(3484,967,16),
+(3487,967,17),
+(3488,967,18),
+(3489,968,11),
+(3490,968,16),
+(3491,968,18),
+(3492,969,11),
+(3493,969,16),
+(3494,969,18),
+(3495,970,11),
+(3497,970,16),
+(3496,970,19),
+(3500,971,13),
+(3498,971,19),
+(3499,971,21),
+(3501,971,25),
+(3504,972,13),
+(3502,972,19),
+(3503,972,21),
+(3505,972,25),
+(3506,973,11),
+(3508,973,16),
+(3507,973,21),
+(3509,973,26),
+(3511,974,7),
+(3510,974,20),
+(3512,974,27),
+(3514,975,7),
+(3513,975,20),
+(3515,975,27),
+(3518,976,3),
+(3516,976,10),
+(3519,976,11),
+(3517,976,22),
+(3520,976,26),
+(3523,977,3),
+(3521,977,10),
+(3524,977,11),
+(3522,977,22),
+(3525,977,26),
+(3528,978,9),
+(3526,978,11),
+(3527,978,16),
+(3529,978,27),
+(3533,979,9),
+(3532,979,11),
+(3530,979,19),
+(3531,979,26),
+(3537,980,9),
+(3536,980,11),
+(3534,980,19),
+(3535,980,26),
+(3538,981,9),
+(3540,981,11),
+(3541,981,19),
+(3539,981,26),
+(3542,982,7),
+(3543,982,16),
+(3544,982,18),
+(3545,982,26),
+(3547,983,6),
+(3546,983,7),
+(3548,983,16),
+(3549,983,26),
+(3550,983,27),
+(3552,984,6),
+(3551,984,7),
+(3553,984,16),
+(3554,984,26),
+(3555,984,27),
+(3559,985,10),
+(3556,985,13),
+(3558,985,14),
+(3560,985,19),
+(3557,985,21),
+(3564,986,10),
+(3561,986,13),
+(3563,986,14),
+(3565,986,19),
+(3562,986,21),
+(3567,987,6),
+(3570,987,13),
+(3566,987,15),
+(3568,987,16),
+(3569,987,18),
+(3571,987,24),
+(3573,988,6),
+(3574,988,11),
+(3572,988,17),
+(3575,988,24),
+(3578,989,2),
+(3579,989,17),
+(3576,989,18),
+(3577,989,19),
+(3580,990,27),
+(3581,991,27),
+(3582,992,27),
+(3583,993,27),
+(3584,994,3),
+(3585,994,4),
+(3586,994,5),
+(3587,995,3),
+(3588,995,4),
+(3589,995,5),
+(3591,996,7),
+(3590,996,20),
+(3592,996,21),
+(3593,996,27),
+(3595,997,7),
+(3594,997,20),
+(3596,997,21),
+(3597,997,27),
+(3598,998,9),
+(3599,998,22),
+(3600,998,26),
+(3601,999,9),
+(3602,999,22),
+(3603,999,26),
+(3605,1000,15),
+(3606,1000,16),
+(3604,1000,18),
+(3608,1001,15),
+(3609,1001,16),
+(3607,1001,18),
+(3611,1002,6),
+(3610,1002,16),
+(3612,1002,17),
+(3613,1002,18),
+(3615,1003,6),
+(3614,1003,16),
+(3616,1003,17),
+(3617,1003,18),
+(3619,1004,6),
+(3618,1004,16),
+(3620,1004,17),
+(3621,1004,18),
+(3623,1005,6),
+(3622,1005,16),
+(3624,1005,17),
+(3625,1005,18),
+(3628,1006,7),
+(3629,1006,19),
+(3626,1006,21),
+(3627,1006,25),
+(3632,1007,3),
+(3633,1007,9),
+(3630,1007,10),
+(3631,1007,22),
+(3634,1007,26),
+(3637,1008,3),
+(3638,1008,9),
+(3635,1008,10),
+(3636,1008,22),
+(3639,1008,26),
+(3643,1009,8),
+(3642,1009,17),
+(3640,1009,19),
+(3641,1009,25),
+(3645,1010,6),
+(3644,1010,16),
+(3646,1010,18),
+(3648,1011,6),
+(3647,1011,16),
+(3649,1011,18),
+(3650,1012,27),
+(3651,1013,27),
+(3654,1014,8),
+(3652,1014,9),
+(3655,1014,22),
+(3653,1014,26),
+(3658,1015,8),
+(3656,1015,9),
+(3659,1015,22),
+(3657,1015,26),
+(3663,1016,3),
+(3662,1016,7),
+(3660,1016,8),
+(3661,1016,26),
+(3667,1017,3),
+(3666,1017,7),
+(3664,1017,8),
+(3665,1017,26),
+(3668,1018,11),
+(3670,1018,16),
+(3671,1018,20),
+(3669,1018,27),
+(3673,1019,3),
+(3672,1019,10),
+(3674,1019,22),
+(3675,1019,26),
+(3677,1020,3),
+(3676,1020,10),
+(3678,1020,22),
+(3679,1020,26),
+(3680,1021,27),
+(3681,1022,27),
+(3685,1023,6),
+(3682,1023,13),
+(3684,1023,19),
+(3683,1023,21),
+(3686,1024,13),
+(3688,1024,19),
+(3687,1024,21),
+(3689,1024,25),
+(3690,1025,13),
+(3692,1025,19),
+(3691,1025,21),
+(3693,1025,25),
+(3695,1026,6),
+(3694,1026,16),
+(3696,1026,17),
+(3697,1026,18),
+(3699,1027,6),
+(3698,1027,16),
+(3700,1027,17),
+(3701,1027,18),
+(3703,1028,6),
+(3706,1028,13),
+(3702,1028,15),
+(3704,1028,16),
+(3705,1028,18),
+(3707,1028,24),
+(3709,1029,7),
+(3708,1029,20),
+(3710,1029,27),
+(3712,1030,7),
+(3711,1030,20),
+(3713,1030,27),
+(3715,1031,6),
+(3714,1031,16),
+(3716,1031,18),
+(3718,1032,6),
+(3719,1032,7),
+(3720,1032,11),
+(3717,1032,16),
+(3723,1033,11),
+(3721,1033,16),
+(3724,1033,17),
+(3722,1033,18),
+(3727,1034,2),
+(3726,1034,6),
+(3728,1034,8),
+(3725,1034,17),
+(3731,1035,7),
+(3729,1035,20),
+(3730,1035,27),
+(3734,1036,7),
+(3732,1036,20),
+(3733,1036,27),
+(3736,1037,3),
+(3737,1037,9),
+(3735,1037,10),
+(3738,1037,22),
+(3739,1037,26),
+(3741,1038,3),
+(3742,1038,9),
+(3740,1038,10),
+(3743,1038,22),
+(3744,1038,26),
+(3746,1039,19),
+(3745,1039,21),
+(3748,1040,19),
+(3747,1040,21),
+(3750,1041,7),
+(3749,1041,20),
+(3751,1041,27),
+(3753,1042,7),
+(3752,1042,20),
+(3754,1042,27),
+(3756,1043,3),
+(3757,1043,9),
+(3755,1043,10),
+(3758,1043,22),
+(3759,1043,26),
+(3761,1044,3),
+(3762,1044,9),
+(3760,1044,10),
+(3763,1044,22),
+(3764,1044,26),
+(3766,1045,7),
+(3765,1045,20),
+(3767,1045,23),
+(3768,1045,27),
+(3770,1046,7),
+(3769,1046,20),
+(3771,1046,23),
+(3772,1046,27),
+(3775,1047,3),
+(3776,1047,9),
+(3773,1047,10),
+(3774,1047,22),
+(3779,1048,3),
+(3780,1048,9),
+(3777,1048,10),
+(3778,1048,22),
+(3781,1049,2),
+(3783,1049,11),
+(3784,1049,15),
+(3782,1049,18),
+(3785,1050,2),
+(3788,1050,6),
+(3786,1050,16),
+(3787,1050,18),
+(3789,1051,2),
+(3792,1051,6),
+(3790,1051,16),
+(3791,1051,18),
+(3794,1052,5),
+(3793,1052,14),
+(3796,1053,5),
+(3795,1053,14),
+(3799,1054,7),
+(3797,1054,12),
+(3798,1054,14),
+(3802,1055,7),
+(3800,1055,12),
+(3801,1055,14),
+(3803,1056,3),
+(3804,1056,4),
+(3805,1056,5),
+(3806,1056,12),
+(3807,1057,3),
+(3808,1057,4),
+(3809,1057,5),
+(3810,1057,12),
+(3812,1058,6),
+(3813,1058,15),
+(3811,1058,16),
+(3814,1058,18),
+(3816,1060,6),
+(3817,1060,11),
+(3815,1060,16),
+(3818,1060,17),
+(3819,1060,18);
+/*!40000 ALTER TABLE `musculoejercicio` ENABLE KEYS */;
+
+--
+-- Table structure for table `persona`
+--
+
+DROP TABLE IF EXISTS `persona`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `persona` (
+  `idpersona` int(11) NOT NULL AUTO_INCREMENT,
+  `cedula` varchar(20) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `nombres` varchar(100) NOT NULL,
+  `fechanacimiento` date DEFAULT NULL,
+  `idsexo` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idpersona`),
+  UNIQUE KEY `cedula` (`cedula`),
+  KEY `fk_persona_sexo` (`idsexo`),
+  CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `persona`
+--
+
+/*!40000 ALTER TABLE `persona` DISABLE KEYS */;
+INSERT INTO `persona` VALUES
+(1,'0801234567','Mendoza Reyes','Carlos Alberto','1995-04-12',1),
+(2,'0807654321','Torres Loor','María Fernanda','1998-09-25',2),
+(3,'0912345678','Castillo Ortiz','Juan Diego','2000-01-15',1),
+(7,'08016017','Francis Quinde','Stalin Adalberto','1980-07-01',1);
+/*!40000 ALTER TABLE `persona` ENABLE KEYS */;
+
+--
+-- Table structure for table `planejercicio`
+--
+
+DROP TABLE IF EXISTS `planejercicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `planejercicio` (
+  `idplanejercicio` int(11) NOT NULL AUTO_INCREMENT,
+  `idejercicio` int(11) NOT NULL,
+  `diassemanas` int(11) DEFAULT NULL,
+  `repeticiones` int(11) DEFAULT NULL,
+  `series` int(11) DEFAULT NULL,
+  `tiempodescanso` int(11) DEFAULT NULL,
+  `peso` decimal(8,2) DEFAULT NULL,
+  PRIMARY KEY (`idplanejercicio`),
+  KEY `fk_pej_ejercicio` (`idejercicio`),
+  CONSTRAINT `fk_pej_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `planejercicio`
+--
+
+/*!40000 ALTER TABLE `planejercicio` DISABLE KEYS */;
+INSERT INTO `planejercicio` VALUES
+(1,1,3,12,4,90,60.00),
+(2,2,3,10,4,120,80.00),
+(3,4,4,12,3,60,50.00),
+(4,5,4,15,3,60,45.00),
+(5,9,5,20,4,45,0.00),
+(6,8,5,20,4,45,0.00),
+(7,3,3,5,5,180,100.00),
+(8,1,3,5,5,180,85.00),
+(9,10,4,15,3,60,30.00),
+(10,11,3,12,3,60,20.00);
+/*!40000 ALTER TABLE `planejercicio` ENABLE KEYS */;
+
+--
+-- Table structure for table `programacliente`
+--
+
+DROP TABLE IF EXISTS `programacliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `programacliente` (
+  `idprogramacliente` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogramaentrenamiento` int(11) NOT NULL,
+  `idcliente` int(11) NOT NULL,
+  `fechainicio` date NOT NULL,
+  `idestadoprogramacliente` int(11) NOT NULL,
+  PRIMARY KEY (`idprogramacliente`),
+  KEY `fk_pc_programa` (`idprogramaentrenamiento`),
+  KEY `fk_pc_cliente` (`idcliente`),
+  KEY `fk_pc_estado` (`idestadoprogramacliente`),
+  CONSTRAINT `fk_pc_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_pc_estado` FOREIGN KEY (`idestadoprogramacliente`) REFERENCES `estadoprogramacliente` (`idestadoprogramacliente`) ON UPDATE CASCADE,
+  CONSTRAINT `fk_pc_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `programacliente`
+--
+
+/*!40000 ALTER TABLE `programacliente` DISABLE KEYS */;
+INSERT INTO `programacliente` VALUES
+(1,1,1,'2026-01-15',1),
+(2,2,1,'2026-02-01',1),
+(3,3,2,'2026-03-10',1),
+(4,5,6,'2026-04-05',1);
+/*!40000 ALTER TABLE `programacliente` ENABLE KEYS */;
+
+--
 -- Table structure for table `programaentrenamiento`
 --
 
@@ -1572,16 +5673,11 @@ DROP TABLE IF EXISTS `programaentrenamiento`;
 /*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `programaentrenamiento` (
   `idprogramaentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL DEFAULT '',
   `idmotivoentrenamiento` int(11) NOT NULL,
-  `idrutinaejercicio` int(11) NOT NULL,
-  `idejercicio` int(11) NOT NULL,
   PRIMARY KEY (`idprogramaentrenamiento`),
   KEY `fk_pe_motivo` (`idmotivoentrenamiento`),
-  KEY `fk_pe_rutina` (`idrutinaejercicio`),
-  KEY `fk_pe_ejercicio` (`idejercicio`),
-  CONSTRAINT `fk_pe_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_pe_motivo` FOREIGN KEY (`idmotivoentrenamiento`) REFERENCES `motivoentrenamiento` (`idmotivoentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_pe_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_pe_motivo` FOREIGN KEY (`idmotivoentrenamiento`) REFERENCES `motivoentrenamiento` (`idmotivoentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1591,29 +5687,364 @@ CREATE TABLE `programaentrenamiento` (
 
 /*!40000 ALTER TABLE `programaentrenamiento` DISABLE KEYS */;
 INSERT INTO `programaentrenamiento` VALUES
-(1,1,1,1),
-(2,1,1,2),
-(3,1,2,4),
-(4,1,2,5),
-(5,2,4,9),
-(6,2,4,8),
-(7,3,5,3),
-(8,3,5,1),
-(9,4,3,10),
-(10,5,1,11);
+(1,'Hipertrofia Muscular - Full Body A',1),
+(2,'Hipertrofia Muscular - Full Body B',1),
+(3,'Hipertrofia Torso y Pierna A',1),
+(4,'Hipertrofia Torso y Pierna B',1),
+(5,'Definición y Quema Grasa - HIIT A',2),
+(6,'Definición y Quema Grasa - HIIT B',2),
+(7,'Fuerza y Potencia 5x5 Básico',3),
+(8,'Fuerza y Potencia 5x5 Avanzado',3),
+(9,'Acondicionamiento Físico - PPL Pro',4),
+(10,'Rehabilitación y Movilidad Funcional',5);
 /*!40000 ALTER TABLE `programaentrenamiento` ENABLE KEYS */;
 
--- =============================================================================
--- Vista `rutinaejercicio` (compatibilidad de alias, sin DEFINER restringido)
--- =============================================================================
-DROP VIEW IF EXISTS `rutinaejercicio`;
-CREATE VIEW `rutinaejercicio` AS 
-SELECT `idrutinaejercicio`, `nombre` 
-FROM `rutinaejecicio`;
+--
+-- Table structure for table `rutinaejecicio`
+--
 
-COMMIT;
+DROP TABLE IF EXISTS `rutinaejecicio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaejecicio` (
+  `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idrutinaejercicio`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
+--
+-- Dumping data for table `rutinaejecicio`
+--
+
+/*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
+INSERT INTO `rutinaejecicio` VALUES
+(1,'Full Body Principiante'),
+(2,'Torso / Pierna Intermedio'),
+(3,'Push / Pull / Legs (PPL) Avanzado'),
+(4,'Circuito Funcional HIIT'),
+(5,'Rutina de Fuerza 5x5');
+/*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
+
+--
+-- Temporary table structure for view `rutinaejercicio`
+--
+
+DROP TABLE IF EXISTS `rutinaejercicio`;
+/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaejercicio` AS SELECT
+ NULL AS `idrutinaejercicio`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `rutinaplan`
+--
+
+DROP TABLE IF EXISTS `rutinaplan`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaplan` (
+  `id_rutina_plan` int(11) NOT NULL AUTO_INCREMENT,
+  `idrutinaejercicio` int(11) NOT NULL,
+  `idplanejercicio` int(11) NOT NULL,
+  PRIMARY KEY (`id_rutina_plan`),
+  KEY `fk_rp_rutina` (`idrutinaejercicio`),
+  KEY `fk_rp_plan` (`idplanejercicio`),
+  CONSTRAINT `fk_rp_plan` FOREIGN KEY (`idplanejercicio`) REFERENCES `planejercicio` (`idplanejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_rp_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaplan`
+--
+
+/*!40000 ALTER TABLE `rutinaplan` DISABLE KEYS */;
+INSERT INTO `rutinaplan` VALUES
+(1,1,1),
+(2,1,2),
+(3,2,3),
+(4,2,4),
+(5,4,5),
+(6,4,6),
+(7,5,7),
+(8,5,8),
+(9,3,9),
+(10,1,10);
+/*!40000 ALTER TABLE `rutinaplan` ENABLE KEYS */;
+
+--
+-- Table structure for table `rutinaprograma`
+--
+
+DROP TABLE IF EXISTS `rutinaprograma`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaprograma` (
+  `idrutinaprograma` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogramaentrenamiento` int(11) NOT NULL,
+  `idrutinaejercicio` int(11) NOT NULL,
+  PRIMARY KEY (`idrutinaprograma`),
+  KEY `fk_rprog_programa` (`idprogramaentrenamiento`),
+  KEY `fk_rprog_rutina` (`idrutinaejercicio`),
+  CONSTRAINT `fk_rprog_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_rprog_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaprograma`
+--
+
+/*!40000 ALTER TABLE `rutinaprograma` DISABLE KEYS */;
+INSERT INTO `rutinaprograma` VALUES
+(1,1,1),
+(2,2,1),
+(3,10,1),
+(4,3,2),
+(5,4,2),
+(6,9,3),
+(7,5,4),
+(8,6,4),
+(9,7,5),
+(10,8,5);
+/*!40000 ALTER TABLE `rutinaprograma` ENABLE KEYS */;
+
+--
+-- Table structure for table `sexo`
+--
+
+DROP TABLE IF EXISTS `sexo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `sexo` (
+  `idsexo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idsexo`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `sexo`
+--
+
+/*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
+INSERT INTO `sexo` VALUES
+(1,'Masculino'),
+(2,'Femenino'),
+(3,'Intersexual');
+/*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
+
+--
+-- Table structure for table `visitasgim`
+--
+
+DROP TABLE IF EXISTS `visitasgim`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `visitasgim` (
+  `idvisitasgim` int(11) NOT NULL AUTO_INCREMENT,
+  `idcliente` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `horaingreso` time NOT NULL,
+  `horasalida` time DEFAULT NULL,
+  PRIMARY KEY (`idvisitasgim`),
+  KEY `idx_visitasgim_cliente` (`idcliente`),
+  KEY `idx_visitasgim_fecha` (`fecha`),
+  CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `visitasgim`
+--
+
+/*!40000 ALTER TABLE `visitasgim` DISABLE KEYS */;
+INSERT INTO `visitasgim` VALUES
+(1,1,'2026-10-01','07:15:00','08:30:00'),
+(2,2,'2026-10-02','18:00:00','19:45:00'),
+(3,1,'2026-10-05','06:45:00','08:00:00'),
+(4,2,'2026-10-05','19:00:00','21:15:00');
+/*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
+
+--
+-- Dumping routines for database 'gim360'
+--
+
+--
+-- Final view structure for view `EjercicioEquipo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `EjercicioEquipo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `EjercicioEquipo` AS select `ejercicioequipo`.`idejercicioequipo` AS `idejercicioequipo`,`ejercicioequipo`.`idejercicio` AS `idejercicio`,`ejercicioequipo`.`idequipo` AS `idequipo` from `ejercicioequipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `EstadoProgramaCliente`
+--
+
+/*!50001 DROP VIEW IF EXISTS `EstadoProgramaCliente`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `EstadoProgramaCliente` AS select `estadoprogramacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente`,`estadoprogramacliente`.`nombre` AS `nombre` from `estadoprogramacliente` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `Musculo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `Musculo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `Musculo` AS select `musculo`.`idmusculo` AS `idmusculo`,`musculo`.`nombre` AS `nombre`,`musculo`.`imagen` AS `imagen` from `musculo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `MusculoEjercicio`
+--
+
+/*!50001 DROP VIEW IF EXISTS `MusculoEjercicio`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `MusculoEjercicio` AS select `musculoejercicio`.`idmusculoejecicio` AS `idmusculoejecicio`,`musculoejercicio`.`idejercicio` AS `idejercicio`,`musculoejercicio`.`idmusculo` AS `idmusculo` from `musculoejercicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `PlanEjercicio`
+--
+
+/*!50001 DROP VIEW IF EXISTS `PlanEjercicio`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `PlanEjercicio` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ProgramaCliente`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ProgramaCliente`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `ProgramaCliente` AS select `programacliente`.`idprogramacliente` AS `idprogramacliente`,`programacliente`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programacliente`.`idcliente` AS `idcliente`,`programacliente`.`fechainicio` AS `fechainicio`,`programacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente` from `programacliente` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ProgramaEntrenamiento`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ProgramaEntrenamiento`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `ProgramaEntrenamiento` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento` from `programaentrenamiento` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `RutinaPlan`
+--
+
+/*!50001 DROP VIEW IF EXISTS `RutinaPlan`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `RutinaPlan` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `RutinaPrograma`
+--
+
+/*!50001 DROP VIEW IF EXISTS `RutinaPrograma`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `RutinaPrograma` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinaejercicio`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinaejercicio`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
@@ -1622,6 +6053,4 @@ COMMIT;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- =============================================================================
--- FIN DEL SCRIPT GIM360 - IMPORTACIÓN EN LA NUBE COMPLETADA CON ÉXITO
--- =============================================================================
+-- Dump completed on 2026-10-09 19:58:18

@@ -2,19 +2,161 @@
 
 <?= $this->section('content') ?>
 
-<div class="row align-items-center mb-4">
-    <div class="col-md-8">
-        <h2 class="fw-bold mb-1 text-dark"><i class="bi bi-speedometer2 text-primary me-2"></i>Panel de Control GIM360</h2>
-        <p class="text-muted mb-0">Sistema integral para la gestión de personas, clientes, contactos y catálogos en la base de datos <code>gim360</code>.</p>
-    </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-        <a href="<?= base_url('persona/add') ?>" class="btn btn-primary me-2">
-            <i class="bi bi-person-plus-fill me-1"></i> Registrar Persona
-        </a>
+<!-- Banner Institucional y de Mentoría Académica -->
+<div class="card border-0 shadow-sm mb-4" style="background: linear-gradient(135deg, #0a2540 0%, #0284c7 100%); color: white; border-radius: 14px;">
+    <div class="card-body p-4">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-white text-dark fw-bold px-2 py-1"><i class="bi bi-mortarboard-fill text-primary me-1"></i>UTLVTE</span>
+                    <span class="badge bg-info bg-opacity-25 text-white border border-info border-opacity-50">Ingeniería de Software</span>
+                    <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50"><i class="bi bi-shield-check me-1"></i>Sprint 1 Operativo</span>
+                </div>
+                <h3 class="fw-bold mb-1 text-white">GIM360 — Sistema de Gestión Deportiva Integral</h3>
+                <p class="mb-2 text-white-50" style="font-size: 0.95rem;">
+                    Modernización, control de aforo e inventario patrimonial para el Gimnasio Universitario y la Carrera de Cultura Física.
+                </p>
+                <div class="d-flex flex-wrap align-items-center gap-3 pt-1 border-top border-white border-opacity-25 small text-white-50">
+                    <span><i class="bi bi-person-workspace text-warning me-1"></i><strong>Docente Guía y Mentor:</strong> <span class="text-white fw-semibold">Ing. Stalin Francis</span></span>
+                    <span><i class="bi bi-laptop text-info me-1"></i>Tecnologías de la Información</span>
+                    <span><i class="bi bi-database-check text-success me-1"></i>100% Producción Local</span>
+                </div>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                <div class="btn-group">
+                    <a href="<?= base_url('visitasgim/listar') ?>" class="btn btn-light text-dark fw-semibold shadow-sm">
+                        <i class="bi bi-qr-code-scan me-1 text-primary"></i> Control Asistencia
+                    </a>
+                    <a href="<?= base_url('musculo/galeria') ?>" class="btn btn-outline-light">
+                        <i class="bi bi-person-arms-up me-1"></i> Atlas Anatómico
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Tarjetas de Métricas de las 9 Tablas -->
+<!-- Métricas Clave de Alto Valor -->
+<div class="row g-3 mb-4">
+    <div class="col-sm-6 col-xl-3">
+        <div class="card card-custom h-100 bg-white border-top border-4 border-primary shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold">Ejercicios Físicos</span>
+                        <h2 class="fw-bold my-1 text-primary"><?= number_format($counts['ejercicio']) ?></h2>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle">
+                            <i class="bi bi-play-circle me-1"></i>Fases Start/Peak
+                        </span>
+                    </div>
+                    <div class="bg-primary bg-opacity-10 p-3 rounded-3 text-primary fs-3">
+                        <i class="bi bi-fire"></i>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">Catálogo biomecánico pedagógico con video</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card card-custom h-100 bg-white border-top border-4 border-success shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold">Inventario de Equipos</span>
+                        <h2 class="fw-bold my-1 text-success"><?= number_format($counts['equipos']) ?></h2>
+                        <span class="badge bg-success-subtle text-success border border-success-subtle">
+                            <i class="bi bi-check-circle me-1"></i>100% Operativos
+                        </span>
+                    </div>
+                    <div class="bg-success bg-opacity-10 p-3 rounded-3 text-success fs-3">
+                        <i class="bi bi-gear-wide-connected"></i>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">Maquinaria, pesas y accesorios registrados</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card card-custom h-100 bg-white border-top border-4 border-danger shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold">Atlas Anatómico</span>
+                        <h2 class="fw-bold my-1 text-danger"><?= number_format($counts['musculo']) ?></h2>
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle">
+                            <i class="bi bi-person-fill me-1"></i>Grupos Musculares
+                        </span>
+                    </div>
+                    <div class="bg-danger bg-opacity-10 p-3 rounded-3 text-danger fs-3">
+                        <i class="bi bi-person-arms-up"></i>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">Músculos ilustrados y vinculados a rutinas</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+        <div class="card card-custom h-100 bg-white border-top border-4 border-info shadow-sm">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <span class="text-muted small text-uppercase fw-bold">Prescripción Deportiva</span>
+                        <h2 class="fw-bold my-1 text-info"><?= number_format($counts['planejercicio']) ?></h2>
+                        <span class="badge bg-info-subtle text-info border border-info-subtle">
+                            <i class="bi bi-clipboard2-check me-1"></i>Planes Activos
+                        </span>
+                    </div>
+                    <div class="bg-info bg-opacity-10 p-3 rounded-3 text-info fs-3">
+                        <i class="bi bi-clipboard-pulse"></i>
+                    </div>
+                </div>
+                <small class="text-muted d-block mt-2">Planes estructurados según objetivo físico</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráficos Analíticos de Alto Valor -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-5">
+        <div class="card card-custom bg-white h-100 shadow-sm">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-pie-chart-fill text-primary me-2"></i>Equipamiento por Categoría
+                    </h6>
+                    <small class="text-muted">Distribución del inventario patrimonial</small>
+                </div>
+                <span class="badge bg-primary"><?= $counts['equipos'] ?> Equipos</span>
+            </div>
+            <div class="card-body d-flex flex-column justify-content-center align-items-center p-3">
+                <div style="position: relative; height: 240px; width: 100%;">
+                    <canvas id="chartEquipos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="card card-custom bg-white h-100 shadow-sm">
+            <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+                <div>
+                    <h6 class="fw-bold mb-0 text-dark">
+                        <i class="bi bi-bar-chart-fill text-danger me-2"></i>Cobertura Biomecánica por Grupo Muscular
+                    </h6>
+                    <small class="text-muted">Número de ejercicios disponibles por anatomía muscular</small>
+                </div>
+                <span class="badge bg-danger"><?= $counts['ejercicio'] ?> Ejercicios</span>
+            </div>
+            <div class="card-body p-3">
+                <div style="position: relative; height: 240px; width: 100%;">
+                    <canvas id="chartMusculos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Resumen de Módulos Operativos -->
 <h5 class="fw-bold text-secondary mb-3"><i class="bi bi-grid-fill me-1"></i> Resumen de Tablas Gestionadas</h5>
 <div class="row g-3 mb-4">
     <!-- 1. persona -->
@@ -302,14 +444,33 @@
         </div>
     </div>
 
-    <!-- 16. programaentrenamiento -->
+    <!-- 16. planejercicio -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-primary">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">16. Planes de Ejercicio</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['planejercicio'] ?></h3>
+                    <small class="text-muted">Series, repeticiones, descanso y peso</small>
+                </div>
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary fs-3">
+                    <i class="bi bi-card-checklist"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('planejercicio') ?>" class="text-decoration-none small fw-semibold text-primary">Gestionar planes <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 17. programaentrenamiento -->
     <div class="col-sm-6 col-xl-4">
         <div class="card card-custom h-100 bg-white border-start border-4 border-success">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <div>
-                    <span class="text-uppercase fw-bold text-muted small">16. Programa Entrenamiento</span>
+                    <span class="text-uppercase fw-bold text-muted small">17. Programa Entrenamiento</span>
                     <h3 class="fw-bold my-1 text-dark"><?= $counts['programaentrenamiento'] ?></h3>
-                    <small class="text-muted">Relación motivo, rutina y ejercicios</small>
+                    <small class="text-muted">Relación motivo, rutina y planes</small>
                 </div>
                 <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success fs-3">
                     <i class="bi bi-clipboard2-pulse"></i>
@@ -317,6 +478,139 @@
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
                 <a href="<?= base_url('programaentrenamiento') ?>" class="text-decoration-none small fw-semibold text-success">Gestionar programas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 18. rutinaplan -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-warning">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">18. Rutina Plan</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['rutinaplan'] ?></h3>
+                    <small class="text-muted">Asociación de rutinas y planes de ejercicio</small>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning fs-3">
+                    <i class="bi bi-diagram-3"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('rutinaplan') ?>" class="text-decoration-none small fw-semibold text-warning">Gestionar rutina-plan <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 19. musculo -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-danger">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">19. Músculos</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['musculo'] ?></h3>
+                    <small class="text-muted">Grupos musculares anatómicos con imágenes</small>
+                </div>
+                <div class="bg-danger bg-opacity-10 p-3 rounded-circle text-danger fs-3">
+                    <i class="bi bi-person-arms-up"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('musculo') ?>" class="text-decoration-none small fw-semibold text-danger">Gestionar músculos <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 20. musculoejercicio -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-warning">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">20. Músculos y Ejercicios</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['musculoejercicio'] ?></h3>
+                    <small class="text-muted">Músculos afectados por cada ejercicio</small>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning fs-3">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('musculoejercicio') ?>" class="text-decoration-none small fw-semibold text-warning">Gestionar relaciones <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 21. ejercicioequipo -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">21. Ejercicios y Equipos</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['ejercicioequipo'] ?></h3>
+                    <small class="text-muted">Equipos y máquinas requeridos en cada ejercicio</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-gear-wide-connected"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('ejercicioequipo') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar relaciones <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 22. programacliente -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-primary">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">22. Programas de Clientes</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['programacliente'] ?></h3>
+                    <small class="text-muted">Programas asignados a clientes con fecha y estado</small>
+                </div>
+                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary fs-3">
+                    <i class="bi bi-person-lines-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('programacliente') ?>" class="text-decoration-none small fw-semibold text-primary">Gestionar programas <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 23. estadoprogramacliente -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">23. Estados Programa Cliente</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['estadoprogramacliente'] ?></h3>
+                    <small class="text-muted">Catálogo de estados (Activo, Pausado, etc.)</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-flag-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('estadoprogramacliente') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar estados <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 24. rutinaprograma -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">24. Rutinas en Programas</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['rutinaprograma'] ?? 0 ?></h3>
+                    <small class="text-muted">Asociación de múltiples rutinas por programa</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-collection-play-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('rutinaprograma') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar rutinas-programa <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -627,4 +921,94 @@
     </div>
 </div>
 
+<?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Gráfico de Equipos por Tipo
+    const ctxEquipos = document.getElementById('chartEquipos');
+    if (ctxEquipos) {
+        new Chart(ctxEquipos, {
+            type: 'doughnut',
+            data: {
+                labels: <?= json_encode(array_keys($equipmentByType ?? [])) ?>,
+                datasets: [{
+                    data: <?= json_encode(array_values($equipmentByType ?? [])) ?>,
+                    backgroundColor: [
+                        '#0284c7',
+                        '#10b981',
+                        '#f59e0b',
+                        '#6366f1',
+                        '#8b5cf6'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#ffffff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                        labels: {
+                            boxWidth: 12,
+                            font: { size: 11, weight: '600' },
+                            padding: 10
+                        }
+                    }
+                },
+                cutout: '60%'
+            }
+        });
+    }
+
+    // Gráfico de Músculos
+    const ctxMusculos = document.getElementById('chartMusculos');
+    if (ctxMusculos) {
+        new Chart(ctxMusculos, {
+            type: 'bar',
+            data: {
+                labels: <?= json_encode(array_keys($topMuscles ?? [])) ?>,
+                datasets: [{
+                    label: 'Ejercicios Disponibles',
+                    data: <?= json_encode(array_values($topMuscles ?? [])) ?>,
+                    backgroundColor: [
+                        'rgba(239, 68, 68, 0.85)',
+                        'rgba(249, 115, 22, 0.85)',
+                        'rgba(14, 165, 233, 0.85)',
+                        'rgba(16, 185, 129, 0.85)',
+                        'rgba(99, 102, 241, 0.85)',
+                        'rgba(168, 85, 247, 0.85)'
+                    ],
+                    borderRadius: 6,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: false,
+                indexAxis: 'y',
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(0,0,0,0.05)' },
+                        ticks: { font: { size: 10 } }
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: { font: { size: 11, weight: '600' } }
+                    }
+                }
+            }
+        });
+    }
+});
+</script>
 <?= $this->endSection() ?>

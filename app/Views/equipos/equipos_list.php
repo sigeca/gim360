@@ -40,7 +40,8 @@
             <table class="table table-hover align-middle mb-0">
                 <thead class="table-light">
                     <tr>
-                        <th class="ps-4">Código</th>
+                        <th class="ps-4" style="width: 70px;">Foto</th>
+                        <th>Código</th>
                         <th>Nombre del Equipo</th>
                         <th>Tipo</th>
                         <th>Marca</th>
@@ -54,12 +55,27 @@
                 <tbody>
                     <?php if (empty($equipos)): ?>
                         <tr>
-                            <td colspan="9" class="text-center py-5 text-muted">No se encontraron equipos registrados.</td>
+                            <td colspan="10" class="text-center py-5 text-muted">No se encontraron equipos registrados.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($equipos as $e): ?>
                             <tr>
                                 <td class="ps-4">
+                                    <a href="<?= base_url('equipos/actual/' . $e['id_equipo']) ?>" class="d-inline-block">
+                                        <?php if (!empty($e['imagen'])): ?>
+                                            <img src="<?= base_url('repositorio/images/equipment/' . esc($e['imagen'])) ?>" 
+                                                 onerror="this.onerror=null; this.src='<?= base_url('equipos/imagen/' . esc($e['imagen'])) ?>';"
+                                                 alt="<?= esc($e['nombre']) ?>" 
+                                                 class="rounded border bg-light shadow-sm" 
+                                                 style="width: 48px; height: 48px; object-fit: contain; padding: 2px;">
+                                        <?php else: ?>
+                                            <div class="rounded border bg-light d-flex align-items-center justify-content-center text-muted" style="width: 48px; height: 48px;">
+                                                <i class="bi bi-image text-muted"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </a>
+                                </td>
+                                <td>
                                     <span class="badge bg-primary font-monospace"><?= esc($e['codigo']) ?></span>
                                 </td>
                                 <td>

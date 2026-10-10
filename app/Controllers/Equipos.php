@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Models\EquipoModel;
+use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Equipos extends BaseController
 {
@@ -89,12 +90,13 @@ class Equipos extends BaseController
     public function add()
     {
         $data = [
-            'title'       => 'Registrar Nuevo Equipo',
-            'tipos'       => EquipoModel::getTipos(),
-            'marcas'      => EquipoModel::getMarcas(),
-            'ubicaciones' => EquipoModel::getUbicaciones(),
-            'estados'     => EquipoModel::getEstados(),
-            'module'      => 'equipos',
+            'title'           => 'Registrar Nuevo Equipo',
+            'tipos'           => EquipoModel::getTipos(),
+            'marcas'          => EquipoModel::getMarcas(),
+            'ubicaciones'     => EquipoModel::getUbicaciones(),
+            'estados'         => EquipoModel::getEstados(),
+            'availableImages' => $this->equipoModel->getAvailableImages(),
+            'module'          => 'equipos',
         ];
 
         return view('equipos/equipos_form', $data);
@@ -105,6 +107,7 @@ class Equipos extends BaseController
         $rules = [
             'codigo'            => 'required|min_length[2]|max_length[30]|is_unique[equipos.codigo]',
             'nombre'            => 'required|min_length[2]|max_length[100]',
+            'imagen'            => 'permit_empty|max_length[255]',
             'id_tipo'           => 'permit_empty',
             'id_marca'          => 'permit_empty',
             'modelo'            => 'permit_empty|max_length[80]',
@@ -125,6 +128,7 @@ class Equipos extends BaseController
         $id = $this->equipoModel->insert([
             'codigo'            => strtoupper(trim($this->request->getPost('codigo'))),
             'nombre'            => trim($this->request->getPost('nombre')),
+            'imagen'            => trim($this->request->getPost('imagen')) ?: null,
             'id_tipo'           => $this->request->getPost('id_tipo') ?: null,
             'id_marca'          => $this->request->getPost('id_marca') ?: null,
             'modelo'            => trim($this->request->getPost('modelo')) ?: null,
@@ -146,17 +150,18 @@ class Equipos extends BaseController
     {
         $equipo = $this->equipoModel->find($id);
         if (!$equipo) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Equipo no encontrado.");
+            throw PageNotFoundException::forPageNotFound("Equipo no encontrado.");
         }
 
         $data = [
-            'title'       => 'Editar Equipo: ' . $equipo['nombre'],
-            'equipo'      => $equipo,
-            'tipos'       => EquipoModel::getTipos(),
-            'marcas'      => EquipoModel::getMarcas(),
-            'ubicaciones' => EquipoModel::getUbicaciones(),
-            'estados'     => EquipoModel::getEstados(),
-            'module'      => 'equipos',
+            'title'           => 'Editar Equipo: ' . $equipo['nombre'],
+            'equipo'          => $equipo,
+            'tipos'           => EquipoModel::getTipos(),
+            'marcas'          => EquipoModel::getMarcas(),
+            'ubicaciones'     => EquipoModel::getUbicaciones(),
+            'estados'         => EquipoModel::getEstados(),
+            'availableImages' => $this->equipoModel->getAvailableImages(),
+            'module'          => 'equipos',
         ];
 
         return view('equipos/equipos_edit', $data);
@@ -172,6 +177,7 @@ class Equipos extends BaseController
         $rules = [
             'codigo'            => "required|min_length[2]|max_length[30]|is_unique[equipos.codigo,id_equipo,{$id}]",
             'nombre'            => 'required|min_length[2]|max_length[100]',
+            'imagen'            => 'permit_empty|max_length[255]',
             'id_tipo'           => 'permit_empty',
             'id_marca'          => 'permit_empty',
             'modelo'            => 'permit_empty|max_length[80]',
@@ -192,6 +198,7 @@ class Equipos extends BaseController
         $this->equipoModel->update($id, [
             'codigo'            => strtoupper(trim($this->request->getPost('codigo'))),
             'nombre'            => trim($this->request->getPost('nombre')),
+            'imagen'            => trim($this->request->getPost('imagen')) ?: null,
             'id_tipo'           => $this->request->getPost('id_tipo') ?: null,
             'id_marca'          => $this->request->getPost('id_marca') ?: null,
             'modelo'            => trim($this->request->getPost('modelo')) ?: null,
@@ -221,5 +228,48 @@ class Equipos extends BaseController
         $targetUrl = $last ? 'equipos/actual/' . $last['id_equipo'] : 'equipos';
 
         return redirect()->to(base_url($targetUrl))->with('success', 'Equipo eliminado exitosamente.');
+    }
+
+    public function imagen($filename = null)
+    {
+        if (empty($filename)) {
+            throw PageNotFoundException::forPageNotFound("Nombre de archivo no especificado.");
+        }
+
+        $cleanFilename = basename($filename);
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+
+        $paths = [
+            $baseDir . '/repositorio/images/equipment/' . $cleanFilename,
+            $baseDir . '/repositorio/image/equipment/' . $cleanFilename,
+            $baseDir . '/uploads/equipment/' . $cleanFilename,
+        ];
+
+        $targetPath = null;
+        foreach ($paths as $p) {
+            if (file_exists($p)) {
+                $targetPath = $p;
+                break;
+            }
+        }
+
+        if (!$targetPath) {
+            throw PageNotFoundException::forPageNotFound("Imagen de equipo no encontrada: " . $cleanFilename);
+        }
+
+        $extension = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'webp' => 'image/webp',
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'svg'  => 'image/svg+xml',
+        ];
+        $contentType = $mimeTypes[$extension] ?? 'image/webp';
+
+        return $this->response
+            ->setHeader('Content-Type', $contentType)
+            ->setHeader('Cache-Control', 'public, max-age=86400')
+            ->setBody(file_get_contents($targetPath));
     }
 }
