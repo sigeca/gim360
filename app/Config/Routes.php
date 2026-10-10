@@ -88,3 +88,50 @@ foreach ($modulos as $slug => $controller) {
         }
     });
 }
+
+// --------------------------------------------------------------------
+// RUTAS API REST PARA LA APLICACIÓN MÓVIL GIM360
+// --------------------------------------------------------------------
+$routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($routes) {
+    // Manejo de CORS preflight
+    $routes->options('(:any)', 'GimApiController::options');
+    $routes->options('/', 'GimApiController::options');
+
+    // Catálogos
+    $routes->get('catalogos', 'PersonaController::catalogos');
+
+    // Personas CRUD
+    $routes->get('persona', 'PersonaController::index');
+    $routes->get('persona/(:num)', 'PersonaController::show/$1');
+    $routes->post('persona', 'PersonaController::create');
+    $routes->put('persona/(:num)', 'PersonaController::update/$1');
+    $routes->post('persona/(:num)', 'PersonaController::update/$1');
+    $routes->post('persona/update/(:num)', 'PersonaController::update/$1');
+    $routes->delete('persona/(:num)', 'PersonaController::delete/$1');
+
+    // Clientes y Visitantes
+    $routes->get('cliente', 'GimApiController::getClientes');
+    $routes->get('cliente/(:num)', 'GimApiController::getClienteDetail/$1');
+    $routes->get('cliente/(:num)/programas', 'GimApiController::getClienteProgramas/$1');
+    $routes->get('cliente/(:num)/visitas', 'GimApiController::getClienteVisitas/$1');
+    $routes->get('cliente/(:num)/ejercicios', 'GimApiController::getClienteEjercicios/$1');
+    $routes->get('cliente/(:num)/progreso', 'GimApiController::getClienteProgreso/$1');
+
+    // Programas y Rutinas de Entrenamiento
+    $routes->get('programas', 'GimApiController::getProgramas');
+    $routes->get('programa/(:num)', 'GimApiController::getProgramaDetail/$1');
+    $routes->get('rutinas', 'GimApiController::getRutinas');
+    $routes->get('rutina/(:num)', 'GimApiController::getRutinaDetail/$1');
+
+    // Catálogo de Ejercicios, Músculos y Equipos
+    $routes->get('ejercicios', 'GimApiController::getEjercicios');
+    $routes->get('ejercicio/(:num)', 'GimApiController::getEjercicioDetail/$1');
+    $routes->get('musculos', 'GimApiController::getMusculos');
+    $routes->get('equipos', 'GimApiController::getEquipos');
+
+    // Registro de esfuerzo y visitas
+    $routes->post('visitas', 'GimApiController::registrarVisita');
+    $routes->post('visitas/(:num)/checkout', 'GimApiController::checkoutVisita/$1');
+    $routes->post('ejercicios-cliente', 'GimApiController::registrarEjercicioCliente');
+});
+
