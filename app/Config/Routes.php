@@ -21,7 +21,6 @@ $modulos = [
     'visitasgim'         => 'VisitasGim',
     'equipos'            => 'Equipos',
     'ejercicio'          => 'Ejercicio',
-    'ejerciciocliente'   => 'EjercicioCliente',
     'motivoentrenamiento'  => 'MotivoEntrenamiento',
     'rutinaejecicio'       => 'RutinaEjecicio',
     'rutinaejercicio'      => 'RutinaEjecicio',
@@ -109,6 +108,31 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->post('persona/update/(:num)', 'PersonaController::update/$1');
     $routes->delete('persona/(:num)', 'PersonaController::delete/$1');
 
+    // Sexo CRUD API
+    $routes->get('sexo', 'SexoApiController::index');
+    $routes->get('sexo/(:num)', 'SexoApiController::show/$1');
+    $routes->post('sexo', 'SexoApiController::create');
+    $routes->put('sexo/(:num)', 'SexoApiController::update/$1');
+    $routes->post('sexo/(:num)', 'SexoApiController::update/$1');
+    $routes->delete('sexo/(:num)', 'SexoApiController::delete/$1');
+
+    // Estado Civil CRUD API
+    $routes->get('estadocivil', 'EstadoCivilApiController::index');
+    $routes->get('estadocivil/(:num)', 'EstadoCivilApiController::show/$1');
+    $routes->post('estadocivil', 'EstadoCivilApiController::create');
+    $routes->put('estadocivil/(:num)', 'EstadoCivilApiController::update/$1');
+    $routes->post('estadocivil/(:num)', 'EstadoCivilApiController::update/$1');
+    $routes->delete('estadocivil/(:num)', 'EstadoCivilApiController::delete/$1');
+
+    // Correo CRUD API
+    $routes->get('correo', 'CorreoApiController::index');
+    $routes->get('correo/(:num)', 'CorreoApiController::show/$1');
+    $routes->get('persona/(:num)/correos', 'CorreoApiController::index/$1');
+    $routes->post('correo', 'CorreoApiController::create');
+    $routes->put('correo/(:num)', 'CorreoApiController::update/$1');
+    $routes->post('correo/(:num)', 'CorreoApiController::update/$1');
+    $routes->delete('correo/(:num)', 'CorreoApiController::delete/$1');
+
     // Clientes y Visitantes
     $routes->get('cliente', 'GimApiController::getClientes');
     $routes->get('cliente/(:num)', 'GimApiController::getClienteDetail/$1');
@@ -132,6 +156,5 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     // Registro de esfuerzo y visitas
     $routes->post('visitas', 'GimApiController::registrarVisita');
     $routes->post('visitas/(:num)/checkout', 'GimApiController::checkoutVisita/$1');
-    $routes->post('ejercicios-cliente', 'GimApiController::registrarEjercicioCliente');
 });
 
