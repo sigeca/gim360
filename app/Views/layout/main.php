@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= esc($title ?? 'GIM360 - Sistema de Gestión') ?></title>
+    <link rel="icon" type="image/png" href="<?= base_url('gim360.png') ?>">
     <!-- Bootstrap 5.3 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -278,10 +279,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
         <!-- Identidad / Logo -->
         <div class="sidebar-brand d-flex align-items-center justify-content-between">
             <a href="<?= base_url() ?>" class="d-flex align-items-center gap-2 text-white text-decoration-none">
-                <i class="bi bi-activity text-warning fs-3"></i>
+                <img src="<?= base_url('gim360.png') ?>" alt="Logo GIM360" class="rounded-3 border border-info border-opacity-50 shadow-sm" style="width: 44px; height: 44px; object-fit: cover;">
                 <div class="lh-sm">
-                    <span class="fs-4 fw-bold">GIM<span class="text-warning">360</span></span>
-                    <span class="d-block text-secondary small" style="font-size: 0.72rem;">SISTEMA DE GESTIÓN</span>
+                    <span class="fs-4 fw-bold">GIM<span class="text-info">360</span></span>
+                    <span class="d-block text-secondary small" style="font-size: 0.70rem;">SOFTWARE PARA GIMNASIOS</span>
                 </div>
             </a>
             <button class="btn btn-sm btn-outline-secondary text-light d-lg-none" id="closeSidebarBtn">

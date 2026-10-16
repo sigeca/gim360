@@ -7,12 +7,17 @@
     <div class="card-body p-4">
         <div class="row align-items-center">
             <div class="col-lg-8">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-white text-dark fw-bold px-2 py-1"><i class="bi bi-mortarboard-fill text-primary me-1"></i>UTLVTE</span>
-                    <span class="badge bg-info bg-opacity-25 text-white border border-info border-opacity-50">Ingeniería de Software</span>
-                    <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50"><i class="bi bi-shield-check me-1"></i>Sprint 1 Operativo</span>
+                <div class="d-flex align-items-center gap-3 mb-2">
+                    <img src="<?= base_url('gim360.png') ?>" alt="Logo GIM360" class="rounded-3 border border-info border-opacity-50 shadow" style="width: 64px; height: 64px; object-fit: cover;">
+                    <div>
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                            <span class="badge bg-white text-dark fw-bold px-2 py-1"><i class="bi bi-mortarboard-fill text-primary me-1"></i>UTLVTE</span>
+                            <span class="badge bg-info bg-opacity-25 text-white border border-info border-opacity-50">Ingeniería de Software</span>
+                            <span class="badge bg-success bg-opacity-25 text-white border border-success border-opacity-50"><i class="bi bi-shield-check me-1"></i>Sprint 1 Operativo</span>
+                        </div>
+                        <h3 class="fw-bold mb-0 text-white">GIM360 — Sistema de Gestión Deportiva Integral</h3>
+                    </div>
                 </div>
-                <h3 class="fw-bold mb-1 text-white">GIM360 — Sistema de Gestión Deportiva Integral</h3>
                 <p class="mb-2 text-white-50" style="font-size: 0.95rem;">
                     Modernización, control de aforo e inventario patrimonial para el Gimnasio Universitario y la Carrera de Cultura Física.
                 </p>
@@ -611,6 +616,25 @@
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
                 <a href="<?= base_url('rutinaprograma') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar rutinas-programa <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 25. ejecucionprograma -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-warning">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">25. Ejecución de Programa</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['ejecucionprograma'] ?? 0 ?></h3>
+                    <small class="text-muted">Registro de ejercicios ejecutados por programa</small>
+                </div>
+                <div class="bg-warning bg-opacity-10 p-3 rounded-circle text-warning fs-3">
+                    <i class="bi bi-play-btn-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('ejecucionprograma') ?>" class="text-decoration-none small fw-semibold text-warning">Gestionar ejecuciones <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>

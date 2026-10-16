@@ -26,6 +26,7 @@ use App\Models\EstadoProgramaClienteModel;
 use App\Models\EjercicioEquipoModel;
 use App\Models\RutinaProgramaModel;
 use App\Models\RangoEdadModel;
+use App\Models\EjecucionProgramaModel;
 
 class Home extends BaseController
 {
@@ -55,6 +56,7 @@ class Home extends BaseController
         $eeModel               = new EjercicioEquipoModel();
         $rprogModel            = new RutinaProgramaModel();
         $rangoModel            = new RangoEdadModel();
+        $ejecProgModel         = new EjecucionProgramaModel();
 
         $db = \Config\Database::connect();
 
@@ -110,6 +112,7 @@ class Home extends BaseController
                 'rutinaprograma'       => $rprogModel->countAllResults(),
                 'programacliente'      => $pcModel->countAllResults(),
                 'estadoprogramacliente'=> $epcModel->countAllResults(),
+                'ejecucionprograma'    => $ejecProgModel->countAllResults(),
             ],
             'equipmentByType'  => $equipmentByType,
             'topMuscles'       => $topMuscles,

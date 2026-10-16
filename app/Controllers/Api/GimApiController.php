@@ -17,6 +17,7 @@ use App\Models\MusculoModel;
 use App\Models\EquipoModel;
 use App\Models\MusculoEjercicioModel;
 use App\Models\EjercicioEquipoModel;
+use App\Models\EjecucionProgramaModel;
 
 class GimApiController extends ResourceController
 {
@@ -190,19 +191,21 @@ class GimApiController extends ResourceController
         }
 
         $progModel = new ProgramaClienteModel();
-        $programas = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, motivoentrenamiento.objetivo as motivo_objetivo, estadoprogramacliente.nombre as estado_nombre')
+        $programas = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, motivoentrenamiento.objetivo as motivo_objetivo, estadoprogramacliente.nombre as estado_nombre, rangoedad.nombre as rango_nombre, rangoedad.edadminima as rango_edadminima, rangoedad.edadmaxima as rango_edadmaxima')
                                ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
                                ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
                                ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
+                               ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
                                ->where('programacliente.idcliente', $id)
                                ->orderBy('programacliente.fechainicio', 'DESC')
                                ->findAll();
 
         $rutinaProgModel = new RutinaProgramaModel();
-        $baseUrl = base_url();
+        $db = \Config\Database::connect();
 
         foreach ($programas as &$prog) {
             $idProgEntrenamiento = (int)$prog['idprogramaentrenamiento'];
+            $idProgCliente = (int)$prog['idprogramacliente'];
             $rutinas = $rutinaProgModel->getRutinasByPrograma($idProgEntrenamiento);
 
             // Enhance exercises with image URL and musculo/equipo
@@ -219,6 +222,9 @@ class GimApiController extends ResourceController
             }
 
             $prog['rutinas'] = $rutinas;
+            $prog['total_ejecuciones'] = $db->table('ejecucionprograma')
+                                            ->where('idprogramacliente', $idProgCliente)
+                                            ->countAllResults();
         }
 
         return $this->respond([
@@ -610,6 +616,245 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/ejecucionprograma
+     * List all program executions
+     */
+    public function getEjecuciones()
+    {
+        $ejecModel = new EjecucionProgramaModel();
+        $ejecuciones = $ejecModel->getEjecucionesWithDetails($this->request->getGet('q'));
+
+        foreach ($ejecuciones as &$e) {
+            $e['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $e['ejercicio_imagen'] ?? null);
+            $e['duracionminutos'] = $this->calcMinutes($e['horainicio'] ?? null, $e['horafin'] ?? null);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Ejecuciones de programa obtenidas correctamente',
+            'data'    => $ejecuciones,
+            'total'   => count($ejecuciones),
+        ]);
+    }
+
+    /**
+     * GET /api/cliente/{id}/ejecuciones
+     * List all exercise executions for a specific client
+     */
+    public function getClienteEjecuciones($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de cliente no proporcionado');
+        }
+
+        $db = \Config\Database::connect();
+        $ejecuciones = $db->table('ejecucionprograma ep')
+                          ->select('ep.*,
+                                    pc.idcliente,
+                                    pc.idprogramaentrenamiento,
+                                    prog.nombre AS programa_nombre,
+                                    ejercicio.nombreespanol AS ejercicio_nombre,
+                                    ejercicio.nombreespanol,
+                                    ejercicio.nombreingles,
+                                    ejercicio.imagen AS ejercicio_imagen')
+                          ->join('programacliente pc', 'pc.idprogramacliente = ep.idprogramacliente', 'inner')
+                          ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                          ->join('ejercicio', 'ejercicio.idejercicio = ep.idejercicio', 'inner')
+                          ->where('pc.idcliente', (int)$id)
+                          ->orderBy('ep.fecha', 'DESC')
+                          ->orderBy('ep.horainicio', 'DESC')
+                          ->orderBy('ep.idejecucionprograma', 'DESC')
+                          ->get()
+                          ->getResultArray();
+
+        foreach ($ejecuciones as &$e) {
+            $e['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $e['ejercicio_imagen'] ?? null);
+            $e['duracionminutos'] = $this->calcMinutes($e['horainicio'] ?? null, $e['horafin'] ?? null);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Ejecuciones del cliente obtenidas correctamente',
+            'data'    => $ejecuciones,
+            'total'   => count($ejecuciones),
+        ]);
+    }
+
+    /**
+     * POST /api/ejecucionprograma (also aliased at /api/ejercicios-cliente)
+     * Record a completed or started exercise execution in ejecucionprograma
+     */
+    public function registrarEjecucionPrograma()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+
+        $idProgramaCliente = !empty($input['idprogramacliente']) ? (int)$input['idprogramacliente'] : 0;
+        $idCliente = !empty($input['idcliente']) ? (int)$input['idcliente'] : 0;
+        $idEjercicio = !empty($input['idejercicio']) ? (int)$input['idejercicio'] : 0;
+
+        if ($idEjercicio <= 0) {
+            return $this->failValidationErrors(['idejercicio' => 'Debe seleccionar un ejercicio válido.']);
+        }
+
+        $db = \Config\Database::connect();
+
+        // Resolve idprogramacliente if only idcliente was passed
+        if ($idProgramaCliente <= 0 && $idCliente > 0) {
+            $activeRow = $db->table('programacliente pc')
+                            ->join('estadoprogramacliente epc', 'epc.idestadoprogramacliente = pc.idestadoprogramacliente', 'left')
+                            ->where('pc.idcliente', $idCliente)
+                            ->orderBy('epc.nombre = "Activo"', 'DESC', false)
+                            ->orderBy('pc.idprogramacliente', 'DESC')
+                            ->get()
+                            ->getRowArray();
+
+            if ($activeRow) {
+                $idProgramaCliente = (int)$activeRow['idprogramacliente'];
+            } else {
+                // Auto-assign first available training program if client has none yet
+                $firstProg = $db->table('programaentrenamiento')->orderBy('idprogramaentrenamiento', 'ASC')->get()->getRowArray();
+                if ($firstProg) {
+                    $progClienteModel = new ProgramaClienteModel();
+                    $idProgramaCliente = (int)$progClienteModel->insert([
+                        'idcliente'               => $idCliente,
+                        'idprogramaentrenamiento' => (int)$firstProg['idprogramaentrenamiento'],
+                        'fechainicio'             => date('Y-m-d'),
+                        'idestadoprogramacliente' => 1,
+                    ]);
+                }
+            }
+        }
+
+        if ($idProgramaCliente <= 0) {
+            return $this->failValidationErrors(['idprogramacliente' => 'El cliente no tiene un programa asignado para registrar la ejecución.']);
+        }
+
+        $fecha = !empty($input['fecha']) ? $input['fecha'] : date('Y-m-d');
+        $duracionMinutos = !empty($input['duracionminutos']) ? max(1, (int)$input['duracionminutos']) : 5;
+
+        if (!empty($input['horainicio'])) {
+            $horaInicio = $input['horainicio'];
+            $horaFin = !empty($input['horafin']) ? $input['horafin'] : null;
+        } else {
+            $nowTs = time();
+            $horaFin = date('H:i:s', $nowTs);
+            $horaInicio = date('H:i:s', $nowTs - ($duracionMinutos * 60));
+        }
+
+        $ejecModel = new EjecucionProgramaModel();
+        $id = $ejecModel->insert([
+            'idprogramacliente' => $idProgramaCliente,
+            'idejercicio'       => $idEjercicio,
+            'fecha'             => $fecha,
+            'horainicio'        => $horaInicio,
+            'horafin'           => $horaFin,
+        ]);
+
+        if (!$id) {
+            return $this->failServerError('No se pudo registrar la ejecución del ejercicio.');
+        }
+
+        $created = $ejecModel->getEjecucionWithDetails($id);
+        if ($created) {
+            $created['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $created['ejercicio_imagen'] ?? null);
+            $created['duracionminutos'] = $this->calcMinutes($created['horainicio'] ?? null, $created['horafin'] ?? null);
+        }
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Ejecución de ejercicio registrada correctamente',
+            'data'    => $created,
+        ]);
+    }
+
+    /**
+     * POST /api/ejecucionprograma/{id}/finalizar
+     */
+    public function finalizarEjecucionPrograma($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de ejecución no proporcionado');
+        }
+
+        $ejecModel = new EjecucionProgramaModel();
+        $item = $ejecModel->find($id);
+        if (!$item) {
+            return $this->failNotFound("Ejecución no encontrada con ID: {$id}");
+        }
+
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $horaFin = !empty($input['horafin']) ? $input['horafin'] : date('H:i:s');
+
+        $ejecModel->update($id, ['horafin' => $horaFin]);
+        $updated = $ejecModel->getEjecucionWithDetails($id);
+        if ($updated) {
+            $updated['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $updated['ejercicio_imagen'] ?? null);
+            $updated['duracionminutos'] = $this->calcMinutes($updated['horainicio'] ?? null, $updated['horafin'] ?? null);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Ejecución de ejercicio finalizada correctamente',
+            'data'    => $updated,
+        ]);
+    }
+
+    /**
+     * POST /api/programacliente
+     * Assign a training program to a client
+     */
+    public function asignarProgramaCliente()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+
+        $idCliente = !empty($input['idcliente']) ? (int)$input['idcliente'] : 0;
+        $idPrograma = !empty($input['idprogramaentrenamiento']) ? (int)$input['idprogramaentrenamiento'] : 0;
+        $fechaInicio = !empty($input['fechainicio']) ? $input['fechainicio'] : date('Y-m-d');
+        $idEstado = !empty($input['idestadoprogramacliente']) ? (int)$input['idestadoprogramacliente'] : 1;
+
+        if ($idCliente <= 0 || $idPrograma <= 0) {
+            return $this->failValidationErrors('Debe proporcionar idcliente e idprogramaentrenamiento válidos.');
+        }
+
+        $progClienteModel = new ProgramaClienteModel();
+        $id = $progClienteModel->insert([
+            'idcliente'               => $idCliente,
+            'idprogramaentrenamiento' => $idPrograma,
+            'fechainicio'             => $fechaInicio,
+            'idestadoprogramacliente' => $idEstado,
+        ]);
+
+        if (!$id) {
+            return $this->failServerError('No se pudo asignar el programa al cliente.');
+        }
+
+        $created = $progClienteModel->getProgramaClienteWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Programa de entrenamiento asignado correctamente al cliente',
+            'data'    => $created,
+        ]);
+    }
+
+    protected function calcMinutes(?string $horaInicio, ?string $horaFin): int
+    {
+        if (empty($horaInicio)) {
+            return 5;
+        }
+        if (empty($horaFin)) {
+            return 5;
+        }
+        $t1 = strtotime($horaInicio);
+        $t2 = strtotime($horaFin);
+        if ($t1 === false || $t2 === false) {
+            return 5;
+        }
+        $diff = (int)round(($t2 - $t1) / 60);
+        return $diff > 0 ? $diff : 5;
+    }
+
+    /**
      * GET /api/cliente/{id}/progreso
      * Comprehensive progress, effort metrics and statistics for client
      */
@@ -626,52 +871,128 @@ class GimApiController extends ResourceController
         }
 
         $db = \Config\Database::connect();
+        $idCliente = (int)$id;
 
         // Total visits to gym
         $visitasCount = $db->table('visitasgim')
-                           ->where('idcliente', (int)$id)
+                           ->where('idcliente', $idCliente)
                            ->countAllResults();
 
-        // Distinct days attended
-        $diasEntrenadosRow = $db->table('visitasgim')
-                                ->select('COUNT(DISTINCT fecha) as dias')
-                                ->where('idcliente', (int)$id)
-                                ->get()
-                                ->getRowArray();
-        $diasEntrenados = (int)($diasEntrenadosRow['dias'] ?? 0);
+        // Total executions in ejecucionprograma
+        $ejecucionesRows = $db->table('ejecucionprograma ep')
+                              ->select('ep.*,
+                                        prog.nombre AS programa_nombre,
+                                        ejercicio.nombreespanol AS ejercicio_nombre,
+                                        ejercicio.nombreespanol,
+                                        ejercicio.nombreingles,
+                                        ejercicio.imagen AS ejercicio_imagen')
+                              ->join('programacliente pc', 'pc.idprogramacliente = ep.idprogramacliente', 'inner')
+                              ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                              ->join('ejercicio', 'ejercicio.idejercicio = ep.idejercicio', 'inner')
+                              ->where('pc.idcliente', $idCliente)
+                              ->orderBy('ep.fecha', 'DESC')
+                              ->orderBy('ep.horainicio', 'DESC')
+                              ->orderBy('ep.idejecucionprograma', 'DESC')
+                              ->get()
+                              ->getResultArray();
 
-        // Visits in the last 7 days and 30 days
-        $hoy = date('Y-m-d');
+        $totalEjecuciones = count($ejecucionesRows);
+        $totalMinutosEjecucion = 0;
+        $fechasEntrenadasSet = [];
+
+        foreach ($ejecucionesRows as &$er) {
+            $mins = $this->calcMinutes($er['horainicio'] ?? null, $er['horafin'] ?? null);
+            $er['duracionminutos'] = $mins;
+            $er['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $er['ejercicio_imagen'] ?? null);
+            $totalMinutosEjecucion += $mins;
+            if (!empty($er['fecha'])) {
+                $fechasEntrenadasSet[$er['fecha']] = true;
+            }
+        }
+
+        // Also include dates and minutes from visitasgim
+        $visitasRows = $db->table('visitasgim')
+                          ->where('idcliente', $idCliente)
+                          ->get()
+                          ->getResultArray();
+        $totalMinutosVisitas = 0;
+        foreach ($visitasRows as $vr) {
+            if (!empty($vr['fecha'])) {
+                $fechasEntrenadasSet[$vr['fecha']] = true;
+            }
+            if (!empty($vr['horaingreso']) && !empty($vr['horasalida'])) {
+                $totalMinutosVisitas += $this->calcMinutes($vr['horaingreso'], $vr['horasalida']);
+            }
+        }
+
+        $diasEntrenados = count($fechasEntrenadasSet);
+        $totalMinutos = $totalMinutosEjecucion > 0 ? $totalMinutosEjecucion : $totalMinutosVisitas;
+
+        // Visits & Executions in the last 7 days and 30 days
         $hace7Dias = date('Y-m-d', strtotime('-7 days'));
         $hace30Dias = date('Y-m-d', strtotime('-30 days'));
 
-        $sesiones7Dias = $db->table('visitasgim')
-                            ->where('idcliente', (int)$id)
-                            ->where('fecha >=', $hace7Dias)
-                            ->countAllResults();
+        $visitas7d = $db->table('visitasgim')
+                        ->where('idcliente', $idCliente)
+                        ->where('fecha >=', $hace7Dias)
+                        ->countAllResults();
+        $ejec7d = $db->table('ejecucionprograma ep')
+                     ->join('programacliente pc', 'pc.idprogramacliente = ep.idprogramacliente', 'inner')
+                     ->where('pc.idcliente', $idCliente)
+                     ->where('ep.fecha >=', $hace7Dias)
+                     ->countAllResults();
+        $sesiones7Dias = max($visitas7d, $ejec7d);
 
-        $sesiones30Dias = $db->table('visitasgim')
-                             ->where('idcliente', (int)$id)
-                             ->where('fecha >=', $hace30Dias)
-                             ->countAllResults();
+        $visitas30d = $db->table('visitasgim')
+                         ->where('idcliente', $idCliente)
+                         ->where('fecha >=', $hace30Dias)
+                         ->countAllResults();
+        $ejec30d = $db->table('ejecucionprograma ep')
+                      ->join('programacliente pc', 'pc.idprogramacliente = ep.idprogramacliente', 'inner')
+                      ->where('pc.idcliente', $idCliente)
+                      ->where('ep.fecha >=', $hace30Dias)
+                      ->countAllResults();
+        $sesiones30Dias = max($visitas30d, $ejec30d);
 
-        // History grouped by date (last 14 days)
+        // History grouped by date (last 14 days) combining ejecucionprograma and visitasgim
         $hace14Dias = date('Y-m-d', strtotime('-14 days'));
-        $historialDiario = $db->table('visitasgim')
-                              ->select('fecha, COUNT(*) as visitas')
-                              ->where('idcliente', (int)$id)
-                              ->where('fecha >=', $hace14Dias)
-                              ->groupBy('fecha')
-                              ->orderBy('fecha', 'ASC')
-                              ->get()
-                              ->getResultArray();
+        $dailyMap = [];
+
+        foreach ($ejecucionesRows as $er) {
+            $f = $er['fecha'] ?? '';
+            if ($f >= $hace14Dias) {
+                if (!isset($dailyMap[$f])) {
+                    $dailyMap[$f] = ['fecha' => $f, 'visitas' => 0, 'ejercicios' => 0, 'minutos' => 0];
+                }
+                $dailyMap[$f]['ejercicios'] += 1;
+                $dailyMap[$f]['minutos'] += (int)$er['duracionminutos'];
+            }
+        }
+
+        foreach ($visitasRows as $vr) {
+            $f = $vr['fecha'] ?? '';
+            if ($f >= $hace14Dias) {
+                if (!isset($dailyMap[$f])) {
+                    $dailyMap[$f] = ['fecha' => $f, 'visitas' => 0, 'ejercicios' => 0, 'minutos' => 0];
+                }
+                $dailyMap[$f]['visitas'] += 1;
+                if ($dailyMap[$f]['minutos'] == 0) {
+                    $dailyMap[$f]['minutos'] += !empty($vr['horasalida'])
+                        ? $this->calcMinutes($vr['horaingreso'], $vr['horasalida'])
+                        : 45;
+                }
+            }
+        }
+
+        ksort($dailyMap);
+        $historialDiario = array_values($dailyMap);
 
         // Total exercises in assigned programs
         $ejRow = $db->table('programacliente pc')
                     ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento')
                     ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rp.idrutinaejercicio')
                     ->join('planejercicio pe', 'pe.idplanejercicio = rpl.idplanejercicio')
-                    ->where('pc.idcliente', (int)$id)
+                    ->where('pc.idcliente', $idCliente)
                     ->select('COUNT(DISTINCT pe.idejercicio) as total')
                     ->get()
                     ->getRowArray();
@@ -686,7 +1007,7 @@ class GimApiController extends ResourceController
                                  ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
                                  ->join('musculoejercicio', 'musculoejercicio.idejercicio = ejercicio.idejercicio', 'inner')
                                  ->join('musculo', 'musculo.idmusculo = musculoejercicio.idmusculo', 'inner')
-                                 ->where('pc.idcliente', (int)$id)
+                                 ->where('pc.idcliente', $idCliente)
                                  ->groupBy('musculo.idmusculo, musculo.nombre')
                                  ->orderBy('veces', 'DESC')
                                  ->limit(6)
@@ -695,13 +1016,14 @@ class GimApiController extends ResourceController
 
         // Exercises assigned through current programs
         $ejerciciosAsignados = $db->table('programacliente pc')
-                                  ->select('ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.imagen AS ejercicio_imagen, plane.series, plane.repeticiones, plane.peso, plane.tiempodescanso, rutina.nombre AS rutina_nombre')
+                                  ->select('pc.idprogramacliente, pc.fechainicio AS fecha, ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.imagen AS ejercicio_imagen, plane.series, plane.repeticiones, plane.peso, plane.tiempodescanso, rutina.nombre AS rutina_nombre, prog.nombre AS programa_nombre')
+                                  ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
                                   ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
                                   ->join('rutinaejecicio rutina', 'rutina.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
                                   ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rutina.idrutinaejercicio', 'inner')
                                   ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
                                   ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
-                                  ->where('pc.idcliente', (int)$id)
+                                  ->where('pc.idcliente', $idCliente)
                                   ->groupBy('ejercicio.idejercicio, plane.idplanejercicio')
                                   ->limit(10)
                                   ->get()
@@ -709,32 +1031,41 @@ class GimApiController extends ResourceController
 
         foreach ($ejerciciosAsignados as &$r) {
             $r['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $r['ejercicio_imagen'] ?? null);
+            $r['duracionminutos'] = (int)($r['series'] ?? 3) * 3;
         }
 
         // Active training program summary
         $progModel = new ProgramaClienteModel();
-        $programaActivo = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, estadoprogramacliente.nombre as estado_nombre')
+        $programaActivo = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, estadoprogramacliente.nombre as estado_nombre, rangoedad.nombre as rango_nombre, rangoedad.edadminima as rango_edadminima, rangoedad.edadmaxima as rango_edadmaxima')
                                     ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
                                     ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
                                     ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
-                                    ->where('programacliente.idcliente', (int)$id)
+                                    ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
+                                    ->where('programacliente.idcliente', $idCliente)
                                     ->where('estadoprogramacliente.nombre', 'Activo')
                                     ->orderBy('programacliente.idprogramacliente', 'DESC')
                                     ->first();
+
+        $ejecucionesRecientes = array_slice($ejecucionesRows, 0, 15);
+        $recientesFinal = !empty($ejecucionesRecientes) ? $ejecucionesRecientes : $ejerciciosAsignados;
 
         return $this->respond([
             'status'  => 200,
             'message' => 'Estadísticas de progreso y esfuerzo calculadas correctamente',
             'data'    => [
-                'total_visitas_gim'    => $visitasCount,
-                'total_ejercicios'     => $totalEjerciciosAsignados,
-                'dias_entrenados'      => $diasEntrenados,
-                'sesiones_ultimos_7d'  => $sesiones7Dias,
-                'sesiones_ultimos_30d' => $sesiones30Dias,
-                'historial_diario'     => $historialDiario,
-                'musculos_trabajados'  => $musculosTrabajados,
-                'programa_activo'      => $programaActivo,
-                'ejercicios_recientes' => $ejerciciosAsignados,
+                'total_sesiones'        => $totalEjecuciones > 0 ? $totalEjecuciones : $totalEjerciciosAsignados,
+                'total_ejecuciones'     => $totalEjecuciones,
+                'total_minutos'         => $totalMinutos,
+                'total_visitas_gim'     => $visitasCount,
+                'total_ejercicios'      => $totalEjerciciosAsignados,
+                'dias_entrenados'       => $diasEntrenados,
+                'sesiones_ultimos_7d'   => $sesiones7Dias,
+                'sesiones_ultimos_30d'  => $sesiones30Dias,
+                'historial_diario'      => $historialDiario,
+                'musculos_trabajados'   => $musculosTrabajados,
+                'programa_activo'       => $programaActivo,
+                'ejecuciones_recientes' => $ejecucionesRecientes,
+                'ejercicios_recientes'  => $recientesFinal,
             ],
         ]);
     }

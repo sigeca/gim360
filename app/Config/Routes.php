@@ -148,11 +148,13 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('cliente/(:num)/programas', 'GimApiController::getClienteProgramas/$1');
     $routes->get('cliente/(:num)/visitas', 'GimApiController::getClienteVisitas/$1');
     $routes->get('cliente/(:num)/ejercicios', 'GimApiController::getClienteEjercicios/$1');
+    $routes->get('cliente/(:num)/ejecuciones', 'GimApiController::getClienteEjecuciones/$1');
     $routes->get('cliente/(:num)/progreso', 'GimApiController::getClienteProgreso/$1');
 
     // Programas y Rutinas de Entrenamiento
     $routes->get('programas', 'GimApiController::getProgramas');
     $routes->get('programa/(:num)', 'GimApiController::getProgramaDetail/$1');
+    $routes->post('programacliente', 'GimApiController::asignarProgramaCliente');
     $routes->get('rutinas', 'GimApiController::getRutinas');
     $routes->get('rutina/(:num)', 'GimApiController::getRutinaDetail/$1');
     $routes->get('rangos-edad', 'GimApiController::getRangosEdad');
@@ -164,7 +166,11 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('musculos', 'GimApiController::getMusculos');
     $routes->get('equipos', 'GimApiController::getEquipos');
 
-    // Registro de esfuerzo y visitas
+    // Registro de esfuerzo, ejecuciones de programa y visitas
+    $routes->get('ejecucionprograma', 'GimApiController::getEjecuciones');
+    $routes->post('ejecucionprograma', 'GimApiController::registrarEjecucionPrograma');
+    $routes->post('ejecucionprograma/(:num)/finalizar', 'GimApiController::finalizarEjecucionPrograma/$1');
+    $routes->post('ejercicios-cliente', 'GimApiController::registrarEjecucionPrograma');
     $routes->post('visitas', 'GimApiController::registrarVisita');
     $routes->post('visitas/(:num)/checkout', 'GimApiController::checkoutVisita/$1');
 });
