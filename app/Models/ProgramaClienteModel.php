@@ -54,6 +54,10 @@ class ProgramaClienteModel extends Model
                              persona.fechanacimiento AS cliente_fechanacimiento,
                              programaentrenamiento.nombre AS programa_nombre,
                              programaentrenamiento.idmotivoentrenamiento,
+                             programaentrenamiento.idrangoedad,
+                             rangoedad.nombre AS rango_nombre,
+                             rangoedad.edadminima AS rango_edadminima,
+                             rangoedad.edadmaxima AS rango_edadmaxima,
                              motivoentrenamiento.nombre AS motivo_nombre, 
                              motivoentrenamiento.objetivo AS motivo_objetivo,
                              estadoprogramacliente.nombre AS estado_nombre')
@@ -61,6 +65,7 @@ class ProgramaClienteModel extends Model
                     ->join('persona', 'persona.idpersona = cliente.idpersona', 'inner')
                     ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
                     ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                    ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
                     ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
                     ->where('programacliente.idprogramacliente', $id)
                     ->first();
@@ -79,6 +84,7 @@ class ProgramaClienteModel extends Model
                 }
             }
             $pc['planes'] = $allPlanes;
+            $pc['ejecuciones'] = (new EjecucionProgramaModel())->getEjecucionesByProgramaCliente((int)$pc['idprogramacliente']);
         }
 
         return $pc;
@@ -92,6 +98,9 @@ class ProgramaClienteModel extends Model
                                   persona.nombres AS cliente_nombres, 
                                   programaentrenamiento.nombre AS programa_nombre,
                                   motivoentrenamiento.nombre AS motivo_nombre, 
+                                  rangoedad.nombre AS rango_nombre,
+                                  rangoedad.edadminima AS rango_edadminima,
+                                  rangoedad.edadmaxima AS rango_edadmaxima,
                                   estadoprogramacliente.nombre AS estado_nombre,
                                   (SELECT COUNT(*) FROM rutinaprograma WHERE rutinaprograma.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento) AS total_rutinas,
                                   (SELECT COUNT(*) FROM rutinaplan WHERE rutinaplan.idrutinaejercicio IN (SELECT rp.idrutinaejercicio FROM rutinaprograma rp WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento)) AS total_planes')
@@ -99,6 +108,7 @@ class ProgramaClienteModel extends Model
                         ->join('persona', 'persona.idpersona = cliente.idpersona', 'inner')
                         ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
                         ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                        ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
                         ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
                         ->orderBy('programacliente.idprogramacliente', 'DESC');
 
@@ -114,5 +124,26 @@ class ProgramaClienteModel extends Model
         }
 
         return $builder->findAll();
+    }
+
+    public function getProgramasByCliente(int $idcliente): array
+    {
+        return $this->select('programacliente.*, 
+                              programaentrenamiento.nombre AS programa_nombre,
+                              motivoentrenamiento.nombre AS motivo_nombre, 
+                              rangoedad.nombre AS rango_nombre,
+                              rangoedad.edadminima AS rango_edadminima,
+                              rangoedad.edadmaxima AS rango_edadmaxima,
+                              estadoprogramacliente.nombre AS estado_nombre,
+                              (SELECT COUNT(*) FROM rutinaprograma WHERE rutinaprograma.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento) AS total_rutinas,
+                              (SELECT COUNT(*) FROM rutinaplan WHERE rutinaplan.idrutinaejercicio IN (SELECT rp.idrutinaejercicio FROM rutinaprograma rp WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento)) AS total_planes')
+                    ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
+                    ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                    ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
+                    ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
+                    ->where('programacliente.idcliente', $idcliente)
+                    ->orderBy('programacliente.fechainicio', 'DESC')
+                    ->orderBy('programacliente.idprogramacliente', 'DESC')
+                    ->findAll();
     }
 }

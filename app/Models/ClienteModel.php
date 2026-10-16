@@ -27,7 +27,7 @@ class ClienteModel extends Model
 
     public function getClientesWithPersona($search = null)
     {
-        $builder = $this->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
+        $builder = $this->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.apellidos AS persona_apellidos, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
                         ->join('persona', 'persona.idpersona = cliente.idpersona', 'inner')
                         ->join('sexo', 'sexo.idsexo = persona.idsexo', 'left')
                         ->orderBy('cliente.idcliente', 'DESC');
@@ -36,6 +36,7 @@ class ClienteModel extends Model
             $builder->groupStart()
                     ->like('persona.cedula', $search)
                     ->orLike('persona.nombres', $search)
+                    ->orLike('persona.apellidos', $search)
                     ->groupEnd();
         }
 

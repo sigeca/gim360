@@ -41,24 +41,47 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">ID</th>
+                        <th style="width: 80px;">Foto</th>
                         <th>Nombre del Motivo</th>
-                        <th>Objetivo</th>
+                        <th>Dimensión</th>
+                        <th>Objetivo / Necesidad Física</th>
                         <th class="text-end pe-4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($motivos)): ?>
                         <tr>
-                            <td colspan="4" class="text-center py-5 text-muted">No se encontraron registros de motivos de entrenamiento.</td>
+                            <td colspan="6" class="text-center py-5 text-muted">No se encontraron registros de motivos de entrenamiento.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($motivos as $m): ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-muted">#<?= $m['idmotivoentrenamiento'] ?></td>
+                                <td>
+                                    <?php if (!empty($m['imagen'])): ?>
+                                        <img src="<?= base_url('repositorio/motivos/' . esc($m['imagen'])) ?>" 
+                                             onerror="this.onerror=null; this.src='<?= base_url('motivoentrenamiento/imagen/' . esc($m['imagen'])) ?>';"
+                                             alt="<?= esc($m['nombre']) ?>" 
+                                             class="rounded shadow-sm" 
+                                             style="width: 65px; height: 45px; object-fit: cover;">
+                                    <?php else: ?>
+                                        <div class="bg-light rounded text-muted text-center py-2" style="width: 65px; height: 45px;">
+                                            <i class="bi bi-image text-secondary"></i>
+                                        </div>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="fw-semibold text-dark fs-6">
-                                    <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-2">
-                                        <i class="bi bi-flag-fill text-warning me-1"></i><?= esc($m['nombre']) ?>
-                                    </span>
+                                    <?= esc($m['nombre']) ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($m['dimension'])): ?>
+                                        <span class="badge <?= $m['dimension'] === 'Salud' ? 'bg-success-subtle text-success border border-success' : 'bg-primary-subtle text-primary border border-primary' ?> px-2 py-1">
+                                            <i class="bi <?= $m['dimension'] === 'Salud' ? 'bi-heart-pulse' : 'bi-stars' ?> me-1"></i>
+                                            <?= esc($m['dimension']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-muted small fst-italic">-</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-muted small" style="max-width: 380px;">
                                     <?php if (!empty($m['objetivo'])): ?>
@@ -70,7 +93,7 @@
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm">
                                         <a href="<?= base_url('motivoentrenamiento/actual/' . $m['idmotivoentrenamiento']) ?>" class="btn btn-outline-primary" title="Ver Ficha del Registro">
-                                            <i class="bi bi-eye"></i> Ver Ficha
+                                            <i class="bi bi-eye"></i> Ficha
                                         </a>
                                         <a href="<?= base_url('motivoentrenamiento/edit/' . $m['idmotivoentrenamiento']) ?>" class="btn btn-outline-warning text-dark" title="Editar">
                                             <i class="bi bi-pencil"></i>

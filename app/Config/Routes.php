@@ -40,6 +40,10 @@ $modulos = [
     'ejercicio-equipo'     => 'EjercicioEquipo',
     'rutinaprograma'       => 'RutinaPrograma',
     'rutina-programa'      => 'RutinaPrograma',
+    'rangoedad'            => 'RangoEdad',
+    'rango-edad'           => 'RangoEdad',
+    'ejecucionprograma'    => 'EjecucionPrograma',
+    'ejecucion-programa'   => 'EjecucionPrograma',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -84,6 +88,11 @@ foreach ($modulos as $slug => $controller) {
         if ($controller === 'Musculo') {
             $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Musculo::imagen/$1');
             $routes->get('galeria', 'Musculo::galeria');
+        }
+
+        // Rutas adicionales para motivoentrenamiento
+        if ($controller === 'MotivoEntrenamiento') {
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'MotivoEntrenamiento::imagen/$1');
         }
     });
 }
@@ -146,6 +155,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('programa/(:num)', 'GimApiController::getProgramaDetail/$1');
     $routes->get('rutinas', 'GimApiController::getRutinas');
     $routes->get('rutina/(:num)', 'GimApiController::getRutinaDetail/$1');
+    $routes->get('rangos-edad', 'GimApiController::getRangosEdad');
+    $routes->get('rangoedad', 'GimApiController::getRangosEdad');
 
     // Catálogo de Ejercicios, Músculos y Equipos
     $routes->get('ejercicios', 'GimApiController::getEjercicios');

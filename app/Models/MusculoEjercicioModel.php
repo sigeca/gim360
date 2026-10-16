@@ -53,10 +53,10 @@ class MusculoEjercicioModel extends Model
     public function getEjerciciosByMusculo(int $idmusculo): array
     {
         return $this->db->table('musculoejercicio me')
-            ->select('me.idmusculoejecicio, me.idejercicio, me.idmusculo, e.nombre AS ejercicio_nombre, e.imagen AS ejercicio_imagen, e.descripcion AS ejercicio_descripcion')
+            ->select('me.idmusculoejecicio, me.idejercicio, me.idmusculo, e.nombreespanol AS ejercicio_nombre, e.nombreespanol AS ejercicio_nombreespanol, e.nombreingles AS ejercicio_nombreingles, e.imagen AS ejercicio_imagen, e.descripcion AS ejercicio_descripcion')
             ->join('ejercicio e', 'e.idejercicio = me.idejercicio', 'inner')
             ->where('me.idmusculo', $idmusculo)
-            ->orderBy('e.nombre', 'ASC')
+            ->orderBy('e.nombreespanol', 'ASC')
             ->get()
             ->getResultArray();
     }
@@ -128,7 +128,7 @@ class MusculoEjercicioModel extends Model
     {
         return $this->db->table('musculoejercicio me')
             ->select('me.idmusculoejecicio, me.idejercicio, me.idmusculo, 
-                      e.nombre AS ejercicio_nombre, e.imagen AS ejercicio_imagen,
+                      e.nombreespanol AS ejercicio_nombre, e.nombreespanol AS ejercicio_nombreespanol, e.nombreingles AS ejercicio_nombreingles, e.imagen AS ejercicio_imagen,
                       m.nombre AS musculo_nombre, m.imagen AS musculo_imagen')
             ->join('ejercicio e', 'e.idejercicio = me.idejercicio', 'inner')
             ->join('musculo m', 'm.idmusculo = me.idmusculo', 'inner')
@@ -143,7 +143,9 @@ class MusculoEjercicioModel extends Model
     public function getListado(?string $search = null, int $perPage = 25)
     {
         $builder = $this->select('musculoejercicio.*, 
-                                  ejercicio.nombre AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombreespanol,
+                                  ejercicio.nombreingles AS ejercicio_nombreingles,
                                   ejercicio.imagen AS ejercicio_imagen,
                                   musculo.nombre AS musculo_nombre, 
                                   musculo.imagen AS musculo_imagen')
@@ -153,7 +155,8 @@ class MusculoEjercicioModel extends Model
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('ejercicio.nombre', $search)
+                    ->like('ejercicio.nombreespanol', $search)
+                    ->orLike('ejercicio.nombreingles', $search)
                     ->orLike('musculo.nombre', $search)
                     ->groupEnd();
         }

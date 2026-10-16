@@ -14,7 +14,6 @@ use App\Models\GeneroPersonaModel;
 use App\Models\VisitasGimModel;
 use App\Models\EquipoModel;
 use App\Models\EjercicioModel;
-use App\Models\EjercicioClienteModel;
 use App\Models\MotivoEntrenamientoModel;
 use App\Models\RutinaEjecicioModel;
 use App\Models\PlanEjercicioModel;
@@ -26,6 +25,7 @@ use App\Models\ProgramaClienteModel;
 use App\Models\EstadoProgramaClienteModel;
 use App\Models\EjercicioEquipoModel;
 use App\Models\RutinaProgramaModel;
+use App\Models\RangoEdadModel;
 
 class Home extends BaseController
 {
@@ -43,7 +43,6 @@ class Home extends BaseController
         $visitasGimModel       = new VisitasGimModel();
         $equipoModel           = new EquipoModel();
         $ejercicioModel        = new EjercicioModel();
-        $ejercicioClienteModel = new EjercicioClienteModel();
         $motivoModel           = new MotivoEntrenamientoModel();
         $rutinaModel           = new RutinaEjecicioModel();
         $planModel             = new PlanEjercicioModel();
@@ -55,6 +54,7 @@ class Home extends BaseController
         $epcModel              = new EstadoProgramaClienteModel();
         $eeModel               = new EjercicioEquipoModel();
         $rprogModel            = new RutinaProgramaModel();
+        $rangoModel            = new RangoEdadModel();
 
         $db = \Config\Database::connect();
 
@@ -101,8 +101,8 @@ class Home extends BaseController
                 'musculo'              => $musculoModel->countAllResults(),
                 'musculoejercicio'     => $meModel->countAllResults(),
                 'ejercicioequipo'      => $eeModel->countAllResults(),
-                'ejerciciocliente'     => $ejercicioClienteModel->countAllResults(),
                 'motivoentrenamiento'  => $motivoModel->countAllResults(),
+                'rangoedad'            => $rangoModel->countAllResults(),
                 'rutinaejecicio'       => $rutinaModel->countAllResults(),
                 'planejercicio'        => $planModel->countAllResults(),
                 'rutinaplan'           => $rpModel->countAllResults(),
@@ -117,7 +117,6 @@ class Home extends BaseController
             'recentVisitas'    => $visitasGimModel->getVisitasWithDetails(),
             'recentEquipos'    => $equipoModel->getEquiposWithDetails(),
             'recentEjercicios' => $ejercicioModel->getEjercicios(),
-            'recentEC'         => $ejercicioClienteModel->getEjercicioClientesWithDetails(),
         ];
 
         return view('home/dashboard', $data);

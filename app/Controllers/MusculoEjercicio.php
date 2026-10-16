@@ -88,7 +88,7 @@ class MusculoEjercicio extends BaseController
     {
         $data = [
             'title'      => 'Asignar Músculo a Ejercicio',
-            'ejercicios' => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios' => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'musculos'   => $this->musculoModel->orderBy('nombre', 'ASC')->findAll(),
             'selectedEjercicio' => $this->request->getGet('idejercicio') ?? '',
             'module'     => 'musculoejercicio',
@@ -138,7 +138,7 @@ class MusculoEjercicio extends BaseController
         $data = [
             'title'      => 'Editar Relación Músculo - Ejercicio #' . $id,
             'rel'        => $record,
-            'ejercicios' => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios' => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'musculos'   => $this->musculoModel->orderBy('nombre', 'ASC')->findAll(),
             'module'     => 'musculoejercicio',
         ];

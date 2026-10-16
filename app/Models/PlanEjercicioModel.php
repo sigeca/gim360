@@ -13,6 +13,7 @@ class PlanEjercicioModel extends Model
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $allowedFields    = [
+        'nombre',
         'idejercicio',
         'diassemanas',
         'repeticiones',
@@ -22,6 +23,7 @@ class PlanEjercicioModel extends Model
     ];
 
     protected $validationRules = [
+        'nombre'         => 'required|min_length[3]|max_length[100]',
         'idejercicio'    => 'required|is_natural_no_zero',
         'diassemanas'    => 'permit_empty|is_natural_no_zero',
         'repeticiones'   => 'permit_empty|is_natural_no_zero',
@@ -31,6 +33,11 @@ class PlanEjercicioModel extends Model
     ];
 
     protected $validationMessages = [
+        'nombre' => [
+            'required'   => 'El nombre del plan de ejercicio es obligatorio.',
+            'min_length' => 'El nombre debe tener al menos 3 caracteres.',
+            'max_length' => 'El nombre no puede exceder los 100 caracteres.',
+        ],
         'idejercicio' => [
             'required'           => 'Debe seleccionar un ejercicio.',
             'is_natural_no_zero' => 'Debe seleccionar un ejercicio válido.',
@@ -56,7 +63,9 @@ class PlanEjercicioModel extends Model
     public function getPlanWithDetails($id)
     {
         return $this->select('planejercicio.*, 
-                              ejercicio.nombre AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombreespanol, 
+                              ejercicio.nombreingles AS ejercicio_nombreingles, 
                               ejercicio.descripcion AS ejercicio_descripcion, 
                               ejercicio.urlvideo AS ejercicio_urlvideo, 
                               ejercicio.imagen AS ejercicio_imagen')
@@ -68,14 +77,18 @@ class PlanEjercicioModel extends Model
     public function getPlanesWithDetails(?string $search = null)
     {
         $builder = $this->select('planejercicio.*, 
-                                  ejercicio.nombre AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombreespanol, 
+                                  ejercicio.nombreingles AS ejercicio_nombreingles, 
                                   ejercicio.imagen AS ejercicio_imagen')
                         ->join('ejercicio', 'ejercicio.idejercicio = planejercicio.idejercicio', 'inner')
                         ->orderBy('planejercicio.idplanejercicio', 'ASC');
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('ejercicio.nombre', $search);
+                    ->like('planejercicio.nombre', $search)
+                    ->orLike('ejercicio.nombreespanol', $search)
+                    ->orLike('ejercicio.nombreingles', $search);
             if (is_numeric($search)) {
                 $builder->orWhere('planejercicio.idplanejercicio', (int)$search)
                         ->orWhere('planejercicio.diassemanas', (int)$search)

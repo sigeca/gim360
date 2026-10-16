@@ -34,10 +34,25 @@
                                 <tr>
                                     <th class="table-light text-muted">Cliente</th>
                                     <td>
-                                        <a href="<?= base_url('cliente/actual/' . $visita['idcliente']) ?>" class="fs-6 fw-bold text-dark text-decoration-none">
-                                            <?= esc($visita['cliente_nombres']) ?> <i class="bi bi-box-arrow-up-right fs-6 text-primary"></i>
-                                        </a>
-                                        <span class="badge bg-light text-dark border ms-2 font-monospace">Cédula: <?= esc($visita['cedula']) ?></span>
+                                        <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($visita['cedula'])) . '.jpg'; ?>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto en tamaño original" class="text-decoration-none">
+                                                <img src="<?= esc($fotoUrl) ?>"
+                                                     alt="Foto <?= esc($visita['cedula']) ?>"
+                                                     class="rounded-circle border border-success shadow-sm"
+                                                     style="width: 48px; height: 48px; object-fit: cover;"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                                                <span class="bg-light text-success rounded-circle border align-items-center justify-content-center" style="width: 48px; height: 48px; display: none;">
+                                                    <i class="bi bi-person-fill fs-5"></i>
+                                                </span>
+                                            </a>
+                                            <div>
+                                                <a href="<?= base_url('cliente/actual/' . $visita['idcliente']) ?>" class="fs-6 fw-bold text-dark text-decoration-none">
+                                                    <?= esc($visita['cliente_nombres']) ?> <i class="bi bi-box-arrow-up-right fs-6 text-primary"></i>
+                                                </a>
+                                                <span class="badge bg-light text-dark border ms-2 font-monospace">Cédula: <?= esc($visita['cedula']) ?></span>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                                 <tr>

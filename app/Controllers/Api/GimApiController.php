@@ -12,7 +12,6 @@ use App\Models\RutinaProgramaModel;
 use App\Models\RutinaPlanModel;
 use App\Models\PlanEjercicioModel;
 use App\Models\EjercicioModel;
-use App\Models\EjercicioClienteModel;
 use App\Models\VisitasGimModel;
 use App\Models\MusculoModel;
 use App\Models\EquipoModel;
@@ -47,7 +46,17 @@ class GimApiController extends ResourceController
             $base = substr($base, 0, -9);
             $base = rtrim($base, '/');
         }
-        return $base . '/index.php/' . $segment . '/' . $filename;
+        $targetFile = $filename;
+        if ($segment === 'ejercicio/imagen') {
+            $baseSlug = preg_replace('/-(start|peak|main)\.webp$/', '', $filename);
+            $baseSlug = preg_replace('/\.webp$/', '', $baseSlug);
+            $candidate = $baseSlug . '.webp';
+            $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+            if (file_exists($baseDir . '/repositorio/ejercicios/' . $candidate) || file_exists($baseDir . '/repositorio/ejercicios/repdb-free/images/flat/' . $candidate)) {
+                $targetFile = $candidate;
+            }
+        }
+        return $base . '/index.php/' . $segment . '/' . $targetFile;
     }
 
     /**
@@ -71,11 +80,16 @@ class GimApiController extends ResourceController
                                ->countAllResults();
             $c['total_visitas'] = $visitasCount;
 
-            // Total workouts / exercises
-            $ejerciciosCount = $db->table('ejerciciocliente')
-                                  ->where('idcliente', $idcliente)
-                                  ->countAllResults();
-            $c['total_ejercicios'] = $ejerciciosCount;
+            // Total exercises through assigned training programs
+            $ejRow = $db->table('programacliente pc')
+                        ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento')
+                        ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rp.idrutinaejercicio')
+                        ->join('planejercicio pe', 'pe.idplanejercicio = rpl.idplanejercicio')
+                        ->where('pc.idcliente', $idcliente)
+                        ->select('COUNT(DISTINCT pe.idejercicio) as total')
+                        ->get()
+                        ->getRowArray();
+            $c['total_ejercicios'] = (int)($ejRow['total'] ?? 0);
 
             // Active program
             $activeProg = $db->table('programacliente')
@@ -134,13 +148,24 @@ class GimApiController extends ResourceController
                                        ->orderBy('horaingreso', 'DESC')
                                        ->findAll(5);
 
-        $ejClienteModel = new EjercicioClienteModel();
-        $ultimosEjercicios = $ejClienteModel->select('ejerciciocliente.*, ejercicio.nombre AS ejercicio_nombre, ejercicio.imagen AS ejercicio_imagen')
-                                            ->join('ejercicio', 'ejercicio.idejercicio = ejerciciocliente.idejercicio', 'inner')
-                                            ->where('ejerciciocliente.idcliente', $id)
-                                            ->orderBy('ejerciciocliente.fecha', 'DESC')
-                                            ->orderBy('ejerciciocliente.idejerciciocliente', 'DESC')
-                                            ->findAll(5);
+        $db = \Config\Database::connect();
+        $ultimosEjercicios = $db->table('programacliente pc')
+                                ->select('ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.imagen AS ejercicio_imagen, plane.series, plane.repeticiones, plane.peso, plane.tiempodescanso, rutina.nombre AS rutina_nombre, prog.nombre AS programa_nombre')
+                                ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                                ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = prog.idprogramaentrenamiento', 'inner')
+                                ->join('rutinaejecicio rutina', 'rutina.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                                ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rutina.idrutinaejercicio', 'inner')
+                                ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
+                                ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
+                                ->where('pc.idcliente', (int)$id)
+                                ->groupBy('ejercicio.idejercicio, plane.idplanejercicio')
+                                ->limit(5)
+                                ->get()
+                                ->getResultArray();
+
+        foreach ($ultimosEjercicios as &$ue) {
+            $ue['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ue['ejercicio_imagen'] ?? null);
+        }
 
         return $this->respond([
             'status'  => 200,
@@ -337,7 +362,7 @@ class GimApiController extends ResourceController
         $offset = ($page - 1) * $limit;
 
         $ejercicioModel = new EjercicioModel();
-        $builder = $ejercicioModel->select('ejercicio.*');
+        $builder = $ejercicioModel->select('ejercicio.*, ejercicio.nombreespanol AS nombre');
 
         if (!empty($idmusculo)) {
             $builder->join('musculoejercicio', 'musculoejercicio.idejercicio = ejercicio.idejercicio', 'inner')
@@ -351,13 +376,14 @@ class GimApiController extends ResourceController
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('ejercicio.nombre', $search)
+                    ->like('ejercicio.nombreespanol', $search)
+                    ->orLike('ejercicio.nombreingles', $search)
                     ->orLike('ejercicio.descripcion', $search)
                     ->groupEnd();
         }
 
         $total = $builder->countAllResults(false);
-        $ejercicios = $builder->orderBy('ejercicio.nombre', 'ASC')
+        $ejercicios = $builder->orderBy('ejercicio.nombreespanol', 'ASC')
                               ->limit($limit, $offset)
                               ->get()
                               ->getResultArray();
@@ -398,6 +424,7 @@ class GimApiController extends ResourceController
         }
 
         $baseUrl = base_url();
+        $ejercicio['nombre'] = $ejercicio['nombreespanol'] ?? '';
         $ejercicio['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ejercicio['imagen'] ?? null);
         $ejercicio['musculos'] = $ejercicioModel->getMusculos((int)$id);
         $ejercicio['equipos'] = $ejercicioModel->getEquipos((int)$id);
@@ -539,7 +566,7 @@ class GimApiController extends ResourceController
 
     /**
      * GET /api/cliente/{id}/ejercicios
-     * Get completed workouts history for client
+     * Get exercises prescribed for client through their assigned training programs
      */
     public function getClienteEjercicios($id = null)
     {
@@ -547,75 +574,44 @@ class GimApiController extends ResourceController
             return $this->failNotFound('ID de cliente no proporcionado');
         }
 
-        $ejClienteModel = new EjercicioClienteModel();
-        $ejercicios = $ejClienteModel->select('ejerciciocliente.*, ejercicio.nombre AS ejercicio_nombre, ejercicio.descripcion, ejercicio.imagen AS ejercicio_imagen, ejercicio.urlvideo')
-                                     ->join('ejercicio', 'ejercicio.idejercicio = ejerciciocliente.idejercicio', 'inner')
-                                     ->where('ejerciciocliente.idcliente', (int)$id)
-                                     ->orderBy('ejerciciocliente.fecha', 'DESC')
-                                     ->orderBy('ejerciciocliente.idejerciciocliente', 'DESC')
-                                     ->findAll();
+        $clienteModel = new ClienteModel();
+        $cliente = $clienteModel->find($id);
+        if (!$cliente) {
+            return $this->failNotFound("Cliente no encontrado con ID: {$id}");
+        }
 
-        $baseUrl = base_url();
+        $db = \Config\Database::connect();
+        $ejercicios = $db->table('programacliente pc')
+                         ->select('ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.descripcion, ejercicio.imagen AS ejercicio_imagen, ejercicio.urlvideo, plane.idplanejercicio, plane.diassemanas, plane.repeticiones, plane.series, plane.tiempodescanso, plane.peso, rutina.idrutinaejercicio, rutina.nombre AS rutina_nombre, prog.idprogramaentrenamiento, prog.nombre AS programa_nombre, estado.nombre AS estado_programa')
+                         ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                         ->join('estadoprogramacliente estado', 'estado.idestadoprogramacliente = pc.idestadoprogramacliente', 'inner')
+                         ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = prog.idprogramaentrenamiento', 'inner')
+                         ->join('rutinaejecicio rutina', 'rutina.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                         ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rutina.idrutinaejercicio', 'inner')
+                         ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
+                         ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
+                         ->where('pc.idcliente', (int)$id)
+                         ->orderBy('pc.idprogramacliente', 'DESC')
+                         ->orderBy('rutina.idrutinaejercicio', 'ASC')
+                         ->orderBy('plane.idplanejercicio', 'ASC')
+                         ->get()
+                         ->getResultArray();
+
         foreach ($ejercicios as &$ej) {
             $ej['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ej['ejercicio_imagen'] ?? null);
         }
 
         return $this->respond([
             'status'  => 200,
-            'message' => 'Historial de ejercicios obtenido correctamente',
+            'message' => 'Ejercicios asignados al cliente obtenidos a través de su programa de entrenamiento',
             'data'    => $ejercicios,
             'total'   => count($ejercicios),
         ]);
     }
 
     /**
-     * POST /api/ejercicios-cliente
-     * Log a completed exercise for a client
-     */
-    public function registrarEjercicioCliente()
-    {
-        $input = $this->request->getJSON(true) ?: $this->request->getPost();
-
-        $rules = [
-            'idcliente'       => 'required|is_natural_no_zero',
-            'idejercicio'     => 'required|is_natural_no_zero',
-            'fecha'           => 'required|valid_date[Y-m-d]',
-            'duracionminutos' => 'required|is_natural_no_zero|greater_than[0]|less_than_equal_to[1440]',
-        ];
-
-        if (!$this->validateData($input, $rules)) {
-            return $this->failValidationErrors($this->validator->getErrors());
-        }
-
-        $ejClienteModel = new EjercicioClienteModel();
-        $data = [
-            'idcliente'       => (int)$input['idcliente'],
-            'idejercicio'     => (int)$input['idejercicio'],
-            'fecha'           => $input['fecha'],
-            'duracionminutos' => (int)$input['duracionminutos'],
-        ];
-
-        $id = $ejClienteModel->insert($data);
-        if (!$id) {
-            return $this->failServerError('No se pudo registrar el ejercicio.');
-        }
-
-        $created = $ejClienteModel->getEjercicioClienteWithDetails($id);
-        $baseUrl = base_url();
-        if ($created && !empty($created['ejercicio_imagen'])) {
-            $created['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $created['ejercicio_imagen']);
-        }
-
-        return $this->respondCreated([
-            'status'  => 201,
-            'message' => 'Ejercicio registrado en tu historial de entrenamiento',
-            'data'    => $created,
-        ]);
-    }
-
-    /**
      * GET /api/cliente/{id}/progreso
-     * Comprehensive progress, effort metrics and statistics for visitor
+     * Comprehensive progress, effort metrics and statistics for client
      */
     public function getClienteProgreso($id = null)
     {
@@ -631,41 +627,38 @@ class GimApiController extends ResourceController
 
         $db = \Config\Database::connect();
 
-        // Total workouts count and minutes
-        $workoutStats = $db->table('ejerciciocliente')
-                           ->select('COUNT(*) as total_sesiones, SUM(duracionminutos) as total_minutos, COUNT(DISTINCT fecha) as dias_entrenados')
-                           ->where('idcliente', (int)$id)
-                           ->get()
-                           ->getRowArray();
-
-        $totalSesiones = (int)($workoutStats['total_sesiones'] ?? 0);
-        $totalMinutos = (int)($workoutStats['total_minutos'] ?? 0);
-        $diasEntrenados = (int)($workoutStats['dias_entrenados'] ?? 0);
-
         // Total visits to gym
         $visitasCount = $db->table('visitasgim')
                            ->where('idcliente', (int)$id)
                            ->countAllResults();
 
-        // Workouts in the last 7 days and 30 days
+        // Distinct days attended
+        $diasEntrenadosRow = $db->table('visitasgim')
+                                ->select('COUNT(DISTINCT fecha) as dias')
+                                ->where('idcliente', (int)$id)
+                                ->get()
+                                ->getRowArray();
+        $diasEntrenados = (int)($diasEntrenadosRow['dias'] ?? 0);
+
+        // Visits in the last 7 days and 30 days
         $hoy = date('Y-m-d');
         $hace7Dias = date('Y-m-d', strtotime('-7 days'));
         $hace30Dias = date('Y-m-d', strtotime('-30 days'));
 
-        $sesiones7Dias = $db->table('ejerciciocliente')
+        $sesiones7Dias = $db->table('visitasgim')
                             ->where('idcliente', (int)$id)
                             ->where('fecha >=', $hace7Dias)
                             ->countAllResults();
 
-        $sesiones30Dias = $db->table('ejerciciocliente')
+        $sesiones30Dias = $db->table('visitasgim')
                              ->where('idcliente', (int)$id)
                              ->where('fecha >=', $hace30Dias)
                              ->countAllResults();
 
-        // History grouped by date for weekly chart (last 14 days)
+        // History grouped by date (last 14 days)
         $hace14Dias = date('Y-m-d', strtotime('-14 days'));
-        $historialDiario = $db->table('ejerciciocliente')
-                              ->select('fecha, COUNT(*) as ejercicios, SUM(duracionminutos) as minutos')
+        $historialDiario = $db->table('visitasgim')
+                              ->select('fecha, COUNT(*) as visitas')
                               ->where('idcliente', (int)$id)
                               ->where('fecha >=', $hace14Dias)
                               ->groupBy('fecha')
@@ -673,29 +666,48 @@ class GimApiController extends ResourceController
                               ->get()
                               ->getResultArray();
 
-        // Top muscles worked
-        $musculosTrabajados = $db->table('ejerciciocliente')
-                                 ->select('musculo.nombre as musculo, COUNT(*) as veces')
-                                 ->join('musculoejercicio', 'musculoejercicio.idejercicio = ejerciciocliente.idejercicio', 'inner')
+        // Total exercises in assigned programs
+        $ejRow = $db->table('programacliente pc')
+                    ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento')
+                    ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rp.idrutinaejercicio')
+                    ->join('planejercicio pe', 'pe.idplanejercicio = rpl.idplanejercicio')
+                    ->where('pc.idcliente', (int)$id)
+                    ->select('COUNT(DISTINCT pe.idejercicio) as total')
+                    ->get()
+                    ->getRowArray();
+        $totalEjerciciosAsignados = (int)($ejRow['total'] ?? 0);
+
+        // Muscles targeted in assigned programs
+        $musculosTrabajados = $db->table('programacliente pc')
+                                 ->select('musculo.nombre as musculo, COUNT(DISTINCT ejercicio.idejercicio) as veces')
+                                 ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                                 ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                                 ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
+                                 ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
+                                 ->join('musculoejercicio', 'musculoejercicio.idejercicio = ejercicio.idejercicio', 'inner')
                                  ->join('musculo', 'musculo.idmusculo = musculoejercicio.idmusculo', 'inner')
-                                 ->where('ejerciciocliente.idcliente', (int)$id)
-                                 ->groupBy('musculo.nombre')
+                                 ->where('pc.idcliente', (int)$id)
+                                 ->groupBy('musculo.idmusculo, musculo.nombre')
                                  ->orderBy('veces', 'DESC')
                                  ->limit(6)
                                  ->get()
                                  ->getResultArray();
 
-        // Recent exercise records with exercise details
-        $ejClienteModel = new EjercicioClienteModel();
-        $recientes = $ejClienteModel->select('ejerciciocliente.*, ejercicio.nombre AS ejercicio_nombre, ejercicio.imagen AS ejercicio_imagen')
-                                    ->join('ejercicio', 'ejercicio.idejercicio = ejerciciocliente.idejercicio', 'inner')
-                                    ->where('ejerciciocliente.idcliente', (int)$id)
-                                    ->orderBy('ejerciciocliente.fecha', 'DESC')
-                                    ->orderBy('ejerciciocliente.idejerciciocliente', 'DESC')
-                                    ->findAll(10);
+        // Exercises assigned through current programs
+        $ejerciciosAsignados = $db->table('programacliente pc')
+                                  ->select('ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.imagen AS ejercicio_imagen, plane.series, plane.repeticiones, plane.peso, plane.tiempodescanso, rutina.nombre AS rutina_nombre')
+                                  ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
+                                  ->join('rutinaejecicio rutina', 'rutina.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                                  ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rutina.idrutinaejercicio', 'inner')
+                                  ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
+                                  ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
+                                  ->where('pc.idcliente', (int)$id)
+                                  ->groupBy('ejercicio.idejercicio, plane.idplanejercicio')
+                                  ->limit(10)
+                                  ->get()
+                                  ->getResultArray();
 
-        $baseUrl = base_url();
-        foreach ($recientes as &$r) {
+        foreach ($ejerciciosAsignados as &$r) {
             $r['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $r['ejercicio_imagen'] ?? null);
         }
 
@@ -714,17 +726,33 @@ class GimApiController extends ResourceController
             'status'  => 200,
             'message' => 'Estadísticas de progreso y esfuerzo calculadas correctamente',
             'data'    => [
-                'total_sesiones'       => $totalSesiones,
-                'total_minutos'        => $totalMinutos,
-                'dias_entrenados'      => $diasEntrenados,
                 'total_visitas_gim'    => $visitasCount,
+                'total_ejercicios'     => $totalEjerciciosAsignados,
+                'dias_entrenados'      => $diasEntrenados,
                 'sesiones_ultimos_7d'  => $sesiones7Dias,
                 'sesiones_ultimos_30d' => $sesiones30Dias,
                 'historial_diario'     => $historialDiario,
                 'musculos_trabajados'  => $musculosTrabajados,
                 'programa_activo'      => $programaActivo,
-                'ejercicios_recientes' => $recientes,
+                'ejercicios_recientes' => $ejerciciosAsignados,
             ],
+        ]);
+    }
+
+    /**
+     * GET /api/rangos-edad
+     * List all age ranges
+     */
+    public function getRangosEdad()
+    {
+        $rangoModel = new \App\Models\RangoEdadModel();
+        $rangos = $rangoModel->getRangos($this->request->getGet('q'));
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Rangos de edad obtenidos correctamente',
+            'data'    => $rangos,
+            'total'   => count($rangos),
         ]);
     }
 }

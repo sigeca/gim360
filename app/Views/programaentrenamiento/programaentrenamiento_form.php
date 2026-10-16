@@ -36,12 +36,56 @@
                         <select name="idmotivoentrenamiento" id="idmotivoentrenamiento" class="form-select" required>
                             <option value="">-- Seleccione un Motivo --</option>
                             <?php foreach ($motivos as $m): ?>
-                                <option value="<?= $m['idmotivoentrenamiento'] ?>" <?= old('idmotivoentrenamiento', $idmotivoPreselected ?? '') == $m['idmotivoentrenamiento'] ? 'selected' : '' ?>>
-                                    <?= esc($m['nombre']) ?>
+                                <option value="<?= $m['idmotivoentrenamiento'] ?>" 
+                                        data-nombre="<?= esc($m['nombre']) ?>"
+                                        data-dimension="<?= esc($m['dimension'] ?? '') ?>"
+                                        data-objetivo="<?= esc($m['objetivo'] ?? '') ?>"
+                                        data-imagen="<?= esc($m['imagen'] ?? '') ?>"
+                                        <?= old('idmotivoentrenamiento', $idmotivoPreselected ?? '') == $m['idmotivoentrenamiento'] ? 'selected' : '' ?>>
+                                    <?= esc($m['nombre']) ?><?= !empty($m['dimension']) ? ' [' . esc($m['dimension']) . ']' : '' ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>
-                        <div class="form-text">Objetivo general o meta que persigue el usuario.</div>
+                        <div class="form-text">Objetivo general o necesidad biológica/estética que persigue la persona.</div>
+
+                        <!-- Tarjeta de Representación Física de la Necesidad -->
+                        <div id="motivoPreviewCard" class="card border border-warning-subtle bg-light-subtle rounded-3 mt-3 shadow-sm" style="display: none;">
+                            <div class="card-body p-3">
+                                <div class="row align-items-center g-3">
+                                    <div class="col-sm-4 text-center">
+                                        <img id="motivoPreviewImg" src="" alt="Representación Física" class="img-fluid rounded-2 shadow-sm w-100" style="max-height: 130px; object-fit: cover;">
+                                        <div class="text-muted small mt-1 fst-italic">
+                                            <i class="bi bi-person-check me-1"></i>Representación física
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <div class="d-flex align-items-center gap-2 mb-1">
+                                            <span id="motivoPreviewDimension" class="badge bg-success"></span>
+                                            <strong id="motivoPreviewTitle" class="text-dark"></strong>
+                                        </div>
+                                        <p id="motivoPreviewDesc" class="text-secondary small mb-0" style="line-height: 1.45;"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Rango de Edad -->
+                    <div class="mb-3">
+                        <label for="idrangoedad" class="form-label fw-semibold">
+                            <i class="bi bi-person-bounding-box text-info me-1"></i>Rango de Edad Recomendado
+                        </label>
+                        <select name="idrangoedad" id="idrangoedad" class="form-select">
+                            <option value="">-- Sin rango específico (General / Todas las edades) --</option>
+                            <?php if (!empty($rangos)): ?>
+                                <?php foreach ($rangos as $r): ?>
+                                    <option value="<?= $r['idrangoedad'] ?>" <?= old('idrangoedad', $idrangoPreselected ?? '') == $r['idrangoedad'] ? 'selected' : '' ?>>
+                                        <?= esc($r['nombre']) ?> (<?= (int)$r['edadminima'] ?> a <?= (int)$r['edadmaxima'] ?> años)
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <div class="form-text">Segmento etario al que está orientado este programa de entrenamiento.</div>
                     </div>
 
                     <div class="alert alert-light border small text-muted d-flex align-items-center gap-2 mb-4">
@@ -62,5 +106,58 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('idmotivoentrenamiento');
+    const card = document.getElementById('motivoPreviewCard');
+    const img = document.getElementById('motivoPreviewImg');
+    const title = document.getElementById('motivoPreviewTitle');
+    const dimensionBadge = document.getElementById('motivoPreviewDimension');
+    const desc = document.getElementById('motivoPreviewDesc');
+    const baseUrl = '<?= base_url('repositorio/motivos') ?>/';
+    const fallbackUrl = '<?= base_url('motivoentrenamiento/imagen') ?>/';
+
+    function updateMotivoPreview() {
+        const selected = select.options[select.selectedIndex];
+        if (!selected || !selected.value) {
+            card.style.display = 'none';
+            return;
+        }
+
+        const imagen = selected.getAttribute('data-imagen');
+        const nombre = selected.getAttribute('data-nombre');
+        const dimension = selected.getAttribute('data-dimension');
+        const objetivo = selected.getAttribute('data-objetivo');
+
+        title.textContent = nombre || '';
+        desc.textContent = objetivo || 'Sin descripción registrada.';
+
+        if (dimension) {
+            dimensionBadge.textContent = dimension;
+            dimensionBadge.className = 'badge ' + (dimension === 'Salud' ? 'bg-success' : 'bg-primary');
+            dimensionBadge.style.display = 'inline-block';
+        } else {
+            dimensionBadge.style.display = 'none';
+        }
+
+        if (imagen) {
+            img.onerror = function() {
+                this.onerror = null;
+                this.src = fallbackUrl + encodeURIComponent(imagen);
+            };
+            img.src = baseUrl + encodeURIComponent(imagen);
+            img.style.display = 'block';
+        } else {
+            img.style.display = 'none';
+        }
+
+        card.style.display = 'block';
+    }
+
+    select.addEventListener('change', updateMotivoPreview);
+    updateMotivoPreview();
+});
+</script>
 
 <?= $this->endSection() ?>

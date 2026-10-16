@@ -376,6 +376,29 @@ INSERT IGNORE INTO `ejercicioequipo` (`idejercicioequipo`, `idejercicio`, `idequ
 (15, 13, 2),
 (16, 14, 14),
 (17, 15, 6);
+
+CREATE TABLE IF NOT EXISTS `rangoedad` (
+  `idrangoedad` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `edadminima` int(11) NOT NULL,
+  `edadmaxima` int(11) NOT NULL,
+  PRIMARY KEY (`idrangoedad`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
+  `idejecucionprograma` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogramacliente` int(11) NOT NULL,
+  `idejercicio` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `horainicio` time NOT NULL,
+  `horafin` time DEFAULT NULL,
+  PRIMARY KEY (`idejecucionprograma`),
+  KEY `idx_ejecucionprograma_pc` (`idprogramacliente`),
+  KEY `idx_ejecucionprograma_ejercicio` (`idejercicio`),
+  KEY `idx_ejecucionprograma_fecha` (`fecha`),
+  CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 ";
             if ($conn->multi_query($migrationSql)) {
                 do {
@@ -397,7 +420,7 @@ INSERT IGNORE INTO `ejercicioequipo` (`idejercicioequipo`, `idejercicio`, `idequ
                 $existingTables[] = strtolower($row[0]);
             }
         }
-        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 'estadoprogramacliente', 'programacliente', 'ejercicioequipo'];
+        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 'estadoprogramacliente', 'programacliente', 'ejercicioequipo', 'rangoedad', 'ejecucionprograma'];
         $missingTables = array_diff($requiredTables, $existingTables);
 
         echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount >= 16 && empty($missingTables), "OK ({$tableCount} tablas encontradas)", "Incompleta ({$tableCount} tablas encontradas)") . "</td></tr>";

@@ -8,7 +8,7 @@
             <div class="card-header bg-white py-3 border-bottom">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-pencil-square text-danger me-2"></i>Editar Ejercicio: <?= esc($ejercicio['nombre']) ?>
+                        <i class="bi bi-pencil-square text-danger me-2"></i>Editar Ejercicio: <?= esc($ejercicio['nombreespanol']) ?>
                     </h5>
                     <a href="<?= base_url('ejercicio/actual/' . $ejercicio['idejercicio']) ?>" class="btn btn-outline-secondary btn-sm">
                         <i class="bi bi-arrow-left me-1"></i>Volver
@@ -20,13 +20,19 @@
                 <form method="post" action="<?= base_url('ejercicio/update/' . $ejercicio['idejercicio']) ?>">
                     <?= csrf_field() ?>
 
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label fw-semibold">Nombre del Ejercicio <span class="text-danger">*</span></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" value="<?= old('nombre', $ejercicio['nombre']) ?>" required>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="nombreespanol" class="form-label fw-semibold">Nombre en Español <span class="text-danger">*</span></label>
+                            <input type="text" name="nombreespanol" id="nombreespanol" class="form-control" value="<?= old('nombreespanol', $ejercicio['nombreespanol']) ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombreingles" class="form-label fw-semibold">Nombre en Inglés <span class="text-danger">*</span></label>
+                            <input type="text" name="nombreingles" id="nombreingles" class="form-control" value="<?= old('nombreingles', $ejercicio['nombreingles']) ?>" required>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen</label>
+                        <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen Animada</label>
                         <?php if (!empty($ejercicio['imagen'])): ?>
                             <div class="d-flex align-items-center gap-3 mb-2 p-2 bg-light rounded border">
                                 <img src="<?= base_url('ejercicio/imagen/' . esc($ejercicio['imagen'])) ?>" 
@@ -35,15 +41,15 @@
                                      style="width: 70px; height: 70px; object-fit: contain;">
                                 <div>
                                     <div class="fw-semibold text-dark small"><?= esc($ejercicio['imagen']) ?></div>
-                                    <small class="text-muted">Vista previa de la ilustración actual</small>
+                                    <small class="text-muted">Vista previa de la animación actual</small>
                                 </div>
                             </div>
                         <?php endif; ?>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-file-earmark-image text-danger"></i></span>
-                            <input type="text" name="imagen" id="imagen" class="form-control" value="<?= old('imagen', $ejercicio['imagen']) ?>" placeholder="Ej: squat-start.webp">
+                            <input type="text" name="imagen" id="imagen" class="form-control" value="<?= old('imagen', $ejercicio['imagen']) ?>" placeholder="Ej: squat.webp">
                         </div>
-                        <small class="text-muted">Archivo .webp en el repositorio del gimnasio.</small>
+                        <small class="text-muted">Archivo .webp animado en <code>/repositorio/ejercicios/</code>.</small>
                     </div>
 
                     <div class="mb-3">

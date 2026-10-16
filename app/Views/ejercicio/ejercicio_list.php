@@ -44,7 +44,7 @@
                     <tr>
                         <th class="ps-4" style="width: 70px;">ID</th>
                         <th style="width: 80px;">Imagen</th>
-                        <th>Nombre del Ejercicio</th>
+                        <th>Nombre en Español / Inglés</th>
                         <th>Descripción</th>
                         <th>Video Tutorial</th>
                         <th class="text-end pe-4" style="width: 140px;">Acciones</th>
@@ -61,9 +61,14 @@
                                 <td class="ps-4 fw-bold text-muted"><?= $ej['idejercicio'] ?></td>
                                 <td>
                                     <?php if (!empty($ej['imagen'])): ?>
-                                        <a href="<?= base_url('ejercicio/actual/' . $ej['idejercicio']) ?>" title="Ver ficha">
-                                            <img src="<?= base_url('ejercicio/imagen/' . esc($ej['imagen'])) ?>" 
-                                                 alt="<?= esc($ej['nombre']) ?>" 
+                                        <?php 
+                                            $baseSlug = preg_replace('/-(start|peak|main)\.webp$/', '', $ej['imagen']);
+                                            $baseSlug = preg_replace('/\.webp$/', '', $baseSlug);
+                                            $thumbImg = $baseSlug ? ($baseSlug . '.webp') : $ej['imagen'];
+                                        ?>
+                                        <a href="<?= base_url('ejercicio/actual/' . $ej['idejercicio']) ?>" title="Ver ficha y animación">
+                                            <img src="<?= base_url('ejercicio/imagen/' . esc($thumbImg)) ?>" 
+                                                 alt="<?= esc($ej['nombreespanol']) ?>" 
                                                  class="rounded border bg-light"
                                                  style="width: 55px; height: 55px; object-fit: contain; padding: 2px;">
                                         </a>
@@ -76,18 +81,15 @@
                                 <td>
                                     <div>
                                         <a href="<?= base_url('ejercicio/actual/' . $ej['idejercicio']) ?>" class="fw-bold text-dark text-decoration-none">
-                                            <?= esc($ej['nombre']) ?>
+                                            <?= esc($ej['nombreespanol']) ?>
                                         </a>
+                                        <div class="small text-secondary fst-italic">
+                                            <?= esc($ej['nombreingles']) ?>
+                                        </div>
                                     </div>
                                     <div class="mt-1">
                                         <?php if (!empty($ej['imagen'])): ?>
-                                            <?php if (str_contains($ej['imagen'], '-start.webp')): ?>
-                                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle py-0 px-2" style="font-size: 0.72rem;">Fase Inicial</span>
-                                            <?php elseif (str_contains($ej['imagen'], '-peak.webp')): ?>
-                                                <span class="badge bg-success-subtle text-success border border-success-subtle py-0 px-2" style="font-size: 0.72rem;">Fase Final</span>
-                                            <?php else: ?>
-                                                <span class="badge bg-info-subtle text-info border border-info-subtle py-0 px-2" style="font-size: 0.72rem;">General</span>
-                                            <?php endif; ?>
+                                            <span class="badge bg-danger-subtle text-danger border border-danger-subtle py-0 px-2" style="font-size: 0.72rem;">Animado .webp</span>
                                             <small class="text-muted ms-1 font-monospace" style="font-size: 0.75rem;"><?= esc($ej['imagen']) ?></small>
                                         <?php endif; ?>
                                     </div>

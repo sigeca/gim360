@@ -235,8 +235,7 @@ $groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive;
 $isEquiposActive = (strpos($uri, 'equipos') === 0);
 $groupEquiposOpen = $isEquiposActive;
 
-$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'ejerciciocliente') === false && strpos($uri, 'rutinaejercicio') === false && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false);
-$isEjercicioClienteActive = (strpos($uri, 'ejerciciocliente') === 0);
+$isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'rutinaejercicio') === false && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false);
 $isMotivoActive = (strpos($uri, 'motivoentrenamiento') === 0);
 $isRutinaActive = (strpos($uri, 'rutinaejecicio') === 0 || strpos($uri, 'rutinaejercicio') === 0);
 $isPlanEjercicioActive = (strpos($uri, 'planejercicio') === 0);
@@ -245,10 +244,13 @@ $isMusculoActive = (strpos($uri, 'musculo') === 0 || strpos($uri, 'musculos') ==
 $isMusculoEjercicioActive = (strpos($uri, 'musculoejercicio') === 0 || strpos($uri, 'musculo-ejercicio') === 0);
 $isEjercicioEquipoActive = (strpos($uri, 'ejercicioequipo') === 0 || strpos($uri, 'ejercicio-equipo') === 0);
 $isProgramaActive = (strpos($uri, 'programaentrenamiento') === 0);
+$isRangoEdadActive = (strpos($uri, 'rangoedad') === 0 || strpos($uri, 'rango-edad') === 0);
 $isRutinaProgramaActive = (strpos($uri, 'rutinaprograma') === 0 || strpos($uri, 'rutina-programa') === 0);
 $isProgramaClienteActive = (strpos($uri, 'programacliente') === 0 || strpos($uri, 'programa-cliente') === 0);
+$isEjecucionProgramaActive = (strpos($uri, 'ejecucionprograma') === 0 || strpos($uri, 'ejecucion-programa') === 0);
 $isEstadoProgramaClienteActive = (strpos($uri, 'estadoprogramacliente') === 0 || strpos($uri, 'estado-programa-cliente') === 0);
-$groupEntrenamientoOpen = $isEjercicioActive || $isEjercicioClienteActive || $isMotivoActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isProgramaClienteActive || $isEstadoProgramaClienteActive;
+$groupPlanificacionOpen = $isEjercicioActive || $isMotivoActive || $isRangoEdadActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isEstadoProgramaClienteActive;
+$groupEjecucionOpen = $isProgramaClienteActive || $isEjecucionProgramaActive;
 
 $isCorreoActive = (strpos($uri, 'correo') === 0);
 $isDireccionActive = (strpos($uri, 'direccion') === 0);
@@ -356,21 +358,21 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                 </div>
             </div>
 
-            <!-- CATEGORÍA: ENTRENAMIENTO & EJERCICIOS -->
+            <!-- CATEGORÍA: PLANIFICACIÓN -->
             <div class="sidebar-item">
-                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupEntrenamientoOpen ? '' : 'collapsed' ?>" 
+                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupPlanificacionOpen ? '' : 'collapsed' ?>" 
                    data-bs-toggle="collapse" 
-                   href="#menuEntrenamientoCollapse" 
+                   href="#menuPlanificacionCollapse" 
                    role="button" 
-                   aria-expanded="<?= $groupEntrenamientoOpen ? 'true' : 'false' ?>"
-                   aria-controls="menuEntrenamientoCollapse">
+                   aria-expanded="<?= $groupPlanificacionOpen ? 'true' : 'false' ?>"
+                   aria-controls="menuPlanificacionCollapse">
                     <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-fire text-danger fs-5"></i>
-                        <span>Entrenamiento</span>
+                        <i class="bi bi-calendar2-check text-danger fs-5"></i>
+                        <span>Planificación</span>
                     </div>
                     <i class="bi bi-chevron-down arrow-indicator"></i>
                 </a>
-                <div class="collapse <?= $groupEntrenamientoOpen ? 'show' : '' ?>" id="menuEntrenamientoCollapse">
+                <div class="collapse <?= $groupPlanificacionOpen ? 'show' : '' ?>" id="menuPlanificacionCollapse">
                     <div class="sidebar-submenu">
                         <a href="<?= base_url('ejercicio') ?>" class="submenu-link <?= $isEjercicioActive ? 'active' : '' ?>">
                             <i class="bi bi-card-list text-danger"></i>
@@ -388,13 +390,13 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-gear-wide-connected text-info"></i>
                             <span>Ejercicios y Equipos</span>
                         </a>
-                        <a href="<?= base_url('ejerciciocliente') ?>" class="submenu-link <?= $isEjercicioClienteActive ? 'active' : '' ?>">
-                            <i class="bi bi-person-walking text-primary"></i>
-                            <span>Ejercicios de Clientes</span>
-                        </a>
                         <a href="<?= base_url('motivoentrenamiento') ?>" class="submenu-link <?= $isMotivoActive ? 'active' : '' ?>">
                             <i class="bi bi-bullseye text-warning"></i>
                             <span>Motivos de Entrenamiento</span>
+                        </a>
+                        <a href="<?= base_url('rangoedad') ?>" class="submenu-link <?= $isRangoEdadActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-bounding-box text-info"></i>
+                            <span>Rangos de Edad</span>
                         </a>
                         <a href="<?= base_url('rutinaejecicio') ?>" class="submenu-link <?= $isRutinaActive ? 'active' : '' ?>">
                             <i class="bi bi-calendar2-week text-info"></i>
@@ -416,13 +418,37 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-collection-play text-info"></i>
                             <span>Rutinas en Programas</span>
                         </a>
-                        <a href="<?= base_url('programacliente') ?>" class="submenu-link <?= $isProgramaClienteActive ? 'active' : '' ?>">
-                            <i class="bi bi-person-lines-fill text-primary"></i>
-                            <span>Programas de Clientes</span>
-                        </a>
                         <a href="<?= base_url('estadoprogramacliente') ?>" class="submenu-link <?= $isEstadoProgramaClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-flag text-info"></i>
                             <span>Estados de Programa</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: EJECUCIÓN -->
+            <div class="sidebar-item">
+                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupEjecucionOpen ? '' : 'collapsed' ?>" 
+                   data-bs-toggle="collapse" 
+                   href="#menuEjecucionCollapse" 
+                   role="button" 
+                   aria-expanded="<?= $groupEjecucionOpen ? 'true' : 'false' ?>"
+                   aria-controls="menuEjecucionCollapse">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-play-circle-fill text-warning fs-5"></i>
+                        <span>Ejecución</span>
+                    </div>
+                    <i class="bi bi-chevron-down arrow-indicator"></i>
+                </a>
+                <div class="collapse <?= $groupEjecucionOpen ? 'show' : '' ?>" id="menuEjecucionCollapse">
+                    <div class="sidebar-submenu">
+                        <a href="<?= base_url('programacliente') ?>" class="submenu-link <?= $isProgramaClienteActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-lines-fill text-primary"></i>
+                            <span>Programa Cliente</span>
+                        </a>
+                        <a href="<?= base_url('ejecucionprograma') ?>" class="submenu-link <?= $isEjecucionProgramaActive ? 'active' : '' ?>">
+                            <i class="bi bi-play-btn-fill text-warning"></i>
+                            <span>Ejecución de Programa</span>
                         </a>
                     </div>
                 </div>

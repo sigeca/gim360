@@ -56,6 +56,23 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th class="table-light text-muted">Rango de Edad Recomendado</th>
+                                    <td>
+                                        <?php if (!empty($programa['idrangoedad'])): ?>
+                                            <a href="<?= base_url('rangoedad/actual/' . $programa['idrangoedad']) ?>" class="text-decoration-none fw-semibold">
+                                                <span class="badge bg-info-subtle text-dark border border-info px-3 py-2 fs-6">
+                                                    <i class="bi bi-person-bounding-box text-info me-1"></i><?= esc($programa['rango_nombre']) ?>
+                                                    (<?= (int)$programa['rango_edadminima'] ?> - <?= (int)$programa['rango_edadmaxima'] ?> años)
+                                                </span>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="badge bg-light text-muted border px-3 py-2">
+                                                <i class="bi bi-info-circle me-1"></i>Sin rango de edad asignado
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th class="table-light text-muted">Total de Rutinas Asignadas</th>
                                     <td>
                                         <span class="badge bg-info-subtle text-info-emphasis border border-info px-3 py-2 fs-6">

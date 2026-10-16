@@ -49,6 +49,18 @@ class Ejercicio extends BaseController
             }
         }
 
+        // Detectar si existe versión animada (.webp) para el ejercicio
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+        $animacionFn = null;
+        if (!empty($ejercicio['imagen'])) {
+            $baseSlug = preg_replace('/-(start|peak|main)\.webp$/', '', $ejercicio['imagen']);
+            $baseSlug = preg_replace('/\.webp$/', '', $baseSlug);
+            $candidateAnim = $baseSlug . '.webp';
+            if (file_exists($baseDir . '/repositorio/ejercicios/' . $candidateAnim) || file_exists($baseDir . '/repositorio/ejercicios/repdb-free/images/flat/' . $candidateAnim)) {
+                $animacionFn = $candidateAnim;
+            }
+        }
+
         // Músculos asignados y catálogo de músculos
         $musculos = $ejercicio ? $this->ejercicioModel->getMusculos((int)$ejercicio['idejercicio']) : [];
         $todosLosMusculos = (new \App\Models\MusculoModel())->orderBy('nombre', 'ASC')->findAll();
@@ -58,9 +70,10 @@ class Ejercicio extends BaseController
         $todosLosEquipos = (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll();
 
         $data = [
-            'title'            => 'Ficha Técnica de Ejercicio: ' . ($ejercicio['nombre'] ?? ''),
+            'title'            => 'Ficha Técnica de Ejercicio: ' . ($ejercicio['nombreespanol'] ?? ''),
             'ejercicio'        => $ejercicio,
             'parejaEjercicio'  => $parejaEjercicio,
+            'animacionFn'      => $animacionFn,
             'youtubeId'        => $youtubeId,
             'musculos'         => $musculos,
             'todosLosMusculos' => $todosLosMusculos,
@@ -129,7 +142,10 @@ class Ejercicio extends BaseController
 
         $cleanFilename = basename($filename);
         $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
-        $path = $baseDir . '/repositorio/ejercicios/repdb-free/images/flat/' . $cleanFilename;
+        $path = $baseDir . '/repositorio/ejercicios/' . $cleanFilename;
+        if (!file_exists($path)) {
+            $path = $baseDir . '/repositorio/ejercicios/repdb-free/images/flat/' . $cleanFilename;
+        }
 
         if (!file_exists($path)) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Imagen no encontrada.");
@@ -159,10 +175,11 @@ class Ejercicio extends BaseController
     public function save()
     {
         $rules = [
-            'nombre'      => 'required|min_length[3]|max_length[150]',
-            'descripcion' => 'permit_empty',
-            'urlvideo'    => 'permit_empty|max_length[255]',
-            'imagen'      => 'permit_empty|max_length[255]',
+            'nombreespanol' => 'required|min_length[2]|max_length[150]',
+            'nombreingles'  => 'required|min_length[2]|max_length[150]',
+            'descripcion'   => 'permit_empty',
+            'urlvideo'      => 'permit_empty|max_length[255]',
+            'imagen'        => 'permit_empty|max_length[255]',
         ];
 
         if (!$this->validate($rules)) {
@@ -170,10 +187,11 @@ class Ejercicio extends BaseController
         }
 
         $id = $this->ejercicioModel->insert([
-            'nombre'      => trim($this->request->getPost('nombre')),
-            'descripcion' => trim($this->request->getPost('descripcion')) ?: null,
-            'urlvideo'    => trim($this->request->getPost('urlvideo')) ?: null,
-            'imagen'      => trim($this->request->getPost('imagen')) ?: null,
+            'nombreespanol' => trim($this->request->getPost('nombreespanol')),
+            'nombreingles'  => trim($this->request->getPost('nombreingles')),
+            'descripcion'   => trim($this->request->getPost('descripcion')) ?: null,
+            'urlvideo'      => trim($this->request->getPost('urlvideo')) ?: null,
+            'imagen'        => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
         // Sincronizar músculos seleccionados
@@ -212,7 +230,7 @@ class Ejercicio extends BaseController
         );
 
         $data = [
-            'title'             => 'Editar Ejercicio: ' . $ejercicio['nombre'],
+            'title'             => 'Editar Ejercicio: ' . ($ejercicio['nombreespanol'] ?? ''),
             'ejercicio'         => $ejercicio,
             'todosLosMusculos'  => (new \App\Models\MusculoModel())->orderBy('nombre', 'ASC')->findAll(),
             'musculosAsignados' => $musculosAsignados,
@@ -232,10 +250,11 @@ class Ejercicio extends BaseController
         }
 
         $rules = [
-            'nombre'      => 'required|min_length[3]|max_length[150]',
-            'descripcion' => 'permit_empty',
-            'urlvideo'    => 'permit_empty|max_length[255]',
-            'imagen'      => 'permit_empty|max_length[255]',
+            'nombreespanol' => 'required|min_length[2]|max_length[150]',
+            'nombreingles'  => 'required|min_length[2]|max_length[150]',
+            'descripcion'   => 'permit_empty',
+            'urlvideo'      => 'permit_empty|max_length[255]',
+            'imagen'        => 'permit_empty|max_length[255]',
         ];
 
         if (!$this->validate($rules)) {
@@ -243,10 +262,11 @@ class Ejercicio extends BaseController
         }
 
         $this->ejercicioModel->update($id, [
-            'nombre'      => trim($this->request->getPost('nombre')),
-            'descripcion' => trim($this->request->getPost('descripcion')) ?: null,
-            'urlvideo'    => trim($this->request->getPost('urlvideo')) ?: null,
-            'imagen'      => trim($this->request->getPost('imagen')) ?: null,
+            'nombreespanol' => trim($this->request->getPost('nombreespanol')),
+            'nombreingles'  => trim($this->request->getPost('nombreingles')),
+            'descripcion'   => trim($this->request->getPost('descripcion')) ?: null,
+            'urlvideo'      => trim($this->request->getPost('urlvideo')) ?: null,
+            'imagen'        => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
         // Sincronizar músculos seleccionados

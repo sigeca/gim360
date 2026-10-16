@@ -21,7 +21,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por nombre del ejercicio, días, repeticiones, series...">
+                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por nombre del plan, ejercicio, días, repeticiones, series...">
                 </div>
             </div>
             <div class="col-md-2 d-grid d-md-flex gap-2">
@@ -41,6 +41,7 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">ID</th>
+                        <th>Nombre del Plan</th>
                         <th>Ejercicio Asignado</th>
                         <th class="text-center" title="Días por Semana">Días/Sem</th>
                         <th class="text-center">Reps</th>
@@ -53,25 +54,34 @@
                 <tbody>
                     <?php if (empty($planes)): ?>
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">No se encontraron registros de planes de ejercicio.</td>
+                            <td colspan="9" class="text-center py-5 text-muted">No se encontraron registros de planes de ejercicio.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($planes as $p): ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-muted">#<?= $p['idplanejercicio'] ?></td>
                                 <td>
+                                    <a href="<?= base_url('planejercicio/actual/' . $p['idplanejercicio']) ?>" class="fw-bold text-dark text-decoration-none">
+                                        <i class="bi bi-tag text-info me-1"></i><?= esc($p['nombre'] ?? 'Plan #' . $p['idplanejercicio']) ?>
+                                    </a>
+                                </td>
+                                <td>
                                     <div class="d-flex align-items-center gap-2">
                                         <?php if (!empty($p['ejercicio_imagen'])): ?>
-                                            <img src="<?= base_url('ejercicio/imagen/' . esc($p['ejercicio_imagen'])) ?>" 
-                                                 alt="" 
-                                                 class="rounded border" 
-                                                 style="width: 38px; height: 38px; object-fit: cover;">
+                                            <a href="<?= base_url('ejercicio/actual/' . $p['idejercicio']) ?>" title="Ver ejercicio">
+                                                <img src="<?= base_url('ejercicio/imagen/' . esc($p['ejercicio_imagen'])) ?>" 
+                                                     alt="" 
+                                                     class="rounded border" 
+                                                     style="width: 38px; height: 38px; object-fit: cover;">
+                                            </a>
                                         <?php else: ?>
                                             <div class="bg-light rounded border d-flex align-items-center justify-content-center text-muted" style="width: 38px; height: 38px;">
                                                 <i class="bi bi-fire text-danger"></i>
                                             </div>
                                         <?php endif; ?>
-                                        <span class="fw-semibold text-dark"><?= esc($p['ejercicio_nombre']) ?></span>
+                                        <a href="<?= base_url('ejercicio/actual/' . $p['idejercicio']) ?>" class="text-decoration-none text-secondary fw-semibold">
+                                            <?= esc($p['ejercicio_nombre']) ?>
+                                        </a>
                                     </div>
                                 </td>
                                 <td class="text-center">

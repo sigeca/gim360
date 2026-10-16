@@ -22,6 +22,9 @@
                         <i class="bi bi-fire text-danger me-2"></i>Ficha Técnica de Ejercicio
                     </h5>
                     <div class="d-flex align-items-center gap-2">
+                        <?php if (!empty($animacionFn)): ?>
+                            <span class="badge bg-danger"><i class="bi bi-film me-1"></i>Animado .webp</span>
+                        <?php endif; ?>
                         <?php if (!empty($ejercicio['imagen'])): ?>
                             <?php if (str_contains($ejercicio['imagen'], '-start.webp')): ?>
                                 <span class="badge bg-primary"><i class="bi bi-play-circle me-1"></i>Fase Inicial</span>
@@ -31,7 +34,7 @@
                                 <span class="badge bg-info text-dark"><i class="bi bi-image me-1"></i>Ilustración</span>
                             <?php endif; ?>
                         <?php endif; ?>
-                        <span class="badge bg-danger fs-6">ID #<?= $ejercicio['idejercicio'] ?></span>
+                        <span class="badge bg-secondary fs-6">ID #<?= $ejercicio['idejercicio'] ?></span>
                     </div>
                 </div>
                 <div class="card-body p-4">
@@ -42,24 +45,37 @@
                             <div class="p-3 bg-light rounded border shadow-sm">
                                 <?php if (!empty($ejercicio['imagen'])): ?>
                                     <div class="position-relative">
-                                        <img src="<?= base_url('ejercicio/imagen/' . esc($ejercicio['imagen'])) ?>" 
-                                             alt="<?= esc($ejercicio['nombre']) ?>" 
+                                        <img id="imgEjercicio"
+                                             src="<?= base_url('ejercicio/imagen/' . esc($animacionFn ?? $ejercicio['imagen'])) ?>" 
+                                             alt="<?= esc($ejercicio['nombreespanol']) ?>" 
                                              class="img-fluid rounded" 
                                              style="max-height: 290px; width: 100%; object-fit: contain; background-color: #ffffff; border-radius: 8px;">
+                                        <?php if (!empty($animacionFn)): ?>
+                                            <span class="position-absolute top-0 end-0 m-2 badge bg-dark bg-opacity-75 text-white" id="badgeTipoImg">
+                                                <i class="bi bi-play-circle-fill text-danger me-1"></i>Animación .webp
+                                            </span>
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="mt-2 text-start small text-muted">
-                                        <i class="bi bi-file-image me-1"></i><code><?= esc($ejercicio['imagen']) ?></code>
+                                    <div class="mt-2 d-flex justify-content-between align-items-center small text-muted">
+                                        <div><i class="bi bi-file-image me-1"></i><code id="txtNombreArchivo"><?= esc($animacionFn ?? $ejercicio['imagen']) ?></code></div>
+                                        <?php if (!empty($animacionFn) && $animacionFn !== $ejercicio['imagen']): ?>
+                                            <button type="button" class="btn btn-link btn-sm p-0 text-decoration-none text-danger fw-semibold" id="btnToggleAnim" onclick="toggleModoAnimacion()">
+                                                <i class="bi bi-arrow-repeat me-1"></i>Ver Foto Fija
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
-                                    <div class="d-grid gap-2 mt-2">
+                                    <div class="d-grid gap-2 mt-3">
+                                        <?php if (!empty($animacionFn)): ?>
+                                            <a href="<?= base_url('ejercicio/imagen/' . esc($animacionFn)) ?>" target="_blank" class="btn btn-danger btn-sm">
+                                                <i class="bi bi-play-circle me-1"></i> Ampliar Animación WebP
+                                            </a>
+                                        <?php endif; ?>
                                         <?php if (!empty($parejaEjercicio)): ?>
-                                            <a href="<?= base_url('ejercicio/actual/' . $parejaEjercicio['idejercicio']) ?>" class="btn btn-outline-danger btn-sm">
+                                            <a href="<?= base_url('ejercicio/actual/' . $parejaEjercicio['idejercicio']) ?>" class="btn btn-outline-secondary btn-sm">
                                                 <i class="bi bi-arrow-left-right me-1"></i>
                                                 <?= str_contains($parejaEjercicio['imagen'], '-start.webp') ? 'Ver Fase Inicial (Start)' : 'Ver Fase Final (Peak)' ?>
                                             </a>
                                         <?php endif; ?>
-                                        <a href="<?= base_url('ejercicio/imagen/' . esc($ejercicio['imagen'])) ?>" target="_blank" class="btn btn-light btn-sm border text-secondary">
-                                            <i class="bi bi-arrows-fullscreen me-1"></i> Ampliar Imagen
-                                        </a>
                                     </div>
                                 <?php else: ?>
                                     <div class="py-5 text-muted">
@@ -80,9 +96,15 @@
                                             <td class="fw-bold text-muted"><?= $ejercicio['idejercicio'] ?></td>
                                         </tr>
                                         <tr>
-                                            <th class="table-light text-muted">Nombre del Ejercicio</th>
+                                            <th class="table-light text-muted">Nombre en Español</th>
                                             <td class="fs-5 fw-bold text-dark">
-                                                <?= esc($ejercicio['nombre']) ?>
+                                                <?= esc($ejercicio['nombreespanol']) ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted">Nombre en Inglés</th>
+                                            <td class="fs-6 fw-semibold text-secondary">
+                                                <?= esc($ejercicio['nombreingles']) ?>
                                             </td>
                                         </tr>
                                         <tr>
@@ -187,7 +209,7 @@
                                     <?= csrf_field() ?>
                                     <div class="modal-body">
                                         <p class="small text-muted mb-3">
-                                            Seleccione el músculo anatómico que es activado o trabajado por <strong><?= esc($ejercicio['nombre']) ?></strong>:
+                                            Seleccione el músculo anatómico que es activado o trabajado por <strong><?= esc($ejercicio['nombreespanol']) ?></strong>:
                                         </p>
                                         <div class="mb-3">
                                             <label for="selectMusculoModal" class="form-label fw-semibold">Músculo a Vincular <span class="text-danger">*</span></label>
@@ -287,7 +309,7 @@
                                     <?= csrf_field() ?>
                                     <div class="modal-body">
                                         <p class="small text-muted mb-3">
-                                            Seleccione el equipo, máquina o implemento empleado para realizar <strong><?= esc($ejercicio['nombre']) ?></strong>:
+                                            Seleccione el equipo, máquina o implemento empleado para realizar <strong><?= esc($ejercicio['nombreespanol']) ?></strong>:
                                         </p>
                                         <div class="mb-3">
                                             <label for="selectEquipoModal" class="form-label fw-semibold">Equipo a Vincular <span class="text-danger">*</span></label>
@@ -318,7 +340,7 @@
                                 <i class="bi bi-play-circle-fill text-danger me-2 fs-5"></i>Demostración en Video:
                             </h6>
                             <div class="ratio ratio-16x9 rounded overflow-hidden shadow-sm border">
-                                <iframe src="https://www.youtube.com/embed/<?= esc($youtubeId) ?>" title="<?= esc($ejercicio['nombre']) ?>" allowfullscreen></iframe>
+                                <iframe src="https://www.youtube.com/embed/<?= esc($youtubeId) ?>" title="<?= esc($ejercicio['nombreespanol']) ?>" allowfullscreen></iframe>
                             </div>
                         </div>
                     <?php elseif (!empty($ejercicio['urlvideo'])): ?>
@@ -358,5 +380,35 @@
 
     </div>
 </div>
+
+<script>
+let modoAnimado = true;
+const urlAnimada = "<?= !empty($animacionFn) ? base_url('ejercicio/imagen/' . esc($animacionFn)) : '' ?>";
+const urlFija = "<?= !empty($ejercicio['imagen']) ? base_url('ejercicio/imagen/' . esc($ejercicio['imagen'])) : '' ?>";
+const fnAnimada = "<?= !empty($animacionFn) ? esc($animacionFn) : '' ?>";
+const fnFija = "<?= !empty($ejercicio['imagen']) ? esc($ejercicio['imagen']) : '' ?>";
+
+function toggleModoAnimacion() {
+    const img = document.getElementById('imgEjercicio');
+    const badge = document.getElementById('badgeTipoImg');
+    const txt = document.getElementById('txtNombreArchivo');
+    const btn = document.getElementById('btnToggleAnim');
+    if (!img || !urlAnimada || !urlFija) return;
+
+    if (modoAnimado) {
+        img.src = urlFija;
+        if (badge) badge.innerHTML = '<i class="bi bi-camera me-1"></i>Fase Estática';
+        if (txt) txt.textContent = fnFija;
+        if (btn) btn.innerHTML = '<i class="bi bi-play-circle me-1"></i>Ver Animación';
+        modoAnimado = false;
+    } else {
+        img.src = urlAnimada;
+        if (badge) badge.innerHTML = '<i class="bi bi-play-circle-fill text-danger me-1"></i>Animación .webp';
+        if (txt) txt.textContent = fnAnimada;
+        if (btn) btn.innerHTML = '<i class="bi bi-arrow-repeat me-1"></i>Ver Foto Fija';
+        modoAnimado = true;
+    }
+}
+</script>
 
 <?= $this->endSection() ?>

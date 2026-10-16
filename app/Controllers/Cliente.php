@@ -4,16 +4,19 @@ namespace App\Controllers;
 
 use App\Models\ClienteModel;
 use App\Models\PersonaModel;
+use App\Models\ProgramaClienteModel;
 
 class Cliente extends BaseController
 {
     protected ClienteModel $clienteModel;
     protected PersonaModel $personaModel;
+    protected ProgramaClienteModel $programaClienteModel;
 
     public function __construct()
     {
-        $this->clienteModel = new ClienteModel();
-        $this->personaModel = new PersonaModel();
+        $this->clienteModel         = new ClienteModel();
+        $this->personaModel         = new PersonaModel();
+        $this->programaClienteModel = new ProgramaClienteModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -25,24 +28,30 @@ class Cliente extends BaseController
     public function actual($id = null)
     {
         if ($id) {
-            $cliente = $this->clienteModel->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
+            $cliente = $this->clienteModel->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.apellidos AS persona_apellidos, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
                                           ->join('persona', 'persona.idpersona = cliente.idpersona', 'inner')
                                           ->join('sexo', 'sexo.idsexo = persona.idsexo', 'left')
                                           ->where('cliente.idcliente', $id)
                                           ->first();
         } else {
             $last = $this->clienteModel->elultimo();
-            $cliente = $last ? $this->clienteModel->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
+            $cliente = $last ? $this->clienteModel->select('cliente.*, persona.cedula, persona.nombres AS persona_nombres, persona.apellidos AS persona_apellidos, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
                                                   ->join('persona', 'persona.idpersona = cliente.idpersona', 'inner')
                                                   ->join('sexo', 'sexo.idsexo = persona.idsexo', 'left')
                                                   ->where('cliente.idcliente', $last['idcliente'])
                                                   ->first() : null;
         }
 
+        $programasCliente = [];
+        if (!empty($cliente)) {
+            $programasCliente = $this->programaClienteModel->getProgramasByCliente((int)$cliente['idcliente']);
+        }
+
         $data = [
-            'title'   => 'Ficha de Cliente',
-            'cliente' => $cliente,
-            'module'  => 'cliente',
+            'title'            => 'Ficha de Cliente',
+            'cliente'          => $cliente,
+            'programasCliente' => $programasCliente,
+            'module'           => 'cliente',
         ];
 
         return view('cliente/cliente_record', $data);

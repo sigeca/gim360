@@ -14,7 +14,7 @@
             </a>
         </div>
 
-        <div class="card card-custom bg-white border-top border-4 border-warning">
+        <div class="card card-custom bg-white border-top border-4 border-warning shadow-sm">
             <div class="card-body p-4">
                 <form action="<?= base_url('rutinaplan/update/' . $rutinaplan['id_rutina_plan']) ?>" method="post">
                     <?= csrf_field() ?>
@@ -50,13 +50,29 @@
                             <option value="">-- Seleccione un Plan de Ejercicio --</option>
                             <?php foreach ($planes as $p): ?>
                                 <option value="<?= $p['idplanejercicio'] ?>" 
+                                    data-nombre="<?= esc($p['ejercicio_nombre']) ?>"
+                                    data-imagen="<?= esc($p['ejercicio_imagen'] ?? '') ?>"
                                     <?= old('idplanejercicio', $rutinaplan['idplanejercicio']) == $p['idplanejercicio'] ? 'selected' : '' ?>>
-                                    #<?= $p['idplanejercicio'] ?> - <?= esc($p['ejercicio_nombre']) ?> 
-                                    (<?= $p['series'] ?? 0 ?>s × <?= $p['repeticiones'] ?? 0 ?>r, <?= $p['diassemanas'] ?? $p['dias'] ?? 0 ?>d, <?= number_format((float)($p['peso'] ?? 0), 2) ?> kg)
+                                    #<?= $p['idplanejercicio'] ?> - <?= !empty($p['nombre']) ? esc($p['nombre']) . ' (' . esc($p['ejercicio_nombre']) . ')' : esc($p['ejercicio_nombre']) ?> 
+                                    [<?= $p['series'] ?? 0 ?>s × <?= $p['repeticiones'] ?? 0 ?>r, <?= $p['diassemanas'] ?? $p['dias'] ?? 0 ?>d, <?= number_format((float)($p['peso'] ?? 0), 2) ?> kg]
                                 </option>
                             <?php endforeach; ?>
                         </select>
                         <div class="form-text">Contiene el ejercicio con sus series, repeticiones, descanso y peso.</div>
+
+                        <!-- Previsualización del Ejercicio Asignado al Plan -->
+                        <div id="planEjercicioPreview" class="card border border-warning-subtle bg-light rounded-3 mt-3 p-3 shadow-sm" style="display: none;">
+                            <div class="row align-items-center g-3">
+                                <div class="col-sm-3 text-center">
+                                    <img id="planEjercicioPreviewImg" src="" alt="Ejercicio" class="img-fluid rounded border bg-white" style="max-height: 100px; max-width: 100%; object-fit: contain;">
+                                </div>
+                                <div class="col-sm-9">
+                                    <div class="small text-muted fw-bold mb-1"><i class="bi bi-fire text-danger me-1"></i>Ejercicio de este Plan:</div>
+                                    <h6 id="planEjercicioPreviewNombre" class="fw-bold text-dark mb-1"></h6>
+                                    <small id="planEjercicioPreviewFile" class="text-muted font-monospace d-block"></small>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 mt-4">
@@ -70,5 +86,44 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const select = document.getElementById('idplanejercicio');
+    const previewBox = document.getElementById('planEjercicioPreview');
+    const previewImg = document.getElementById('planEjercicioPreviewImg');
+    const previewNombre = document.getElementById('planEjercicioPreviewNombre');
+    const previewFile = document.getElementById('planEjercicioPreviewFile');
+    const imgBase = '<?= base_url('ejercicio/imagen') ?>/';
+
+    function updatePlanPreview() {
+        if (!select || !select.value) {
+            if (previewBox) previewBox.style.display = 'none';
+            return;
+        }
+
+        const opt = select.options[select.selectedIndex];
+        const imagen = opt.getAttribute('data-imagen');
+        const nombre = opt.getAttribute('data-nombre');
+
+        if (nombre && previewNombre) previewNombre.textContent = nombre;
+        if (previewFile) previewFile.textContent = imagen ? imagen : 'Sin archivo asignado';
+
+        if (imagen && previewImg) {
+            previewImg.src = imgBase + encodeURIComponent(imagen);
+            previewImg.style.display = 'inline-block';
+        } else if (previewImg) {
+            previewImg.style.display = 'none';
+        }
+
+        if (previewBox) previewBox.style.display = 'block';
+    }
+
+    if (select) {
+        select.addEventListener('change', updatePlanPreview);
+        updatePlanPreview();
+    }
+});
+</script>
 
 <?= $this->endSection() ?>

@@ -41,6 +41,7 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">ID</th>
+                        <th>Foto</th>
                         <th>Cédula</th>
                         <th>Apellidos</th>
                         <th>Nombres</th>
@@ -53,12 +54,25 @@
                 <tbody>
                     <?php if (empty($personas)): ?>
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">No se encontraron registros de personas.</td>
+                            <td colspan="9" class="text-center py-5 text-muted">No se encontraron registros de personas.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($personas as $p): ?>
+                            <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($p['cedula'])) . '.jpg'; ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-muted"><?= $p['idpersona'] ?></td>
+                                <td>
+                                    <a href="<?= base_url('persona/actual/' . $p['idpersona']) ?>" class="text-decoration-none d-inline-block">
+                                        <img src="<?= esc($fotoUrl) ?>"
+                                             alt="Foto <?= esc($p['cedula']) ?>"
+                                             class="rounded-circle border shadow-sm"
+                                             style="width: 42px; height: 42px; object-fit: cover;"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                                        <span class="bg-light text-secondary rounded-circle border align-items-center justify-content-center" style="width: 42px; height: 42px; display: none;">
+                                            <i class="bi bi-person-fill"></i>
+                                        </span>
+                                    </a>
+                                </td>
                                 <td>
                                     <span class="badge bg-light text-dark border font-monospace fs-6"><?= esc($p['cedula']) ?></span>
                                 </td>

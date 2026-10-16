@@ -15,13 +15,21 @@
                 'currentId' => $persona['idpersona']
             ]) ?>
 
+            <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($persona['cedula'])) . '.jpg'; ?>
             <!-- Encabezado de la Ficha Principal -->
             <div class="card card-custom bg-white border-top border-4 border-primary mb-4">
                 <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center border-bottom">
                     <div class="d-flex align-items-center gap-3">
-                        <div class="bg-primary text-white rounded-circle p-2 fs-3 d-flex align-items-center justify-content-center" style="width: 52px; height: 52px;">
-                            <i class="bi bi-person-fill"></i>
-                        </div>
+                        <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto completa" class="text-decoration-none">
+                            <img src="<?= esc($fotoUrl) ?>"
+                                 alt="Foto de <?= esc($persona['nombres']) ?>"
+                                 class="rounded-circle border border-2 border-primary shadow-sm"
+                                 style="width: 56px; height: 56px; object-fit: cover;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="bg-primary text-white rounded-circle p-2 fs-3 align-items-center justify-content-center" style="width: 56px; height: 56px; display: none;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                        </a>
                         <div>
                             <h4 class="fw-bold mb-0 text-dark"><?= esc($persona['apellidos'] . ' ' . $persona['nombres']) ?></h4>
                             <span class="text-muted small">Registro Principal de Persona #<?= $persona['idpersona'] ?></span>
@@ -30,7 +38,9 @@
                     
                     <div class="mt-2 mt-md-0 d-flex align-items-center gap-2">
                         <?php if (!empty($persona['idcliente'])): ?>
-                            <span class="badge bg-success fs-6"><i class="bi bi-check-circle me-1"></i>Cliente Gym (ID: #<?= $persona['idcliente'] ?>)</span>
+                            <a href="<?= base_url('cliente/actual/' . $persona['idcliente']) ?>" class="badge bg-success fs-6 text-decoration-none" title="Volver a la Ficha del Cliente">
+                                <i class="bi bi-check-circle me-1"></i>Cliente Gym (ID: #<?= $persona['idcliente'] ?>) <i class="bi bi-box-arrow-up-right ms-1"></i>
+                            </a>
                         <?php else: ?>
                             <span class="badge bg-secondary fs-6">No es Cliente</span>
                         <?php endif; ?>
@@ -51,30 +61,46 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <div class="row g-3">
-                        <div class="col-md-2">
-                            <label class="text-muted small fw-bold text-uppercase">Cédula</label>
-                            <p class="fs-5 fw-bold font-monospace text-dark mb-0"><?= esc($persona['cedula']) ?></p>
+                    <div class="row g-4 align-items-center">
+                        <div class="col-md-3 col-lg-2 text-center">
+                            <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto en tamaño original" class="d-inline-block text-decoration-none">
+                                <img src="<?= esc($fotoUrl) ?>"
+                                     alt="Foto Cédula <?= esc($persona['cedula']) ?>"
+                                     class="img-thumbnail rounded-3 shadow-sm"
+                                     style="width: 130px; height: 150px; object-fit: cover;"
+                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="bg-light text-secondary border rounded-3 shadow-sm align-items-center justify-content-center mx-auto" style="width: 130px; height: 150px; display: none;">
+                                    <i class="bi bi-person-bounding-box fs-1"></i>
+                                </div>
+                            </a>
                         </div>
-                        <div class="col-md-3">
-                            <label class="text-muted small fw-bold text-uppercase">Apellidos</label>
-                            <p class="fs-5 fw-semibold text-dark mb-0"><?= esc($persona['apellidos']) ?></p>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="text-muted small fw-bold text-uppercase">Nombres</label>
-                            <p class="fs-5 fw-semibold text-dark mb-0"><?= esc($persona['nombres']) ?></p>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="text-muted small fw-bold text-uppercase">Fecha de Nacimiento</label>
-                            <p class="fs-6 text-dark mb-0">
-                                <?= !empty($persona['fechanacimiento']) ? '<i class="bi bi-calendar3 me-1 text-primary"></i>' . date('d/m/Y', strtotime($persona['fechanacimiento'])) : '<span class="text-muted">-</span>' ?>
-                            </p>
-                        </div>
-                        <div class="col-md-2">
-                            <label class="text-muted small fw-bold text-uppercase">Sexo</label>
-                            <p class="mb-0">
-                                <?= !empty($persona['sexo_nombre']) ? '<span class="badge bg-info text-dark">' . esc($persona['sexo_nombre']) . '</span>' : '<span class="text-muted">No asignado</span>' ?>
-                            </p>
+                        <div class="col-md-9 col-lg-10">
+                            <div class="row g-3">
+                                <div class="col-md-3">
+                                    <label class="text-muted small fw-bold text-uppercase">Cédula</label>
+                                    <p class="fs-5 fw-bold font-monospace text-dark mb-0"><?= esc($persona['cedula']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small fw-bold text-uppercase">Apellidos</label>
+                                    <p class="fs-5 fw-semibold text-dark mb-0"><?= esc($persona['apellidos']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small fw-bold text-uppercase">Nombres</label>
+                                    <p class="fs-5 fw-semibold text-dark mb-0"><?= esc($persona['nombres']) ?></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small fw-bold text-uppercase">Fecha de Nacimiento</label>
+                                    <p class="fs-6 text-dark mb-0">
+                                        <?= !empty($persona['fechanacimiento']) ? '<i class="bi bi-calendar3 me-1 text-primary"></i>' . date('d/m/Y', strtotime($persona['fechanacimiento'])) : '<span class="text-muted">-</span>' ?>
+                                    </p>
+                                </div>
+                                <div class="col-md-3">
+                                    <label class="text-muted small fw-bold text-uppercase">Sexo</label>
+                                    <p class="mb-0">
+                                        <?= !empty($persona['sexo_nombre']) ? '<span class="badge bg-info text-dark">' . esc($persona['sexo_nombre']) . '</span>' : '<span class="text-muted">No asignado</span>' ?>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

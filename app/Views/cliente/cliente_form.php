@@ -35,7 +35,7 @@
                                 <option value="">-- Seleccionar Persona --</option>
                                 <?php foreach ($personasDisponibles as $p): ?>
                                     <option value="<?= $p['idpersona'] ?>" <?= old('idpersona') == $p['idpersona'] ? 'selected' : '' ?>>
-                                        <?= esc($p['cedula']) ?> — <?= esc($p['nombres']) ?>
+                                        <?= esc($p['cedula']) ?> — <?= esc(trim(($p['apellidos'] ?? '') . ' ' . ($p['nombres'] ?? ''))) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>

@@ -93,7 +93,7 @@ class PlanEjercicio extends BaseController
 
         $data = [
             'title'                  => 'Crear Plan de Ejercicio',
-            'ejercicios'             => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios'             => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'idejercicioPreselected' => $idejercicioPreselected,
             'module'                 => 'planejercicio',
         ];
@@ -104,6 +104,7 @@ class PlanEjercicio extends BaseController
     public function save()
     {
         $rules = [
+            'nombre'         => 'required|min_length[3]|max_length[100]',
             'idejercicio'    => 'required|is_natural_no_zero',
             'diassemanas'    => 'permit_empty|is_natural_no_zero',
             'dias'           => 'permit_empty|is_natural_no_zero',
@@ -125,6 +126,7 @@ class PlanEjercicio extends BaseController
         $peso           = $this->request->getPost('peso');
 
         $id = $this->planModel->insert([
+            'nombre'         => trim($this->request->getPost('nombre')),
             'idejercicio'    => $this->request->getPost('idejercicio'),
             'diassemanas'    => ($diassemanas !== null && $diassemanas !== '') ? (int)$diassemanas : null,
             'repeticiones'   => ($repeticiones !== null && $repeticiones !== '') ? (int)$repeticiones : null,
@@ -146,7 +148,7 @@ class PlanEjercicio extends BaseController
         $data = [
             'title'      => 'Editar Plan de Ejercicio #' . $id,
             'plan'       => $plan,
-            'ejercicios' => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios' => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'module'     => 'planejercicio',
         ];
 
@@ -161,6 +163,7 @@ class PlanEjercicio extends BaseController
         }
 
         $rules = [
+            'nombre'         => 'required|min_length[3]|max_length[100]',
             'idejercicio'    => 'required|is_natural_no_zero',
             'diassemanas'    => 'permit_empty|is_natural_no_zero',
             'dias'           => 'permit_empty|is_natural_no_zero',
@@ -182,6 +185,7 @@ class PlanEjercicio extends BaseController
         $peso           = $this->request->getPost('peso');
 
         $this->planModel->update($id, [
+            'nombre'         => trim($this->request->getPost('nombre')),
             'idejercicio'    => $this->request->getPost('idejercicio'),
             'diassemanas'    => ($diassemanas !== null && $diassemanas !== '') ? (int)$diassemanas : null,
             'repeticiones'   => ($repeticiones !== null && $repeticiones !== '') ? (int)$repeticiones : null,

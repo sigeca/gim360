@@ -47,7 +47,9 @@ class RutinaPlanModel extends Model
                               planejercicio.tiempodescanso AS plan_tiempodescanso,
                               planejercicio.peso AS plan_peso,
                               ejercicio.idejercicio,
-                              ejercicio.nombre AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombreespanol, 
+                              ejercicio.nombreingles AS ejercicio_nombreingles, 
                               ejercicio.descripcion AS ejercicio_descripcion, 
                               ejercicio.urlvideo AS ejercicio_urlvideo, 
                               ejercicio.imagen AS ejercicio_imagen')
@@ -72,7 +74,9 @@ class RutinaPlanModel extends Model
                                   planejercicio.tiempodescanso AS plan_tiempodescanso,
                                   planejercicio.peso AS plan_peso,
                                   ejercicio.idejercicio,
-                                  ejercicio.nombre AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombre, 
+                                  ejercicio.nombreespanol AS ejercicio_nombreespanol, 
+                                  ejercicio.nombreingles AS ejercicio_nombreingles, 
                                   ejercicio.imagen AS ejercicio_imagen')
                         ->join('rutinaejecicio', 'rutinaejecicio.idrutinaejercicio = rutinaplan.idrutinaejercicio', 'inner')
                         ->join('planejercicio', 'planejercicio.idplanejercicio = rutinaplan.idplanejercicio', 'inner')
@@ -82,7 +86,8 @@ class RutinaPlanModel extends Model
         if (!empty($search)) {
             $builder->groupStart()
                     ->like('rutinaejecicio.nombre', $search)
-                    ->orLike('ejercicio.nombre', $search);
+                    ->orLike('ejercicio.nombreespanol', $search)
+                    ->orLike('ejercicio.nombreingles', $search);
 
             if (is_numeric($search)) {
                 $builder->orWhere('rutinaplan.id_rutina_plan', (int)$search)
@@ -110,7 +115,9 @@ class RutinaPlanModel extends Model
                               planejercicio.tiempodescanso AS plan_tiempodescanso,
                               planejercicio.peso AS plan_peso,
                               ejercicio.idejercicio,
-                              ejercicio.nombre AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombre, 
+                              ejercicio.nombreespanol AS ejercicio_nombreespanol, 
+                              ejercicio.nombreingles AS ejercicio_nombreingles, 
                               ejercicio.descripcion AS ejercicio_descripcion, 
                               ejercicio.urlvideo AS ejercicio_urlvideo, 
                               ejercicio.imagen AS ejercicio_imagen')

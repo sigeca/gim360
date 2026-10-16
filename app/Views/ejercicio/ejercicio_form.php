@@ -20,18 +20,24 @@
                 <form method="post" action="<?= base_url('ejercicio/save') ?>">
                     <?= csrf_field() ?>
 
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label fw-semibold">Nombre del Ejercicio <span class="text-danger">*</span></label>
-                        <input type="text" name="nombre" id="nombre" class="form-control" placeholder="Ej: Press Francés con Barra Z" value="<?= old('nombre') ?>" required>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-6">
+                            <label for="nombreespanol" class="form-label fw-semibold">Nombre en Español <span class="text-danger">*</span></label>
+                            <input type="text" name="nombreespanol" id="nombreespanol" class="form-control" placeholder="Ej: Press de Banca con Barra" value="<?= old('nombreespanol') ?>" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="nombreingles" class="form-label fw-semibold">Nombre en Inglés <span class="text-danger">*</span></label>
+                            <input type="text" name="nombreingles" id="nombreingles" class="form-control" placeholder="Ej: Barbell Bench Press" value="<?= old('nombreingles') ?>" required>
+                        </div>
                     </div>
 
                     <div class="mb-3">
-                        <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen</label>
+                        <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen Animada</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bi bi-file-earmark-image text-danger"></i></span>
-                            <input type="text" name="imagen" id="imagen" class="form-control" placeholder="Ej: curl-biceps-start.webp" value="<?= old('imagen') ?>">
+                            <input type="text" name="imagen" id="imagen" class="form-control" placeholder="Ej: bench-press.webp" value="<?= old('imagen') ?>">
                         </div>
-                        <small class="text-muted">Archivo .webp en el repositorio de imágenes del gimnasio.</small>
+                        <small class="text-muted">Archivo .webp animado en <code>/repositorio/ejercicios/</code>.</small>
                     </div>
 
                     <div class="mb-3">

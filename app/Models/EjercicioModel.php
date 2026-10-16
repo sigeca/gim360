@@ -12,20 +12,26 @@ class EjercicioModel extends Model
     protected $primaryKey       = 'idejercicio';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['nombre', 'descripcion', 'urlvideo', 'imagen'];
+    protected $allowedFields    = ['nombreespanol', 'nombreingles', 'descripcion', 'urlvideo', 'imagen'];
 
     protected $validationRules = [
-        'nombre'      => 'required|min_length[3]|max_length[150]',
-        'descripcion' => 'permit_empty',
-        'urlvideo'    => 'permit_empty|max_length[255]',
-        'imagen'      => 'permit_empty|max_length[255]',
+        'nombreespanol' => 'required|min_length[2]|max_length[150]',
+        'nombreingles'  => 'required|min_length[2]|max_length[150]',
+        'descripcion'   => 'permit_empty',
+        'urlvideo'      => 'permit_empty|max_length[255]',
+        'imagen'        => 'permit_empty|max_length[255]',
     ];
 
     protected $validationMessages = [
-        'nombre' => [
-            'required'   => 'El nombre del ejercicio es obligatorio.',
-            'min_length' => 'El nombre debe tener al menos 3 caracteres.',
-            'max_length' => 'El nombre no puede exceder los 150 caracteres.',
+        'nombreespanol' => [
+            'required'   => 'El nombre en español del ejercicio es obligatorio.',
+            'min_length' => 'El nombre en español debe tener al menos 2 caracteres.',
+            'max_length' => 'El nombre en español no puede exceder los 150 caracteres.',
+        ],
+        'nombreingles' => [
+            'required'   => 'El nombre en inglés del ejercicio es obligatorio.',
+            'min_length' => 'El nombre en inglés debe tener al menos 2 caracteres.',
+            'max_length' => 'El nombre en inglés no puede exceder los 150 caracteres.',
         ],
     ];
 
@@ -35,7 +41,8 @@ class EjercicioModel extends Model
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('nombre', $search)
+                    ->like('nombreespanol', $search)
+                    ->orLike('nombreingles', $search)
                     ->orLike('descripcion', $search)
                     ->orLike('imagen', $search)
                     ->groupEnd();

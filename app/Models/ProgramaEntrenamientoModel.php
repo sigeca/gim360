@@ -15,11 +15,13 @@ class ProgramaEntrenamientoModel extends Model
     protected $allowedFields    = [
         'nombre',
         'idmotivoentrenamiento',
+        'idrangoedad',
     ];
 
     protected $validationRules = [
         'nombre'                => 'required|min_length[3]|max_length[100]',
         'idmotivoentrenamiento' => 'required|is_natural_no_zero',
+        'idrangoedad'           => 'permit_empty|is_natural_no_zero',
     ];
 
     protected $validationMessages = [
@@ -32,14 +34,21 @@ class ProgramaEntrenamientoModel extends Model
             'required'           => 'Debe seleccionar un motivo de entrenamiento.',
             'is_natural_no_zero' => 'Debe seleccionar un motivo válido.',
         ],
+        'idrangoedad' => [
+            'is_natural_no_zero' => 'El rango de edad seleccionado no es válido.',
+        ],
     ];
 
     public function getProgramaWithDetails($id)
     {
         $programa = $this->select('programaentrenamiento.*, 
                                    motivoentrenamiento.nombre AS motivo_nombre, 
-                                   motivoentrenamiento.objetivo AS motivo_objetivo')
+                                   motivoentrenamiento.objetivo AS motivo_objetivo,
+                                   rangoedad.nombre AS rango_nombre,
+                                   rangoedad.edadminima AS rango_edadminima,
+                                   rangoedad.edadmaxima AS rango_edadmaxima')
                          ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                         ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
                          ->where('programaentrenamiento.idprogramaentrenamiento', $id)
                          ->first();
 
@@ -67,17 +76,24 @@ class ProgramaEntrenamientoModel extends Model
         $builder = $this->select('programaentrenamiento.*, 
                                   motivoentrenamiento.nombre AS motivo_nombre, 
                                   motivoentrenamiento.objetivo AS motivo_objetivo,
+                                  rangoedad.nombre AS rango_nombre,
+                                  rangoedad.edadminima AS rango_edadminima,
+                                  rangoedad.edadmaxima AS rango_edadmaxima,
                                   (SELECT COUNT(*) FROM rutinaprograma WHERE rutinaprograma.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento) AS total_rutinas,
                                   (SELECT COUNT(*) FROM rutinaplan WHERE rutinaplan.idrutinaejercicio IN (SELECT rp.idrutinaejercicio FROM rutinaprograma rp WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento)) AS total_planes')
                         ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                        ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
                         ->orderBy('programaentrenamiento.idprogramaentrenamiento', 'ASC');
 
         if (!empty($search)) {
             $builder->groupStart()
                     ->like('programaentrenamiento.nombre', $search)
-                    ->orLike('motivoentrenamiento.nombre', $search);
+                    ->orLike('motivoentrenamiento.nombre', $search)
+                    ->orLike('rangoedad.nombre', $search);
             if (is_numeric($search)) {
-                $builder->orWhere('programaentrenamiento.idprogramaentrenamiento', (int)$search);
+                $builder->orWhere('programaentrenamiento.idprogramaentrenamiento', (int)$search)
+                        ->orWhere('rangoedad.edadminima', (int)$search)
+                        ->orWhere('rangoedad.edadmaxima', (int)$search);
             }
             $builder->groupEnd();
         }

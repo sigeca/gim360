@@ -4,17 +4,20 @@ namespace App\Controllers;
 
 use App\Models\ProgramaEntrenamientoModel;
 use App\Models\MotivoEntrenamientoModel;
+use App\Models\RangoEdadModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class ProgramaEntrenamiento extends BaseController
 {
     protected ProgramaEntrenamientoModel $peModel;
     protected MotivoEntrenamientoModel $motivoModel;
+    protected RangoEdadModel $rangoModel;
 
     public function __construct()
     {
         $this->peModel     = new ProgramaEntrenamientoModel();
         $this->motivoModel = new MotivoEntrenamientoModel();
+        $this->rangoModel  = new RangoEdadModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -85,11 +88,14 @@ class ProgramaEntrenamiento extends BaseController
     public function add()
     {
         $idmotivoPreselected = $this->request->getGet('idmotivo') ?? $this->request->getGet('idmotivoentrenamiento');
+        $idrangoPreselected  = $this->request->getGet('idrango') ?? $this->request->getGet('idrangoedad');
 
         $data = [
             'title'               => 'Crear Programa de Entrenamiento',
             'motivos'             => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
+            'rangos'              => $this->rangoModel->orderBy('edadminima', 'ASC')->findAll(),
             'idmotivoPreselected' => $idmotivoPreselected,
+            'idrangoPreselected'  => $idrangoPreselected,
             'module'              => 'programaentrenamiento',
         ];
 
@@ -101,15 +107,19 @@ class ProgramaEntrenamiento extends BaseController
         $rules = [
             'nombre'                => 'required|min_length[3]|max_length[100]',
             'idmotivoentrenamiento' => 'required|is_natural_no_zero',
+            'idrangoedad'           => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idrango = $this->request->getPost('idrangoedad');
+
         $id = $this->peModel->insert([
             'nombre'                => trim($this->request->getPost('nombre')),
             'idmotivoentrenamiento' => (int)$this->request->getPost('idmotivoentrenamiento'),
+            'idrangoedad'           => !empty($idrango) ? (int)$idrango : null,
         ]);
 
         return redirect()->to(base_url('programaentrenamiento/actual/' . $id))->with('success', 'Programa de entrenamiento registrado exitosamente.');
@@ -127,6 +137,7 @@ class ProgramaEntrenamiento extends BaseController
             'title'    => 'Editar Programa de Entrenamiento #' . $id,
             'programa' => $programa,
             'motivos'  => $this->motivoModel->orderBy('nombre', 'ASC')->findAll(),
+            'rangos'   => $this->rangoModel->orderBy('edadminima', 'ASC')->findAll(),
             'module'   => 'programaentrenamiento',
         ];
 
@@ -143,15 +154,19 @@ class ProgramaEntrenamiento extends BaseController
         $rules = [
             'nombre'                => 'required|min_length[3]|max_length[100]',
             'idmotivoentrenamiento' => 'required|is_natural_no_zero',
+            'idrangoedad'           => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idrango = $this->request->getPost('idrangoedad');
+
         $this->peModel->update($id, [
             'nombre'                => trim($this->request->getPost('nombre')),
             'idmotivoentrenamiento' => (int)$this->request->getPost('idmotivoentrenamiento'),
+            'idrangoedad'           => !empty($idrango) ? (int)$idrango : null,
         ]);
 
         return redirect()->to(base_url('programaentrenamiento/actual/' . $id))->with('success', 'Programa de entrenamiento actualizado exitosamente.');

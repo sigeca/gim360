@@ -45,10 +45,18 @@
                         <!-- Columna de la Tarjeta del Cliente Asignado -->
                         <div class="col-md-5 col-lg-4 text-center">
                             <div class="card bg-light border shadow-sm p-4">
+                                <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($programaCliente['cliente_cedula'])) . '.jpg'; ?>
                                 <div class="mb-3">
-                                    <div class="d-inline-flex align-items-center justify-content-center bg-white rounded-circle shadow-sm border" style="width: 85px; height: 85px;">
-                                        <i class="bi bi-person-badge-fill text-primary fs-1"></i>
-                                    </div>
+                                    <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto en tamaño original" class="d-inline-block text-decoration-none">
+                                        <img src="<?= esc($fotoUrl) ?>"
+                                             alt="Foto de <?= esc($programaCliente['cliente_nombres']) ?>"
+                                             class="rounded-circle shadow-sm border border-2 border-primary"
+                                             style="width: 95px; height: 95px; object-fit: cover;"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                                        <div class="align-items-center justify-content-center bg-white rounded-circle shadow-sm border" style="width: 95px; height: 95px; display: none;">
+                                            <i class="bi bi-person-badge-fill text-primary fs-1"></i>
+                                        </div>
+                                    </a>
                                 </div>
                                 <h5 class="fw-bold text-dark mb-1"><?= esc($programaCliente['cliente_nombres']) ?></h5>
                                 <div class="text-muted small mb-3">
@@ -156,6 +164,19 @@
                                                 <?php endif; ?>
                                             </td>
                                         </tr>
+                                        <?php if (!empty($programaCliente['idrangoedad'])): ?>
+                                        <tr>
+                                            <th class="table-light text-muted">Rango de Edad Recomendado</th>
+                                            <td>
+                                                <a href="<?= base_url('rangoedad/actual/' . $programaCliente['idrangoedad']) ?>" class="text-decoration-none">
+                                                    <span class="badge bg-info-subtle text-dark border border-info px-3 py-2">
+                                                        <i class="bi bi-person-bounding-box text-info me-1"></i><?= esc($programaCliente['rango_nombre']) ?>
+                                                        (<?= (int)$programaCliente['rango_edadminima'] ?> - <?= (int)$programaCliente['rango_edadmaxima'] ?> años)
+                                                    </span>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <?php endif; ?>
                                         <tr>
                                             <th class="table-light text-muted">Rutinas del Programa</th>
                                             <td>
@@ -260,11 +281,111 @@
                                                 </td>
                                                 <td class="text-end">
                                                     <div class="btn-group btn-group-sm">
+                                                        <a href="<?= base_url('ejecucionprograma/add?idprogramacliente=' . $programaCliente['idprogramacliente'] . '&idejercicio=' . $pl['idejercicio']) ?>" class="btn btn-warning text-dark fw-semibold" title="Registrar Ejecución de este Ejercicio">
+                                                            <i class="bi bi-play-fill"></i> Ejecutar
+                                                        </a>
                                                         <a href="<?= base_url('ejercicio/actual/' . $pl['idejercicio']) ?>" class="btn btn-outline-danger" title="Ver Ejercicio">
                                                             <i class="bi bi-fire"></i>
                                                         </a>
                                                         <a href="<?= base_url('planejercicio/actual/' . $pl['idplanejercicio']) ?>" class="btn btn-outline-primary" title="Ver Plan">
                                                             <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <!-- Sección: Historial de Ejecución de Ejercicios de este Programa Cliente -->
+                    <div>
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                            <h6 class="fw-bold text-dark mb-0">
+                                <i class="bi bi-play-btn-fill text-warning me-2"></i>Registro de Ejecución de Ejercicios (<code>ejecucionprograma</code>)
+                                <span class="badge bg-warning text-dark ms-1"><?= !empty($programaCliente['ejecuciones']) ? count($programaCliente['ejecuciones']) : 0 ?></span>
+                            </h6>
+                            <a href="<?= base_url('ejecucionprograma/add?idprogramacliente=' . $programaCliente['idprogramacliente']) ?>" class="btn btn-sm btn-warning text-dark fw-bold">
+                                <i class="bi bi-plus-circle me-1"></i> + Registrar Ejecución
+                            </a>
+                        </div>
+
+                        <?php if (empty($programaCliente['ejecuciones'])): ?>
+                            <div class="alert alert-light border text-muted mb-0">
+                                <i class="bi bi-info-circle me-1"></i> Aún no se han registrado ejecuciones de ejercicios para este programa asignado.
+                            </div>
+                        <?php else: ?>
+                            <div class="table-responsive">
+                                <table class="table table-hover table-bordered align-middle mb-0">
+                                    <thead class="table-light small">
+                                        <tr>
+                                            <th class="ps-3">ID</th>
+                                            <th>Ejercicio Ejecutado</th>
+                                            <th>Fecha</th>
+                                            <th>Hora Inicio</th>
+                                            <th>Hora Fin</th>
+                                            <th>Duración</th>
+                                            <th class="text-end pe-3">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($programaCliente['ejecuciones'] as $ejExec): ?>
+                                            <tr>
+                                                <td class="ps-3 fw-bold text-muted">#<?= $ejExec['idejecucionprograma'] ?></td>
+                                                <td>
+                                                    <div class="d-flex align-items-center gap-2">
+                                                        <?php if (!empty($ejExec['ejercicio_imagen'])): ?>
+                                                            <img src="<?= base_url('ejercicio/imagen/' . rawurlencode($ejExec['ejercicio_imagen'])) ?>"
+                                                                 alt=""
+                                                                 class="rounded border bg-light"
+                                                                 style="width: 38px; height: 38px; object-fit: cover;">
+                                                        <?php endif; ?>
+                                                        <div>
+                                                            <a href="<?= base_url('ejecucionprograma/actual/' . $ejExec['idejecucionprograma']) ?>" class="fw-semibold text-dark text-decoration-none d-block">
+                                                                <?= esc($ejExec['ejercicio_nombreespanol']) ?>
+                                                            </a>
+                                                            <small class="text-muted fst-italic"><?= esc($ejExec['ejercicio_nombreingles']) ?></small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td class="fw-semibold"><?= date('d/m/Y', strtotime($ejExec['fecha'])) ?></td>
+                                                <td><span class="badge bg-primary font-monospace"><?= date('H:i', strtotime($ejExec['horainicio'])) ?></span></td>
+                                                <td>
+                                                    <?php if (!empty($ejExec['horafin'])): ?>
+                                                        <span class="badge bg-success font-monospace"><?= date('H:i', strtotime($ejExec['horafin'])) ?></span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-warning text-dark">En curso</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td>
+                                                    <?php
+                                                        if (!empty($ejExec['horainicio']) && !empty($ejExec['horafin'])) {
+                                                            $tIni = strtotime($ejExec['fecha'] . ' ' . $ejExec['horainicio']);
+                                                            $tFin = strtotime($ejExec['fecha'] . ' ' . $ejExec['horafin']);
+                                                            $diff = $tFin - $tIni;
+                                                            if ($diff > 0) {
+                                                                $h = floor($diff / 3600);
+                                                                $m = floor(($diff % 3600) / 60);
+                                                                echo '<small class="fw-semibold text-success">' . ($h > 0 ? $h . 'h ' : '') . $m . 'm</small>';
+                                                            } else {
+                                                                echo '-';
+                                                            }
+                                                        } else {
+                                                            echo '-';
+                                                        }
+                                                    ?>
+                                                </td>
+                                                <td class="text-end pe-3">
+                                                    <div class="btn-group btn-group-sm">
+                                                        <a href="<?= base_url('ejecucionprograma/actual/' . $ejExec['idejecucionprograma']) ?>" class="btn btn-outline-primary" title="Ver Ejecución">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="<?= base_url('ejecucionprograma/edit/' . $ejExec['idejecucionprograma']) ?>" class="btn btn-outline-warning" title="Editar">
+                                                            <i class="bi bi-pencil"></i>
                                                         </a>
                                                     </div>
                                                 </td>

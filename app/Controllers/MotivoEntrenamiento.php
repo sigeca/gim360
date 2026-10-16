@@ -97,8 +97,9 @@ class MotivoEntrenamiento extends BaseController
     public function add()
     {
         $data = [
-            'title'  => 'Nuevo Motivo de Entrenamiento',
-            'module' => 'motivoentrenamiento',
+            'title'           => 'Nuevo Motivo de Entrenamiento',
+            'availableImages' => $this->motivoModel->getAvailableImages(),
+            'module'          => 'motivoentrenamiento',
         ];
 
         return view('motivoentrenamiento/motivoentrenamiento_form', $data);
@@ -107,8 +108,10 @@ class MotivoEntrenamiento extends BaseController
     public function save()
     {
         $rules = [
-            'nombre'   => 'required|min_length[2]|max_length[100]|is_unique[motivoentrenamiento.nombre]',
-            'objetivo' => 'permit_empty',
+            'nombre'    => 'required|min_length[2]|max_length[100]|is_unique[motivoentrenamiento.nombre]',
+            'objetivo'  => 'permit_empty',
+            'dimension' => 'permit_empty|max_length[50]',
+            'imagen'    => 'permit_empty|max_length[255]',
         ];
 
         if (!$this->validate($rules)) {
@@ -116,8 +119,10 @@ class MotivoEntrenamiento extends BaseController
         }
 
         $id = $this->motivoModel->insert([
-            'nombre'   => trim($this->request->getPost('nombre')),
-            'objetivo' => trim($this->request->getPost('objetivo')) ?: null,
+            'nombre'    => trim($this->request->getPost('nombre')),
+            'objetivo'  => trim($this->request->getPost('objetivo')) ?: null,
+            'dimension' => trim($this->request->getPost('dimension')) ?: null,
+            'imagen'    => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
         return redirect()->to(base_url('motivoentrenamiento/actual/' . $id))->with('success', 'Motivo de entrenamiento registrado exitosamente.');
@@ -132,9 +137,10 @@ class MotivoEntrenamiento extends BaseController
         }
 
         $data = [
-            'title'  => 'Editar Motivo de Entrenamiento #' . $id,
-            'motivo' => $motivo,
-            'module' => 'motivoentrenamiento',
+            'title'           => 'Editar Motivo de Entrenamiento #' . $id,
+            'motivo'          => $motivo,
+            'availableImages' => $this->motivoModel->getAvailableImages(),
+            'module'          => 'motivoentrenamiento',
         ];
 
         return view('motivoentrenamiento/motivoentrenamiento_edit', $data);
@@ -148,8 +154,10 @@ class MotivoEntrenamiento extends BaseController
         }
 
         $rules = [
-            'nombre'   => "required|min_length[2]|max_length[100]|is_unique[motivoentrenamiento.nombre,idmotivoentrenamiento,{$id}]",
-            'objetivo' => 'permit_empty',
+            'nombre'    => "required|min_length[2]|max_length[100]|is_unique[motivoentrenamiento.nombre,idmotivoentrenamiento,{$id}]",
+            'objetivo'  => 'permit_empty',
+            'dimension' => 'permit_empty|max_length[50]',
+            'imagen'    => 'permit_empty|max_length[255]',
         ];
 
         if (!$this->validate($rules)) {
@@ -157,11 +165,57 @@ class MotivoEntrenamiento extends BaseController
         }
 
         $this->motivoModel->update($id, [
-            'nombre'   => trim($this->request->getPost('nombre')),
-            'objetivo' => trim($this->request->getPost('objetivo')) ?: null,
+            'nombre'    => trim($this->request->getPost('nombre')),
+            'objetivo'  => trim($this->request->getPost('objetivo')) ?: null,
+            'dimension' => trim($this->request->getPost('dimension')) ?: null,
+            'imagen'    => trim($this->request->getPost('imagen')) ?: null,
         ]);
 
         return redirect()->to(base_url('motivoentrenamiento/actual/' . $id))->with('success', 'Motivo de entrenamiento actualizado exitosamente.');
+    }
+
+    // Servir imagen desde el repositorio de motivos
+    public function imagen($filename = null)
+    {
+        if (empty($filename)) {
+            throw PageNotFoundException::forPageNotFound();
+        }
+
+        $cleanFilename = basename($filename);
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+
+        $paths = [
+            $baseDir . '/repositorio/motivos/' . $cleanFilename,
+            $baseDir . '/repositorio/images/motivos/' . $cleanFilename,
+            $baseDir . '/uploads/motivos/' . $cleanFilename,
+        ];
+
+        $targetPath = null;
+        foreach ($paths as $p) {
+            if (file_exists($p)) {
+                $targetPath = $p;
+                break;
+            }
+        }
+
+        if (!$targetPath) {
+            throw PageNotFoundException::forPageNotFound("Imagen no encontrada: " . $cleanFilename);
+        }
+
+        $extension = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'webp' => 'image/webp',
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'svg'  => 'image/svg+xml',
+        ];
+        $contentType = $mimeTypes[$extension] ?? 'image/webp';
+
+        return $this->response
+            ->setHeader('Content-Type', $contentType)
+            ->setHeader('Cache-Control', 'public, max-age=86400')
+            ->setBody(file_get_contents($targetPath));
     }
 
     public function delete($id)

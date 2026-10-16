@@ -89,7 +89,7 @@ class EjercicioEquipo extends BaseController
     {
         $data = [
             'title'             => 'Asignar Equipo a Ejercicio',
-            'ejercicios'        => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios'        => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'equipos'           => $this->equipoModel->orderBy('nombre', 'ASC')->findAll(),
             'selectedEjercicio' => $this->request->getGet('idejercicio') ?? '',
             'module'            => 'ejercicioequipo',
@@ -140,7 +140,7 @@ class EjercicioEquipo extends BaseController
         $data = [
             'title'      => 'Editar Asignación de Equipo',
             'rel'        => $rel,
-            'ejercicios' => $this->ejercicioModel->orderBy('nombre', 'ASC')->findAll(),
+            'ejercicios' => $this->ejercicioModel->select('ejercicio.*, nombreespanol AS nombre')->orderBy('nombreespanol', 'ASC')->findAll(),
             'equipos'    => $this->equipoModel->orderBy('nombre', 'ASC')->findAll(),
             'module'     => 'ejercicioequipo',
         ];

@@ -43,6 +43,7 @@
                         <th class="ps-4">ID</th>
                         <th>Nombre del Programa</th>
                         <th>Motivo de Entrenamiento</th>
+                        <th>Rango de Edad</th>
                         <th>Rutinas Asignadas</th>
                         <th class="text-center">Total Planes</th>
                         <th class="text-end pe-4">Acciones</th>
@@ -51,7 +52,7 @@
                 <tbody>
                     <?php if (empty($programas)): ?>
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
+                            <td colspan="7" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($programas as $p): ?>
@@ -66,6 +67,18 @@
                                     <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-2">
                                         <i class="bi bi-bullseye text-warning me-1"></i><?= esc($p['motivo_nombre']) ?>
                                     </span>
+                                </td>
+                                <td>
+                                    <?php if (!empty($p['idrangoedad'])): ?>
+                                        <a href="<?= base_url('rangoedad/actual/' . $p['idrangoedad']) ?>" class="text-decoration-none">
+                                            <span class="badge bg-info-subtle text-dark border border-info px-2 py-1">
+                                                <i class="bi bi-person-bounding-box text-info me-1"></i><?= esc($p['rango_nombre']) ?>
+                                                <small class="text-muted d-block"><?= (int)$p['rango_edadminima'] ?>-<?= (int)$p['rango_edadmaxima'] ?> años</small>
+                                            </span>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="badge bg-light text-muted border px-2 py-1">Sin rango</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <a href="<?= base_url('rutinaprograma?q=' . urlencode($p['nombre'])) ?>" class="text-decoration-none" title="Ver rutinas asignadas a este programa">

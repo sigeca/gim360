@@ -25,11 +25,16 @@
                     </div>
 
                     <div class="mb-3">
-                        <label for="idpersona" class="form-label fw-semibold">Persona Asignada <span class="text-danger">*</span></label>
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="idpersona" class="form-label fw-semibold mb-0">Persona Asignada <span class="text-danger">*</span></label>
+                            <a href="<?= base_url('persona/actual/' . $cliente['idpersona']) ?>" class="small text-decoration-none">
+                                <i class="bi bi-person-vcard me-1"></i>Ir a Ficha de la Persona
+                            </a>
+                        </div>
                         <select name="idpersona" id="idpersona" class="form-select" required autofocus>
                             <?php foreach ($personas as $p): ?>
                                 <option value="<?= $p['idpersona'] ?>" <?= old('idpersona', $cliente['idpersona']) == $p['idpersona'] ? 'selected' : '' ?>>
-                                    <?= esc($p['cedula']) ?> — <?= esc($p['nombres']) ?>
+                                    <?= esc($p['cedula']) ?> — <?= esc(trim(($p['apellidos'] ?? '') . ' ' . ($p['nombres'] ?? ''))) ?>
                                 </option>
                             <?php endforeach; ?>
                         </select>

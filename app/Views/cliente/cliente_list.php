@@ -41,6 +41,7 @@
                 <thead class="table-light">
                     <tr>
                         <th class="ps-4">ID Cliente</th>
+                        <th>Foto</th>
                         <th>Cédula</th>
                         <th>Nombres y Apellidos</th>
                         <th>Sexo</th>
@@ -51,28 +52,44 @@
                 <tbody>
                     <?php if (empty($clientes)): ?>
                         <tr>
-                            <td colspan="6" class="text-center py-5 text-muted">No se encontraron clientes registrados.</td>
+                            <td colspan="7" class="text-center py-5 text-muted">No se encontraron clientes registrados.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($clientes as $c): ?>
+                            <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($c['cedula'])) . '.jpg'; ?>
                             <tr>
                                 <td class="ps-4 fw-bold text-success">#<?= $c['idcliente'] ?></td>
+                                <td>
+                                    <a href="<?= base_url('cliente/actual/' . $c['idcliente']) ?>" class="text-decoration-none d-inline-block">
+                                        <img src="<?= esc($fotoUrl) ?>"
+                                             alt="Foto <?= esc($c['cedula']) ?>"
+                                             class="rounded-circle border border-success shadow-sm"
+                                             style="width: 42px; height: 42px; object-fit: cover;"
+                                             onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+                                        <span class="bg-light text-success rounded-circle border align-items-center justify-content-center" style="width: 42px; height: 42px; display: none;">
+                                            <i class="bi bi-person-fill"></i>
+                                        </span>
+                                    </a>
+                                </td>
                                 <td>
                                     <span class="badge bg-light text-dark border font-monospace fs-6"><?= esc($c['cedula']) ?></span>
                                 </td>
                                 <td class="fw-semibold text-dark">
                                     <a href="<?= base_url('cliente/actual/' . $c['idcliente']) ?>" class="text-decoration-none text-dark">
-                                        <?= esc($c['persona_nombres']) ?>
+                                        <?= esc(trim(($c['persona_apellidos'] ?? '') . ' ' . ($c['persona_nombres'] ?? ''))) ?>
                                     </a>
                                 </td>
                                 <td><?= !empty($c['sexo_nombre']) ? esc($c['sexo_nombre']) : '-' ?></td>
                                 <td><?= !empty($c['fechanacimiento']) ? date('d/m/Y', strtotime($c['fechanacimiento'])) : '-' ?></td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm">
-                                        <a href="<?= base_url('cliente/actual/' . $c['idcliente']) ?>" class="btn btn-outline-primary" title="Ver Ficha de Registro">
-                                            <i class="bi bi-eye"></i> Ver Ficha
+                                        <a href="<?= base_url('cliente/actual/' . $c['idcliente']) ?>" class="btn btn-outline-primary" title="Ver Ficha de Cliente">
+                                            <i class="bi bi-eye"></i> Ver Cliente
                                         </a>
-                                        <a href="<?= base_url('cliente/edit/' . $c['idcliente']) ?>" class="btn btn-outline-warning" title="Editar">
+                                        <a href="<?= base_url('persona/actual/' . $c['idpersona']) ?>" class="btn btn-outline-info text-dark" title="Ir a Ficha de la Persona">
+                                            <i class="bi bi-person-vcard"></i> Ficha Persona
+                                        </a>
+                                        <a href="<?= base_url('cliente/edit/' . $c['idcliente']) ?>" class="btn btn-outline-warning" title="Editar Asignación">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </div>

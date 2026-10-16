@@ -19,7 +19,7 @@
             <div class="card card-custom bg-white border-top border-4 border-info">
                 <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
                     <h5 class="fw-bold mb-0 text-dark">
-                        <i class="bi bi-card-checklist text-info me-2"></i>Ficha de Plan de Ejercicio
+                        <i class="bi bi-card-checklist text-info me-2"></i><?= esc($plan['nombre'] ?? 'Ficha de Plan de Ejercicio') ?>
                     </h5>
                     <span class="badge bg-secondary text-white fs-6">ID #<?= $plan['idplanejercicio'] ?></span>
                 </div>
@@ -32,6 +32,12 @@
                                         <tr>
                                             <th class="table-light w-35 text-muted">ID Plan</th>
                                             <td class="fw-bold text-secondary">#<?= $plan['idplanejercicio'] ?></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted">Nombre del Plan</th>
+                                            <td class="fs-5 fw-bold text-dark">
+                                                <i class="bi bi-tag text-info me-1"></i><?= esc($plan['nombre'] ?? 'Sin nombre asignado') ?>
+                                            </td>
                                         </tr>
                                         <tr>
                                             <th class="table-light text-muted">Ejercicio Asignado</th>

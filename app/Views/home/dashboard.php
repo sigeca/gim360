@@ -387,25 +387,6 @@
         </div>
     </div>
 
-    <!-- 13. ejerciciocliente -->
-    <div class="col-sm-6 col-xl-4">
-        <div class="card card-custom h-100 bg-white border-start border-4 border-primary">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="text-uppercase fw-bold text-muted small">13. Ejercicios de Clientes</span>
-                    <h3 class="fw-bold my-1 text-dark"><?= $counts['ejerciciocliente'] ?></h3>
-                    <small class="text-muted">Asignación y duración</small>
-                </div>
-                <div class="bg-primary bg-opacity-10 p-3 rounded-circle text-primary fs-3">
-                    <i class="bi bi-person-walking"></i>
-                </div>
-            </div>
-            <div class="card-footer bg-transparent border-0 pt-0">
-                <a href="<?= base_url('ejerciciocliente') ?>" class="text-decoration-none small fw-semibold text-primary">Gestionar asignaciones <i class="bi bi-arrow-right"></i></a>
-            </div>
-        </div>
-    </div>
-
     <!-- 14. motivoentrenamiento -->
     <div class="col-sm-6 col-xl-4">
         <div class="card card-custom h-100 bg-white border-start border-4 border-warning">
@@ -421,6 +402,25 @@
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
                 <a href="<?= base_url('motivoentrenamiento') ?>" class="text-decoration-none small fw-semibold text-warning">Gestionar motivos <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rangos de Edad -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">Rangos de Edad</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['rangoedad'] ?? 0 ?></h3>
+                    <small class="text-muted">Intervalos etarios para programas</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-person-bounding-box"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('rangoedad') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar rangos <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -827,7 +827,10 @@
                         <?php foreach (array_slice($recentEjercicios, 0, 5) as $ej): ?>
                             <tr>
                                 <td class="ps-3 fw-bold text-muted"><?= $ej['idejercicio'] ?></td>
-                                <td class="fw-semibold text-dark"><?= esc($ej['nombre']) ?></td>
+                                <td>
+                                    <div class="fw-semibold text-dark"><?= esc($ej['nombreespanol'] ?? '') ?></div>
+                                    <small class="text-muted fst-italic"><?= esc($ej['nombreingles'] ?? '') ?></small>
+                                </td>
                                 <td>
                                     <small class="text-secondary text-truncate d-inline-block" style="max-width: 400px;">
                                         <?= esc($ej['descripcion'] ?? '-') ?>
@@ -861,65 +864,6 @@
     </div>
 </div>
 
-<!-- Tabla de Ejercicios por Cliente Recientes -->
-<div class="card card-custom bg-white mt-4">
-    <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
-        <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-person-walking me-2 text-primary"></i>Últimos Ejercicios Realizados por Clientes</h5>
-        <div class="d-flex gap-2">
-            <a href="<?= base_url('ejerciciocliente/add') ?>" class="btn btn-outline-primary btn-sm">+ Asignar Ejercicio</a>
-            <a href="<?= base_url('ejerciciocliente/listar') ?>" class="btn btn-outline-secondary btn-sm">Ver todos</a>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead class="table-light">
-                    <tr>
-                        <th class="ps-3">ID</th>
-                        <th>Cliente</th>
-                        <th>Cédula</th>
-                        <th>Ejercicio</th>
-                        <th>Fecha</th>
-                        <th>Duración</th>
-                        <th class="text-end pe-3">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if (empty($recentEC)): ?>
-                        <tr>
-                            <td colspan="7" class="text-center py-4 text-muted">No se han registrado ejercicios de clientes aún.</td>
-                        </tr>
-                    <?php else: ?>
-                        <?php foreach (array_slice($recentEC, 0, 5) as $rec): ?>
-                            <tr>
-                                <td class="ps-3 fw-bold text-muted"><?= $rec['idejerciciocliente'] ?></td>
-                                <td class="fw-semibold text-dark"><?= esc($rec['cliente_nombres']) ?></td>
-                                <td><span class="badge bg-light text-dark border font-monospace"><?= esc($rec['cedula']) ?></span></td>
-                                <td>
-                                    <span class="fw-semibold text-dark"><i class="bi bi-fire text-danger me-1"></i><?= esc($rec['ejercicio_nombre']) ?></span>
-                                </td>
-                                <td><?= date('d/m/Y', strtotime($rec['fecha'])) ?></td>
-                                <td>
-                                    <span class="badge bg-success font-monospace"><?= $rec['duracionminutos'] ?> min</span>
-                                </td>
-                                <td class="text-end pe-3">
-                                    <div class="btn-group btn-group-sm">
-                                        <a href="<?= base_url('ejerciciocliente/actual/' . $rec['idejerciciocliente']) ?>" class="btn btn-outline-info" title="Ver Ficha">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="<?= base_url('ejerciciocliente/edit/' . $rec['idejerciciocliente']) ?>" class="btn btn-outline-warning" title="Editar">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
 
 <?= $this->endSection() ?>
 
