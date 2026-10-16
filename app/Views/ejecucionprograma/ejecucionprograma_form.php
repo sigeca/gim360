@@ -25,7 +25,7 @@
                         <select name="idprogramacliente" id="idprogramacliente" class="form-select" required autofocus>
                             <option value="">-- Seleccionar Programa Asignado al Cliente --</option>
                             <?php foreach ($programasClientes as $pc): ?>
-                                <option value="<?= $pc['idprogramacliente'] ?>" <?= (old('idprogramacliente', $idProgramaClientePreselected ?? '') == $pc['idprogramacliente']) ? 'selected' : '' ?>>
+                                <option value="<?= $pc['idprogramacliente'] ?>" <?= ((string) (!empty($idProgramaClientePreselected) ? $idProgramaClientePreselected : old('idprogramacliente', '')) === (string) $pc['idprogramacliente']) ? 'selected' : '' ?>>
                                     #<?= $pc['idprogramacliente'] ?> — <?= esc($pc['cliente_nombres']) ?> (C.I: <?= esc($pc['cliente_cedula']) ?>) — <?= esc($pc['programa_nombre']) ?> [<?= esc($pc['estado_nombre']) ?>]
                                 </option>
                             <?php endforeach; ?>
@@ -37,7 +37,7 @@
                         <select name="idejercicio" id="idejercicio" class="form-select" required>
                             <option value="">-- Seleccionar Ejercicio --</option>
                             <?php foreach ($ejercicios as $ej): ?>
-                                <option value="<?= $ej['idejercicio'] ?>" <?= (old('idejercicio', $idEjercicioPreselected ?? '') == $ej['idejercicio']) ? 'selected' : '' ?>>
+                                <option value="<?= $ej['idejercicio'] ?>" <?= ((string) (!empty($idEjercicioPreselected) ? $idEjercicioPreselected : old('idejercicio', '')) === (string) $ej['idejercicio']) ? 'selected' : '' ?>>
                                     #<?= $ej['idejercicio'] ?> — <?= esc($ej['nombreespanol']) ?> (<?= esc($ej['nombreingles']) ?>)
                                 </option>
                             <?php endforeach; ?>
