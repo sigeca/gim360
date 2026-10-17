@@ -70,4 +70,12 @@ class PersonaModel extends Model
                     ->where('persona.idpersona', $idpersona)
                     ->first();
     }
+
+    /**
+     * Alias para compatibilidad con AuthApiController
+     */
+    public function getPersonaWithDetails($idpersona)
+    {
+        return $this->getPersonaDetail($idpersona);
+    }
 }
