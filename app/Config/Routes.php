@@ -8,6 +8,15 @@ use CodeIgniter\Router\RouteCollection;
 $routes->get('/', 'Home::index');
 $routes->get('home', 'Home::index');
 
+// Autenticación y Registro
+$routes->get('login', 'Auth::login');
+$routes->post('login', 'Auth::processLogin');
+$routes->get('registro', 'Auth::register');
+$routes->post('registro', 'Auth::processRegister');
+$routes->get('register', 'Auth::register');
+$routes->post('register', 'Auth::processRegister');
+$routes->get('logout', 'Auth::logout');
+
 $modulos = [
     'persona'            => 'Persona',
     'cliente'            => 'Cliente',
@@ -44,6 +53,7 @@ $modulos = [
     'rango-edad'           => 'RangoEdad',
     'ejecucionprograma'    => 'EjecucionPrograma',
     'ejecucion-programa'   => 'EjecucionPrograma',
+    'usuario'              => 'Usuario',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -104,6 +114,14 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     // Manejo de CORS preflight
     $routes->options('(:any)', 'GimApiController::options');
     $routes->options('/', 'GimApiController::options');
+
+    // Autenticación y Registro Móvil GIM360
+    $routes->post('auth/login', 'AuthApiController::login');
+    $routes->post('login', 'AuthApiController::login');
+    $routes->post('auth/registro', 'AuthApiController::register');
+    $routes->post('registro', 'AuthApiController::register');
+    $routes->get('auth/verificar-cedula', 'AuthApiController::verificarCedula');
+    $routes->post('auth/verificar-cedula', 'AuthApiController::verificarCedula');
 
     // Catálogos
     $routes->get('catalogos', 'PersonaController::catalogos');
