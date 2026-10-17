@@ -175,6 +175,14 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->post('programacliente', 'GimApiController::asignarProgramaCliente');
     $routes->get('rutinas', 'GimApiController::getRutinas');
     $routes->get('rutina/(:num)', 'GimApiController::getRutinaDetail/$1');
+    $routes->post('rutina/(:num)/plan', 'GimApiController::agregarPlanRutina/$1');
+    $routes->post('rutina/plan', 'GimApiController::agregarPlanRutina');
+    $routes->put('planejercicio/(:num)', 'GimApiController::actualizarPlanEjercicio/$1');
+    $routes->post('planejercicio/(:num)', 'GimApiController::actualizarPlanEjercicio/$1');
+    $routes->post('planejercicio/update/(:num)', 'GimApiController::actualizarPlanEjercicio/$1');
+    $routes->delete('rutinaplan/(:num)', 'GimApiController::eliminarPlanRutina/$1');
+    $routes->post('rutinaplan/delete/(:num)', 'GimApiController::eliminarPlanRutina/$1');
+    $routes->delete('planejercicio/(:num)', 'GimApiController::eliminarPlanRutina/$1');
     $routes->get('rangos-edad', 'GimApiController::getRangosEdad');
     $routes->get('rangoedad', 'GimApiController::getRangosEdad');
 

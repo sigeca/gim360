@@ -1071,6 +1071,213 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * POST /api/rutina/{id}/plan o POST /api/rutina/plan
+     * Agrega un nuevo plan de ejercicio a una rutina
+     */
+    public function agregarPlanRutina($idRutinaParam = null)
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+
+        $idRutina = !empty($idRutinaParam) ? (int)$idRutinaParam : (!empty($input['idrutinaejercicio']) ? (int)$input['idrutinaejercicio'] : 0);
+        $idEjercicio = !empty($input['idejercicio']) ? (int)$input['idejercicio'] : 0;
+
+        if ($idRutina <= 0 || $idEjercicio <= 0) {
+            return $this->failValidationErrors('Debe especificar un ID de rutina válido y un ID de ejercicio válido.');
+        }
+
+        $rutinaModel = new RutinaEjecicioModel();
+        $rutina = $rutinaModel->find($idRutina);
+        if (!$rutina) {
+            return $this->failNotFound("Rutina no encontrada con ID: {$idRutina}");
+        }
+
+        $ejercicioModel = new EjercicioModel();
+        $ejercicio = $ejercicioModel->find($idEjercicio);
+        if (!$ejercicio) {
+            return $this->failNotFound("Ejercicio no encontrado con ID: {$idEjercicio}");
+        }
+
+        $nombreEj = !empty($ejercicio['nombreespanol']) ? $ejercicio['nombreespanol'] : ($ejercicio['nombreingles'] ?? 'Ejercicio');
+        $nombrePlan = !empty($input['nombre']) ? trim($input['nombre']) : "Plan {$nombreEj}";
+        if (mb_strlen($nombrePlan) < 3) {
+            $nombrePlan = "Plan {$nombreEj}";
+        }
+        if (mb_strlen($nombrePlan) > 100) {
+            $nombrePlan = mb_substr($nombrePlan, 0, 100);
+        }
+
+        $series = isset($input['series']) && $input['series'] !== '' ? (int)$input['series'] : 3;
+        $repeticiones = isset($input['repeticiones']) && $input['repeticiones'] !== '' ? (int)$input['repeticiones'] : 12;
+        $diassemanas = isset($input['diassemanas']) && $input['diassemanas'] !== '' ? (int)$input['diassemanas'] : 3;
+        $tiempodescanso = isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '' ? (int)$input['tiempodescanso'] : 60;
+        $peso = isset($input['peso']) && $input['peso'] !== '' ? (float)$input['peso'] : 0.0;
+
+        $planModel = new PlanEjercicioModel();
+        $idPlan = $planModel->insert([
+            'nombre'         => $nombrePlan,
+            'idejercicio'    => $idEjercicio,
+            'diassemanas'    => $diassemanas > 0 ? $diassemanas : 3,
+            'repeticiones'   => $repeticiones > 0 ? $repeticiones : 12,
+            'series'         => $series > 0 ? $series : 3,
+            'tiempodescanso' => $tiempodescanso >= 0 ? $tiempodescanso : 60,
+            'peso'           => $peso >= 0 ? $peso : 0.0,
+        ]);
+
+        if (!$idPlan) {
+            return $this->failServerError('Error al crear el plan de ejercicio: ' . json_encode($planModel->errors()));
+        }
+
+        $rutinaPlanModel = new RutinaPlanModel();
+        $idRutinaPlan = $rutinaPlanModel->insert([
+            'idrutinaejercicio' => $idRutina,
+            'idplanejercicio'   => $idPlan,
+        ]);
+
+        if (!$idRutinaPlan) {
+            $planModel->delete($idPlan);
+            return $this->failServerError('Error al asociar el plan a la rutina: ' . json_encode($rutinaPlanModel->errors()));
+        }
+
+        $nuevoPlan = $rutinaPlanModel->getRutinaPlanWithDetails($idRutinaPlan);
+        if (!empty($nuevoPlan['ejercicio_imagen'])) {
+            $nuevoPlan['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $nuevoPlan['ejercicio_imagen']);
+        }
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Ejercicio agregado exitosamente a la rutina',
+            'data'    => $nuevoPlan,
+        ]);
+    }
+
+    /**
+     * PUT|POST /api/planejercicio/{id}
+     * Modifica los datos de un plan de ejercicio existente (ejercicio, series, repeticiones, días, descanso, peso)
+     */
+    public function actualizarPlanEjercicio($idPlanParam = null)
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+
+        $idPlan = !empty($idPlanParam) ? (int)$idPlanParam : (!empty($input['idplanejercicio']) ? (int)$input['idplanejercicio'] : 0);
+
+        if ($idPlan <= 0) {
+            return $this->failValidationErrors('ID de plan de ejercicio no válido.');
+        }
+
+        $planModel = new PlanEjercicioModel();
+        $planExistente = $planModel->find($idPlan);
+        if (!$planExistente) {
+            return $this->failNotFound("Plan de ejercicio no encontrado con ID: {$idPlan}");
+        }
+
+        $updateData = [];
+
+        // Cambiar ejercicio si viene especificado
+        if (!empty($input['idejercicio'])) {
+            $nuevoIdEjercicio = (int)$input['idejercicio'];
+            $ejercicioModel = new EjercicioModel();
+            $ej = $ejercicioModel->find($nuevoIdEjercicio);
+            if (!$ej) {
+                return $this->failNotFound("Ejercicio no encontrado con ID: {$nuevoIdEjercicio}");
+            }
+            $updateData['idejercicio'] = $nuevoIdEjercicio;
+
+            // Actualizar nombre del plan si no se proporciona uno explícito
+            if (empty($input['nombre'])) {
+                $nombreEj = !empty($ej['nombreespanol']) ? $ej['nombreespanol'] : ($ej['nombreingles'] ?? 'Ejercicio');
+                $updateData['nombre'] = mb_substr("Plan {$nombreEj}", 0, 100);
+            }
+        }
+
+        if (!empty($input['nombre'])) {
+            $updateData['nombre'] = mb_substr(trim($input['nombre']), 0, 100);
+        }
+
+        if (isset($input['series']) && $input['series'] !== '') {
+            $updateData['series'] = (int)$input['series'];
+        }
+        if (isset($input['repeticiones']) && $input['repeticiones'] !== '') {
+            $updateData['repeticiones'] = (int)$input['repeticiones'];
+        }
+        if (isset($input['diassemanas']) && $input['diassemanas'] !== '') {
+            $updateData['diassemanas'] = (int)$input['diassemanas'];
+        }
+        if (isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '') {
+            $updateData['tiempodescanso'] = (int)$input['tiempodescanso'];
+        }
+        if (isset($input['peso']) && $input['peso'] !== '') {
+            $updateData['peso'] = (float)$input['peso'];
+        }
+
+        if (!empty($updateData)) {
+            $updated = $planModel->update($idPlan, $updateData);
+            if (!$updated) {
+                return $this->failServerError('Error al actualizar el plan de ejercicio: ' . json_encode($planModel->errors()));
+            }
+        }
+
+        $planActualizado = $planModel->getPlanWithDetails($idPlan);
+        if ($planActualizado && !empty($planActualizado['ejercicio_imagen'])) {
+            $planActualizado['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $planActualizado['ejercicio_imagen']);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Plan de ejercicio actualizado correctamente',
+            'data'    => $planActualizado,
+        ]);
+    }
+
+    /**
+     * DELETE /api/rutinaplan/{id} o /api/rutina/{id}/plan/{idplan}
+     * Elimina un plan de ejercicio de la rutina
+     */
+    public function eliminarPlanRutina($idRutinaPlanParam = null)
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $idRutinaPlan = !empty($idRutinaPlanParam) ? (int)$idRutinaPlanParam : (!empty($input['id_rutina_plan']) ? (int)$input['id_rutina_plan'] : 0);
+
+        $rutinaPlanModel = new RutinaPlanModel();
+        
+        // Si no se pasó id_rutina_plan, verificar si viene por idrutina y idplan
+        if ($idRutinaPlan <= 0 && !empty($input['idrutinaejercicio']) && !empty($input['idplanejercicio'])) {
+            $rp = $rutinaPlanModel->where('idrutinaejercicio', (int)$input['idrutinaejercicio'])
+                                  ->where('idplanejercicio', (int)$input['idplanejercicio'])
+                                  ->first();
+            if ($rp) {
+                $idRutinaPlan = (int)$rp['id_rutina_plan'];
+            }
+        }
+
+        if ($idRutinaPlan <= 0) {
+            return $this->failValidationErrors('ID de rutina_plan no válido.');
+        }
+
+        $registro = $rutinaPlanModel->find($idRutinaPlan);
+        if (!$registro) {
+            return $this->failNotFound("Registro de rutina_plan no encontrado con ID: {$idRutinaPlan}");
+        }
+
+        $idPlan = (int)$registro['idplanejercicio'];
+
+        // Eliminar vínculo en rutinaplan
+        $rutinaPlanModel->delete($idRutinaPlan);
+
+        // Si el plan no está asociado a ninguna otra rutina, limpiarlo
+        $otrosUsos = $rutinaPlanModel->where('idplanejercicio', $idPlan)->countAllResults();
+        if ($otrosUsos === 0) {
+            $planModel = new PlanEjercicioModel();
+            $planModel->delete($idPlan);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Ejercicio removido de la rutina correctamente',
+            'data'    => ['id_rutina_plan' => $idRutinaPlan, 'idplanejercicio' => $idPlan],
+        ]);
+    }
+
+    /**
      * GET /api/rangos-edad
      * List all age ranges
      */
