@@ -231,7 +231,8 @@ $uri = uri_string();
 $isPersonaActive = (strpos($uri, 'persona') === 0 && strpos($uri, 'generopersona') === false && strpos($uri, 'estadocivilpersona') === false);
 $isClienteActive = (strpos($uri, 'cliente') === 0);
 $isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
-$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive;
+$isUsuarioActive = (strpos($uri, 'usuario') === 0);
+$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive || $isUsuarioActive;
 
 $isEquiposActive = (strpos($uri, 'equipos') === 0);
 $groupEquiposOpen = $isEquiposActive;
@@ -330,6 +331,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('visitasgim') ?>" class="submenu-link <?= $isVisitaActive ? 'active' : '' ?>">
                             <i class="bi bi-clock-history text-warning"></i>
                             <span>Visitas Gimnasio</span>
+                        </a>
+                        <a href="<?= base_url('usuario') ?>" class="submenu-link <?= $isUsuarioActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-lock text-primary"></i>
+                            <span>Usuarios del Sistema</span>
                         </a>
                     </div>
                 </div>
@@ -576,6 +581,49 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
             </div>
 
             <div class="d-flex align-items-center gap-2">
+                <?php if (session()->get('isLoggedIn')): ?>
+                    <div class="dropdown">
+                        <button class="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center gap-2 shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-person-circle text-primary fs-5"></i>
+                            <span class="d-none d-md-inline fw-semibold font-monospace">@<?= esc(session()->get('nombreusuario')) ?></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                            <li class="px-3 py-1">
+                                <span class="d-block fw-bold text-dark small"><?= esc(session()->get('persona_nombre_completo') ?: session()->get('nombreusuario')) ?></span>
+                                <span class="text-muted small">C.I: <?= esc(session()->get('persona_cedula') ?: 'N/A') ?></span>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <?php if (session()->get('idpersona')): ?>
+                                <li>
+                                    <a class="dropdown-item small" href="<?= base_url('persona/actual/' . session()->get('idpersona')) ?>">
+                                        <i class="bi bi-person-vcard text-info me-2"></i>Mi Ficha Personal
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <?php if (session()->get('idusuario')): ?>
+                                <li>
+                                    <a class="dropdown-item small" href="<?= base_url('usuario/actual/' . session()->get('idusuario')) ?>">
+                                        <i class="bi bi-person-lock text-primary me-2"></i>Mi Cuenta de Usuario
+                                    </a>
+                                </li>
+                            <?php endif; ?>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item small text-danger" href="<?= base_url('logout') ?>">
+                                    <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                <?php else: ?>
+                    <a href="<?= base_url('login') ?>" class="btn btn-outline-primary btn-sm fw-semibold">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Iniciar Sesión
+                    </a>
+                    <a href="<?= base_url('registro') ?>" class="btn btn-primary btn-sm fw-semibold text-white">
+                        <i class="bi bi-person-plus me-1"></i> Registrarse
+                    </a>
+                <?php endif; ?>
+
                 <a href="<?= base_url('persona/add') ?>" class="btn btn-warning btn-sm fw-bold px-3">
                     <i class="bi bi-person-plus-fill me-1"></i> + Nueva Persona
                 </a>

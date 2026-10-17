@@ -22,7 +22,7 @@
 
                     <div class="mb-3">
                         <label for="idprogramacliente" class="form-label fw-semibold">Programa Cliente <span class="text-danger">*</span></label>
-                        <select name="idprogramacliente" id="idprogramacliente" class="form-select" required autofocus>
+                        <select name="idprogramacliente" id="idprogramacliente" class="form-select" required autofocus autocomplete="off">
                             <option value="">-- Seleccionar Programa Asignado al Cliente --</option>
                             <?php foreach ($programasClientes as $pc): ?>
                                 <option value="<?= $pc['idprogramacliente'] ?>" <?= ((string) (!empty($idProgramaClientePreselected) ? $idProgramaClientePreselected : old('idprogramacliente', '')) === (string) $pc['idprogramacliente']) ? 'selected' : '' ?>>
@@ -34,7 +34,7 @@
 
                     <div class="mb-3">
                         <label for="idejercicio" class="form-label fw-semibold">Ejercicio Ejecutado <span class="text-danger">*</span></label>
-                        <select name="idejercicio" id="idejercicio" class="form-select" required>
+                        <select name="idejercicio" id="idejercicio" class="form-select" required autocomplete="off">
                             <option value="">-- Seleccionar Ejercicio --</option>
                             <?php foreach ($ejercicios as $ej): ?>
                                 <option value="<?= $ej['idejercicio'] ?>" <?= ((string) (!empty($idEjercicioPreselected) ? $idEjercicioPreselected : old('idejercicio', '')) === (string) $ej['idejercicio']) ? 'selected' : '' ?>>
@@ -74,3 +74,18 @@
 </div>
 
 <?= $this->endSection() ?>
+
+<?= $this->section('scripts') ?>
+<script>
+    // Preselecciona programa/ejercicio recibidos por URL (respaldo ante restauración de formulario del navegador)
+    document.addEventListener('DOMContentLoaded', function () {
+        const params = new URLSearchParams(window.location.search);
+        ['idprogramacliente', 'idejercicio'].forEach(function (name) {
+            const val = params.get(name);
+            const el = document.getElementById(name);
+            if (val && el) el.value = val;
+        });
+    });
+</script>
+<?= $this->endSection() ?>
+

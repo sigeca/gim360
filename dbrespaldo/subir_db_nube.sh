@@ -271,6 +271,10 @@ if [ "$VERIFICAR_SOLO" = "false" ]; then
             cp "$BACKUP_FILE" "$SCRIPT_DIR/gim360-${FECHA_DIA}.sql"
             cp "$BACKUP_FILE" "$SCRIPT_DIR/gim360.sql"
             cp "$BACKUP_FILE" "$PROJECT_DIR/gim360.sql"
+            if [ "$BACKUP_FILE" != "$SCRIPT_DIR/gim360-${FECHA_DIA}.sql" ]; then
+                rm -f "$BACKUP_FILE"
+                BACKUP_FILE="$SCRIPT_DIR/gim360-${FECHA_DIA}.sql"
+            fi
             echo -e "${GREEN}[OK]${NC} Copias sincronizadas: ${BOLD}dbrespaldo/gim360-${FECHA_DIA}.sql${NC} y ${BOLD}gim360.sql${NC}"
         else
             echo -e "${YELLOW}[AVISO] No se pudo conectar a la base local o falta comando dump.${NC}"

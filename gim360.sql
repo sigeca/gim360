@@ -175,7 +175,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idcliente`),
   UNIQUE KEY `idpersona` (`idpersona`),
   CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,7 +187,8 @@ INSERT INTO `cliente` VALUES
 (1,1),
 (2,2),
 (6,7),
-(7,8);
+(7,8),
+(8,9);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 
 --
@@ -270,7 +271,7 @@ CREATE TABLE `ejecucionprograma` (
   KEY `idx_ejecucionprograma_fecha` (`fecha`),
   CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -283,7 +284,11 @@ INSERT INTO `ejecucionprograma` VALUES
 (2,1,2,'2026-10-14','08:17:00','08:32:00'),
 (3,1,7,'2026-10-14','08:35:00','08:50:00'),
 (4,3,4,'2026-10-15','09:10:00','09:25:00'),
-(5,4,355,'2026-10-15','18:00:00','18:20:00');
+(5,4,355,'2026-10-15','18:00:00','18:20:00'),
+(6,6,3,'2026-10-16','15:11:00','15:21:00'),
+(7,7,253,'2026-10-16','15:13:00','15:50:00'),
+(8,7,253,'2026-10-16','15:13:00','15:50:00'),
+(9,7,339,'2026-10-16','16:16:00','17:00:00');
 /*!40000 ALTER TABLE `ejecucionprograma` ENABLE KEYS */;
 
 --
@@ -3222,7 +3227,7 @@ CREATE TABLE `persona` (
   UNIQUE KEY `cedula` (`cedula`),
   KEY `fk_persona_sexo` (`idsexo`),
   CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3235,7 +3240,9 @@ INSERT INTO `persona` VALUES
 (2,'0807654321','Torres Loor','María Fernanda','1998-09-25',2),
 (3,'0912345678','Castillo Ortiz','Juan Diego','2000-01-15',1),
 (7,'0801560517','Francis Quinde','Stalin Adalberto','1980-07-01',1),
-(8,'0803597285','San Luca Arroyo','Edwin','2001-03-18',1);
+(8,'0803597285','San Luca Arroyo','Edwin','2001-03-18',1),
+(9,'0804932341','QUIÑONEZ SANCHEZ','MIRKA GERALDY','2003-07-30',2),
+(10,'0809999999','Gomez Perez','Andrea Carolina','1999-05-20',2);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 
 --
@@ -3257,7 +3264,7 @@ CREATE TABLE `planejercicio` (
   PRIMARY KEY (`idplanejercicio`),
   KEY `fk_pej_ejercicio` (`idejercicio`),
   CONSTRAINT `fk_pej_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3279,7 +3286,10 @@ INSERT INTO `planejercicio` VALUES
 (11,'Plan Crunch Declinado',131,3,10,4,10,0.00),
 (12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00),
 (14,'Plan Apertura con mancuernas en banco inclinado',223,3,10,4,10,5.00),
-(15,'Plan Aperturas con Mancuernas en Banco Declinado adulto 18 - 29 años',132,3,5,4,60,10.00);
+(15,'Plan Aperturas con Mancuernas en Banco Declinado adulto 18 - 29 años',132,3,5,4,60,10.00),
+(16,'Plan Sentadilla con Kettlebell',253,2,15,4,60,5.00),
+(17,'Plan Push Press con Mancuerna a Un Brazo',290,2,15,8,60,5.00),
+(18,'Plan Apertura de Deltoides Posterior',339,2,15,4,60,10.00);
 /*!40000 ALTER TABLE `planejercicio` ENABLE KEYS */;
 
 --
@@ -3302,7 +3312,7 @@ CREATE TABLE `programacliente` (
   CONSTRAINT `fk_pc_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_estado` FOREIGN KEY (`idestadoprogramacliente`) REFERENCES `estadoprogramacliente` (`idestadoprogramacliente`) ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3316,7 +3326,8 @@ INSERT INTO `programacliente` VALUES
 (3,3,2,'2026-03-10',1),
 (4,5,6,'2026-04-05',1),
 (5,12,6,'2026-10-15',1),
-(6,13,7,'2026-10-16',1);
+(6,13,7,'2026-10-16',1),
+(7,14,8,'2026-10-16',1);
 /*!40000 ALTER TABLE `programacliente` ENABLE KEYS */;
 
 --
@@ -3336,7 +3347,7 @@ CREATE TABLE `programaentrenamiento` (
   KEY `fk_pe_rangoedad` (`idrangoedad`),
   CONSTRAINT `fk_pe_motivo` FOREIGN KEY (`idmotivoentrenamiento`) REFERENCES `motivoentrenamiento` (`idmotivoentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pe_rangoedad` FOREIGN KEY (`idrangoedad`) REFERENCES `rangoedad` (`idrangoedad`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3356,7 +3367,8 @@ INSERT INTO `programaentrenamiento` VALUES
 (9,'Acondicionamiento Físico - PPL Pro',4,3),
 (10,'Rehabilitación y Movilidad Funcional',5,5),
 (12,'Acondicionamiento físico y salud 56 años',4,4),
-(13,'fuerza y potencias adulto joven 18-29',3,2);
+(13,'fuerza y potencias adulto joven 18-29',3,2),
+(14,'PROGRAMA MIRKA',1,2);
 /*!40000 ALTER TABLE `programaentrenamiento` ENABLE KEYS */;
 
 --
@@ -3399,7 +3411,7 @@ CREATE TABLE `rutinaejecicio` (
   `idrutinaejercicio` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(50) NOT NULL,
   PRIMARY KEY (`idrutinaejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3415,7 +3427,8 @@ INSERT INTO `rutinaejecicio` VALUES
 (5,'Rutina de Fuerza 5x5'),
 (7,'Acondicionamiento físico y salud 56 años'),
 (8,'fuerza y potencia para adunto 18-19'),
-(9,'fuerza y potencia adunso 18- 29');
+(9,'fuerza y potencia adunso 18- 29'),
+(10,'RUTINA MIRKA');
 /*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
 
 --
@@ -3447,7 +3460,7 @@ CREATE TABLE `rutinaplan` (
   KEY `fk_rp_plan` (`idplanejercicio`),
   CONSTRAINT `fk_rp_plan` FOREIGN KEY (`idplanejercicio`) REFERENCES `planejercicio` (`idplanejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_rp_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3470,7 +3483,10 @@ INSERT INTO `rutinaplan` VALUES
 (15,7,12),
 (16,9,14),
 (17,8,7),
-(18,8,15);
+(18,8,15),
+(19,10,16),
+(20,10,17),
+(21,10,18);
 /*!40000 ALTER TABLE `rutinaplan` ENABLE KEYS */;
 
 --
@@ -3489,7 +3505,7 @@ CREATE TABLE `rutinaprograma` (
   KEY `fk_rprog_rutina` (`idrutinaejercicio`),
   CONSTRAINT `fk_rprog_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_rprog_rutina` FOREIGN KEY (`idrutinaejercicio`) REFERENCES `rutinaejecicio` (`idrutinaejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3509,7 +3525,8 @@ INSERT INTO `rutinaprograma` VALUES
 (9,7,5),
 (10,8,5),
 (16,12,7),
-(17,13,8);
+(17,13,8),
+(18,14,10);
 /*!40000 ALTER TABLE `rutinaprograma` ENABLE KEYS */;
 
 --
@@ -3536,6 +3553,37 @@ INSERT INTO `sexo` VALUES
 (2,'Femenino'),
 (3,'Intersexual');
 /*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
+
+--
+-- Table structure for table `usuario`
+--
+
+DROP TABLE IF EXISTS `usuario`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `usuario` (
+  `idusuario` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `nombreusuario` varchar(50) NOT NULL,
+  `password` varchar(200) NOT NULL,
+  PRIMARY KEY (`idusuario`),
+  UNIQUE KEY `idx_usuario_nombreusuario` (`nombreusuario`),
+  KEY `fk_usuario_persona` (`idpersona`),
+  CONSTRAINT `fk_usuario_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `usuario`
+--
+
+/*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
+INSERT INTO `usuario` VALUES
+(1,1,'carlos.admin','$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghijklmnopqrstuv'),
+(2,10,'andrea.fit','$2y$12$osUsQNr08fZ07X/70i0uxeJu6pkJ6hYAbPUpqOIG9nd/VpDdCSx4S'),
+(3,2,'maria.torres','$2y$12$jyHOGOPaSzdyLOy44TcX9OYvtG.d/ZXPXZvJ3YQyhwV5HdKhhjRq2'),
+(4,7,'admin','$2y$12$VpLb9p.YAQF7hwCRbPlI8OgHag1qmo/mY864jhpDSaC1QGCC6QAPO');
+/*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 
 --
 -- Table structure for table `visitasgim`
@@ -3587,6 +3635,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `EjercicioEquipo` AS select `ejercicioequipo`.`idejercicioequipo` AS `idejercicioequipo`,`ejercicioequipo`.`idejercicio` AS `idejercicio`,`ejercicioequipo`.`idequipo` AS `idequipo` from `ejercicioequipo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3604,6 +3653,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `EstadoProgramaCliente` AS select `estadoprogramacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente`,`estadoprogramacliente`.`nombre` AS `nombre` from `estadoprogramacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3621,6 +3671,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `Musculo` AS select `musculo`.`idmusculo` AS `idmusculo`,`musculo`.`nombre` AS `nombre`,`musculo`.`imagen` AS `imagen` from `musculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3638,6 +3689,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `MusculoEjercicio` AS select `musculoejercicio`.`idmusculoejecicio` AS `idmusculoejecicio`,`musculoejercicio`.`idejercicio` AS `idejercicio`,`musculoejercicio`.`idmusculo` AS `idmusculo` from `musculoejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3655,6 +3707,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `PlanEjercicio` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3672,6 +3725,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `ProgramaCliente` AS select `programacliente`.`idprogramacliente` AS `idprogramacliente`,`programacliente`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programacliente`.`idcliente` AS `idcliente`,`programacliente`.`fechainicio` AS `fechainicio`,`programacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente` from `programacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3689,6 +3743,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `ProgramaEntrenamiento` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamiento`.`idrangoedad` AS `idrangoedad` from `programaentrenamiento` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3706,6 +3761,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `RangoEdad` AS select `rangoedad`.`idrangoedad` AS `idrangoedad`,`rangoedad`.`nombre` AS `nombre`,`rangoedad`.`edadminima` AS `edadminima`,`rangoedad`.`edadmaxima` AS `edadmaxima` from `rangoedad` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3723,6 +3779,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `RutinaPlan` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3740,6 +3797,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `RutinaPrograma` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3757,6 +3815,7 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET character_set_results     = utf8mb4 */;
 /*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
+
 /*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3771,4 +3830,4 @@ INSERT INTO `visitasgim` VALUES
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-15 22:05:37
+-- Dump completed on 2026-10-16 23:27:07

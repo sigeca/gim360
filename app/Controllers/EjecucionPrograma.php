@@ -91,7 +91,7 @@ class EjecucionPrograma extends BaseController
         $idEjercicioPreselected       = $this->request->getGet('idejercicio');
 
         $programasClientes = $this->programaClienteModel->getProgramasClientesWithDetails();
-        $ejercicios        = $this->ejercicioModel->getEjercicios();
+        $ejercicios        = $this->ejercicioModel->getEjercicios(null, 0);
 
         $data = [
             'title'                        => 'Registrar Ejecución de Programa',
@@ -141,7 +141,7 @@ class EjecucionPrograma extends BaseController
         }
 
         $programasClientes = $this->programaClienteModel->getProgramasClientesWithDetails();
-        $ejercicios        = $this->ejercicioModel->getEjercicios();
+        $ejercicios        = $this->ejercicioModel->getEjercicios(null, 0);
 
         $data = [
             'title'             => 'Editar Ejecución de Programa #' . $id,

@@ -275,6 +275,54 @@
                     </div>
                 </div>
 
+                <!-- 5. Cuentas de Usuario del Sistema -->
+                <div class="col-md-6">
+                    <div class="card card-custom bg-white h-100">
+                        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-dark">
+                                <i class="bi bi-person-lock text-primary me-2"></i>Cuenta de Usuario (<code>usuario</code>)
+                            </h6>
+                            <a href="<?= base_url('usuario/add?idpersona=' . $persona['idpersona']) ?>" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-plus-lg"></i> Crear Usuario
+                            </a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle mb-0 small">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="ps-3">ID</th>
+                                            <th>Nombre de Usuario</th>
+                                            <th class="text-end pe-3">Acción</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php if (empty($usuarios)): ?>
+                                            <tr><td colspan="3" class="text-center py-3 text-muted">Sin cuenta de usuario registrada.</td></tr>
+                                        <?php else: ?>
+                                            <?php foreach ($usuarios as $u): ?>
+                                                <tr>
+                                                    <td class="ps-3 text-muted fw-bold">#<?= $u['idusuario'] ?></td>
+                                                    <td>
+                                                        <a href="<?= base_url('usuario/actual/' . $u['idusuario']) ?>" class="font-monospace fw-bold text-primary text-decoration-none">
+                                                            <i class="bi bi-at"></i><?= esc($u['nombreusuario']) ?>
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-end pe-3">
+                                                        <a href="<?= base_url('usuario/actual/' . $u['idusuario']) ?>" class="btn btn-sm btn-outline-secondary py-0 px-2" title="Ver cuenta">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         <?php endif; ?>

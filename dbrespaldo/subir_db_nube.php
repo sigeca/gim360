@@ -27,6 +27,7 @@ if (php_sapi_name() !== 'cli') {
 
 $scriptDir  = __DIR__;
 $projectDir = dirname($scriptDir);
+date_default_timezone_set('America/Guayaquil');
 
 // Función auxiliar para leer variables tipo .env
 function parseEnvFile(string $path): array {
@@ -205,6 +206,10 @@ if (!$verificarSolo) {
             copy($backupFile, $scriptDir . "/gim360-{$fechaDia}.sql");
             copy($backupFile, $scriptDir . '/gim360.sql');
             copy($backupFile, $projectDir . '/gim360.sql');
+            if ($backupFile !== $scriptDir . "/gim360-{$fechaDia}.sql") {
+                @unlink($backupFile);
+                $backupFile = $scriptDir . "/gim360-{$fechaDia}.sql";
+            }
             echo "[OK] Copias sincronizadas: dbrespaldo/gim360-{$fechaDia}.sql y gim360.sql\n";
         }
     }

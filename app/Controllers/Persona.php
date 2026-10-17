@@ -11,6 +11,7 @@ use App\Models\EstadoCivilModel;
 use App\Models\EstadoCivilPersonaModel;
 use App\Models\GeneroModel;
 use App\Models\GeneroPersonaModel;
+use App\Models\UsuarioModel;
 
 class Persona extends BaseController
 {
@@ -23,6 +24,7 @@ class Persona extends BaseController
     protected EstadoCivilPersonaModel $ecpModel;
     protected GeneroModel $generoModel;
     protected GeneroPersonaModel $gpModel;
+    protected UsuarioModel $usuarioModel;
 
     public function __construct()
     {
@@ -35,6 +37,7 @@ class Persona extends BaseController
         $this->ecpModel         = new EstadoCivilPersonaModel();
         $this->generoModel      = new GeneroModel();
         $this->gpModel          = new GeneroPersonaModel();
+        $this->usuarioModel     = new UsuarioModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -71,6 +74,7 @@ class Persona extends BaseController
             'direcciones'    => $this->direccionModel->getDireccionesByPersona($idpersona),
             'estadosCiviles' => $this->ecpModel->getEstadosCivilesByPersona($idpersona),
             'generos'        => $this->gpModel->getGenerosByPersona($idpersona),
+            'usuarios'       => $this->usuarioModel->getUsuariosByPersona($idpersona),
             'catalogoSexo'   => $this->sexoModel->findAll(),
             'catalogoEC'     => $this->estadoCivilModel->findAll(),
             'catalogoGen'    => $this->generoModel->findAll(),
