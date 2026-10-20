@@ -201,12 +201,19 @@ class GimApiController extends ResourceController
                                ->findAll();
 
         $rutinaProgModel = new RutinaProgramaModel();
+        $rutinaPersModel = new \App\Models\RutinaPersonalizadaModel();
         $db = \Config\Database::connect();
 
         foreach ($programas as &$prog) {
+            $idProgPersonalizado = !empty($prog['idprogramapersonalizado']) ? (int)$prog['idprogramapersonalizado'] : null;
             $idProgEntrenamiento = (int)$prog['idprogramaentrenamiento'];
             $idProgCliente = (int)$prog['idprogramacliente'];
-            $rutinas = $rutinaProgModel->getRutinasByPrograma($idProgEntrenamiento);
+
+            if ($idProgPersonalizado) {
+                $rutinas = $rutinaPersModel->getRutinasByProgramaPersonalizado($idProgPersonalizado);
+            } else {
+                $rutinas = $rutinaProgModel->getRutinasByPrograma($idProgEntrenamiento);
+            }
 
             // Enhance exercises with image URL and musculo/equipo
             foreach ($rutinas as &$rutina) {
@@ -587,24 +594,49 @@ class GimApiController extends ResourceController
         }
 
         $db = \Config\Database::connect();
-        $ejercicios = $db->table('programacliente pc')
-                         ->select('ejercicio.idejercicio, ejercicio.nombreespanol AS ejercicio_nombre, ejercicio.nombreespanol, ejercicio.nombreingles, ejercicio.descripcion, ejercicio.imagen AS ejercicio_imagen, ejercicio.urlvideo, plane.idplanejercicio, plane.diassemanas, plane.repeticiones, plane.series, plane.tiempodescanso, plane.peso, rutina.idrutinaejercicio, rutina.nombre AS rutina_nombre, prog.idprogramaentrenamiento, prog.nombre AS programa_nombre, estado.nombre AS estado_programa')
-                         ->join('programaentrenamiento prog', 'prog.idprogramaentrenamiento = pc.idprogramaentrenamiento', 'inner')
-                         ->join('estadoprogramacliente estado', 'estado.idestadoprogramacliente = pc.idestadoprogramacliente', 'inner')
-                         ->join('rutinaprograma rp', 'rp.idprogramaentrenamiento = prog.idprogramaentrenamiento', 'inner')
-                         ->join('rutinaejecicio rutina', 'rutina.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
-                         ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rutina.idrutinaejercicio', 'inner')
-                         ->join('planejercicio plane', 'plane.idplanejercicio = rpl.idplanejercicio', 'inner')
-                         ->join('ejercicio', 'ejercicio.idejercicio = plane.idejercicio', 'inner')
-                         ->where('pc.idcliente', (int)$id)
-                         ->orderBy('pc.idprogramacliente', 'DESC')
-                         ->orderBy('rutina.idrutinaejercicio', 'ASC')
-                         ->orderBy('plane.idplanejercicio', 'ASC')
-                         ->get()
-                         ->getResultArray();
+        $pcs = $db->table('programacliente pc')
+                  ->where('pc.idcliente', (int)$id)
+                  ->orderBy('pc.idprogramacliente', 'DESC')
+                  ->get()
+                  ->getResultArray();
 
-        foreach ($ejercicios as &$ej) {
-            $ej['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ej['ejercicio_imagen'] ?? null);
+        $rutinaPersModel = new \App\Models\RutinaPersonalizadaModel();
+        $rutinaProgModel = new RutinaProgramaModel();
+        $ejercicios = [];
+
+        foreach ($pcs as $pc) {
+            $idProgPers = !empty($pc['idprogramapersonalizado']) ? (int)$pc['idprogramapersonalizado'] : null;
+            if ($idProgPers) {
+                $rutinas = $rutinaPersModel->getRutinasByProgramaPersonalizado($idProgPers);
+            } else {
+                $rutinas = $rutinaProgModel->getRutinasByPrograma((int)$pc['idprogramaentrenamiento']);
+            }
+            foreach ($rutinas as $r) {
+                if (!empty($r['planes'])) {
+                    foreach ($r['planes'] as $pl) {
+                        $ejercicios[] = [
+                            'idejercicio'            => (int)$pl['idejercicio'],
+                            'ejercicio_nombre'       => $pl['ejercicio_nombre'] ?? ($pl['nombre'] ?? ''),
+                            'nombreespanol'          => $pl['nombreespanol'] ?? ($pl['ejercicio_nombre'] ?? ''),
+                            'nombreingles'           => $pl['nombreingles'] ?? '',
+                            'descripcion'            => $pl['descripcion'] ?? ($pl['ejercicio_descripcion'] ?? ''),
+                            'ejercicio_imagen'       => $pl['ejercicio_imagen'] ?? null,
+                            'imagen_url'             => $this->getImageUrl('ejercicio/imagen', $pl['ejercicio_imagen'] ?? null),
+                            'urlvideo'               => $pl['urlvideo'] ?? ($pl['ejercicio_urlvideo'] ?? ''),
+                            'idplanejercicio'        => (int)($pl['idplanejercicio'] ?? $pl['idplanpersonalizado']),
+                            'diassemanas'            => $pl['diassemanas'] ?? null,
+                            'repeticiones'           => $pl['repeticiones'] ?? null,
+                            'series'                 => $pl['series'] ?? null,
+                            'tiempodescanso'         => $pl['tiempodescanso'] ?? null,
+                            'peso'                   => $pl['peso'] ?? null,
+                            'idrutinaejercicio'      => (int)($r['idrutinaejercicio'] ?? $r['idrutinapersonalizada']),
+                            'rutina_nombre'          => $r['rutina_nombre'] ?? ($r['nombre'] ?? ''),
+                            'idprogramaentrenamiento'=> (int)$pc['idprogramaentrenamiento'],
+                            'idprogramacliente'      => (int)$pc['idprogramacliente'],
+                        ];
+                    }
+                }
+            }
         }
 
         return $this->respond([
@@ -817,9 +849,18 @@ class GimApiController extends ResourceController
         }
 
         $progClienteModel = new ProgramaClienteModel();
+
+        // Particularizar: clonar el programa modelo hacia las tablas personalizadas del cliente
+        try {
+            $idProgPersonalizado = $progClienteModel->clonarProgramaModeloACliente($idPrograma, $idCliente);
+        } catch (\Exception $e) {
+            return $this->failServerError('Error al particularizar el programa de entrenamiento: ' . $e->getMessage());
+        }
+
         $id = $progClienteModel->insert([
             'idcliente'               => $idCliente,
             'idprogramaentrenamiento' => $idPrograma,
+            'idprogramapersonalizado' => $idProgPersonalizado,
             'fechainicio'             => $fechaInicio,
             'idestadoprogramacliente' => $idEstado,
         ]);
@@ -832,7 +873,7 @@ class GimApiController extends ResourceController
 
         return $this->respondCreated([
             'status'  => 201,
-            'message' => 'Programa de entrenamiento asignado correctamente al cliente',
+            'message' => 'Programa de entrenamiento particularizado y asignado correctamente al cliente',
             'data'    => $created,
         ]);
     }
@@ -1085,12 +1126,6 @@ class GimApiController extends ResourceController
             return $this->failValidationErrors('Debe especificar un ID de rutina válido y un ID de ejercicio válido.');
         }
 
-        $rutinaModel = new RutinaEjecicioModel();
-        $rutina = $rutinaModel->find($idRutina);
-        if (!$rutina) {
-            return $this->failNotFound("Rutina no encontrada con ID: {$idRutina}");
-        }
-
         $ejercicioModel = new EjercicioModel();
         $ejercicio = $ejercicioModel->find($idEjercicio);
         if (!$ejercicio) {
@@ -1111,6 +1146,53 @@ class GimApiController extends ResourceController
         $diassemanas = isset($input['diassemanas']) && $input['diassemanas'] !== '' ? (int)$input['diassemanas'] : 3;
         $tiempodescanso = isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '' ? (int)$input['tiempodescanso'] : 60;
         $peso = isset($input['peso']) && $input['peso'] !== '' ? (float)$input['peso'] : 0.0;
+
+        // 1. Verificar si la rutina es una rutina personalizada de cliente
+        $rutinaPersModel = new \App\Models\RutinaPersonalizadaModel();
+        $rutinaPers = $rutinaPersModel->find($idRutina);
+        if ($rutinaPers) {
+            $planPersModel = new \App\Models\PlanPersonalizadoModel();
+            $idPlan = $planPersModel->insert([
+                'nombre'         => $nombrePlan,
+                'idejercicio'    => $idEjercicio,
+                'diassemanas'    => $diassemanas > 0 ? $diassemanas : 3,
+                'repeticiones'   => $repeticiones > 0 ? $repeticiones : 12,
+                'series'         => $series > 0 ? $series : 3,
+                'tiempodescanso' => $tiempodescanso >= 0 ? $tiempodescanso : 60,
+                'peso'           => $peso >= 0 ? $peso : 0.0,
+            ]);
+
+            if (!$idPlan) {
+                return $this->failServerError('Error al crear el plan personalizado: ' . json_encode($planPersModel->errors()));
+            }
+
+            $rplpModel = new \App\Models\RutinaPlanPersonalizadoModel();
+            $idRutinaPlan = $rplpModel->insert([
+                'idrutinapersonalizada' => $idRutina,
+                'idplanpersonalizado'   => $idPlan,
+            ]);
+
+            $nuevoPlan = $planPersModel->getPlanWithDetails($idPlan);
+            $nuevoPlan['id_rutina_plan'] = $idRutinaPlan;
+            $nuevoPlan['idrutinaejercicio'] = $idRutina;
+            $nuevoPlan['rutina_nombre'] = $rutinaPers['nombre'];
+            if (!empty($nuevoPlan['ejercicio_imagen'])) {
+                $nuevoPlan['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $nuevoPlan['ejercicio_imagen']);
+            }
+
+            return $this->respondCreated([
+                'status'  => 201,
+                'message' => 'Ejercicio agregado exitosamente a la rutina personalizada',
+                'data'    => $nuevoPlan,
+            ]);
+        }
+
+        // 2. Si no es personalizada, es una rutina modelo estándar
+        $rutinaModel = new RutinaEjecicioModel();
+        $rutina = $rutinaModel->find($idRutina);
+        if (!$rutina) {
+            return $this->failNotFound("Rutina no encontrada con ID: {$idRutina}");
+        }
 
         $planModel = new PlanEjercicioModel();
         $idPlan = $planModel->insert([
@@ -1164,12 +1246,6 @@ class GimApiController extends ResourceController
             return $this->failValidationErrors('ID de plan de ejercicio no válido.');
         }
 
-        $planModel = new PlanEjercicioModel();
-        $planExistente = $planModel->find($idPlan);
-        if (!$planExistente) {
-            return $this->failNotFound("Plan de ejercicio no encontrado con ID: {$idPlan}");
-        }
-
         $updateData = [];
 
         // Cambiar ejercicio si viene especificado
@@ -1209,6 +1285,31 @@ class GimApiController extends ResourceController
             $updateData['peso'] = (float)$input['peso'];
         }
 
+        // 1. Verificar si el plan pertenece a las tablas personalizadas del cliente
+        $planPersModel = new \App\Models\PlanPersonalizadoModel();
+        $planPers = $planPersModel->find($idPlan);
+        if ($planPers) {
+            if (!empty($updateData)) {
+                $planPersModel->update($idPlan, $updateData);
+            }
+            $planActualizado = $planPersModel->getPlanWithDetails($idPlan);
+            if ($planActualizado && !empty($planActualizado['ejercicio_imagen'])) {
+                $planActualizado['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $planActualizado['ejercicio_imagen']);
+            }
+            return $this->respond([
+                'status'  => 200,
+                'message' => 'Plan de ejercicio personalizado actualizado correctamente',
+                'data'    => $planActualizado,
+            ]);
+        }
+
+        // 2. Si no es personalizado, verificar en planes modelo
+        $planModel = new PlanEjercicioModel();
+        $planExistente = $planModel->find($idPlan);
+        if (!$planExistente) {
+            return $this->failNotFound("Plan de ejercicio no encontrado con ID: {$idPlan}");
+        }
+
         if (!empty($updateData)) {
             $updated = $planModel->update($idPlan, $updateData);
             if (!$updated) {
@@ -1237,6 +1338,41 @@ class GimApiController extends ResourceController
         $input = $this->request->getJSON(true) ?: $this->request->getPost();
         $idRutinaPlan = !empty($idRutinaPlanParam) ? (int)$idRutinaPlanParam : (!empty($input['id_rutina_plan']) ? (int)$input['id_rutina_plan'] : 0);
 
+        // 1. Verificar si corresponde a una asignación en rutinaplanpersonalizado
+        $rplpModel = new \App\Models\RutinaPlanPersonalizadoModel();
+        $regPers = null;
+
+        if ($idRutinaPlan > 0) {
+            $regPers = $rplpModel->find($idRutinaPlan);
+        }
+
+        if (!$regPers && !empty($input['idrutinaejercicio']) && !empty($input['idplanejercicio'])) {
+            $regPers = $rplpModel->where('idrutinapersonalizada', (int)$input['idrutinaejercicio'])
+                                 ->where('idplanpersonalizado', (int)$input['idplanejercicio'])
+                                 ->first();
+            if ($regPers) {
+                $idRutinaPlan = (int)$regPers['idrutinaplanpersonalizado'];
+            }
+        }
+
+        if ($regPers) {
+            $idPlanPers = (int)$regPers['idplanpersonalizado'];
+            $rplpModel->delete($idRutinaPlan);
+
+            $otrosUsos = $rplpModel->where('idplanpersonalizado', $idPlanPers)->countAllResults();
+            if ($otrosUsos === 0) {
+                $planPersModel = new \App\Models\PlanPersonalizadoModel();
+                $planPersModel->delete($idPlanPers);
+            }
+
+            return $this->respond([
+                'status'  => 200,
+                'message' => 'Ejercicio removido de la rutina personalizada correctamente',
+                'data'    => ['id_rutina_plan' => $idRutinaPlan, 'idplanejercicio' => $idPlanPers],
+            ]);
+        }
+
+        // 2. Si no es personalizado, operar sobre las tablas estándar
         $rutinaPlanModel = new RutinaPlanModel();
         
         // Si no se pasó id_rutina_plan, verificar si viene por idrutina y idplan

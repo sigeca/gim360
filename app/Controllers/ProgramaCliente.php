@@ -38,7 +38,7 @@ class ProgramaCliente extends BaseController
         }
 
         $data = [
-            'title'           => 'Ficha de Programa Asignado al Cliente',
+            'title'           => 'Ficha de Programa Particularizado Asignado al Cliente',
             'programaCliente' => $programaCliente,
             'module'          => 'programacliente',
         ];
@@ -91,7 +91,7 @@ class ProgramaCliente extends BaseController
         $idProgPreselected    = $this->request->getGet('idprogramaentrenamiento');
 
         $data = [
-            'title'                => 'Asignar Programa de Entrenamiento a Cliente',
+            'title'                => 'Asignar Programa de Entrenamiento Modelo a Cliente',
             'clientes'             => $this->clienteModel->getClientesWithPersona(),
             'programas'            => $this->programaModel->getProgramasWithDetails(),
             'estados'              => $this->estadoModel->getEstados(),
@@ -116,14 +116,25 @@ class ProgramaCliente extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idCliente = (int)$this->request->getPost('idcliente');
+        $idProgModelo = (int)$this->request->getPost('idprogramaentrenamiento');
+
+        // Clonar el programa modelo hacia las tablas personalizadas del cliente
+        try {
+            $idProgPersonalizado = $this->programaClienteModel->clonarProgramaModeloACliente($idProgModelo, $idCliente);
+        } catch (\Exception $e) {
+            return redirect()->back()->withInput()->with('error', 'Error al particularizar el programa: ' . $e->getMessage());
+        }
+
         $id = $this->programaClienteModel->insert([
-            'idcliente'               => (int)$this->request->getPost('idcliente'),
-            'idprogramaentrenamiento' => (int)$this->request->getPost('idprogramaentrenamiento'),
+            'idcliente'               => $idCliente,
+            'idprogramaentrenamiento' => $idProgModelo,
+            'idprogramapersonalizado' => $idProgPersonalizado,
             'fechainicio'             => $this->request->getPost('fechainicio'),
             'idestadoprogramacliente' => (int)$this->request->getPost('idestadoprogramacliente'),
         ]);
 
-        return redirect()->to(base_url('programacliente/actual/' . $id))->with('success', 'Programa asignado al cliente exitosamente.');
+        return redirect()->to(base_url('programacliente/actual/' . $id))->with('success', 'Programa modelo particularizado y asignado al cliente exitosamente.');
     }
 
     public function edit($id)
@@ -180,7 +191,33 @@ class ProgramaCliente extends BaseController
             return redirect()->to(base_url('programacliente'))->with('error', 'Programa de cliente no encontrado.');
         }
 
+        $idProgPers = !empty($programaCliente['idprogramapersonalizado']) ? (int)$programaCliente['idprogramapersonalizado'] : null;
+
         $this->programaClienteModel->delete($id);
+
+        if ($idProgPers) {
+            $db = \Config\Database::connect();
+            $rutinas = $db->table('rutinaprogramapersonalizado')
+                          ->where('idprogramapersonalizado', $idProgPers)
+                          ->get()
+                          ->getResultArray();
+            foreach ($rutinas as $r) {
+                $idRutina = (int)$r['idrutinapersonalizada'];
+                $planes = $db->table('rutinaplanpersonalizado')
+                             ->where('idrutinapersonalizada', $idRutina)
+                             ->get()
+                             ->getResultArray();
+                foreach ($planes as $pl) {
+                    $idPlan = (int)$pl['idplanpersonalizado'];
+                    $db->table('rutinaplanpersonalizado')->where('idrutinaplanpersonalizado', (int)$pl['idrutinaplanpersonalizado'])->delete();
+                    $db->table('planejerciciopersonalizado')->where('idplanpersonalizado', $idPlan)->delete();
+                }
+                $db->table('rutinaprogramapersonalizado')->where('idrutinaprogramapersonalizado', (int)$r['idrutinaprogramapersonalizado'])->delete();
+                $db->table('rutinaejerciciopersonalizado')->where('idrutinapersonalizada', $idRutina)->delete();
+            }
+            $db->table('programaentrenamientopersonalizado')->where('idprogramapersonalizado', $idProgPers)->delete();
+        }
+
         return redirect()->to(base_url('programacliente/elprimero'))->with('success', 'Asignación de programa eliminada correctamente.');
     }
 }

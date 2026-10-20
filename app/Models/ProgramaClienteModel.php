@@ -14,6 +14,7 @@ class ProgramaClienteModel extends Model
     protected $returnType       = 'array';
     protected $allowedFields    = [
         'idprogramaentrenamiento',
+        'idprogramapersonalizado',
         'idcliente',
         'fechainicio',
         'idestadoprogramacliente',
@@ -45,6 +46,92 @@ class ProgramaClienteModel extends Model
         ],
     ];
 
+    /**
+     * Clona un programa de entrenamiento modelo a las tablas personalizadas de un cliente
+     */
+    public function clonarProgramaModeloACliente(int $idProgramaModelo, int $idCliente, ?string $nombrePersonalizado = null): int
+    {
+        $db = \Config\Database::connect();
+        
+        $modelo = $db->table('programaentrenamiento')
+                     ->where('idprogramaentrenamiento', $idProgramaModelo)
+                     ->get()
+                     ->getRowArray();
+
+        if (!$modelo) {
+            throw new \RuntimeException("Programa modelo no encontrado con ID: {$idProgramaModelo}");
+        }
+
+        $nombreProg = !empty($nombrePersonalizado) ? trim($nombrePersonalizado) : $modelo['nombre'];
+
+        // 1. Crear Programa Personalizado
+        $db->table('programaentrenamientopersonalizado')->insert([
+            'idprogramaentrenamientomodelo' => $idProgramaModelo,
+            'idcliente'                     => $idCliente,
+            'nombre'                        => $nombreProg,
+            'idmotivoentrenamiento'         => (int)$modelo['idmotivoentrenamiento'],
+            'idrangoedad'                   => !empty($modelo['idrangoedad']) ? (int)$modelo['idrangoedad'] : null,
+            'fechacreacion'                 => date('Y-m-d H:i:s'),
+        ]);
+        $idProgPers = (int)$db->insertID();
+
+        // 2. Obtener y clonar rutinas del modelo
+        $rutinasModelo = $db->table('rutinaprograma rp')
+                            ->select('rp.*, r.nombre')
+                            ->join('rutinaejecicio r', 'r.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                            ->where('rp.idprogramaentrenamiento', $idProgramaModelo)
+                            ->get()
+                            ->getResultArray();
+
+        foreach ($rutinasModelo as $rm) {
+            $idRutinaModelo = (int)$rm['idrutinaejercicio'];
+
+            $db->table('rutinaejerciciopersonalizado')->insert([
+                'idrutinaejerciciomodelo' => $idRutinaModelo,
+                'idcliente'               => $idCliente,
+                'nombre'                  => $rm['nombre'],
+                'fechacreacion'           => date('Y-m-d H:i:s'),
+            ]);
+            $idRutinaPers = (int)$db->insertID();
+
+            $db->table('rutinaprogramapersonalizado')->insert([
+                'idprogramapersonalizado' => $idProgPers,
+                'idrutinapersonalizada'   => $idRutinaPers,
+            ]);
+
+            // 3. Obtener y clonar planes de ejercicio de la rutina
+            $planesModelo = $db->table('rutinaplan rpl')
+                               ->select('rpl.*, p.*')
+                               ->join('planejercicio p', 'p.idplanejercicio = rpl.idplanejercicio', 'inner')
+                               ->where('rpl.idrutinaejercicio', $idRutinaModelo)
+                               ->get()
+                               ->getResultArray();
+
+            foreach ($planesModelo as $pm) {
+                $idPlanModelo = (int)$pm['idplanejercicio'];
+
+                $db->table('planejerciciopersonalizado')->insert([
+                    'idplanejerciciomodelo' => $idPlanModelo,
+                    'nombre'                => $pm['nombre'],
+                    'idejercicio'           => (int)$pm['idejercicio'],
+                    'diassemanas'           => isset($pm['diassemanas']) ? (int)$pm['diassemanas'] : null,
+                    'repeticiones'          => isset($pm['repeticiones']) ? (int)$pm['repeticiones'] : null,
+                    'series'                => isset($pm['series']) ? (int)$pm['series'] : null,
+                    'tiempodescanso'        => isset($pm['tiempodescanso']) ? (int)$pm['tiempodescanso'] : null,
+                    'peso'                  => isset($pm['peso']) ? (float)$pm['peso'] : 0.0,
+                ]);
+                $idPlanPers = (int)$db->insertID();
+
+                $db->table('rutinaplanpersonalizado')->insert([
+                    'idrutinapersonalizada' => $idRutinaPers,
+                    'idplanpersonalizado'   => $idPlanPers,
+                ]);
+            }
+        }
+
+        return $idProgPers;
+    }
+
     public function getProgramaClienteWithDetails($id)
     {
         $pc = $this->select('programacliente.*, 
@@ -71,14 +158,21 @@ class ProgramaClienteModel extends Model
                     ->first();
 
         if ($pc) {
-            $pc['rutinas'] = (new RutinaProgramaModel())->getRutinasByPrograma((int)$pc['idprogramaentrenamiento']);
+            $idProgPersonalizado = !empty($pc['idprogramapersonalizado']) ? (int)$pc['idprogramapersonalizado'] : null;
+
+            if ($idProgPersonalizado) {
+                $rutinaPersModel = new RutinaPersonalizadaModel();
+                $pc['rutinas'] = $rutinaPersModel->getRutinasByProgramaPersonalizado($idProgPersonalizado);
+            } else {
+                $pc['rutinas'] = (new RutinaProgramaModel())->getRutinasByPrograma((int)$pc['idprogramaentrenamiento']);
+            }
             
             // Recolectar todos los planes/ejercicios de todas las rutinas asignadas al programa
             $allPlanes = [];
             foreach ($pc['rutinas'] as $rutina) {
                 if (!empty($rutina['planes'])) {
                     foreach ($rutina['planes'] as $pl) {
-                        $pl['rutina_nombre'] = $rutina['rutina_nombre'];
+                        $pl['rutina_nombre'] = $rutina['rutina_nombre'] ?? ($rutina['nombre'] ?? '');
                         $allPlanes[] = $pl;
                     }
                 }

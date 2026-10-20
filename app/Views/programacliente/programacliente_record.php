@@ -87,7 +87,7 @@
                                         <i class="bi bi-person-circle me-1"></i>Ver Ficha de Cliente
                                     </a>
                                     <a href="<?= base_url('programaentrenamiento/actual/' . $programaCliente['idprogramaentrenamiento']) ?>" class="btn btn-outline-success btn-sm">
-                                        <i class="bi bi-clipboard2-pulse me-1"></i>Ver Programa Base
+                                        <i class="bi bi-clipboard2-pulse me-1"></i>Ver Programa Modelo
                                     </a>
                                 </div>
                             </div>
@@ -146,8 +146,13 @@
                                                     <div>
                                                         <span class="fw-bold text-dark fs-6"><?= esc($programaCliente['programa_nombre'] ?? ('Programa #' . $programaCliente['idprogramaentrenamiento'])) ?></span>
                                                         <span class="text-muted small d-block">
-                                                            ID #<?= $programaCliente['idprogramaentrenamiento'] ?> &bull; <?= esc($programaCliente['motivo_nombre']) ?>
+                                                            ID Modelo #<?= $programaCliente['idprogramaentrenamiento'] ?> &bull; <?= esc($programaCliente['motivo_nombre']) ?>
                                                         </span>
+                                                        <?php if (!empty($programaCliente['idprogramapersonalizado'])): ?>
+                                                            <span class="badge bg-success-subtle text-success border border-success mt-1">
+                                                                <i class="bi bi-person-check-fill me-1"></i>Personalizado (#<?= $programaCliente['idprogramapersonalizado'] ?>) - Copia independiente
+                                                            </span>
+                                                        <?php endif; ?>
                                                     </div>
                                                     <a href="<?= base_url('programaentrenamiento/actual/' . $programaCliente['idprogramaentrenamiento']) ?>" class="btn btn-outline-success btn-sm">
                                                         <i class="bi bi-clipboard2-pulse me-1"></i>Ver Programa

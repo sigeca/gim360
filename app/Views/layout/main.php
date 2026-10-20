@@ -406,19 +406,19 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         </a>
                         <a href="<?= base_url('rutinaejecicio') ?>" class="submenu-link <?= $isRutinaActive ? 'active' : '' ?>">
                             <i class="bi bi-calendar2-week text-info"></i>
-                            <span>Rutinas de Ejercicio</span>
+                            <span>Rutinas Modelo</span>
                         </a>
                         <a href="<?= base_url('planejercicio') ?>" class="submenu-link <?= $isPlanEjercicioActive ? 'active' : '' ?>">
                             <i class="bi bi-card-checklist text-primary"></i>
-                            <span>Planes de Ejercicio</span>
+                            <span>Planes Ejercicio Modelo</span>
                         </a>
                         <a href="<?= base_url('rutinaplan') ?>" class="submenu-link <?= $isRutinaPlanActive ? 'active' : '' ?>">
                             <i class="bi bi-diagram-3 text-warning"></i>
-                            <span>Rutinas y Planes</span>
+                            <span>Rutinas y Planes Modelo</span>
                         </a>
                         <a href="<?= base_url('programaentrenamiento') ?>" class="submenu-link <?= $isProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-clipboard2-pulse text-success"></i>
-                            <span>Programa de Entrenamiento</span>
+                            <span>Programas Modelo</span>
                         </a>
                         <a href="<?= base_url('rutinaprograma') ?>" class="submenu-link <?= $isRutinaProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-collection-play text-info"></i>
@@ -450,7 +450,7 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                     <div class="sidebar-submenu">
                         <a href="<?= base_url('programacliente') ?>" class="submenu-link <?= $isProgramaClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-person-lines-fill text-primary"></i>
-                            <span>Programa Cliente</span>
+                            <span>Programas Personalizados (Cliente)</span>
                         </a>
                         <a href="<?= base_url('ejecucionprograma') ?>" class="submenu-link <?= $isEjecucionProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-play-btn-fill text-warning"></i>
