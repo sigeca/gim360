@@ -316,7 +316,7 @@ CREATE TABLE `ejercicio` (
   `urlvideo` varchar(255) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=464 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=468 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -685,7 +685,7 @@ INSERT INTO `ejercicio` VALUES
 (357,'Giro Ruso','Russian Twist','Un ejercicio de core rotacional que trabaja los oblicuos.\n\nInstrucciones de ejecución:\n1. Siéntate en el suelo con las rodillas flexionadas e inclínate ligeramente hacia atrás.\n2. Junta las manos o sostén un peso a la altura del pecho.\n3. Rota el torso hacia un lado, luego hacia el otro.\n4. Mantén el core apretado en todo momento.\n5. Repite.\n\nConsejos técnicos:\n• Gira desde el torso, no solo con los brazos.\n• Mantén la espalda recta aunque estés ligeramente reclinado.\n• Hazlo lento y controlado; la velocidad resta trabajo a los oblicuos.\n\nMúsculos principales: obliques, rectus_abdominis',NULL,'russian-twist.webp'),
 (358,'Dominadas Escapulares','Scapular Pull Ups','Un ejercicio en barra de dominadas con brazos extendidos, que entrena la depresión y retracción de las escápulas.\n\nInstrucciones de ejecución:\n1. Cuélgate de una barra de dominadas con los brazos completamente extendidos.\n2. Mantén los brazos rectos durante todo el movimiento.\n3. Deprime y retrae las escápulas para elevar el pecho.\n4. Haz una breve pausa en la parte superior del movimiento.\n5. Regresa a la posición de cuelgue completo.\n6. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Piensa en alejar los hombros de las orejas al subir el pecho.\n• No intentes convertirlo en una dominada; el recorrido es corto.\n• Controla la vuelta a la posición colgada sin desplomarte.\n\nMúsculos principales: latissimus_dorsi, trapezius',NULL,'scapular-pull-ups.webp'),
 (359,'Tijeras','Scissor Kicks','Un ejercicio de core realizado boca arriba, cruzando alternadamente las piernas rectas para trabajar el abdomen bajo y los flexores de cadera.\n\nInstrucciones de ejecución:\n1. Recuéstate boca arriba con las manos bajo los glúteos.\n2. Eleva ambas piernas unos centímetros del suelo.\n3. Cruza alternadamente una pierna sobre la otra en un movimiento de tijera.\n4. Mantén la zona lumbar presionada contra el suelo.\n5. Mantén un ritmo constante durante todo el ejercicio.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Presiona la zona lumbar contra el suelo en todo momento.\n• Mantén las piernas rectas y cerca del suelo.\n• Muévete con control, no con velocidad.\n\nMúsculos principales: hip_flexors, rectus_abdominis',NULL,'scissor-kicks.webp'),
-(360,'Remo Sentado en Polea','Seated Cable Row','Un ejercicio de espalda en una máquina de remo con polea, tirando de una manija hacia el torso estando sentado.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo y coloca los pies en los apoyos.\n2. Sujeta la manija y siéntate erguido con una ligera inclinación hacia adelante.\n3. Lleva los codos hacia atrás y tira de la manija hacia la parte baja del abdomen.\n4. Contrae los omóplatos al final del tirón.\n5. Extiende los brazos con control de vuelta a la posición inicial.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén el torso erguido con un balanceo mínimo.\n• Lleva los codos directamente hacia atrás, no hacia los lados.\n• Contrae los omóplatos al final del tirón.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'seated-cable-row.webp'),
+(360,'Remo Sentado en Polea (Agarre Estrecho)','Seated Cable Row','Un ejercicio de espalda en una máquina de remo con polea, tirando de una manija hacia el torso estando sentado.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo y coloca los pies en los apoyos.\n2. Sujeta la manija y siéntate erguido con una ligera inclinación hacia adelante.\n3. Lleva los codos hacia atrás y tira de la manija hacia la parte baja del abdomen.\n4. Contrae los omóplatos al final del tirón.\n5. Extiende los brazos con control de vuelta a la posición inicial.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén el torso erguido con un balanceo mínimo.\n• Lleva los codos directamente hacia atrás, no hacia los lados.\n• Contrae los omóplatos al final del tirón.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'01_remo_sentado_agarre_estrecho.webp'),
 (361,'Elevación de Talones Sentado','Seated Calf Raise','Una elevación de talones en máquina realizada sentado para trabajar específicamente el músculo sóleo.\n\nInstrucciones de ejecución:\n1. Siéntate en la máquina de elevación de talones con los pads apoyados en los muslos.\n2. Baja los talones lo más posible.\n3. Elévate sobre las puntas de los pies.\n4. Baja con control.\n5. Repite.\n\nConsejos técnicos:\n• La posición sentada pre-estira el sóleo.\n• Utiliza un rango completo de movimiento.\n\nMúsculos principales: soleus',NULL,'seated-calf-raise.webp'),
 (362,'Press de Hombro con Mancuernas Sentado','Seated Dumbbell Shoulder Press','Un movimiento de press sentado para los hombros usando mancuernas.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco con respaldo sosteniendo mancuernas a la altura de los hombros.\n2. Empuja las mancuernas sobre la cabeza hasta extender completamente los brazos.\n3. Baja las mancuernas de vuelta a la altura de los hombros.\n4. Repite.\n\nConsejos técnicos:\n• No arquees la espalda baja; mantén el contacto con el respaldo.\n• Sube las mancuernas en línea recta, sin chocarlas arriba.\n• Exhala al empujar y mantén el core firme.\n\nMúsculos principales: anterior_deltoid, lateral_deltoid',NULL,'seated-db-press.webp'),
 (363,'Curl con Mancuernas Sentado','Seated Dumbbell Curl','Un curl de bíceps sentado con mancuernas, donde la posición sentada y erguida elimina el impulso para una técnica más estricta.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco con una mancuerna en cada mano.\n2. Deja los brazos colgando a los lados con las palmas hacia adelante.\n3. Sube ambas mancuernas hacia los hombros flexionando los bíceps.\n4. Aprieta en la parte superior del movimiento.\n5. Baja las mancuernas con control.\n6. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Mantén los codos pegados a los costados en todo momento.\n• Evita inclinarte hacia atrás para ayudar a levantar el peso.\n• Estira los brazos por completo al final de cada repetición.\n\nMúsculos principales: biceps_brachii',NULL,'seated-dumbbell-curl.webp'),
@@ -784,11 +784,15 @@ INSERT INTO `ejercicio` VALUES
 (456,'Press de Banca en Agarre Ancho','Wide-Grip Bench Press','Una variante del press de banca con un agarre más ancho que los hombros para maximizar la activación del pectoral.\n\nInstrucciones de ejecución:\n1. Túmbate en un banco plano. Agarra la barra más ancha que los hombros.\n2. Baja la barra hasta la mitad del pecho.\n3. Empuja de vuelta a la extensión completa.\n4. Repite.\n\nConsejos técnicos:\n• Un agarre más ancho reduce la participación de los tríceps.\n• Evita doblar las muñecas en exceso.\n\nMúsculos principales: pectoralis_major',NULL,'wide-grip-bench-press.webp'),
 (457,'Dominadas en Agarre Ancho','Wide Grip Pull Ups','Una dominada con agarre prono más ancho que los hombros, que enfatiza el desarrollo de los dorsales.\n\nInstrucciones de ejecución:\n1. Agarra la barra de dominadas con un agarre en pronación más ancho que los hombros.\n2. Cuélgate con los brazos completamente extendidos y el core contraído.\n3. Tira del pecho hacia la barra empujando los codos hacia abajo.\n4. Mantén los hombros hacia atrás al subir.\n5. Baja de forma controlada hasta la extensión completa.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Cuelga con los brazos extendidos y el core firme.\n• Lleva el pecho hacia la barra bajando los codos.\n• Desciende con control hasta la extensión completa.\n\nMúsculos principales: latissimus_dorsi',NULL,'wide-grip-pull-ups.webp'),
 (458,'Flexiones con Agarre Ancho','Wide Grip Push Ups','Una variante de flexión con las manos colocadas más separadas para enfatizar el pecho.\n\nInstrucciones de ejecución:\n1. Comienza en una plancha alta con las manos más separadas que el ancho de hombros.\n2. Mantén el cuerpo en línea recta de la cabeza a los talones.\n3. Baja el pecho hacia el suelo flexionando los codos.\n4. Mantén el core activado y los glúteos contraídos.\n5. Empuja de vuelta hasta extender los brazos.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén los codos a unos 45 grados respecto al torso.\n• Mantén una línea recta de la cabeza a los talones.\n• Baja hasta que el pecho quede cerca del suelo.\n\nMúsculos principales: pectoralis_major',NULL,'wide-grip-push-ups.webp'),
-(459,'Remo en Polea Sentado en Agarre Ancho','Wide Grip Seated Cable Row','Una variante del remo sentado con agarre ancho que hace énfasis en la parte superior de la espalda.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo con los pies en la plataforma.\n2. Agarra la barra ancha con un agarre en pronación.\n3. Tira de la barra hacia el abdomen superior apretando los omóplatos.\n4. Extiende los brazos de vuelta a la posición inicial de forma controlada.\n5. Repite.\n\nConsejos técnicos:\n• Sujeta la barra ancha con agarre prono.\n• Lleva la barra hacia el abdomen alto juntando los omóplatos.\n• Extiende los brazos al frente de forma controlada.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'wide-grip-seated-cable-row.webp'),
+(459,'Remo Sentado con Barra Ancha en Polea','Wide Grip Seated Cable Row','Una variante del remo sentado con agarre ancho que hace énfasis en la parte superior de la espalda.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo con los pies en la plataforma.\n2. Agarra la barra ancha con un agarre en pronación.\n3. Tira de la barra hacia el abdomen superior apretando los omóplatos.\n4. Extiende los brazos de vuelta a la posición inicial de forma controlada.\n5. Repite.\n\nConsejos técnicos:\n• Sujeta la barra ancha con agarre prono.\n• Lleva la barra hacia el abdomen alto juntando los omóplatos.\n• Extiende los brazos al frente de forma controlada.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'02_remo_sentado_barra_ancha.webp'),
 (460,'Prensa de piernas con postura amplia','Wide-Stance Leg Press','Una prensa de piernas con una postura amplia y ligeramente abierta, que aumenta la participación de los aductores junto con la extensión de cadera y rodilla.\n\nInstrucciones de ejecución:\n1. Ajusta el asiento y el respaldo para que la zona lumbar permanezca apoyada en la parte baja del recorrido.\n2. Coloca los pies separados en la plataforma y gira las puntas hacia fuera solo hasta donde las rodillas puedan seguirlas.\n3. Baja el carro flexionando caderas y rodillas y mantén las rodillas en la misma dirección que los pies.\n4. Empuja con todo el pie y extiende caderas y rodillas sin forzar el bloqueo.\n5. Baja el carro bajo control y repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Elige una anchura y un ángulo de los pies que puedas controlar desde la cadera; más ancho no siempre es mejor.\n• Mantén las rodillas siguiendo a los pies y evita que se hundan hacia dentro.\n• Detén el descenso antes de que la pelvis se despegue y la espalda pierda contacto con el respaldo.\n\nMúsculos principales: adductors',NULL,'wide-stance-leg-press.webp'),
 (461,'Curl de Muñeca con Mancuernas Bilateral','Bilateral Dumbbell Wrist Curl','Un curl de muñeca con mancuernas realizado con ambos brazos a la vez, que aísla los flexores del antebrazo para un entrenamiento eficiente.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco sujetando una mancuerna en cada mano, con los antebrazos apoyados sobre los muslos, palmas hacia arriba.\n2. Deja que ambas mancuernas rueden hacia las puntas de los dedos.\n3. Flexiona las muñecas para levantar ambas mancuernas.\n4. Aprieta arriba y baja con control.\n5. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Mantén los antebrazos apoyados en los muslos durante todo el movimiento — solo se mueven las muñecas.\n• Usa una carga por mano más ligera que en la versión unilateral, ya que ambos lados trabajan a la vez.\n\nMúsculos principales: forearm_flexors',NULL,'wrist-curl.webp'),
 (462,'Rodillo de Muñeca','Wrist Roller','Un ejercicio para el antebrazo que consiste en enrollar un peso con la cuerda mediante el giro de las muñecas.\n\nInstrucciones de ejecución:\n1. Agarra el mango del rodillo con los brazos extendidos al frente a la altura de los hombros.\n2. Deja que el peso cuelgue del cordón.\n3. Enrolla el mango hacia adelante con movimientos alternos de muñeca para subir el peso.\n4. Mantén los brazos rectos durante todo el movimiento.\n5. Una vez enrollado por completo, invierte la rotación para bajar el peso.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén los brazos extendidos al frente a la altura de los hombros.\n• Enrolla la cuerda con giros alternos de las muñecas.\n• Invierte la rotación para bajar el peso de forma controlada.\n\nMúsculos principales: forearm_extensors, forearm_flexors',NULL,'wrist-roller.webp'),
-(463,'Curl Zottman','Zottman Curl','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl.webp');
+(463,'Curl Zottman','Zottman Curl','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl.webp'),
+(464,'Remo Unilateral Sentado en Polea','Single-Arm Seated Cable Row','Variación unilateral del remo sentado en polea baja con maneral individual. Permite corregir desequilibrios musculares bilaterales y lograr un mayor rango de recorrido y contracción del dorsal ancho y romboides.',NULL,'03_remo_unilateral_sentado.webp'),
+(465,'Face Pull Sentado con Cuerda','Seated Cable Rope Face Pull','Variación de face pull ejecutada sentado en máquina de polea baja / remo con agarre de cuerda hacia el rostro. Enfocada en el aislamiento del deltoides posterior, manguito rotador externo y trapecio medio/superior.',NULL,'04_face_pull_sentado_cuerda.webp'),
+(466,'Curl de Bíceps Sentado en Polea','Seated Cable Bicep Curl','Curl de bíceps ejecutado sentado en el banco de la polea baja / long pull. Asegura tensión mecánica continua durante todo el rango de flexión del codo, maximizando la activación del bíceps braquial y braquial anterior.',NULL,'05_curl_biceps_sentado_polea.webp'),
+(467,'Encogimiento de Hombros Sentado en Polea','Seated Cable Shrug','Encogimiento de hombros para trapecios realizado sentado frente a la polea baja. Elimina la sobrecarga lumbar de las variantes de pie y enfoca la tracción vertical de las escápulas directamente en el trapecio superior.',NULL,'06_encogimiento_hombros_sentado.webp');
 /*!40000 ALTER TABLE `ejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -809,7 +813,7 @@ CREATE TABLE `ejercicioequipo` (
   KEY `fk_ee_equipo` (`idequipo`),
   CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=377 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1110,6 +1114,7 @@ INSERT INTO `ejercicioequipo` VALUES
 (289,355,46),
 (290,358,14),
 (291,360,57),
+(377,360,62),
 (292,361,39),
 (293,362,29),
 (294,363,29),
@@ -1191,10 +1196,15 @@ INSERT INTO `ejercicioequipo` VALUES
 (370,456,17),
 (371,457,14),
 (372,459,57),
+(378,459,62),
 (373,460,3),
 (374,461,29),
 (375,462,58),
-(376,463,29);
+(376,463,29),
+(379,464,62),
+(380,465,62),
+(381,466,62),
+(382,467,62);
 /*!40000 ALTER TABLE `ejercicioequipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1224,7 +1234,7 @@ CREATE TABLE `equipos` (
   `fecha_registro` datetime DEFAULT current_timestamp(),
   PRIMARY KEY (`id_equipo`),
   UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1293,7 +1303,8 @@ INSERT INTO `equipos` VALUES
 (58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
 (59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
 (60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02');
+(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
+(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg',2,1,'Gim360 Pro',NULL,'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',2,'2026-10-20',850.00,1,1,'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.','2026-10-20 22:09:49');
 /*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1563,7 +1574,7 @@ CREATE TABLE `musculoejercicio` (
   KEY `fk_me_musculo` (`idmusculo`),
   CONSTRAINT `fk_me_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_me_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1666 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1681 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3237,7 +3248,22 @@ INSERT INTO `musculoejercicio` VALUES
 (1662,463,3),
 (1663,463,4),
 (1664,463,5),
-(1665,463,12);
+(1665,463,12),
+(1668,464,3),
+(1669,464,9),
+(1666,464,10),
+(1670,464,11),
+(1667,464,22),
+(1671,464,26),
+(1675,465,8),
+(1672,465,9),
+(1674,465,22),
+(1673,465,26),
+(1676,466,3),
+(1677,466,4),
+(1678,466,5),
+(1680,467,22),
+(1679,467,26);
 /*!40000 ALTER TABLE `musculoejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4036,10 +4062,6 @@ INSERT INTO `visitasgim` VALUES
 UNLOCK TABLES;
 
 --
--- Dumping routines for database 'gim360'
---
-
---
 -- Final view structure for view `EjercicioEquipo`
 --
 
@@ -4408,4 +4430,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-20 13:59:48
+-- Dump completed on 2026-10-20 22:10:58
