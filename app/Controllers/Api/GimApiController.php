@@ -485,13 +485,31 @@ class GimApiController extends ResourceController
         $ubicaciones = EquipoModel::getUbicaciones();
         $estados = EquipoModel::getEstados();
 
+        $db = \Config\Database::connect();
+        $musculosCounts = $db->table('equipomusculo')
+                             ->select('idequipo, COUNT(idmusculo) as total_musculos')
+                             ->groupBy('idequipo')
+                             ->get()
+                             ->getResultArray();
+        $musculosMap = array_column($musculosCounts, 'total_musculos', 'idequipo');
+
+        $ejerciciosCounts = $db->table('ejercicioequipo')
+                               ->select('idequipo, COUNT(idejercicio) as total_ejercicios')
+                               ->groupBy('idequipo')
+                               ->get()
+                               ->getResultArray();
+        $ejerciciosMap = array_column($ejerciciosCounts, 'total_ejercicios', 'idequipo');
+
         foreach ($equipos as &$eq) {
-            $eq['id_equipo'] = (int)$eq['idequipo'];
+            $idEq = (int)$eq['idequipo'];
+            $eq['id_equipo'] = $idEq;
             $eq['imagen_url'] = $this->getImageUrl('equipos/imagen', $eq['imagen'] ?? null);
             $eq['tipo_nombre'] = $tipos[$eq['id_tipo']] ?? null;
             $eq['marca_nombre'] = $marcas[$eq['id_marca']] ?? null;
             $eq['ubicacion_nombre'] = $ubicaciones[$eq['id_ubicacion']] ?? null;
             $eq['estado_nombre'] = $estados[$eq['id_estado']] ?? null;
+            $eq['total_musculos'] = (int)($musculosMap[$idEq] ?? 0);
+            $eq['total_ejercicios'] = (int)($ejerciciosMap[$idEq] ?? 0);
         }
 
         return $this->respond([
@@ -536,6 +554,21 @@ class GimApiController extends ResourceController
         // Músculos que se ejercitan directamente con este equipo (equipomusculo)
         $equipoMusculoModel = new \App\Models\EquipoMusculoModel();
         $musculos = $equipoMusculoModel->getMusculosByEquipo((int)$id);
+
+        // Fallback: si aún no tiene registros en equipomusculo, obtenerlos mediante sus ejercicios asociados
+        if (empty($musculos)) {
+            $db = \Config\Database::connect();
+            $musculos = $db->table('ejercicioequipo ee')
+                           ->select('m.idmusculo, m.nombre, m.imagen')
+                           ->join('musculoejercicio me', 'me.idejercicio = ee.idejercicio', 'inner')
+                           ->join('musculo m', 'm.idmusculo = me.idmusculo', 'inner')
+                           ->where('ee.idequipo', (int)$id)
+                           ->groupBy('m.idmusculo')
+                           ->orderBy('m.nombre', 'ASC')
+                           ->get()
+                           ->getResultArray();
+        }
+
         foreach ($musculos as &$m) {
             $m['imagen_url'] = $this->getImageUrl('musculo/imagen', $m['imagen'] ?? null);
         }
