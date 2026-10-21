@@ -204,6 +204,107 @@
                 </div>
             </div>
 
+            <!-- Tabla de Ejercicios Relacionados con el Equipo -->
+            <div class="card card-custom bg-white border-top border-4 border-info shadow-sm mt-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                    <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                        <i class="bi bi-activity text-info me-2 fs-4"></i>Ejercicios que se realizan con este equipo
+                    </h5>
+                    <span class="badge bg-info-subtle text-dark border border-info px-3 py-2 fs-6">
+                        <i class="bi bi-card-checklist me-1"></i><?= count($ejercicios ?? []) ?> <?= count($ejercicios ?? []) === 1 ? 'ejercicio vinculado' : 'ejercicios vinculados' ?>
+                    </span>
+                </div>
+                <div class="card-body p-0">
+                    <?php if (empty($ejercicios)): ?>
+                        <div class="p-4 text-center text-muted">
+                            <i class="bi bi-info-circle fs-2 d-block mb-2 text-secondary opacity-50"></i>
+                            <p class="mb-0">No hay ejercicios registrados actualmente para este equipo.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="text-center" style="width: 80px;">Animación</th>
+                                        <th style="width: 70px;">ID</th>
+                                        <th>Ejercicio</th>
+                                        <th>Músculos Implicados</th>
+                                        <th>Descripción Técnica</th>
+                                        <th class="text-center" style="width: 110px;">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($ejercicios as $ej): ?>
+                                        <tr>
+                                            <td class="text-center p-2">
+                                                <div class="bg-light rounded border p-1 d-inline-block shadow-xs" style="width: 72px; height: 50px;">
+                                                    <?php if (!empty($ej['ejercicio_imagen'])): ?>
+                                                        <img src="<?= base_url('repositorio/ejercicios/' . esc($ej['ejercicio_imagen'])) ?>" 
+                                                             onerror="this.onerror=null; this.src='<?= base_url('ejercicio/imagen/' . esc($ej['ejercicio_imagen'])) ?>';"
+                                                             alt="<?= esc($ej['ejercicio_nombre']) ?>" 
+                                                             class="img-fluid rounded" 
+                                                             style="max-height: 42px; width: 100%; object-fit: contain;">
+                                                    <?php else: ?>
+                                                        <i class="bi bi-image text-muted fs-4"></i>
+                                                    <?php endif; ?>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-secondary-subtle text-secondary font-monospace border">
+                                                    #<?= $ej['idejercicio'] ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <div class="fw-bold text-dark">
+                                                    <a href="<?= base_url('ejercicio/actual/' . $ej['idejercicio']) ?>" class="text-primary text-decoration-none">
+                                                        <?= esc($ej['ejercicio_nombre']) ?>
+                                                    </a>
+                                                </div>
+                                                <?php if (!empty($ej['ejercicio_nombreingles'])): ?>
+                                                    <div class="small text-muted fst-italic">
+                                                        <?= esc($ej['ejercicio_nombreingles']) ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php 
+                                                    $musculos = $musculosPorEjercicio[$ej['idejercicio']] ?? []; 
+                                                ?>
+                                                <?php if (!empty($musculos)): ?>
+                                                    <div class="d-flex flex-wrap gap-1">
+                                                        <?php foreach ($musculos as $m): ?>
+                                                            <span class="badge bg-light text-dark border small py-1">
+                                                                <i class="bi bi-dot text-danger"></i><?= esc($m['nombre']) ?>
+                                                            </span>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <span class="text-muted small fst-italic">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($ej['ejercicio_descripcion'])): ?>
+                                                    <div class="small text-secondary" style="max-height: 52px; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                                                        <?= esc(strip_tags($ej['ejercicio_descripcion'])) ?>
+                                                    </div>
+                                                <?php else: ?>
+                                                    <span class="text-muted small fst-italic">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td class="text-center">
+                                                <a href="<?= base_url('ejercicio/actual/' . $ej['idejercicio']) ?>" class="btn btn-outline-primary btn-sm px-2 py-1" title="Ver Ficha del Ejercicio">
+                                                    <i class="bi bi-eye me-1"></i>Ver
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
         <?php endif; ?>
 
     </div>

@@ -29,14 +29,29 @@ class Equipos extends BaseController
             $equipo = $last ? $this->equipoModel->find($last['id_equipo']) : null;
         }
 
+        $ejercicios = [];
+        $musculosPorEjercicio = [];
+        if (!empty($equipo['id_equipo'])) {
+            $ejercicioEquipoModel = new \App\Models\EjercicioEquipoModel();
+            $ejercicios = $ejercicioEquipoModel->getEjerciciosByEquipo((int)$equipo['id_equipo']);
+
+            if (!empty($ejercicios)) {
+                $ejercicioModel = new \App\Models\EjercicioModel();
+                $idejercicios = array_column($ejercicios, 'idejercicio');
+                $musculosPorEjercicio = $ejercicioModel->getMusculosBatch($idejercicios);
+            }
+        }
+
         $data = [
-            'title'       => 'Ficha Técnica de Equipo',
-            'equipo'      => $equipo,
-            'tipos'       => EquipoModel::getTipos(),
-            'marcas'      => EquipoModel::getMarcas(),
-            'ubicaciones' => EquipoModel::getUbicaciones(),
-            'estados'     => EquipoModel::getEstados(),
-            'module'      => 'equipos',
+            'title'                => 'Ficha Técnica de Equipo',
+            'equipo'               => $equipo,
+            'ejercicios'           => $ejercicios,
+            'musculosPorEjercicio' => $musculosPorEjercicio,
+            'tipos'                => EquipoModel::getTipos(),
+            'marcas'               => EquipoModel::getMarcas(),
+            'ubicaciones'          => EquipoModel::getUbicaciones(),
+            'estados'              => EquipoModel::getEstados(),
+            'module'               => 'equipos',
         ];
 
         return view('equipos/equipos_record', $data);
