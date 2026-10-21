@@ -458,13 +458,82 @@ class GimApiController extends ResourceController
         $musculos = $musculoModel->getMusculos($this->request->getGet('q'));
         $baseUrl = base_url();
 
+        $db = \Config\Database::connect();
+        $ejerciciosCounts = $db->table('musculoejercicio')
+                               ->select('idmusculo, COUNT(idejercicio) as total_ejercicios')
+                               ->groupBy('idmusculo')
+                               ->get()
+                               ->getResultArray();
+        $ejerciciosMap = array_column($ejerciciosCounts, 'total_ejercicios', 'idmusculo');
+
+        $equiposCounts = $db->table('equipomusculo')
+                            ->select('idmusculo, COUNT(idequipo) as total_equipos')
+                            ->groupBy('idmusculo')
+                            ->get()
+                            ->getResultArray();
+        $equiposMap = array_column($equiposCounts, 'total_equipos', 'idmusculo');
+
         foreach ($musculos as &$m) {
+            $idM = (int)$m['idmusculo'];
             $m['imagen_url'] = $this->getImageUrl('musculo/imagen', $m['imagen'] ?? null);
+            $m['total_ejercicios'] = (int)($ejerciciosMap[$idM] ?? 0);
+            $m['total_equipos'] = (int)($equiposMap[$idM] ?? 0);
         }
 
         return $this->respond([
             'status' => 200,
             'data'   => $musculos,
+        ]);
+    }
+
+    /**
+     * GET /api/musculo/{id}
+     * Detalle completo de un músculo con sus ejercicios y máquinas
+     */
+    public function getMusculoDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de músculo no proporcionado');
+        }
+
+        $musculoModel = new MusculoModel();
+        $musculo = $musculoModel->find((int)$id);
+
+        if (!$musculo) {
+            return $this->failNotFound('Músculo no encontrado');
+        }
+
+        $musculo['imagen_url'] = $this->getImageUrl('musculo/imagen', $musculo['imagen'] ?? null);
+
+        // 1. Ejercicios que entrenan este músculo (musculoejercicio)
+        $meModel = new \App\Models\MusculoEjercicioModel();
+        $ejercicios = $meModel->getEjerciciosByMusculo((int)$id);
+        foreach ($ejercicios as &$ej) {
+            $ej['nombre'] = $ej['ejercicio_nombre'] ?? $ej['nombreespanol'] ?? '';
+            $ej['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ej['ejercicio_imagen'] ?? $ej['imagen'] ?? null);
+        }
+        $musculo['ejercicios'] = $ejercicios;
+        $musculo['total_ejercicios'] = count($ejercicios);
+
+        // 2. Máquinas y equipos que permiten ejercitar este músculo (equipomusculo)
+        $emModel = new \App\Models\EquipoMusculoModel();
+        $equipos = $emModel->getEquiposByMusculo((int)$id);
+        foreach ($equipos as &$eq) {
+            $eq['idequipo'] = (int)$eq['idequipo'];
+            $eq['id_equipo'] = (int)$eq['idequipo'];
+            $eq['nombre'] = $eq['equipo_nombre'] ?? '';
+            $eq['codigo'] = $eq['equipo_codigo'] ?? '';
+            $eq['modelo'] = $eq['equipo_modelo'] ?? '';
+            $eq['imagen'] = $eq['equipo_imagen'] ?? null;
+            $eq['imagen_url'] = $this->getImageUrl('equipos/imagen', $eq['equipo_imagen'] ?? null);
+        }
+        $musculo['equipos'] = $equipos;
+        $musculo['total_equipos'] = count($equipos);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del músculo obtenido correctamente',
+            'data'    => $musculo,
         ]);
     }
 

@@ -201,6 +201,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('ejercicios', 'GimApiController::getEjercicios');
     $routes->get('ejercicio/(:num)', 'GimApiController::getEjercicioDetail/$1');
     $routes->get('musculos', 'GimApiController::getMusculos');
+    $routes->get('musculo/(:num)', 'GimApiController::getMusculoDetail/$1');
+    $routes->get('musculos/(:num)', 'GimApiController::getMusculoDetail/$1');
     $routes->get('equipos', 'GimApiController::getEquipos');
     $routes->get('equipo', 'GimApiController::getEquipos');
     $routes->get('equipo/(:num)', 'GimApiController::getEquipoDetail/$1');
