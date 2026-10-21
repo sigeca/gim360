@@ -95,6 +95,17 @@ if ($conn->connect_error) {
     } else {
         // Ejecutar migración si se solicita
         if (isset($_GET['migrar']) || isset($_POST['migrar'])) {
+            // Migración preventiva de renombramiento de tablas y columnas
+            @$conn->query("ALTER TABLE `ejercicioequipo` DROP FOREIGN KEY `fk_ee_equipo`");
+            $resEquipos = $conn->query("SHOW TABLES LIKE 'equipos'");
+            $resEquipo = $conn->query("SHOW TABLES LIKE 'equipo'");
+            if ($resEquipos && $resEquipos->num_rows > 0 && (!$resEquipo || $resEquipo->num_rows == 0)) {
+                @$conn->query("ALTER TABLE `equipos` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
+                @$conn->query("RENAME TABLE `equipos` TO `equipo`");
+            }
+            @$conn->query("ALTER TABLE `equipo` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
+            @$conn->query("ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `iddisponibilidadequipo` INT(11) DEFAULT 1 AFTER `id_estado`");
+
             $migrationSql = "
 CREATE TABLE IF NOT EXISTS `motivoentrenamiento` (
   `idmotivoentrenamiento` int(11) NOT NULL AUTO_INCREMENT,
