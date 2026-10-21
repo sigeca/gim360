@@ -199,6 +199,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('musculos', 'GimApiController::getMusculos');
     $routes->get('equipos', 'GimApiController::getEquipos');
     $routes->get('equipo', 'GimApiController::getEquipos');
+    $routes->get('equipo/(:num)', 'GimApiController::getEquipoDetail/$1');
+    $routes->get('equipos/(:num)', 'GimApiController::getEquipoDetail/$1');
+    $routes->get('disponibilidadequipo', 'GimApiController::getDisponibilidadEquipo');
+    $routes->get('disponibilidad-equipo', 'GimApiController::getDisponibilidadEquipo');
 
     // Registro de esfuerzo, ejecuciones de programa y visitas
     $routes->get('ejecucionprograma', 'GimApiController::getEjecuciones');

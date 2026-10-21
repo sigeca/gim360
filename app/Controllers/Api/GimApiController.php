@@ -473,17 +473,103 @@ class GimApiController extends ResourceController
      */
     public function getEquipos()
     {
+        $search = $this->request->getGet('q');
+        $idDisp = $this->request->getGet('iddisponibilidad') ?: $this->request->getGet('iddisponibilidadequipo');
+
         $equipoModel = new EquipoModel();
-        $equipos = $equipoModel->getEquiposWithDetails($this->request->getGet('q'));
+        $equipos = $equipoModel->getEquiposWithDetails($search, $idDisp ? (int)$idDisp : null);
         $baseUrl = base_url();
 
+        $tipos = EquipoModel::getTipos();
+        $marcas = EquipoModel::getMarcas();
+        $ubicaciones = EquipoModel::getUbicaciones();
+        $estados = EquipoModel::getEstados();
+
         foreach ($equipos as &$eq) {
+            $eq['id_equipo'] = (int)$eq['idequipo'];
             $eq['imagen_url'] = $this->getImageUrl('equipos/imagen', $eq['imagen'] ?? null);
+            $eq['tipo_nombre'] = $tipos[$eq['id_tipo']] ?? null;
+            $eq['marca_nombre'] = $marcas[$eq['id_marca']] ?? null;
+            $eq['ubicacion_nombre'] = $ubicaciones[$eq['id_ubicacion']] ?? null;
+            $eq['estado_nombre'] = $estados[$eq['id_estado']] ?? null;
         }
 
         return $this->respond([
             'status' => 200,
             'data'   => $equipos,
+        ]);
+    }
+
+    /**
+     * GET /api/equipo/{id} o /api/equipos/{id}
+     * Detalle completo de una máquina o equipo, incluyendo músculos trabajados y ejercicios vinculados
+     */
+    public function getEquipoDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de equipo no proporcionado');
+        }
+
+        $equipoModel = new EquipoModel();
+        $equipo = $equipoModel->select('equipo.*, de.nombre AS disponibilidad_nombre')
+                              ->join('disponibilidadequipo de', 'de.iddisponibilidadequipo = equipo.iddisponibilidadequipo', 'left')
+                              ->where('equipo.idequipo', (int)$id)
+                              ->first();
+
+        if (!$equipo) {
+            return $this->failNotFound('Equipo o máquina no encontrada');
+        }
+
+        $equipo['id_equipo'] = (int)$equipo['idequipo'];
+        $equipo['imagen_url'] = $this->getImageUrl('equipos/imagen', $equipo['imagen'] ?? null);
+
+        $tipos = EquipoModel::getTipos();
+        $marcas = EquipoModel::getMarcas();
+        $ubicaciones = EquipoModel::getUbicaciones();
+        $estados = EquipoModel::getEstados();
+
+        $equipo['tipo_nombre'] = $tipos[$equipo['id_tipo']] ?? null;
+        $equipo['marca_nombre'] = $marcas[$equipo['id_marca']] ?? null;
+        $equipo['ubicacion_nombre'] = $ubicaciones[$equipo['id_ubicacion']] ?? null;
+        $equipo['estado_nombre'] = $estados[$equipo['id_estado']] ?? null;
+
+        // Músculos que se ejercitan directamente con este equipo (equipomusculo)
+        $equipoMusculoModel = new \App\Models\EquipoMusculoModel();
+        $musculos = $equipoMusculoModel->getMusculosByEquipo((int)$id);
+        foreach ($musculos as &$m) {
+            $m['imagen_url'] = $this->getImageUrl('musculo/imagen', $m['imagen'] ?? null);
+        }
+        $equipo['musculos'] = $musculos;
+
+        // Ejercicios que se realizan con este equipo (ejercicioequipo)
+        $ejercicioEquipoModel = new \App\Models\EjercicioEquipoModel();
+        $ejercicios = $ejercicioEquipoModel->getEjerciciosByEquipo((int)$id);
+        foreach ($ejercicios as &$ej) {
+            $ej['nombre'] = $ej['ejercicio_nombre'] ?? $ej['nombreespanol'] ?? '';
+            $ej['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ej['ejercicio_imagen'] ?? null);
+        }
+        $equipo['ejercicios'] = $ejercicios;
+        $equipo['total_ejercicios'] = count($ejercicios);
+        $equipo['total_musculos'] = count($musculos);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del equipo obtenido correctamente',
+            'data'    => $equipo,
+        ]);
+    }
+
+    /**
+     * GET /api/disponibilidadequipo
+     */
+    public function getDisponibilidadEquipo()
+    {
+        $dispModel = new \App\Models\DisponibilidadEquipoModel();
+        $estados = $dispModel->orderBy('iddisponibilidadequipo', 'ASC')->findAll();
+
+        return $this->respond([
+            'status' => 200,
+            'data'   => $estados,
         ]);
     }
 

@@ -103,11 +103,15 @@ class EquipoModel extends Model
         ];
     }
 
-    public function getEquiposWithDetails($search = null)
+    public function getEquiposWithDetails($search = null, $idDisponibilidad = null)
     {
         $builder = $this->select('equipo.*, de.nombre AS disponibilidad_nombre')
                         ->join('disponibilidadequipo de', 'de.iddisponibilidadequipo = equipo.iddisponibilidadequipo', 'left')
                         ->orderBy('equipo.idequipo', 'DESC');
+
+        if (!empty($idDisponibilidad)) {
+            $builder->where('equipo.iddisponibilidadequipo', (int)$idDisponibilidad);
+        }
 
         if (!empty($search)) {
             $builder->groupStart()
