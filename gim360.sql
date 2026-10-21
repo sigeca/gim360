@@ -17,6 +17,19 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Temporary table structure for view `DisponibilidadEquipo`
+--
+
+DROP TABLE IF EXISTS `DisponibilidadEquipo`;
+/*!50001 DROP VIEW IF EXISTS `DisponibilidadEquipo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `DisponibilidadEquipo` AS SELECT
+ NULL AS `iddisponibilidadequipo`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `EjercicioEquipo`
 --
 
@@ -28,6 +41,20 @@ SET character_set_client = utf8mb4;
  NULL AS `idejercicioequipo`,
  NULL AS `idejercicio`,
  NULL AS `idequipo` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `EquipoMusculo`
+--
+
+DROP TABLE IF EXISTS `EquipoMusculo`;
+/*!50001 DROP VIEW IF EXISTS `EquipoMusculo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `EquipoMusculo` AS SELECT
+ NULL AS `idequipomusculo`,
+ NULL AS `idequipo`,
+ NULL AS `idmusculo` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -257,6 +284,36 @@ INSERT INTO `direccion` VALUES
 (3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
 (7,7,'tachina');
 /*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `disponibilidadequipo`
+--
+
+DROP TABLE IF EXISTS `disponibilidadequipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `disponibilidadequipo` (
+  `iddisponibilidadequipo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`iddisponibilidadequipo`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disponibilidadequipo`
+--
+
+LOCK TABLES `disponibilidadequipo` WRITE;
+/*!40000 ALTER TABLE `disponibilidadequipo` DISABLE KEYS */;
+INSERT INTO `disponibilidadequipo` VALUES
+(1,'Disponible'),
+(2,'En Uso'),
+(3,'En Mantenimiento'),
+(4,'En Reparación'),
+(5,'Fuera de Servicio'),
+(6,'Reservado');
+/*!40000 ALTER TABLE `disponibilidadequipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -812,7 +869,7 @@ CREATE TABLE `ejercicioequipo` (
   KEY `fk_ee_ejercicio` (`idejercicio`),
   KEY `fk_ee_equipo` (`idequipo`),
   CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=383 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -1209,14 +1266,14 @@ INSERT INTO `ejercicioequipo` VALUES
 UNLOCK TABLES;
 
 --
--- Table structure for table `equipos`
+-- Table structure for table `equipo`
 --
 
-DROP TABLE IF EXISTS `equipos`;
+DROP TABLE IF EXISTS `equipo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `equipos` (
-  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `equipo` (
+  `idequipo` int(11) NOT NULL AUTO_INCREMENT,
   `codigo` varchar(30) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `imagen` varchar(255) DEFAULT NULL,
@@ -1229,84 +1286,481 @@ CREATE TABLE `equipos` (
   `fecha_adquisicion` date DEFAULT NULL,
   `valor_adquisicion` decimal(10,2) DEFAULT NULL,
   `id_estado` int(11) DEFAULT 1,
+  `iddisponibilidadequipo` int(11) DEFAULT 1,
   `activo` tinyint(1) DEFAULT 1,
   `observaciones` text DEFAULT NULL,
   `fecha_registro` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_equipo`),
-  UNIQUE KEY `codigo` (`codigo`)
+  PRIMARY KEY (`idequipo`),
+  UNIQUE KEY `codigo` (`codigo`),
+  KEY `fk_equipo_disponibilidad` (`iddisponibilidadequipo`),
+  CONSTRAINT `fk_equipo_disponibilidad` FOREIGN KEY (`iddisponibilidadequipo`) REFERENCES `disponibilidadequipo` (`iddisponibilidadequipo`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `equipos`
+-- Dumping data for table `equipo`
 --
 
-LOCK TABLES `equipos` WRITE;
-/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
-INSERT INTO `equipos` VALUES
-(1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
-(2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
-(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
-(5,'EQ-004','Anillas de Gimnasia','anillas.webp',4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(6,'EQ-005','Balón Medicinal','balon-medicinal.webp',4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(7,'EQ-006','Balón Slam','balon-slam.webp',4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(8,'EQ-007','Banco Declinado','banco-declinado.webp',3,1,'Gim360 Pro',NULL,'Banco declinado para press de pecho declinado y trabajo de abdominales',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(9,'EQ-008','Banco GHD (Glute Ham Developer)','banco-ghd.webp',2,1,'Gim360 Pro',NULL,'Banco especializado para hipertrofia y fortalecimiento de glúteos e isquiotibiales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(10,'EQ-009','Banco Inclinado','banco-inclinado.webp',3,1,'Gim360 Pro',NULL,'Banco multiposición inclinado para press de pecho superior y hombros',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(11,'EQ-010','Banco Plano Olímpico','banco-plano.webp',3,1,'Gim360 Pro',NULL,'Banco horizontal plano para levantamiento de potencia y press de banca',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(12,'EQ-011','Banda de Resistencia Circular (Loop Band)','banda-de-resistencia-circular.webp',5,1,'Gim360 Pro',NULL,'Banda de látex cerrada para activación de glúteos y calentamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(13,'EQ-012','Banda Elástica de Resistencia','banda-elastica.webp',5,1,'Gim360 Pro',NULL,'Banda elástica con diferentes niveles de resistencia para movilidad y fuerza',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(14,'EQ-013','Barra de Dominadas','barra-de-dominadas.webp',4,1,'Gim360 Pro',NULL,'Estructura metálica para dominadas, agarres pronos, supinos y neutros',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(15,'EQ-014','Barra Hexagonal (Trap Bar)','barra-hexagonal.webp',3,1,'Gim360 Pro',NULL,'Barra con marco hexagonal para peso muerto neutral y encogimientos',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(16,'EQ-015','Barra Z (EZ Bar)','barra-z.webp',3,1,'Gim360 Pro',NULL,'Barra curva ergonómica diseñada para reducir tensión en muñecas durante curls y extensiones',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(17,'EQ-016','Barra Olímpica Estándar (20 kg)','barra.webp',3,1,'Gim360 Pro',NULL,'Barra olímpica de acero con rodamientos y moleteado de competición',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(18,'EQ-017','Bicicleta de Aire (Air Bike)','bicicleta-de-aire.webp',1,1,'Gim360 Pro',NULL,'Bicicleta con resistencia de aire y ventilador para entrenamientos HIIT de máxima intensidad',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(19,'EQ-018','Caja Pliométrica (Plyo Box)','caja-pliometrica.webp',4,1,'Gim360 Pro',NULL,'Cajón de salto multifuncional con 3 alturas ajustables para potencia de salto',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(20,'EQ-019','Cuerda de Batalla (Battle Rope)','cuerda-de-batalla.webp',4,1,'Gim360 Pro',NULL,'Cuerda gruesa de polidacrón para acondicionamiento metabólico y core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(21,'EQ-020','Cuerda de Escalada','cuerda-de-escalada.webp',4,1,'Gim360 Pro',NULL,'Cuerda de cáñamo reforzada suspendida para trepa y fuerza de tracción',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(22,'EQ-021','Cuerda de Saltar de Velocidad','cuerda-de-saltar.webp',1,1,'Gim360 Pro',NULL,'Cuerda de saltar con cable de acero y rodamientos de alta velocidad',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(23,'EQ-022','Máquina de Curl Femoral Tumbado','curl-femoral.webp',2,1,'Gim360 Pro',NULL,'Aparato selectorizado de placas para aislamiento del bíceps femoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(24,'EQ-023','Discos Olímpicos de Peso (Bumper Plates)','discos.webp',3,1,'Gim360 Pro',NULL,'Set de discos de goma maciza de alta densidad para barras olímpicas',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(25,'EQ-024','Máquina Elíptica Profesional','eliptica.webp',1,1,'Gim360 Pro',NULL,'Entrenador elíptico de bajo impacto articular con monitor de frecuencia cardíaca',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(26,'EQ-025','Estación de Fondos y Paralelas','estacion-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Barras paralelas fijas para inmersiones de tríceps y pecho',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(27,'EQ-026','Máquina de Extensión de Piernas (Leg Extension)','extension-de-piernas.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada para desarrollo y aislamiento de cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(28,'EQ-027','Soporte Landmine para Barra','landmine.webp',3,1,'Gim360 Pro',NULL,'Articulación multidireccional fijada al suelo para barra olímpica',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(29,'EQ-028','Mancuernas de Uretano / Goma','mancuerna.webp',3,1,'Gim360 Pro',NULL,'Juego de mancuernas fijas de diferentes pesos para levantamiento libre',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(30,'EQ-029','Máquina de Crunch Abdominal','maquina-crunch-abdominal.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada de placas para sobrecarga progresiva en flexión de tronco',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(31,'EQ-030','Máquina de Curl de Bíceps','maquina-curl-de-biceps.webp',2,1,'Gim360 Pro',NULL,'Máquina de placas para aislamiento concéntrico y excéntrico de bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(32,'EQ-031','Máquina de Curl Predicador','maquina-curl-predicador.webp',2,1,'Gim360 Pro',NULL,'Banco Scott integrado con palancas selectorizadas para brazo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(33,'EQ-032','Máquina de Abducción de Cadera','maquina-de-abduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para fortalecimiento de glúteo medio y cadera hacia afuera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(34,'EQ-033','Máquina de Aducción de Cadera','maquina-de-aduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para trabajo de aductores de muslo hacia adentro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(35,'EQ-034','Máquina de Aperturas de Pecho (Chest Fly)','maquina-de-aperturas-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Aparato de brazos articulados para aducción horizontal de hombro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(36,'EQ-035','Máquina de Dominadas y Fondos Asistidos','maquina-de-dominadas-asistidas.webp',2,1,'Gim360 Pro',NULL,'Torre con plataforma contrapesada para facilitar dominadas y fondos',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(37,'EQ-036','Máquina de Gemelos a la Burra (Donkey Calf)','maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp',2,1,'Gim360 Pro',NULL,'Aparato para flexión plantar de tobillo con tronco flexionado a 90 grados',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(38,'EQ-037','Máquina de Gemelos de Pie (Standing Calf)','maquina-de-elevaciones-de-pantorrilla-de-pie.webp',2,1,'Gim360 Pro',NULL,'Máquina con almohadillas en hombros para hipertrofia del gastrocnemio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(39,'EQ-038','Máquina de Gemelos Sentado (Seated Calf)','maquina-de-elevaciones-de-pantorrilla-sentado.webp',2,1,'Gim360 Pro',NULL,'Aparato con rodillera acolchada para trabajo selectivo del músculo sóleo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(40,'EQ-039','Máquina de Elevaciones Laterales a Discos','maquina-de-elevaciones-laterales-de-discos.webp',2,1,'Gim360 Pro',NULL,'Máquina de palanca de carga directa de discos para deltoides lateral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(41,'EQ-040','Máquina de Elevaciones Laterales (Selectorizada)','maquina-de-elevaciones-laterales.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas guiado para aislamiento del hombro medio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(42,'EQ-041','Máquina de Encogimientos de Hombros','maquina-de-encogimientos.webp',2,1,'Gim360 Pro',NULL,'Palancas de agarre neutro para trapecio superior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(43,'EQ-042','Máquina de Extensión de Espalda / Lumbares','maquina-de-extension-de-espalda.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas para fortalecimiento de erectores espinales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(44,'EQ-043','Máquina de Extensión de Tríceps','maquina-de-extension-de-triceps.webp',2,1,'Gim360 Pro',NULL,'Máquina sentada con soporte de codos para empuje vertical de tríceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(45,'EQ-044','Máquina de Fondos Asistida / Selectorizada','maquina-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Aparato con palancas para press hacia abajo de tríceps y pectoral inferior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(46,'EQ-045','Máquina de Remo Ergométrico (Rower)','maquina-de-remo.webp',1,1,'Gim360 Pro',NULL,'Remo de aire y resistencia magnética para cardio total y espalda',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(47,'EQ-046','Máquina Escaladora (StairMaster)','maquina-escaladora.webp',1,1,'Gim360 Pro',NULL,'Escalera sin fin motorizada para entrenamiento cardiovascular y tren inferior',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(48,'EQ-047','Máquina Hack Squat (Sentadilla Hack)','maquina-hack-squat.webp',2,1,'Gim360 Pro',NULL,'Trineo inclinado con respaldo fijo para sobrecarga en cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(49,'EQ-048','Máquina de Hip Thrust (Empuje de Cadera)','maquina-hip-thrust.webp',2,1,'Gim360 Pro',NULL,'Aparato especializado con cinturón acolchado para extensión de cadera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(50,'EQ-049','Máquina de Jalón al Pecho (Lat Pulldown)','maquina-jalon-al-pecho.webp',2,1,'Gim360 Pro',NULL,'Torre de polea alta con barra para dorsales y bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(51,'EQ-050','Máquina de Press Militar / Hombros','maquina-press-de-hombros.webp',2,1,'Gim360 Pro',NULL,'Aparato convergente para empuje vertical seguro de hombros',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(52,'EQ-051','Máquina de Press de Pecho (Chest Press)','maquina-press-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Máquina con agarres múltiples para empuje horizontal de pectoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(53,'EQ-052','Máquina Smith (Multipower)','maquina-smith.webp',2,1,'Gim360 Pro',NULL,'Estructura con barra olímpica guiada por rieles y ganchos de seguridad',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(54,'EQ-053','Máquina Pec Deck / Contractora de Pectoral','pec-deck.webp',2,1,'Gim360 Pro',NULL,'Máquina clásica de almohadillas en codos para aperturas pectorales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(55,'EQ-054','Pelota Suiza / Fitball','pelota-de-estabilidad.webp',5,1,'Gim360 Pro',NULL,'Balón inflable de PVC anti-explosión para estabilidad, core y rehabilitación',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(56,'EQ-055','Pesa Rusa de Competición (Kettlebell)','pesa-rusa.webp',3,1,'Gim360 Pro',NULL,'Pesa de hierro fundido con asa superior para swings, snatches y cleans',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(57,'EQ-056','Torre de Polea Cruzada (Cable Crossover)','polea.webp',2,1,'Gim360 Pro',NULL,'Estación doble de poleas regulables en altura para cruces y jalones',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg',2,1,'Gim360 Pro',NULL,'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',2,'2026-10-20',850.00,1,1,'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.','2026-10-20 22:09:49');
-/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
+LOCK TABLES `equipo` WRITE;
+/*!40000 ALTER TABLE `equipo` DISABLE KEYS */;
+INSERT INTO `equipo` VALUES
+(1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
+(2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
+(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
+(5,'EQ-004','Anillas de Gimnasia','anillas.webp',4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(6,'EQ-005','Balón Medicinal','balon-medicinal.webp',4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(7,'EQ-006','Balón Slam','balon-slam.webp',4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(8,'EQ-007','Banco Declinado','banco-declinado.webp',3,1,'Gim360 Pro',NULL,'Banco declinado para press de pecho declinado y trabajo de abdominales',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(9,'EQ-008','Banco GHD (Glute Ham Developer)','banco-ghd.webp',2,1,'Gim360 Pro',NULL,'Banco especializado para hipertrofia y fortalecimiento de glúteos e isquiotibiales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(10,'EQ-009','Banco Inclinado','banco-inclinado.webp',3,1,'Gim360 Pro',NULL,'Banco multiposición inclinado para press de pecho superior y hombros',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(11,'EQ-010','Banco Plano Olímpico','banco-plano.webp',3,1,'Gim360 Pro',NULL,'Banco horizontal plano para levantamiento de potencia y press de banca',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(12,'EQ-011','Banda de Resistencia Circular (Loop Band)','banda-de-resistencia-circular.webp',5,1,'Gim360 Pro',NULL,'Banda de látex cerrada para activación de glúteos y calentamiento',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(13,'EQ-012','Banda Elástica de Resistencia','banda-elastica.webp',5,1,'Gim360 Pro',NULL,'Banda elástica con diferentes niveles de resistencia para movilidad y fuerza',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(14,'EQ-013','Barra de Dominadas','barra-de-dominadas.webp',4,1,'Gim360 Pro',NULL,'Estructura metálica para dominadas, agarres pronos, supinos y neutros',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(15,'EQ-014','Barra Hexagonal (Trap Bar)','barra-hexagonal.webp',3,1,'Gim360 Pro',NULL,'Barra con marco hexagonal para peso muerto neutral y encogimientos',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(16,'EQ-015','Barra Z (EZ Bar)','barra-z.webp',3,1,'Gim360 Pro',NULL,'Barra curva ergonómica diseñada para reducir tensión en muñecas durante curls y extensiones',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(17,'EQ-016','Barra Olímpica Estándar (20 kg)','barra.webp',3,1,'Gim360 Pro',NULL,'Barra olímpica de acero con rodamientos y moleteado de competición',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(18,'EQ-017','Bicicleta de Aire (Air Bike)','bicicleta-de-aire.webp',1,1,'Gim360 Pro',NULL,'Bicicleta con resistencia de aire y ventilador para entrenamientos HIIT de máxima intensidad',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(19,'EQ-018','Caja Pliométrica (Plyo Box)','caja-pliometrica.webp',4,1,'Gim360 Pro',NULL,'Cajón de salto multifuncional con 3 alturas ajustables para potencia de salto',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(20,'EQ-019','Cuerda de Batalla (Battle Rope)','cuerda-de-batalla.webp',4,1,'Gim360 Pro',NULL,'Cuerda gruesa de polidacrón para acondicionamiento metabólico y core',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(21,'EQ-020','Cuerda de Escalada','cuerda-de-escalada.webp',4,1,'Gim360 Pro',NULL,'Cuerda de cáñamo reforzada suspendida para trepa y fuerza de tracción',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(22,'EQ-021','Cuerda de Saltar de Velocidad','cuerda-de-saltar.webp',1,1,'Gim360 Pro',NULL,'Cuerda de saltar con cable de acero y rodamientos de alta velocidad',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(23,'EQ-022','Máquina de Curl Femoral Tumbado','curl-femoral.webp',2,1,'Gim360 Pro',NULL,'Aparato selectorizado de placas para aislamiento del bíceps femoral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(24,'EQ-023','Discos Olímpicos de Peso (Bumper Plates)','discos.webp',3,1,'Gim360 Pro',NULL,'Set de discos de goma maciza de alta densidad para barras olímpicas',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(25,'EQ-024','Máquina Elíptica Profesional','eliptica.webp',1,1,'Gim360 Pro',NULL,'Entrenador elíptico de bajo impacto articular con monitor de frecuencia cardíaca',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(26,'EQ-025','Estación de Fondos y Paralelas','estacion-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Barras paralelas fijas para inmersiones de tríceps y pecho',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(27,'EQ-026','Máquina de Extensión de Piernas (Leg Extension)','extension-de-piernas.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada para desarrollo y aislamiento de cuádriceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(28,'EQ-027','Soporte Landmine para Barra','landmine.webp',3,1,'Gim360 Pro',NULL,'Articulación multidireccional fijada al suelo para barra olímpica',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(29,'EQ-028','Mancuernas de Uretano / Goma','mancuerna.webp',3,1,'Gim360 Pro',NULL,'Juego de mancuernas fijas de diferentes pesos para levantamiento libre',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(30,'EQ-029','Máquina de Crunch Abdominal','maquina-crunch-abdominal.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada de placas para sobrecarga progresiva en flexión de tronco',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(31,'EQ-030','Máquina de Curl de Bíceps','maquina-curl-de-biceps.webp',2,1,'Gim360 Pro',NULL,'Máquina de placas para aislamiento concéntrico y excéntrico de bíceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(32,'EQ-031','Máquina de Curl Predicador','maquina-curl-predicador.webp',2,1,'Gim360 Pro',NULL,'Banco Scott integrado con palancas selectorizadas para brazo',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(33,'EQ-032','Máquina de Abducción de Cadera','maquina-de-abduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para fortalecimiento de glúteo medio y cadera hacia afuera',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(34,'EQ-033','Máquina de Aducción de Cadera','maquina-de-aduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para trabajo de aductores de muslo hacia adentro',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(35,'EQ-034','Máquina de Aperturas de Pecho (Chest Fly)','maquina-de-aperturas-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Aparato de brazos articulados para aducción horizontal de hombro',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(36,'EQ-035','Máquina de Dominadas y Fondos Asistidos','maquina-de-dominadas-asistidas.webp',2,1,'Gim360 Pro',NULL,'Torre con plataforma contrapesada para facilitar dominadas y fondos',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(37,'EQ-036','Máquina de Gemelos a la Burra (Donkey Calf)','maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp',2,1,'Gim360 Pro',NULL,'Aparato para flexión plantar de tobillo con tronco flexionado a 90 grados',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(38,'EQ-037','Máquina de Gemelos de Pie (Standing Calf)','maquina-de-elevaciones-de-pantorrilla-de-pie.webp',2,1,'Gim360 Pro',NULL,'Máquina con almohadillas en hombros para hipertrofia del gastrocnemio',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(39,'EQ-038','Máquina de Gemelos Sentado (Seated Calf)','maquina-de-elevaciones-de-pantorrilla-sentado.webp',2,1,'Gim360 Pro',NULL,'Aparato con rodillera acolchada para trabajo selectivo del músculo sóleo',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(40,'EQ-039','Máquina de Elevaciones Laterales a Discos','maquina-de-elevaciones-laterales-de-discos.webp',2,1,'Gim360 Pro',NULL,'Máquina de palanca de carga directa de discos para deltoides lateral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(41,'EQ-040','Máquina de Elevaciones Laterales (Selectorizada)','maquina-de-elevaciones-laterales.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas guiado para aislamiento del hombro medio',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(42,'EQ-041','Máquina de Encogimientos de Hombros','maquina-de-encogimientos.webp',2,1,'Gim360 Pro',NULL,'Palancas de agarre neutro para trapecio superior',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(43,'EQ-042','Máquina de Extensión de Espalda / Lumbares','maquina-de-extension-de-espalda.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas para fortalecimiento de erectores espinales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(44,'EQ-043','Máquina de Extensión de Tríceps','maquina-de-extension-de-triceps.webp',2,1,'Gim360 Pro',NULL,'Máquina sentada con soporte de codos para empuje vertical de tríceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(45,'EQ-044','Máquina de Fondos Asistida / Selectorizada','maquina-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Aparato con palancas para press hacia abajo de tríceps y pectoral inferior',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(46,'EQ-045','Máquina de Remo Ergométrico (Rower)','maquina-de-remo.webp',1,1,'Gim360 Pro',NULL,'Remo de aire y resistencia magnética para cardio total y espalda',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(47,'EQ-046','Máquina Escaladora (StairMaster)','maquina-escaladora.webp',1,1,'Gim360 Pro',NULL,'Escalera sin fin motorizada para entrenamiento cardiovascular y tren inferior',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(48,'EQ-047','Máquina Hack Squat (Sentadilla Hack)','maquina-hack-squat.webp',2,1,'Gim360 Pro',NULL,'Trineo inclinado con respaldo fijo para sobrecarga en cuádriceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(49,'EQ-048','Máquina de Hip Thrust (Empuje de Cadera)','maquina-hip-thrust.webp',2,1,'Gim360 Pro',NULL,'Aparato especializado con cinturón acolchado para extensión de cadera',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(50,'EQ-049','Máquina de Jalón al Pecho (Lat Pulldown)','maquina-jalon-al-pecho.webp',2,1,'Gim360 Pro',NULL,'Torre de polea alta con barra para dorsales y bíceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(51,'EQ-050','Máquina de Press Militar / Hombros','maquina-press-de-hombros.webp',2,1,'Gim360 Pro',NULL,'Aparato convergente para empuje vertical seguro de hombros',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(52,'EQ-051','Máquina de Press de Pecho (Chest Press)','maquina-press-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Máquina con agarres múltiples para empuje horizontal de pectoral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(53,'EQ-052','Máquina Smith (Multipower)','maquina-smith.webp',2,1,'Gim360 Pro',NULL,'Estructura con barra olímpica guiada por rieles y ganchos de seguridad',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(54,'EQ-053','Máquina Pec Deck / Contractora de Pectoral','pec-deck.webp',2,1,'Gim360 Pro',NULL,'Máquina clásica de almohadillas en codos para aperturas pectorales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(55,'EQ-054','Pelota Suiza / Fitball','pelota-de-estabilidad.webp',5,1,'Gim360 Pro',NULL,'Balón inflable de PVC anti-explosión para estabilidad, core y rehabilitación',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(56,'EQ-055','Pesa Rusa de Competición (Kettlebell)','pesa-rusa.webp',3,1,'Gim360 Pro',NULL,'Pesa de hierro fundido con asa superior para swings, snatches y cleans',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(57,'EQ-056','Torre de Polea Cruzada (Cable Crossover)','polea.webp',2,1,'Gim360 Pro',NULL,'Estación doble de poleas regulables en altura para cruces y jalones',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg',2,1,'Gim360 Pro',NULL,'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',2,'2026-10-20',850.00,1,1,1,'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.','2026-10-20 22:09:49');
+/*!40000 ALTER TABLE `equipo` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `equipomusculo`
+--
+
+DROP TABLE IF EXISTS `equipomusculo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equipomusculo` (
+  `idequipomusculo` int(11) NOT NULL AUTO_INCREMENT,
+  `idequipo` int(11) NOT NULL,
+  `idmusculo` int(11) NOT NULL,
+  PRIMARY KEY (`idequipomusculo`),
+  UNIQUE KEY `uk_equipo_musculo` (`idequipo`,`idmusculo`),
+  KEY `fk_em_equipo` (`idequipo`),
+  KEY `fk_em_musculo` (`idmusculo`),
+  CONSTRAINT `fk_em_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_em_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=512 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipomusculo`
+--
+
+LOCK TABLES `equipomusculo` WRITE;
+/*!40000 ALTER TABLE `equipomusculo` DISABLE KEYS */;
+INSERT INTO `equipomusculo` VALUES
+(1,3,2),
+(2,3,6),
+(3,3,16),
+(4,3,18),
+(5,5,3),
+(6,5,7),
+(7,5,9),
+(8,5,10),
+(9,5,14),
+(10,5,20),
+(11,5,21),
+(12,5,22),
+(13,5,23),
+(14,5,26),
+(15,5,27),
+(16,7,10),
+(17,7,16),
+(18,7,19),
+(19,7,21),
+(20,9,15),
+(21,9,16),
+(22,9,18),
+(23,11,7),
+(24,11,20),
+(25,11,27),
+(26,12,2),
+(27,12,6),
+(28,12,11),
+(29,12,15),
+(30,12,16),
+(31,12,17),
+(32,12,18),
+(33,13,3),
+(34,13,9),
+(35,13,10),
+(36,13,14),
+(37,13,22),
+(38,13,26),
+(39,14,3),
+(40,14,4),
+(41,14,7),
+(42,14,9),
+(43,14,10),
+(44,14,13),
+(45,14,14),
+(46,14,19),
+(47,14,20),
+(48,14,21),
+(49,14,22),
+(50,14,26),
+(51,14,27),
+(52,15,6),
+(53,15,11),
+(54,15,14),
+(55,15,16),
+(56,15,18),
+(57,15,26),
+(58,16,3),
+(59,16,4),
+(60,16,5),
+(61,16,7),
+(62,16,8),
+(63,16,9),
+(64,16,10),
+(65,16,12),
+(66,16,14),
+(67,16,20),
+(68,16,22),
+(69,16,23),
+(70,16,26),
+(71,16,27),
+(72,17,2),
+(73,17,3),
+(74,17,4),
+(75,17,5),
+(76,17,6),
+(77,17,7),
+(78,17,8),
+(79,17,9),
+(80,17,10),
+(81,17,11),
+(82,17,12),
+(83,17,14),
+(84,17,15),
+(85,17,16),
+(86,17,17),
+(87,17,18),
+(88,17,19),
+(89,17,20),
+(90,17,21),
+(91,17,22),
+(92,17,23),
+(93,17,24),
+(94,17,25),
+(95,17,26),
+(96,17,27),
+(97,19,6),
+(98,19,15),
+(99,19,16),
+(100,19,18),
+(101,19,24),
+(102,20,6),
+(103,20,7),
+(104,20,10),
+(105,20,14),
+(106,20,16),
+(107,20,19),
+(108,20,21),
+(109,20,26),
+(110,23,15),
+(111,23,18),
+(112,24,6),
+(113,24,7),
+(114,24,10),
+(115,24,11),
+(116,24,14),
+(117,24,16),
+(118,24,18),
+(119,24,19),
+(120,24,20),
+(121,24,21),
+(122,24,23),
+(123,24,26),
+(124,24,27),
+(125,26,7),
+(126,26,20),
+(127,26,27),
+(128,27,6),
+(129,29,2),
+(130,29,3),
+(131,29,4),
+(132,29,5),
+(133,29,6),
+(134,29,7),
+(135,29,8),
+(136,29,9),
+(137,29,10),
+(138,29,11),
+(139,29,12),
+(140,29,14),
+(141,29,15),
+(142,29,16),
+(143,29,17),
+(144,29,18),
+(145,29,19),
+(146,29,20),
+(147,29,21),
+(148,29,22),
+(149,29,23),
+(150,29,24),
+(151,29,25),
+(152,29,26),
+(153,29,27),
+(154,30,19),
+(155,30,21),
+(156,30,25),
+(157,31,3),
+(158,31,4),
+(159,32,3),
+(160,32,4),
+(161,33,1),
+(162,33,17),
+(163,34,2),
+(164,35,7),
+(165,35,20),
+(166,35,23),
+(167,36,3),
+(168,36,9),
+(169,36,10),
+(170,36,14),
+(171,36,22),
+(172,37,15),
+(173,37,24),
+(174,38,15),
+(175,38,24),
+(176,39,15),
+(177,39,24),
+(178,40,7),
+(179,40,8),
+(180,40,26),
+(181,42,14),
+(182,42,26),
+(183,43,11),
+(184,43,16),
+(185,43,18),
+(186,44,27),
+(187,45,7),
+(188,45,20),
+(189,45,22),
+(190,45,27),
+(191,46,3),
+(192,46,6),
+(193,46,10),
+(194,46,11),
+(195,46,16),
+(196,46,18),
+(197,46,22),
+(198,46,26),
+(199,48,6),
+(200,48,15),
+(201,48,16),
+(202,48,18),
+(203,48,24),
+(204,49,6),
+(205,49,16),
+(206,49,17),
+(207,49,18),
+(208,50,3),
+(209,50,9),
+(210,50,10),
+(211,50,22),
+(212,50,26),
+(213,51,7),
+(214,51,8),
+(215,51,26),
+(216,51,27),
+(217,52,7),
+(218,52,20),
+(219,52,27),
+(220,53,3),
+(221,53,6),
+(222,53,7),
+(223,53,8),
+(224,53,9),
+(225,53,10),
+(226,53,11),
+(227,53,14),
+(228,53,15),
+(229,53,16),
+(230,53,17),
+(231,53,18),
+(232,53,20),
+(233,53,22),
+(234,53,24),
+(235,53,26),
+(236,53,27),
+(237,54,7),
+(238,54,20),
+(239,54,23),
+(240,55,6),
+(241,55,7),
+(242,55,13),
+(243,55,15),
+(244,55,16),
+(245,55,18),
+(246,55,19),
+(247,55,20),
+(248,55,21),
+(249,55,23),
+(250,55,27),
+(251,56,2),
+(252,56,3),
+(253,56,4),
+(254,56,5),
+(255,56,6),
+(256,56,7),
+(257,56,8),
+(258,56,9),
+(259,56,10),
+(260,56,11),
+(261,56,12),
+(262,56,13),
+(263,56,14),
+(264,56,16),
+(265,56,17),
+(266,56,18),
+(267,56,19),
+(268,56,20),
+(269,56,21),
+(270,56,22),
+(271,56,23),
+(272,56,26),
+(273,56,27),
+(274,57,3),
+(275,57,4),
+(276,57,5),
+(277,57,7),
+(278,57,8),
+(279,57,9),
+(280,57,10),
+(281,57,11),
+(282,57,12),
+(283,57,14),
+(284,57,16),
+(285,57,17),
+(286,57,18),
+(287,57,19),
+(288,57,20),
+(289,57,21),
+(290,57,22),
+(291,57,23),
+(292,57,25),
+(293,57,26),
+(294,57,27),
+(295,58,7),
+(296,58,12),
+(297,58,14),
+(298,59,7),
+(299,59,10),
+(300,59,19),
+(301,59,21),
+(302,59,23),
+(303,59,25),
+(304,60,3),
+(305,60,4),
+(306,60,5),
+(307,60,6),
+(308,60,7),
+(309,60,8),
+(310,60,9),
+(311,60,10),
+(312,60,15),
+(313,60,16),
+(314,60,17),
+(315,60,18),
+(316,60,20),
+(317,60,21),
+(318,60,22),
+(319,60,26),
+(320,60,27),
+(321,61,3),
+(322,61,9),
+(323,61,10),
+(324,61,16),
+(325,61,22),
+(326,61,26),
+(327,62,3),
+(328,62,4),
+(329,62,5),
+(330,62,8),
+(331,62,9),
+(332,62,10),
+(333,62,11),
+(334,62,22),
+(335,62,26);
+/*!40000 ALTER TABLE `equipomusculo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `equipos`
+--
+
+DROP TABLE IF EXISTS `equipos`;
+/*!50001 DROP VIEW IF EXISTS `equipos`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `equipos` AS SELECT
+ NULL AS `id_equipo`,
+ NULL AS `idequipo`,
+ NULL AS `codigo`,
+ NULL AS `nombre`,
+ NULL AS `imagen`,
+ NULL AS `id_tipo`,
+ NULL AS `id_marca`,
+ NULL AS `modelo`,
+ NULL AS `numero_serie`,
+ NULL AS `descripcion`,
+ NULL AS `id_ubicacion`,
+ NULL AS `fecha_adquisicion`,
+ NULL AS `valor_adquisicion`,
+ NULL AS `id_estado`,
+ NULL AS `iddisponibilidadequipo`,
+ NULL AS `activo`,
+ NULL AS `observaciones`,
+ NULL AS `fecha_registro` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `estadocivil`
@@ -4062,6 +4516,24 @@ INSERT INTO `visitasgim` VALUES
 UNLOCK TABLES;
 
 --
+-- Final view structure for view `DisponibilidadEquipo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `DisponibilidadEquipo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `DisponibilidadEquipo` AS select `disponibilidadequipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`disponibilidadequipo`.`nombre` AS `nombre` from `disponibilidadequipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `EjercicioEquipo`
 --
 
@@ -4075,6 +4547,24 @@ UNLOCK TABLES;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `EjercicioEquipo` AS select `ejercicioequipo`.`idejercicioequipo` AS `idejercicioequipo`,`ejercicioequipo`.`idejercicio` AS `idejercicio`,`ejercicioequipo`.`idequipo` AS `idequipo` from `ejercicioequipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `EquipoMusculo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `EquipoMusculo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `EquipoMusculo` AS select `equipomusculo`.`idequipomusculo` AS `idequipomusculo`,`equipomusculo`.`idequipo` AS `idequipo`,`equipomusculo`.`idmusculo` AS `idmusculo` from `equipomusculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4237,6 +4727,24 @@ UNLOCK TABLES;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `RutinaPrograma` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `equipos`
+--
+
+/*!50001 DROP VIEW IF EXISTS `equipos`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `equipos` AS select `equipo`.`idequipo` AS `id_equipo`,`equipo`.`idequipo` AS `idequipo`,`equipo`.`codigo` AS `codigo`,`equipo`.`nombre` AS `nombre`,`equipo`.`imagen` AS `imagen`,`equipo`.`id_tipo` AS `id_tipo`,`equipo`.`id_marca` AS `id_marca`,`equipo`.`modelo` AS `modelo`,`equipo`.`numero_serie` AS `numero_serie`,`equipo`.`descripcion` AS `descripcion`,`equipo`.`id_ubicacion` AS `id_ubicacion`,`equipo`.`fecha_adquisicion` AS `fecha_adquisicion`,`equipo`.`valor_adquisicion` AS `valor_adquisicion`,`equipo`.`id_estado` AS `id_estado`,`equipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`equipo`.`activo` AS `activo`,`equipo`.`observaciones` AS `observaciones`,`equipo`.`fecha_registro` AS `fecha_registro` from `equipo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -4430,4 +4938,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-20 22:10:58
+-- Dump completed on 2026-10-20 23:50:16

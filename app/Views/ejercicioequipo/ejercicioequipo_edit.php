@@ -47,7 +47,8 @@
                         <label for="idequipo" class="form-label fw-semibold">Equipo / Máquina Requerida <span class="text-danger">*</span></label>
                         <select name="idequipo" id="idequipo" class="form-select" required>
                             <?php foreach ($equipos as $eq): ?>
-                                <option value="<?= $eq['id_equipo'] ?>" <?= (old('idequipo', $rel['idequipo']) == $eq['id_equipo']) ? 'selected' : '' ?>>
+                                <?php $idEq = $eq['idequipo'] ?? $eq['id_equipo']; ?>
+                                <option value="<?= $idEq ?>" <?= (old('idequipo', $rel['idequipo']) == $idEq) ? 'selected' : '' ?>>
                                     <?= esc($eq['codigo']) ?> - <?= esc($eq['nombre']) ?> <?= !empty($eq['modelo']) ? '(' . esc($eq['modelo']) . ')' : '' ?>
                                 </option>
                             <?php endforeach; ?>

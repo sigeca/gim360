@@ -18,7 +18,7 @@ El sistema gestiona 9 tablas normalizadas con claves foráneas e integridad refe
 8. **`genero`**: `idgenero`, `nombre`
 9. **`generopersona`**: `idgeneropersona`, `idpersona`, `idgenero`
 10. **`visitasgim`**: `idvisitasgim`, `idcliente`, `fecha`, `horallegada`, `horasalida`
-11. **`equipos`**: `id_equipo`, `codigo`, `nombre`, `descripcion`...
+11. **`equipo`**: `idequipo`, `codigo`, `nombre`, `descripcion`...
 12. **`ejercicio`**: `idejercicio`, `nombre`, `descripcion`, `urlvideo`, `imagen`
 13. **`motivoentrenamiento`**: `idmotivoentrenamiento`, `nombre`, `objetivo`
 15. **`rutinaejecicio`**: `idrutinaejercicio`, `nombre`
@@ -41,7 +41,7 @@ El proyecto está ubicado en `/var/www/html/gim360`:
 - **Catálogo Estados Civiles:** [http://localhost/gim360/index.php/estadocivil](http://localhost/gim360/index.php/estadocivil)
 - **Catálogo Géneros:** [http://localhost/gim360/index.php/genero](http://localhost/gim360/index.php/genero)
 - **Visitas al Gimnasio:** [http://localhost/gim360/index.php/visitasgim](http://localhost/gim360/index.php/visitasgim)
-- **Equipos y Máquinas:** [http://localhost/gim360/index.php/equipos](http://localhost/gim360/index.php/equipos)
+- **Equipos y Máquinas:** [http://localhost/gim360/index.php/equipo](http://localhost/gim360/index.php/equipo)
 - **Catálogo de Ejercicios:** [http://localhost/gim360/index.php/ejercicio](http://localhost/gim360/index.php/ejercicio)
 - **Motivos de Entrenamiento:** [http://localhost/gim360/index.php/motivoentrenamiento](http://localhost/gim360/index.php/motivoentrenamiento)
 - **Rutinas de Ejercicio:** [http://localhost/gim360/index.php/rutinaejecicio](http://localhost/gim360/index.php/rutinaejecicio)
@@ -99,7 +99,9 @@ mysql -h <HOST_NUBE> -P <PUERTO> -u <USUARIO> -p <NOMBRE_BD> < gim360.sql
 | **Motivos de Entrenamiento** | `motivoentrenamiento` | `MotivoEntrenamiento.php` | Catálogo y metas de entrenamiento con descripción de objetivos |
 | **Rutinas de Ejercicio** | `rutinaejecicio` | `RutinaEjecicio.php` | Catálogo y nombres de planes/rutinas de ejercicios |
 | **Visitas al Gimnasio** | `visitasgim` | `VisitasGim.php` | Control de asistencia con horas de llegada y salida |
-| **Equipos y Máquinas** | `equipos` | `Equipos.php` | Inventario de equipos con código, marcas y estado |
+| **Equipos y Máquinas** | `equipo` | `Equipo.php` | Inventario de equipos con código, marcas y estado |
+| **Disponibilidad Equipos** | `disponibilidadequipo` | `DisponibilidadEquipo.php` | Catálogo de estados de operatividad y disponibilidad de máquinas |
+| **Equipo - Músculos** | `equipomusculo` | `EquipoMusculo.php` | Asignación de grupos musculares trabajados por cada máquina |
 | **Ejercicios** | `ejercicio` | `Ejercicio.php` | Catálogo de ejercicios físicos con videos y descripciones |
 | **Programas de Entrenamiento** | `programaentrenamiento` | `ProgramaEntrenamiento.php` | Estructuración integral asociando motivo, rutina y ejercicios |
 

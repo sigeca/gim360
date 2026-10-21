@@ -28,7 +28,8 @@ $modulos = [
     'estadocivilpersona' => 'EstadoCivilPersona',
     'generopersona'      => 'GeneroPersona',
     'visitasgim'         => 'VisitasGim',
-    'equipos'            => 'Equipos',
+    'equipo'             => 'Equipo',
+    'equipos'            => 'Equipo',
     'ejercicio'          => 'Ejercicio',
     'motivoentrenamiento'  => 'MotivoEntrenamiento',
     'rutinaejecicio'       => 'RutinaEjecicio',
@@ -47,6 +48,10 @@ $modulos = [
     'programa-cliente'     => 'ProgramaCliente',
     'ejercicioequipo'      => 'EjercicioEquipo',
     'ejercicio-equipo'     => 'EjercicioEquipo',
+    'equipomusculo'        => 'EquipoMusculo',
+    'equipo-musculo'       => 'EquipoMusculo',
+    'disponibilidadequipo' => 'DisponibilidadEquipo',
+    'disponibilidad-equipo'=> 'DisponibilidadEquipo',
     'rutinaprograma'       => 'RutinaPrograma',
     'rutina-programa'      => 'RutinaPrograma',
     'rangoedad'            => 'RangoEdad',
@@ -89,9 +94,11 @@ foreach ($modulos as $slug => $controller) {
             $routes->post('quitarEquipo/(:num)/(:num)', 'Ejercicio::quitarEquipo/$1/$2');
         }
 
-        // Rutas adicionales para equipos
-        if ($controller === 'Equipos') {
-            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Equipos::imagen/$1');
+        // Rutas adicionales para equipo
+        if ($controller === 'Equipo' || $controller === 'Equipos') {
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', "{$controller}::imagen/$1");
+            $routes->post('asignarMusculo/(:num)', "{$controller}::asignarMusculo/$1");
+            $routes->post('quitarMusculo/(:num)/(:num)', "{$controller}::quitarMusculo/$1/$2");
         }
 
         // Rutas adicionales para musculo
@@ -191,6 +198,7 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('ejercicio/(:num)', 'GimApiController::getEjercicioDetail/$1');
     $routes->get('musculos', 'GimApiController::getMusculos');
     $routes->get('equipos', 'GimApiController::getEquipos');
+    $routes->get('equipo', 'GimApiController::getEquipos');
 
     // Registro de esfuerzo, ejecuciones de programa y visitas
     $routes->get('ejecucionprograma', 'GimApiController::getEjecuciones');

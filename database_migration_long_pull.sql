@@ -3,7 +3,7 @@
 START TRANSACTION;
 
 -- 1. Incorporar Máquina Long Pull / Seated Row si no existe
-INSERT INTO `equipos` (
+INSERT INTO `equipo` (
   `codigo`, `nombre`, `imagen`, `id_tipo`, `id_marca`, `modelo`,
   `numero_serie`, `descripcion`, `id_ubicacion`, `fecha_adquisicion`,
   `valor_adquisicion`, `id_estado`, `activo`, `observaciones`, `fecha_registro`
@@ -12,16 +12,16 @@ SELECT 'EQ-061', 'Máquina de Remo Sentado (Long Pull)', 'long_pull_seated_row_m
        NULL, 'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',
        2, '2026-10-20', 850.00, 1, 1, 'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.', NOW()
 WHERE NOT EXISTS (
-  SELECT 1 FROM `equipos` WHERE `imagen` = 'long_pull_seated_row_machine.jpg' OR `codigo` = 'EQ-061'
+  SELECT 1 FROM `equipo` WHERE `imagen` = 'long_pull_seated_row_machine.jpg' OR `codigo` = 'EQ-061'
 );
 
 -- Si ya existe la máquina con otro nombre o código pero con esta imagen o referencia, actualizar su imagen
-UPDATE `equipos`
+UPDATE `equipo`
 SET `imagen` = 'long_pull_seated_row_machine.jpg'
 WHERE `codigo` = 'EQ-061';
 
 -- Obtener el ID del equipo (Long Pull)
-SET @idequipo_long_pull = (SELECT `id_equipo` FROM `equipos` WHERE `codigo` = 'EQ-061' OR `imagen` = 'long_pull_seated_row_machine.jpg' LIMIT 1);
+SET @idequipo_long_pull = (SELECT `idequipo` FROM `equipo` WHERE `codigo` = 'EQ-061' OR `imagen` = 'long_pull_seated_row_machine.jpg' LIMIT 1);
 
 -- 2. Ejercicio 1: Remo sentado agarre estrecho (idejercicio = 360) - Ya existe, actualizar imagen y nombre
 UPDATE `ejercicio`

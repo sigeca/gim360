@@ -340,7 +340,7 @@ INSERT IGNORE INTO `programacliente` (`idprogramacliente`, `idprogramaentrenamie
 (3, 3, 2, '2026-03-10', 1),
 (4, 5, 6, '2026-04-05', 2);
 
-ALTER TABLE `equipos` ADD COLUMN IF NOT EXISTS `imagen` VARCHAR(255) DEFAULT NULL AFTER `nombre`;
+ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `imagen` VARCHAR(255) DEFAULT NULL AFTER `nombre`;
 
 CREATE TABLE IF NOT EXISTS `ejercicioequipo` (
   `idejercicioequipo` int(11) NOT NULL AUTO_INCREMENT,
@@ -351,7 +351,7 @@ CREATE TABLE IF NOT EXISTS `ejercicioequipo` (
   KEY `fk_ee_ejercicio` (`idejercicio`),
   KEY `fk_ee_equipo` (`idequipo`),
   CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE ON UPDATE CASCADE
+  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 CREATE OR REPLACE VIEW `EjercicioEquipo` AS 
@@ -376,6 +376,34 @@ INSERT IGNORE INTO `ejercicioequipo` (`idejercicioequipo`, `idejercicio`, `idequ
 (15, 13, 2),
 (16, 14, 14),
 (17, 15, 6);
+
+CREATE TABLE IF NOT EXISTS `disponibilidadequipo` (
+  `iddisponibilidadequipo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`iddisponibilidadequipo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT IGNORE INTO `disponibilidadequipo` (`iddisponibilidadequipo`, `nombre`) VALUES
+(1, 'Disponible'),
+(2, 'En Uso'),
+(3, 'En Mantenimiento'),
+(4, 'En Reparación'),
+(5, 'Fuera de Servicio'),
+(6, 'Reservado');
+
+ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `iddisponibilidadequipo` INT(11) DEFAULT 1 AFTER `id_estado`;
+
+CREATE TABLE IF NOT EXISTS `equipomusculo` (
+  `idequipomusculo` int(11) NOT NULL AUTO_INCREMENT,
+  `idequipo` int(11) NOT NULL,
+  `idmusculo` int(11) NOT NULL,
+  PRIMARY KEY (`idequipomusculo`),
+  UNIQUE KEY `uk_equipo_musculo` (`idequipo`, `idmusculo`),
+  KEY `fk_em_equipo` (`idequipo`),
+  KEY `fk_em_musculo` (`idmusculo`),
+  CONSTRAINT `fk_em_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_em_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
 CREATE TABLE IF NOT EXISTS `rangoedad` (
   `idrangoedad` int(11) NOT NULL AUTO_INCREMENT,
@@ -420,7 +448,7 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
                 $existingTables[] = strtolower($row[0]);
             }
         }
-        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 'estadoprogramacliente', 'programacliente', 'ejercicioequipo', 'rangoedad', 'ejecucionprograma'];
+        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 'estadoprogramacliente', 'programacliente', 'ejercicioequipo', 'equipomusculo', 'disponibilidadequipo', 'rangoedad', 'ejecucionprograma'];
         $missingTables = array_diff($requiredTables, $existingTables);
 
         echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount >= 16 && empty($missingTables), "OK ({$tableCount} tablas encontradas)", "Incompleta ({$tableCount} tablas encontradas)") . "</td></tr>";

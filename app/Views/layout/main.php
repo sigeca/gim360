@@ -234,8 +234,10 @@ $isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
 $isUsuarioActive = (strpos($uri, 'usuario') === 0);
 $groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive || $isUsuarioActive;
 
-$isEquiposActive = (strpos($uri, 'equipos') === 0);
-$groupEquiposOpen = $isEquiposActive;
+$isEquiposActive = (strpos($uri, 'equipo') === 0 && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false && strpos($uri, 'equipomusculo') === false && strpos($uri, 'equipo-musculo') === false && strpos($uri, 'disponibilidadequipo') === false && strpos($uri, 'disponibilidad-equipo') === false) || (strpos($uri, 'equipos') === 0);
+$isEquipoMusculoActive = (strpos($uri, 'equipomusculo') === 0 || strpos($uri, 'equipo-musculo') === 0);
+$isDisponibilidadEquipoActive = (strpos($uri, 'disponibilidadequipo') === 0 || strpos($uri, 'disponibilidad-equipo') === 0);
+$groupEquiposOpen = $isEquiposActive || $isEquipoMusculoActive || $isDisponibilidadEquipoActive;
 
 $isEjercicioActive = (strpos($uri, 'ejercicio') === 0 && strpos($uri, 'rutinaejercicio') === false && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false);
 $isMotivoActive = (strpos($uri, 'motivoentrenamiento') === 0);
@@ -356,9 +358,17 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                 </a>
                 <div class="collapse <?= $groupEquiposOpen ? 'show' : '' ?>" id="menuEquiposCollapse">
                     <div class="sidebar-submenu">
-                        <a href="<?= base_url('equipos') ?>" class="submenu-link <?= $isEquiposActive ? 'active' : '' ?>">
+                        <a href="<?= base_url('equipo') ?>" class="submenu-link <?= ($isEquiposActive && !$isEquipoMusculoActive && !$isDisponibilidadEquipoActive) ? 'active' : '' ?>">
                             <i class="bi bi-card-checklist text-success"></i>
                             <span>Gestión de Equipos</span>
+                        </a>
+                        <a href="<?= base_url('equipomusculo') ?>" class="submenu-link <?= $isEquipoMusculoActive ? 'active' : '' ?>">
+                            <i class="bi bi-diagram-3 text-success"></i>
+                            <span>Equipo - Músculos</span>
+                        </a>
+                        <a href="<?= base_url('disponibilidadequipo') ?>" class="submenu-link <?= $isDisponibilidadEquipoActive ? 'active' : '' ?>">
+                            <i class="bi bi-clock-history text-success"></i>
+                            <span>Disponibilidad Equipos</span>
                         </a>
                     </div>
                 </div>

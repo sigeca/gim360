@@ -8,8 +8,8 @@ class EquipoModel extends Model
 {
     use NavigableTrait;
 
-    protected $table            = 'equipos';
-    protected $primaryKey       = 'id_equipo';
+    protected $table            = 'equipo';
+    protected $primaryKey       = 'idequipo';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $allowedFields    = [
@@ -25,21 +25,23 @@ class EquipoModel extends Model
         'fecha_adquisicion',
         'valor_adquisicion',
         'id_estado',
+        'iddisponibilidadequipo',
         'activo',
         'observaciones',
     ];
 
     protected $validationRules = [
-        'codigo'            => 'required|min_length[2]|max_length[30]|is_unique[equipos.codigo,id_equipo,{id_equipo}]',
-        'nombre'            => 'required|min_length[2]|max_length[100]',
-        'imagen'            => 'permit_empty|max_length[255]',
-        'id_tipo'           => 'permit_empty|is_natural_no_zero',
-        'id_marca'          => 'permit_empty|is_natural_no_zero',
-        'id_ubicacion'      => 'permit_empty|is_natural_no_zero',
-        'id_estado'         => 'permit_empty|is_natural_no_zero',
-        'valor_adquisicion' => 'permit_empty|numeric',
-        'fecha_adquisicion' => 'permit_empty|valid_date[Y-m-d]',
-        'activo'            => 'permit_empty|in_list[0,1]',
+        'codigo'                 => 'required|min_length[2]|max_length[30]|is_unique[equipo.codigo,idequipo,{idequipo}]',
+        'nombre'                 => 'required|min_length[2]|max_length[100]',
+        'imagen'                 => 'permit_empty|max_length[255]',
+        'id_tipo'                => 'permit_empty|is_natural_no_zero',
+        'id_marca'               => 'permit_empty|is_natural_no_zero',
+        'id_ubicacion'           => 'permit_empty|is_natural_no_zero',
+        'id_estado'              => 'permit_empty|is_natural_no_zero',
+        'iddisponibilidadequipo' => 'permit_empty|is_natural_no_zero',
+        'valor_adquisicion'      => 'permit_empty|numeric',
+        'fecha_adquisicion'      => 'permit_empty|valid_date[Y-m-d]',
+        'activo'                 => 'permit_empty|in_list[0,1]',
     ];
 
     protected $validationMessages = [
@@ -103,15 +105,18 @@ class EquipoModel extends Model
 
     public function getEquiposWithDetails($search = null)
     {
-        $builder = $this->orderBy('id_equipo', 'DESC');
+        $builder = $this->select('equipo.*, de.nombre AS disponibilidad_nombre')
+                        ->join('disponibilidadequipo de', 'de.iddisponibilidadequipo = equipo.iddisponibilidadequipo', 'left')
+                        ->orderBy('equipo.idequipo', 'DESC');
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('codigo', $search)
-                    ->orLike('nombre', $search)
-                    ->orLike('imagen', $search)
-                    ->orLike('modelo', $search)
-                    ->orLike('numero_serie', $search)
+                    ->like('equipo.codigo', $search)
+                    ->orLike('equipo.nombre', $search)
+                    ->orLike('equipo.imagen', $search)
+                    ->orLike('equipo.modelo', $search)
+                    ->orLike('equipo.numero_serie', $search)
+                    ->orLike('de.nombre', $search)
                     ->groupEnd();
         }
 

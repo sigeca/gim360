@@ -263,7 +263,7 @@
                                             <div class="position-relative" style="height: 100px; display: flex; align-items: center; justify-content: center;">
                                                 <?php if (!empty($eq['imagen'])): ?>
                                                     <img src="<?= base_url('repositorio/images/equipment/' . esc($eq['imagen'])) ?>" 
-                                                         onerror="this.onerror=null; this.src='<?= base_url('equipos/imagen/' . esc($eq['imagen'])) ?>';"
+                                                         onerror="this.onerror=null; this.src='<?= base_url('equipo/imagen/' . esc($eq['imagen'])) ?>';"
                                                          alt="<?= esc($eq['nombre']) ?>" 
                                                          class="img-fluid" 
                                                          style="max-height: 90px; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));">
@@ -273,14 +273,14 @@
                                             </div>
                                             <div class="mt-2">
                                                 <span class="badge bg-secondary-subtle text-secondary border font-monospace small"><?= esc($eq['codigo']) ?></span>
-                                                <a href="<?= base_url('equipos/actual/' . $eq['idequipo']) ?>" 
+                                                <a href="<?= base_url('equipo/actual/' . $eq['idequipo']) ?>" 
                                                    class="fw-bold text-dark text-decoration-none small d-block text-truncate mt-1" 
                                                    title="<?= esc($eq['nombre']) ?>">
                                                     <?= esc($eq['nombre']) ?>
                                                 </a>
                                             </div>
                                             <div class="mt-2 pt-1 border-top d-flex justify-content-between align-items-center">
-                                                <a href="<?= base_url('equipos/actual/' . $eq['idequipo']) ?>" class="btn btn-link btn-sm p-0 text-primary small text-decoration-none" title="Ver ficha del equipo">
+                                                <a href="<?= base_url('equipo/actual/' . $eq['idequipo']) ?>" class="btn btn-link btn-sm p-0 text-primary small text-decoration-none" title="Ver ficha del equipo">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
                                                 <form action="<?= base_url('ejercicio/quitarEquipo/' . $ejercicio['idejercicio'] . '/' . $eq['idequipo']) ?>" method="post" class="d-inline" onsubmit="return confirm('¿Desvincular <?= esc($eq['nombre']) ?> de este ejercicio?');">
@@ -316,8 +316,9 @@
                                             <select name="idequipo" id="selectEquipoModal" class="form-select" required>
                                                 <option value="">-- Seleccionar Equipo --</option>
                                                 <?php foreach ($todosLosEquipos as $te): ?>
-                                                    <?php $yaAsignadoEq = in_array($te['id_equipo'], array_column($equipos, 'idequipo')); ?>
-                                                    <option value="<?= $te['id_equipo'] ?>" <?= $yaAsignadoEq ? 'disabled class="text-muted"' : '' ?>>
+                                                    <?php $idEqActual = $te['idequipo'] ?? $te['id_equipo']; ?>
+                                                    <?php $yaAsignadoEq = in_array($idEqActual, array_column($equipos, 'idequipo')); ?>
+                                                    <option value="<?= $idEqActual ?>" <?= $yaAsignadoEq ? 'disabled class="text-muted"' : '' ?>>
                                                         <?= esc($te['codigo']) ?> - <?= esc($te['nombre']) ?> <?= !empty($te['modelo']) ? '(' . esc($te['modelo']) . ')' : '' ?> <?= $yaAsignadoEq ? '✓ (Ya vinculado)' : '' ?>
                                                     </option>
                                                 <?php endforeach; ?>

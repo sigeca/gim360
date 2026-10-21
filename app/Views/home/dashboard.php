@@ -368,7 +368,7 @@
                 </div>
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
-                <a href="<?= base_url('equipos') ?>" class="text-decoration-none small fw-semibold text-primary">Gestionar inventario <i class="bi bi-arrow-right"></i></a>
+                <a href="<?= base_url('equipo') ?>" class="text-decoration-none small fw-semibold text-primary">Gestionar inventario <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -559,6 +559,44 @@
             </div>
             <div class="card-footer bg-transparent border-0 pt-0">
                 <a href="<?= base_url('ejercicioequipo') ?>" class="text-decoration-none small fw-semibold text-info">Gestionar relaciones <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 21b. equipomusculo -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-success">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">Equipo y Músculos</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['equipomusculo'] ?? 0 ?></h3>
+                    <small class="text-muted">Músculos que se ejercitan con cada máquina</small>
+                </div>
+                <div class="bg-success bg-opacity-10 p-3 rounded-circle text-success fs-3">
+                    <i class="bi bi-diagram-3-fill"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('equipomusculo') ?>" class="text-decoration-none small fw-semibold text-success">Gestionar asignaciones <i class="bi bi-arrow-right"></i></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 21c. disponibilidadequipo -->
+    <div class="col-sm-6 col-xl-4">
+        <div class="card card-custom h-100 bg-white border-start border-4 border-info">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <div>
+                    <span class="text-uppercase fw-bold text-muted small">Disponibilidad Equipos</span>
+                    <h3 class="fw-bold my-1 text-dark"><?= $counts['disponibilidadequipo'] ?? 0 ?></h3>
+                    <small class="text-muted">Estados de operatividad y uso</small>
+                </div>
+                <div class="bg-info bg-opacity-10 p-3 rounded-circle text-info fs-3">
+                    <i class="bi bi-clock-history"></i>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-0 pt-0">
+                <a href="<?= base_url('disponibilidadequipo') ?>" class="text-decoration-none small fw-semibold text-info">Ver catálogo <i class="bi bi-arrow-right"></i></a>
             </div>
         </div>
     </div>
@@ -766,8 +804,8 @@
     <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-0">
         <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-gear-wide-connected me-2 text-primary"></i>Equipos y Maquinaria Registrada</h5>
         <div class="d-flex gap-2">
-            <a href="<?= base_url('equipos/add') ?>" class="btn btn-outline-primary btn-sm">+ Registrar Equipo</a>
-            <a href="<?= base_url('equipos/listar') ?>" class="btn btn-outline-secondary btn-sm">Ver inventario</a>
+            <a href="<?= base_url('equipo/add') ?>" class="btn btn-outline-primary btn-sm">+ Registrar Equipo</a>
+            <a href="<?= base_url('equipo/listar') ?>" class="btn btn-outline-secondary btn-sm">Ver inventario</a>
         </div>
     </div>
     <div class="card-body p-0">
@@ -803,11 +841,12 @@
                                     <?php endif; ?>
                                 </td>
                                 <td class="text-end pe-3">
+                                    <?php $idEq = $eq['idequipo'] ?? $eq['id_equipo']; ?>
                                     <div class="btn-group btn-group-sm">
-                                        <a href="<?= base_url('equipos/actual/' . $eq['id_equipo']) ?>" class="btn btn-outline-info" title="Ver Ficha">
+                                        <a href="<?= base_url('equipo/actual/' . $idEq) ?>" class="btn btn-outline-info" title="Ver Ficha">
                                             <i class="bi bi-eye"></i>
                                         </a>
-                                        <a href="<?= base_url('equipos/edit/' . $eq['id_equipo']) ?>" class="btn btn-outline-warning" title="Editar">
+                                        <a href="<?= base_url('equipo/edit/' . $idEq) ?>" class="btn btn-outline-warning" title="Editar">
                                             <i class="bi bi-pencil"></i>
                                         </a>
                                     </div>

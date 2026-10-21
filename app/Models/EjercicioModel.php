@@ -102,7 +102,7 @@ class EjercicioModel extends Model
         return $this->db->table('ejercicioequipo ee')
             ->select('ee.idejercicioequipo, ee.idejercicio, ee.idequipo, 
                       eq.codigo, eq.nombre, eq.imagen, eq.modelo, eq.id_tipo, eq.id_estado, eq.id_ubicacion')
-            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->join('equipo eq', 'eq.idequipo = ee.idequipo', 'inner')
             ->where('ee.idejercicio', $idejercicio)
             ->orderBy('eq.nombre', 'ASC')
             ->get()
@@ -121,7 +121,7 @@ class EjercicioModel extends Model
         $rows = $this->db->table('ejercicioequipo ee')
             ->select('ee.idejercicio, ee.idejercicioequipo, ee.idequipo, 
                       eq.codigo, eq.nombre, eq.imagen, eq.modelo, eq.id_tipo')
-            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->join('equipo eq', 'eq.idequipo = ee.idequipo', 'inner')
             ->whereIn('ee.idejercicio', $idejercicios)
             ->orderBy('eq.nombre', 'ASC')
             ->get()

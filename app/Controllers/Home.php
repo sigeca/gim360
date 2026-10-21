@@ -64,7 +64,7 @@ class Home extends BaseController
 
         // Distribución de Equipos por Tipo
         $tiposNombres = EquipoModel::getTipos();
-        $equiposRaw = $db->table('equipos')
+        $equiposRaw = $db->table('equipo')
             ->select('id_tipo, COUNT(*) as total')
             ->groupBy('id_tipo')
             ->get()->getResultArray();
@@ -100,11 +100,14 @@ class Home extends BaseController
                 'genero'               => $generoModel->countAllResults(),
                 'generopersona'        => $gpModel->countAllResults(),
                 'visitasgim'           => $visitasGimModel->countAllResults(),
+                'equipo'               => $equipoModel->countAllResults(),
                 'equipos'              => $equipoModel->countAllResults(),
                 'ejercicio'            => $ejercicioModel->countAllResults(),
                 'musculo'              => $musculoModel->countAllResults(),
                 'musculoejercicio'     => $meModel->countAllResults(),
                 'ejercicioequipo'      => $eeModel->countAllResults(),
+                'equipomusculo'        => (new \App\Models\EquipoMusculoModel())->countAllResults(),
+                'disponibilidadequipo' => (new \App\Models\DisponibilidadEquipoModel())->countAllResults(),
                 'motivoentrenamiento'  => $motivoModel->countAllResults(),
                 'rangoedad'            => $rangoModel->countAllResults(),
                 'rutinaejecicio'       => $rutinaModel->countAllResults(),

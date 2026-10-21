@@ -42,7 +42,7 @@ class EjercicioEquipoModel extends Model
             ->select('ee.idejercicioequipo, ee.idejercicio, ee.idequipo, 
                       eq.codigo, eq.nombre AS nombre, eq.imagen AS imagen, 
                       eq.modelo, eq.id_tipo, eq.id_estado, eq.id_ubicacion')
-            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->join('equipo eq', 'eq.idequipo = ee.idequipo', 'inner')
             ->where('ee.idejercicio', $idejercicio)
             ->orderBy('eq.nombre', 'ASC')
             ->get()
@@ -135,7 +135,7 @@ class EjercicioEquipoModel extends Model
                       e.nombreespanol AS ejercicio_nombre, e.nombreespanol AS ejercicio_nombreespanol, e.nombreingles AS ejercicio_nombreingles, e.imagen AS ejercicio_imagen, e.descripcion AS ejercicio_descripcion,
                       eq.codigo AS equipo_codigo, eq.nombre AS equipo_nombre, eq.imagen AS equipo_imagen, eq.modelo AS equipo_modelo, eq.id_tipo AS equipo_tipo')
             ->join('ejercicio e', 'e.idejercicio = ee.idejercicio', 'inner')
-            ->join('equipos eq', 'eq.id_equipo = ee.idequipo', 'inner')
+            ->join('equipo eq', 'eq.idequipo = ee.idequipo', 'inner')
             ->where('ee.idejercicioequipo', $id)
             ->get()
             ->getRowArray();
@@ -151,21 +151,21 @@ class EjercicioEquipoModel extends Model
                                   ejercicio.nombreespanol AS ejercicio_nombreespanol,
                                   ejercicio.nombreingles AS ejercicio_nombreingles,
                                   ejercicio.imagen AS ejercicio_imagen,
-                                  equipos.codigo AS equipo_codigo,
-                                  equipos.nombre AS equipo_nombre, 
-                                  equipos.imagen AS equipo_imagen,
-                                  equipos.modelo AS equipo_modelo')
+                                  equipo.codigo AS equipo_codigo,
+                                  equipo.nombre AS equipo_nombre, 
+                                  equipo.imagen AS equipo_imagen,
+                                  equipo.modelo AS equipo_modelo')
                         ->join('ejercicio', 'ejercicio.idejercicio = ejercicioequipo.idejercicio', 'inner')
-                        ->join('equipos', 'equipos.id_equipo = ejercicioequipo.idequipo', 'inner')
+                        ->join('equipo', 'equipo.idequipo = ejercicioequipo.idequipo', 'inner')
                         ->orderBy('ejercicioequipo.idejercicioequipo', 'DESC');
 
         if (!empty($search)) {
             $builder->groupStart()
                     ->like('ejercicio.nombreespanol', $search)
                     ->orLike('ejercicio.nombreingles', $search)
-                    ->orLike('equipos.nombre', $search)
-                    ->orLike('equipos.codigo', $search)
-                    ->orLike('equipos.modelo', $search)
+                    ->orLike('equipo.nombre', $search)
+                    ->orLike('equipo.codigo', $search)
+                    ->orLike('equipo.modelo', $search)
                     ->groupEnd();
         }
 

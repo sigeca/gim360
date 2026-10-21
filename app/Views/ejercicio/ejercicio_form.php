@@ -85,14 +85,15 @@
                         <div class="p-3 bg-light rounded border" style="max-height: 260px; overflow-y: auto;">
                             <div class="row g-2">
                                 <?php foreach ($todosLosEquipos as $te): ?>
-                                    <?php $checkedEq = in_array($te['id_equipo'], (array)old('equipos', [])); ?>
+                                    <?php $idEq = $te['idequipo'] ?? $te['id_equipo']; ?>
+                                    <?php $checkedEq = in_array($idEq, (array)old('equipos', [])); ?>
                                     <div class="col-sm-6 col-md-4">
                                         <div class="form-check p-2 bg-white rounded border d-flex align-items-center gap-2">
-                                            <input class="form-check-input ms-0 me-2" type="checkbox" name="equipos[]" value="<?= $te['id_equipo'] ?>" id="eq_<?= $te['id_equipo'] ?>" <?= $checkedEq ? 'checked' : '' ?>>
-                                            <label class="form-check-label d-flex align-items-center gap-2 w-100 cursor-pointer small" for="eq_<?= $te['id_equipo'] ?>">
+                                            <input class="form-check-input ms-0 me-2" type="checkbox" name="equipos[]" value="<?= $idEq ?>" id="eq_<?= $idEq ?>" <?= $checkedEq ? 'checked' : '' ?>>
+                                            <label class="form-check-label d-flex align-items-center gap-2 w-100 cursor-pointer small" for="eq_<?= $idEq ?>">
                                                 <?php if (!empty($te['imagen'])): ?>
                                                     <img src="<?= base_url('repositorio/images/equipment/' . esc($te['imagen'])) ?>" 
-                                                         onerror="this.onerror=null; this.src='<?= base_url('equipos/imagen/' . esc($te['imagen'])) ?>';"
+                                                         onerror="this.onerror=null; this.src='<?= base_url('equipo/imagen/' . esc($te['imagen'])) ?>';"
                                                          alt="<?= esc($te['nombre']) ?>" 
                                                          style="width: 24px; height: 24px; object-fit: contain;">
                                                 <?php endif; ?>
