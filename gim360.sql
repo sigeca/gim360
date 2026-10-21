@@ -1385,7 +1385,7 @@ CREATE TABLE `equipomusculo` (
   KEY `fk_em_musculo` (`idmusculo`),
   CONSTRAINT `fk_em_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_em_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=512 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=513 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4516,6 +4516,10 @@ INSERT INTO `visitasgim` VALUES
 UNLOCK TABLES;
 
 --
+-- Dumping routines for database 'gim360'
+--
+
+--
 -- Final view structure for view `DisponibilidadEquipo`
 --
 
@@ -4527,7 +4531,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `DisponibilidadEquipo` AS select `disponibilidadequipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`disponibilidadequipo`.`nombre` AS `nombre` from `disponibilidadequipo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4545,7 +4549,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `EjercicioEquipo` AS select `ejercicioequipo`.`idejercicioequipo` AS `idejercicioequipo`,`ejercicioequipo`.`idejercicio` AS `idejercicio`,`ejercicioequipo`.`idequipo` AS `idequipo` from `ejercicioequipo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4563,7 +4567,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `EquipoMusculo` AS select `equipomusculo`.`idequipomusculo` AS `idequipomusculo`,`equipomusculo`.`idequipo` AS `idequipo`,`equipomusculo`.`idmusculo` AS `idmusculo` from `equipomusculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4581,7 +4585,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `EstadoProgramaCliente` AS select `estadoprogramacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente`,`estadoprogramacliente`.`nombre` AS `nombre` from `estadoprogramacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4599,7 +4603,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `Musculo` AS select `musculo`.`idmusculo` AS `idmusculo`,`musculo`.`nombre` AS `nombre`,`musculo`.`imagen` AS `imagen` from `musculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4617,7 +4621,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `MusculoEjercicio` AS select `musculoejercicio`.`idmusculoejecicio` AS `idmusculoejecicio`,`musculoejercicio`.`idejercicio` AS `idejercicio`,`musculoejercicio`.`idmusculo` AS `idmusculo` from `musculoejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4635,7 +4639,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `PlanEjercicio` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4653,7 +4657,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `ProgramaCliente` AS select `programacliente`.`idprogramacliente` AS `idprogramacliente`,`programacliente`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programacliente`.`idcliente` AS `idcliente`,`programacliente`.`fechainicio` AS `fechainicio`,`programacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente` from `programacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4671,7 +4675,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `ProgramaEntrenamiento` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamiento`.`idrangoedad` AS `idrangoedad` from `programaentrenamiento` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4689,7 +4693,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `RangoEdad` AS select `rangoedad`.`idrangoedad` AS `idrangoedad`,`rangoedad`.`nombre` AS `nombre`,`rangoedad`.`edadminima` AS `edadminima`,`rangoedad`.`edadmaxima` AS `edadmaxima` from `rangoedad` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4707,7 +4711,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `RutinaPlan` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4725,7 +4729,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `RutinaPrograma` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4743,7 +4747,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `equipos` AS select `equipo`.`idequipo` AS `id_equipo`,`equipo`.`idequipo` AS `idequipo`,`equipo`.`codigo` AS `codigo`,`equipo`.`nombre` AS `nombre`,`equipo`.`imagen` AS `imagen`,`equipo`.`id_tipo` AS `id_tipo`,`equipo`.`id_marca` AS `id_marca`,`equipo`.`modelo` AS `modelo`,`equipo`.`numero_serie` AS `numero_serie`,`equipo`.`descripcion` AS `descripcion`,`equipo`.`id_ubicacion` AS `id_ubicacion`,`equipo`.`fecha_adquisicion` AS `fecha_adquisicion`,`equipo`.`valor_adquisicion` AS `valor_adquisicion`,`equipo`.`id_estado` AS `id_estado`,`equipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`equipo`.`activo` AS `activo`,`equipo`.`observaciones` AS `observaciones`,`equipo`.`fecha_registro` AS `fecha_registro` from `equipo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4761,7 +4765,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `planejerciciomodelo` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`nombre` AS `nombre`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4779,7 +4783,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `planpersonalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso` from `planejerciciopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4797,7 +4801,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `programaentrenamientomodelo` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamiento`.`idrangoedad` AS `idrangoedad` from `programaentrenamiento` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4815,7 +4819,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `programapersonalizado` AS select `programaentrenamientopersonalizado`.`idprogramapersonalizado` AS `idprogramapersonalizado`,`programaentrenamientopersonalizado`.`idprogramaentrenamientomodelo` AS `idprogramaentrenamientomodelo`,`programaentrenamientopersonalizado`.`idcliente` AS `idcliente`,`programaentrenamientopersonalizado`.`nombre` AS `nombre`,`programaentrenamientopersonalizado`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamientopersonalizado`.`idrangoedad` AS `idrangoedad`,`programaentrenamientopersonalizado`.`fechacreacion` AS `fechacreacion` from `programaentrenamientopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4833,7 +4837,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4851,7 +4855,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinaejerciciomodelo` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4869,7 +4873,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinaejerciciopersonalizada` AS select `rutinaejerciciopersonalizado`.`idrutinapersonalizada` AS `idrutinapersonalizada`,`rutinaejerciciopersonalizado`.`idrutinaejerciciomodelo` AS `idrutinaejerciciomodelo`,`rutinaejerciciopersonalizado`.`idcliente` AS `idcliente`,`rutinaejerciciopersonalizado`.`nombre` AS `nombre`,`rutinaejerciciopersonalizado`.`fechacreacion` AS `fechacreacion` from `rutinaejerciciopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4887,7 +4891,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinapersonalizada` AS select `rutinaejerciciopersonalizado`.`idrutinapersonalizada` AS `idrutinapersonalizada`,`rutinaejerciciopersonalizado`.`idrutinaejerciciomodelo` AS `idrutinaejerciciomodelo`,`rutinaejerciciopersonalizado`.`idcliente` AS `idcliente`,`rutinaejerciciopersonalizado`.`nombre` AS `nombre`,`rutinaejerciciopersonalizado`.`fechacreacion` AS `fechacreacion` from `rutinaejerciciopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4905,7 +4909,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinaplanmodelo` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4923,7 +4927,7 @@ UNLOCK TABLES;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+
 /*!50001 VIEW `rutinaprogramamodelo` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -4938,4 +4942,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-20 23:50:16
+-- Dump completed on 2026-10-21  0:22:38
