@@ -53,7 +53,12 @@ class MusculoEjercicioModel extends Model
     public function getEjerciciosByMusculo(int $idmusculo): array
     {
         return $this->db->table('musculoejercicio me')
-            ->select('me.idmusculoejecicio, me.idejercicio, me.idmusculo, e.nombreespanol AS ejercicio_nombre, e.nombreespanol AS ejercicio_nombreespanol, e.nombreingles AS ejercicio_nombreingles, e.imagen AS ejercicio_imagen, e.descripcion AS ejercicio_descripcion')
+            ->select('me.idmusculoejecicio, me.idejercicio, me.idmusculo, 
+                      e.nombreespanol AS ejercicio_nombre, e.nombreespanol, 
+                      e.nombreingles AS ejercicio_nombreingles, e.nombreingles, 
+                      e.imagen AS ejercicio_imagen, e.imagen, 
+                      e.descripcion AS ejercicio_descripcion, e.descripcion,
+                      e.urlvideo')
             ->join('ejercicio e', 'e.idejercicio = me.idejercicio', 'inner')
             ->where('me.idmusculo', $idmusculo)
             ->orderBy('e.nombreespanol', 'ASC')

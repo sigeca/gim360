@@ -74,14 +74,20 @@ class EquipoMusculoModel extends Model
     }
 
     /**
-     * Obtiene los equipos asociados a un músculo
+     * Obtiene los equipos asociados a un músculo con disponibilidad y datos completos
      */
     public function getEquiposByMusculo(int $idmusculo): array
     {
         return $this->db->table('equipomusculo em')
             ->select('em.idequipomusculo, em.idequipo, em.idmusculo, 
-                      eq.codigo AS equipo_codigo, eq.nombre AS equipo_nombre, eq.imagen AS equipo_imagen, eq.modelo AS equipo_modelo')
+                      eq.codigo AS equipo_codigo, eq.codigo, 
+                      eq.nombre AS equipo_nombre, eq.nombre, 
+                      eq.imagen AS equipo_imagen, eq.imagen, 
+                      eq.modelo AS equipo_modelo, eq.modelo,
+                      eq.iddisponibilidadequipo, eq.activo,
+                      de.nombre AS disponibilidad_nombre')
             ->join('equipo eq', 'eq.idequipo = em.idequipo', 'inner')
+            ->join('disponibilidadequipo de', 'de.iddisponibilidadequipo = eq.iddisponibilidadequipo', 'left')
             ->where('em.idmusculo', $idmusculo)
             ->orderBy('eq.nombre', 'ASC')
             ->get()

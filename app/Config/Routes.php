@@ -105,6 +105,10 @@ foreach ($modulos as $slug => $controller) {
         if ($controller === 'Musculo') {
             $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Musculo::imagen/$1');
             $routes->get('galeria', 'Musculo::galeria');
+            $routes->post('asignarEquipo/(:num)', 'Musculo::asignarEquipo/$1');
+            $routes->post('quitarEquipo/(:num)/(:num)', 'Musculo::quitarEquipo/$1/$2');
+            $routes->post('asignarEjercicio/(:num)', 'Musculo::asignarEjercicio/$1');
+            $routes->post('quitarEjercicio/(:num)/(:num)', 'Musculo::quitarEjercicio/$1/$2');
         }
 
         // Rutas adicionales para motivoentrenamiento

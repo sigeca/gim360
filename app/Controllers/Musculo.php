@@ -3,15 +3,27 @@
 namespace App\Controllers;
 
 use App\Models\MusculoModel;
+use App\Models\EquipoMusculoModel;
+use App\Models\MusculoEjercicioModel;
+use App\Models\EquipoModel;
+use App\Models\EjercicioModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class Musculo extends BaseController
 {
     protected MusculoModel $musculoModel;
+    protected EquipoMusculoModel $equipoMusculoModel;
+    protected MusculoEjercicioModel $musculoEjercicioModel;
+    protected EquipoModel $equipoModel;
+    protected EjercicioModel $ejercicioModel;
 
     public function __construct()
     {
-        $this->musculoModel = new MusculoModel();
+        $this->musculoModel          = new MusculoModel();
+        $this->equipoMusculoModel    = new EquipoMusculoModel();
+        $this->musculoEjercicioModel = new MusculoEjercicioModel();
+        $this->equipoModel           = new EquipoModel();
+        $this->ejercicioModel        = new EjercicioModel();
     }
 
     public function index($id = null)
@@ -28,10 +40,39 @@ class Musculo extends BaseController
             $musculo = $last ?: null;
         }
 
+        $equipos = [];
+        $ejercicios = [];
+        $todosLosEquipos = [];
+        $todosLosEjercicios = [];
+
+        if ($musculo) {
+            $idmusculo = (int)$musculo['idmusculo'];
+            // 1. Equipos y máquinas que ejercitan este músculo
+            $equipos = $this->equipoMusculoModel->getEquiposByMusculo($idmusculo);
+
+            // 2. Ejercicios que se realizan para ejercitar este músculo
+            $ejercicios = $this->musculoEjercicioModel->getEjerciciosByMusculo($idmusculo);
+
+            // 3. Catálogos para asignaciones / modales
+            $todosLosEquipos = $this->equipoModel
+                ->select('idequipo, codigo, nombre')
+                ->orderBy('nombre', 'ASC')
+                ->findAll();
+
+            $todosLosEjercicios = $this->ejercicioModel
+                ->select('idejercicio, nombreespanol, nombreingles')
+                ->orderBy('nombreespanol', 'ASC')
+                ->findAll();
+        }
+
         $data = [
-            'title'   => 'Ficha de Músculo' . ($musculo ? ': ' . $musculo['nombre'] : ''),
-            'musculo' => $musculo,
-            'module'  => 'musculo',
+            'title'              => 'Ficha de Músculo' . ($musculo ? ': ' . $musculo['nombre'] : ''),
+            'musculo'            => $musculo,
+            'equipos'            => $equipos,
+            'ejercicios'         => $ejercicios,
+            'todosLosEquipos'    => $todosLosEquipos,
+            'todosLosEjercicios' => $todosLosEjercicios,
+            'module'             => 'musculo',
         ];
 
         return view('musculo/musculo_record', $data);
@@ -220,5 +261,83 @@ class Musculo extends BaseController
         } catch (\Exception $e) {
             return redirect()->to(base_url('musculo/actual/' . $id))->with('error', 'No se puede eliminar el registro: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Vincula un equipo/máquina a este músculo
+     */
+    public function asignarEquipo($idmusculo)
+    {
+        $idequipo = (int) $this->request->getPost('idequipo');
+        if ($idequipo <= 0) {
+            return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('error', 'Seleccione un equipo válido.');
+        }
+
+        $existe = $this->equipoMusculoModel
+            ->where('idequipo', $idequipo)
+            ->where('idmusculo', $idmusculo)
+            ->first();
+
+        if (!$existe) {
+            $this->equipoMusculoModel->insert([
+                'idequipo'  => $idequipo,
+                'idmusculo' => $idmusculo,
+            ]);
+            return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('success', 'Equipo / Máquina vinculado exitosamente.');
+        }
+
+        return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('info', 'El equipo ya se encontraba vinculado a este músculo.');
+    }
+
+    /**
+     * Desvincula un equipo/máquina de este músculo
+     */
+    public function quitarEquipo($idmusculo, $idequipo)
+    {
+        $this->equipoMusculoModel
+            ->where('idequipo', $idequipo)
+            ->where('idmusculo', $idmusculo)
+            ->delete();
+
+        return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('success', 'Equipo / Máquina desvinculado correctamente.');
+    }
+
+    /**
+     * Vincula un ejercicio a este músculo
+     */
+    public function asignarEjercicio($idmusculo)
+    {
+        $idejercicio = (int) $this->request->getPost('idejercicio');
+        if ($idejercicio <= 0) {
+            return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('error', 'Seleccione un ejercicio válido.');
+        }
+
+        $existe = $this->musculoEjercicioModel
+            ->where('idejercicio', $idejercicio)
+            ->where('idmusculo', $idmusculo)
+            ->first();
+
+        if (!$existe) {
+            $this->musculoEjercicioModel->insert([
+                'idejercicio' => $idejercicio,
+                'idmusculo'   => $idmusculo,
+            ]);
+            return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('success', 'Ejercicio vinculado exitosamente a este músculo.');
+        }
+
+        return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('info', 'El ejercicio ya se encontraba vinculado a este músculo.');
+    }
+
+    /**
+     * Desvincula un ejercicio de este músculo
+     */
+    public function quitarEjercicio($idmusculo, $idejercicio)
+    {
+        $this->musculoEjercicioModel
+            ->where('idejercicio', $idejercicio)
+            ->where('idmusculo', $idmusculo)
+            ->delete();
+
+        return redirect()->to(base_url('musculo/actual/' . $idmusculo))->with('success', 'Ejercicio desvinculado correctamente de este músculo.');
     }
 }
