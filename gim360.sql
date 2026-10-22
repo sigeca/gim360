@@ -113,9 +113,7 @@ SET character_set_client = utf8mb4;
  NULL AS `repeticiones`,
  NULL AS `series`,
  NULL AS `tiempodescanso`,
- NULL AS `peso`,
- NULL AS `fechainicio`,
- NULL AS `duracionsemana` */;
+ NULL AS `peso` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -205,7 +203,7 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idcliente`),
   UNIQUE KEY `idpersona` (`idpersona`),
   CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,7 +218,8 @@ INSERT INTO `cliente` VALUES
 (6,7),
 (7,8),
 (8,9),
-(9,11);
+(9,11),
+(10,12);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -338,7 +337,7 @@ CREATE TABLE `ejecucionprograma` (
   KEY `idx_ejecucionprograma_fecha` (`fecha`),
   CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -356,7 +355,17 @@ INSERT INTO `ejecucionprograma` VALUES
 (6,6,3,'2026-10-16','15:11:00','15:21:00'),
 (7,7,253,'2026-10-16','15:13:00','15:50:00'),
 (8,7,253,'2026-10-16','15:13:00','15:50:00'),
-(9,7,339,'2026-10-16','16:16:00','17:00:00');
+(9,7,339,'2026-10-16','16:16:00','17:00:00'),
+(10,5,268,'2026-10-21','06:25:15','06:35:15'),
+(11,9,2,'2026-10-21','08:25:52','08:35:52'),
+(12,5,466,'2026-10-21','09:25:09','09:26:09'),
+(13,9,2,'2026-10-21','09:53:54','09:55:13'),
+(14,9,1,'2026-10-21','09:56:20','09:57:20'),
+(15,4,356,'2026-10-21','19:11:08','19:22:00'),
+(16,5,131,'2026-10-21','22:38:04','22:39:04'),
+(17,5,223,'2026-10-22','08:05:13','08:06:41'),
+(18,5,356,'2026-10-22','08:55:50','09:25:30'),
+(19,5,383,'2026-10-22','09:34:39','09:36:18');
 /*!40000 ALTER TABLE `ejecucionprograma` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -375,7 +384,7 @@ CREATE TABLE `ejercicio` (
   `urlvideo` varchar(255) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=468 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=470 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -851,8 +860,50 @@ INSERT INTO `ejercicio` VALUES
 (464,'Remo Unilateral Sentado en Polea','Single-Arm Seated Cable Row','Variación unilateral del remo sentado en polea baja con maneral individual. Permite corregir desequilibrios musculares bilaterales y lograr un mayor rango de recorrido y contracción del dorsal ancho y romboides.',NULL,'03_remo_unilateral_sentado.webp'),
 (465,'Face Pull Sentado con Cuerda','Seated Cable Rope Face Pull','Variación de face pull ejecutada sentado en máquina de polea baja / remo con agarre de cuerda hacia el rostro. Enfocada en el aislamiento del deltoides posterior, manguito rotador externo y trapecio medio/superior.',NULL,'04_face_pull_sentado_cuerda.webp'),
 (466,'Curl de Bíceps Sentado en Polea','Seated Cable Bicep Curl','Curl de bíceps ejecutado sentado en el banco de la polea baja / long pull. Asegura tensión mecánica continua durante todo el rango de flexión del codo, maximizando la activación del bíceps braquial y braquial anterior.',NULL,'05_curl_biceps_sentado_polea.webp'),
-(467,'Encogimiento de Hombros Sentado en Polea','Seated Cable Shrug','Encogimiento de hombros para trapecios realizado sentado frente a la polea baja. Elimina la sobrecarga lumbar de las variantes de pie y enfoca la tracción vertical de las escápulas directamente en el trapecio superior.',NULL,'06_encogimiento_hombros_sentado.webp');
+(467,'Encogimiento de Hombros Sentado en Polea','Seated Cable Shrug','Encogimiento de hombros para trapecios realizado sentado frente a la polea baja. Elimina la sobrecarga lumbar de las variantes de pie y enfoca la tracción vertical de las escápulas directamente en el trapecio superior.',NULL,'06_encogimiento_hombros_sentado.webp'),
+(468,'Pedaleo en Bicicleta Estática (Spinning)','Stationary Bike Cycling','Entrenamiento cardiovascular y de resistencia en bicicleta estática/spinning. Desarrolla potencia en el tren inferior (cuádriceps, glúteos, isquiotibiales y gemelos) con bajo impacto articular.','',''),
+(469,'Sprint en Bicicleta de Aire (Air Bike HIIT)','Air Bike HIIT Sprints','Ejercicio metabólico de cuerpo entero en bicicleta de aire. Combina pedaleo potente con empuje y tirón sincronizado de brazos, reclutando piernas, pecho, espalda, hombros, brazos y core.','','');
 /*!40000 ALTER TABLE `ejercicio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ejerciciocliente`
+--
+
+DROP TABLE IF EXISTS `ejerciciocliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ejerciciocliente` (
+  `idejerciciocliente` int(11) NOT NULL AUTO_INCREMENT,
+  `idejercicio` int(11) NOT NULL,
+  `idcliente` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `duracionminutos` int(11) NOT NULL,
+  PRIMARY KEY (`idejerciciocliente`),
+  KEY `idx_ejerciciocliente_ejercicio` (`idejercicio`),
+  KEY `idx_ejerciciocliente_cliente` (`idcliente`),
+  KEY `idx_ejerciciocliente_fecha` (`fecha`),
+  CONSTRAINT `fk_ejerciciocliente_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ejerciciocliente_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ejerciciocliente`
+--
+
+LOCK TABLES `ejerciciocliente` WRITE;
+/*!40000 ALTER TABLE `ejerciciocliente` DISABLE KEYS */;
+INSERT INTO `ejerciciocliente` VALUES
+(1,1,1,'2026-10-01',25),
+(2,2,1,'2026-10-01',20),
+(3,4,2,'2026-10-02',15),
+(4,3,2,'2026-10-03',30),
+(5,5,1,'2026-10-05',20),
+(7,635,6,'2026-10-06',20),
+(8,1,1,'2026-10-10',15),
+(9,9,6,'2026-10-12',3);
+/*!40000 ALTER TABLE `ejerciciocliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -872,7 +923,7 @@ CREATE TABLE `ejercicioequipo` (
   KEY `fk_ee_equipo` (`idequipo`),
   CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=399 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -968,7 +1019,6 @@ INSERT INTO `ejercicioequipo` VALUES
 (84,99,29),
 (85,100,16),
 (86,101,16),
-(390,102,10),
 (87,102,17),
 (88,103,57),
 (89,104,14),
@@ -988,14 +1038,9 @@ INSERT INTO `ejercicioequipo` VALUES
 (103,124,29),
 (104,125,29),
 (105,126,29),
-(385,128,8),
 (106,128,17),
-(386,129,8),
 (107,129,16),
-(387,130,8),
 (108,130,29),
-(388,131,8),
-(389,132,8),
 (109,132,29),
 (110,134,17),
 (111,137,26),
@@ -1067,17 +1112,11 @@ INSERT INTO `ejercicioequipo` VALUES
 (177,216,34),
 (178,217,17),
 (179,218,3),
-(391,219,10),
 (180,219,16),
-(392,220,10),
 (181,220,17),
-(393,221,10),
 (182,221,29),
-(394,222,10),
 (183,222,29),
-(395,223,10),
 (184,223,29),
-(396,224,10),
 (185,224,29),
 (186,226,17),
 (187,228,29),
@@ -1128,7 +1167,6 @@ INSERT INTO `ejercicioequipo` VALUES
 (232,279,30),
 (233,280,51),
 (234,281,44),
-(384,282,6),
 (235,282,7),
 (236,284,17),
 (237,285,14),
@@ -1163,7 +1201,6 @@ INSERT INTO `ejercicioequipo` VALUES
 (266,325,37),
 (267,326,49),
 (268,327,40),
-(397,327,41),
 (269,328,42),
 (270,329,24),
 (271,330,24),
@@ -1185,7 +1222,6 @@ INSERT INTO `ejercicioequipo` VALUES
 (287,353,5),
 (288,354,17),
 (289,355,46),
-(383,356,1),
 (290,358,14),
 (291,360,57),
 (377,360,62),
@@ -1204,7 +1240,6 @@ INSERT INTO `ejercicioequipo` VALUES
 (304,377,29),
 (305,378,51),
 (306,379,40),
-(398,379,41),
 (307,380,57),
 (308,381,29),
 (309,383,27),
@@ -1279,7 +1314,9 @@ INSERT INTO `ejercicioequipo` VALUES
 (379,464,62),
 (380,465,62),
 (381,466,62),
-(382,467,62);
+(382,467,62),
+(383,468,2),
+(384,469,18);
 /*!40000 ALTER TABLE `ejercicioequipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1403,7 +1440,7 @@ CREATE TABLE `equipomusculo` (
   KEY `fk_em_musculo` (`idmusculo`),
   CONSTRAINT `fk_em_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_em_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=544 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=534 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -1413,12 +1450,13 @@ CREATE TABLE `equipomusculo` (
 LOCK TABLES `equipomusculo` WRITE;
 /*!40000 ALTER TABLE `equipomusculo` DISABLE KEYS */;
 INSERT INTO `equipomusculo` VALUES
-(513,1,6),
-(514,1,13),
-(515,1,15),
-(516,1,16),
-(517,1,18),
-(518,1,24),
+(513,2,6),
+(518,2,13),
+(516,2,15),
+(515,2,16),
+(514,2,18),
+(519,2,21),
+(517,2,24),
 (1,3,2),
 (2,3,6),
 (3,3,16),
@@ -1434,29 +1472,13 @@ INSERT INTO `equipomusculo` VALUES
 (13,5,23),
 (14,5,26),
 (15,5,27),
-(519,6,10),
-(520,6,16),
-(521,6,19),
-(522,6,21),
 (16,7,10),
 (17,7,16),
 (18,7,19),
 (19,7,21),
-(523,8,7),
-(526,8,13),
-(527,8,19),
-(524,8,20),
-(528,8,21),
-(525,8,27),
 (20,9,15),
 (21,9,16),
 (22,9,18),
-(532,10,3),
-(533,10,4),
-(529,10,7),
-(534,10,14),
-(530,10,20),
-(531,10,27),
 (23,11,7),
 (24,11,20),
 (25,11,27),
@@ -1531,6 +1553,20 @@ INSERT INTO `equipomusculo` VALUES
 (94,17,25),
 (95,17,26),
 (96,17,27),
+(530,18,3),
+(520,18,6),
+(526,18,7),
+(529,18,10),
+(525,18,13),
+(523,18,15),
+(522,18,16),
+(521,18,18),
+(533,18,19),
+(527,18,20),
+(532,18,21),
+(531,18,22),
+(524,18,24),
+(528,18,27),
 (97,19,6),
 (98,19,15),
 (99,19,16),
@@ -1615,9 +1651,6 @@ INSERT INTO `equipomusculo` VALUES
 (178,40,7),
 (179,40,8),
 (180,40,26),
-(535,41,7),
-(536,41,8),
-(537,41,26),
 (181,42,14),
 (182,42,26),
 (183,43,11),
@@ -2071,7 +2104,7 @@ CREATE TABLE `musculoejercicio` (
   KEY `fk_me_musculo` (`idmusculo`),
   CONSTRAINT `fk_me_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_me_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1681 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1702 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3760,7 +3793,28 @@ INSERT INTO `musculoejercicio` VALUES
 (1677,466,4),
 (1678,466,5),
 (1680,467,22),
-(1679,467,26);
+(1679,467,26),
+(1681,468,6),
+(1686,468,13),
+(1684,468,15),
+(1683,468,16),
+(1682,468,18),
+(1687,468,21),
+(1685,468,24),
+(1698,469,3),
+(1688,469,6),
+(1694,469,7),
+(1697,469,10),
+(1693,469,13),
+(1691,469,15),
+(1690,469,16),
+(1689,469,18),
+(1701,469,19),
+(1695,469,20),
+(1700,469,21),
+(1699,469,22),
+(1692,469,24),
+(1696,469,27);
 /*!40000 ALTER TABLE `musculoejercicio` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3782,7 +3836,7 @@ CREATE TABLE `persona` (
   UNIQUE KEY `cedula` (`cedula`),
   KEY `fk_persona_sexo` (`idsexo`),
   CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3799,9 +3853,32 @@ INSERT INTO `persona` VALUES
 (8,'0803597285','San Luca Arroyo','Edwin','2001-03-18',1),
 (9,'0804932341','QUIÑONEZ SANCHEZ','MIRKA GERALDY','2003-07-30',2),
 (10,'0809999999','Gomez Perez','Andrea Carolina','1999-05-20',2),
-(11,'0998877665','User','Test',NULL,1);
+(11,'0998877665','User','Test',NULL,1),
+(12,'0850359514','Chávez Salazar','David Bolivar','2004-03-04',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `plan_ejercicio_personalizado`
+--
+
+DROP TABLE IF EXISTS `plan_ejercicio_personalizado`;
+/*!50001 DROP VIEW IF EXISTS `plan_ejercicio_personalizado`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `plan_ejercicio_personalizado` AS SELECT
+ NULL AS `idplanpersonalizado`,
+ NULL AS `idplanejerciciomodelo`,
+ NULL AS `nombre`,
+ NULL AS `idejercicio`,
+ NULL AS `diassemanas`,
+ NULL AS `repeticiones`,
+ NULL AS `series`,
+ NULL AS `tiempodescanso`,
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `planejercicio`
@@ -3841,7 +3918,6 @@ INSERT INTO `planejercicio` VALUES
 (7,'Plan Peso Muerto con Barra',3,3,5,5,180,100.00),
 (8,'Plan Sentadilla Trasera con Barra',1,3,5,5,180,85.00),
 (9,'Plan Dominadas Arquero',7,4,15,3,60,30.00),
-(10,'Plan Dominadas Arquero',7,3,12,3,60,20.00),
 (11,'Plan Crunch Declinado',131,3,10,4,10,0.00),
 (12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00),
 (14,'Plan Apertura con mancuernas en banco inclinado',223,3,10,4,10,5.00),
@@ -3868,9 +3944,7 @@ SET character_set_client = utf8mb4;
  NULL AS `repeticiones`,
  NULL AS `series`,
  NULL AS `tiempodescanso`,
- NULL AS `peso`,
- NULL AS `fechainicio`,
- NULL AS `duracionsemana` */;
+ NULL AS `peso` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3895,7 +3969,7 @@ CREATE TABLE `planejerciciopersonalizado` (
   PRIMARY KEY (`idplanpersonalizado`),
   KEY `fk_pep_ejercicio` (`idejercicio`),
   KEY `fk_pep_planmodelo` (`idplanejerciciomodelo`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3905,26 +3979,33 @@ CREATE TABLE `planejerciciopersonalizado` (
 LOCK TABLES `planejerciciopersonalizado` WRITE;
 /*!40000 ALTER TABLE `planejerciciopersonalizado` DISABLE KEYS */;
 INSERT INTO `planejerciciopersonalizado` VALUES
-(1,1,'Plan Sentadilla Trasera con Barra',1,3,8,5,90,95.50),
-(2,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00),
-(3,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00),
-(4,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00),
-(5,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00),
-(6,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00),
-(7,3,'Plan Dominada',4,4,12,3,60,50.00),
-(8,4,'Plan Press de Barra sobre la Cabeza Sentado',5,4,15,3,60,45.00),
-(9,5,'Plan Máquina de Remo',355,5,20,4,45,0.00),
-(10,6,'Plan Rueda Abdominal',6,5,20,4,45,0.00),
-(11,11,'Plan Crunch Declinado',131,3,10,4,10,0.00),
-(12,12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00),
-(13,7,'Plan Peso Muerto con Barra',3,3,5,5,180,100.00),
-(14,15,'Plan Aperturas con Mancuernas en Banco Declinado adulto 18 - 29 años',132,3,5,4,60,10.00),
-(15,16,'Plan Sentadilla con Kettlebell',253,2,15,4,60,5.00),
-(16,17,'Plan Push Press con Mancuerna a Un Brazo',290,2,15,8,60,5.00),
-(17,18,'Plan Apertura de Deltoides Posterior',339,2,15,4,60,10.00),
-(19,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00),
-(20,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00),
-(21,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00);
+(1,1,'Plan Sentadilla Trasera con Barra',1,3,8,5,90,95.50,NULL,4),
+(2,2,'Plan Press de Banca con Barra',2,3,10,4,120,40.00,NULL,4),
+(3,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(4,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(5,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(6,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(7,3,'Plan Dominada',4,4,12,3,60,50.00,NULL,4),
+(8,4,'Plan Press de Barra sobre la Cabeza Sentado',5,4,15,3,60,45.00,NULL,4),
+(9,5,'Plan Máquina de Remo',355,5,20,4,45,0.00,NULL,4),
+(12,12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00,NULL,4),
+(13,7,'Plan Peso Muerto con Barra',3,3,5,5,180,100.00,NULL,4),
+(14,15,'Plan Aperturas con Mancuernas en Banco Declinado adulto 18 - 29 años',132,3,5,4,60,10.00,NULL,4),
+(15,16,'Plan Sentadilla con Kettlebell',253,2,15,4,60,5.00,NULL,4),
+(16,17,'Plan Push Press con Mancuerna a Un Brazo',290,2,15,8,60,5.00,NULL,4),
+(17,18,'Plan Apertura de Deltoides Posterior',339,2,15,4,60,10.00,NULL,4),
+(19,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(20,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(21,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(22,NULL,'Plan Extensión de Cuádriceps a Una Pierna',383,3,12,3,60,0.00,NULL,4),
+(23,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(24,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(26,NULL,'Plan Press Arnold',9,3,10,5,120,5.00,NULL,4),
+(27,NULL,'Plan Curl de Bíceps Sentado en Polea',466,3,12,3,60,0.00,NULL,4),
+(28,NULL,'Plan Aperturas con Cable',74,2,12,3,120,20.00,NULL,4),
+(29,NULL,'Plan Correr',356,3,12,3,60,0.00,NULL,4),
+(30,NULL,'Plan Apertura con mancuernas en banco inclinado',223,3,12,3,120,0.00,NULL,4),
+(31,NULL,'Plan Correr',356,3,50,5,60,0.00,NULL,4);
 /*!40000 ALTER TABLE `planejerciciopersonalizado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -3971,7 +4052,7 @@ CREATE TABLE `programacliente` (
   CONSTRAINT `fk_pc_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_estado` FOREIGN KEY (`idestadoprogramacliente`) REFERENCES `estadoprogramacliente` (`idestadoprogramacliente`) ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -3988,7 +4069,9 @@ INSERT INTO `programacliente` VALUES
 (5,12,5,6,'2026-10-15',1),
 (6,13,6,7,'2026-10-16',1),
 (7,14,7,8,'2026-10-16',1),
-(8,1,8,2,'2026-10-20',1);
+(8,1,8,2,'2026-10-20',1),
+(9,1,NULL,10,'2026-10-21',1),
+(10,1,9,10,'2026-10-21',1);
 /*!40000 ALTER TABLE `programacliente` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4070,7 +4153,7 @@ CREATE TABLE `programaentrenamientopersonalizado` (
   KEY `fk_pep_modelo` (`idprogramaentrenamientomodelo`),
   KEY `fk_pep_motivo` (`idmotivoentrenamiento`),
   KEY `fk_pep_rango` (`idrangoedad`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4087,7 +4170,8 @@ INSERT INTO `programaentrenamientopersonalizado` VALUES
 (5,12,6,'Acondicionamiento físico y salud 56 años',4,4,'2026-10-20 13:53:44'),
 (6,13,7,'fuerza y potencias adulto joven 18-29',3,2,'2026-10-20 13:53:44'),
 (7,14,8,'PROGRAMA MIRKA',1,2,'2026-10-20 13:53:44'),
-(8,1,2,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-20 18:58:48');
+(8,1,2,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-20 18:58:48'),
+(9,1,10,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-21 13:42:05');
 /*!40000 ALTER TABLE `programaentrenamientopersonalizado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4231,7 +4315,7 @@ CREATE TABLE `rutinaejerciciopersonalizado` (
   PRIMARY KEY (`idrutinapersonalizada`),
   KEY `fk_rep_modelo` (`idrutinaejerciciomodelo`),
   KEY `fk_rep_cliente` (`idcliente`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4248,7 +4332,8 @@ INSERT INTO `rutinaejerciciopersonalizado` VALUES
 (5,7,6,'Acondicionamiento físico y salud 56 años','2026-10-20 13:53:44'),
 (6,8,7,'fuerza y potencia para adunto 18-19','2026-10-20 13:53:44'),
 (7,10,8,'RUTINA MIRKA','2026-10-20 13:53:44'),
-(8,1,2,'Full Body Principiante','2026-10-20 18:58:48');
+(8,1,2,'Full Body Principiante','2026-10-20 18:58:48'),
+(9,1,10,'Full Body Principiante','2026-10-21 13:42:05');
 /*!40000 ALTER TABLE `rutinaejerciciopersonalizado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4303,7 +4388,6 @@ INSERT INTO `rutinaplan` VALUES
 (7,5,7),
 (8,5,8),
 (9,3,9),
-(10,1,10),
 (14,7,11),
 (15,7,12),
 (16,9,14),
@@ -4343,7 +4427,7 @@ CREATE TABLE `rutinaplanpersonalizado` (
   PRIMARY KEY (`idrutinaplanpersonalizado`),
   KEY `fk_rplp_rutina` (`idrutinapersonalizada`),
   KEY `fk_rplp_plan` (`idplanpersonalizado`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4362,8 +4446,6 @@ INSERT INTO `rutinaplanpersonalizado` VALUES
 (7,3,7),
 (8,3,8),
 (9,4,9),
-(10,4,10),
-(11,5,11),
 (12,5,12),
 (13,6,13),
 (14,6,14),
@@ -4372,7 +4454,16 @@ INSERT INTO `rutinaplanpersonalizado` VALUES
 (17,7,17),
 (19,8,19),
 (20,8,20),
-(21,8,21);
+(21,8,21),
+(22,5,22),
+(23,9,23),
+(24,9,24),
+(26,1,26),
+(27,5,27),
+(28,1,28),
+(29,4,29),
+(30,5,30),
+(31,5,31);
 /*!40000 ALTER TABLE `rutinaplanpersonalizado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4446,7 +4537,7 @@ CREATE TABLE `rutinaprogramapersonalizado` (
   PRIMARY KEY (`idrutinaprogramapersonalizado`),
   KEY `fk_rpp_prog` (`idprogramapersonalizado`),
   KEY `fk_rpp_rutina` (`idrutinapersonalizada`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4463,7 +4554,8 @@ INSERT INTO `rutinaprogramapersonalizado` VALUES
 (5,5,5),
 (6,6,6),
 (7,7,7),
-(8,8,8);
+(8,8,8),
+(9,9,9);
 /*!40000 ALTER TABLE `rutinaprogramapersonalizado` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4510,7 +4602,7 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `idx_usuario_nombreusuario` (`nombreusuario`),
   KEY `fk_usuario_persona` (`idpersona`),
   CONSTRAINT `fk_usuario_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4524,7 +4616,8 @@ INSERT INTO `usuario` VALUES
 (2,10,'andrea.fit','$2y$12$osUsQNr08fZ07X/70i0uxeJu6pkJ6hYAbPUpqOIG9nd/VpDdCSx4S'),
 (3,2,'maria.torres','$2y$12$jyHOGOPaSzdyLOy44TcX9OYvtG.d/ZXPXZvJ3YQyhwV5HdKhhjRq2'),
 (4,7,'admin','$2y$12$VpLb9p.YAQF7hwCRbPlI8OgHag1qmo/mY864jhpDSaC1QGCC6QAPO'),
-(5,11,'testuser','$2y$12$SyijhCiTCi9Q0fcKUxJWDOjJGYaHKQO72AFujTNH1O0M.Rkt8GC8i');
+(5,11,'testuser','$2y$12$SyijhCiTCi9Q0fcKUxJWDOjJGYaHKQO72AFujTNH1O0M.Rkt8GC8i'),
+(6,12,'DavidCs4','$2y$10$U8KQg/OlktS/m9.QIBn39.nZ0mKbuVPcqW9D0Ox0jOTEDt2cIXWxa');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4545,7 +4638,7 @@ CREATE TABLE `visitasgim` (
   KEY `idx_visitasgim_cliente` (`idcliente`),
   KEY `idx_visitasgim_fecha` (`fecha`),
   CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4560,9 +4653,16 @@ INSERT INTO `visitasgim` VALUES
 (3,1,'2026-10-05','06:45:00','08:00:00'),
 (4,2,'2026-10-05','19:00:00','21:15:00'),
 (6,1,'2026-10-10','17:30:00','18:45:00'),
-(7,6,'2026-10-10','18:53:53',NULL);
+(7,6,'2026-10-10','18:53:53','03:54:04'),
+(8,6,'2026-10-21','09:25:41','09:25:45'),
+(9,6,'2026-10-21','09:25:47',NULL),
+(10,10,'2026-10-21','09:51:45',NULL);
 /*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Dumping routines for database 'gim360'
+--
 
 --
 -- Final view structure for view `DisponibilidadEquipo`
@@ -4799,6 +4899,24 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `plan_ejercicio_personalizado`
+--
+
+/*!50001 DROP VIEW IF EXISTS `plan_ejercicio_personalizado`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `plan_ejercicio_personalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso`,`planejerciciopersonalizado`.`fechainicio` AS `fechainicio`,`planejerciciopersonalizado`.`duracionsemana` AS `duracionsemana` from `planejerciciopersonalizado` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `planejerciciomodelo`
 --
 
@@ -4987,4 +5105,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-21  4:13:05
+-- Dump completed on 2026-10-22 11:06:07

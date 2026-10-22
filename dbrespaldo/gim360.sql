@@ -1,3 +1,4 @@
+/*M!999999\- enable the sandbox mode */ 
 -- MariaDB dump 10.19  Distrib 10.11.18-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: gim360
@@ -16,6 +17,19 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Temporary table structure for view `DisponibilidadEquipo`
+--
+
+DROP TABLE IF EXISTS `DisponibilidadEquipo`;
+/*!50001 DROP VIEW IF EXISTS `DisponibilidadEquipo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `DisponibilidadEquipo` AS SELECT
+ NULL AS `iddisponibilidadequipo`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `EjercicioEquipo`
 --
 
@@ -27,6 +41,20 @@ SET character_set_client = utf8mb4;
  NULL AS `idejercicioequipo`,
  NULL AS `idejercicio`,
  NULL AS `idequipo` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `EquipoMusculo`
+--
+
+DROP TABLE IF EXISTS `EquipoMusculo`;
+/*!50001 DROP VIEW IF EXISTS `EquipoMusculo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `EquipoMusculo` AS SELECT
+ NULL AS `idequipomusculo`,
+ NULL AS `idequipo`,
+ NULL AS `idmusculo` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -175,21 +203,25 @@ CREATE TABLE `cliente` (
   PRIMARY KEY (`idcliente`),
   UNIQUE KEY `idpersona` (`idpersona`),
   CONSTRAINT `fk_cliente_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `cliente`
 --
 
+LOCK TABLES `cliente` WRITE;
 /*!40000 ALTER TABLE `cliente` DISABLE KEYS */;
 INSERT INTO `cliente` VALUES
 (1,1),
 (2,2),
 (6,7),
 (7,8),
-(8,9);
+(8,9),
+(9,11),
+(10,12);
 /*!40000 ALTER TABLE `cliente` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `correo`
@@ -213,6 +245,7 @@ CREATE TABLE `correo` (
 -- Dumping data for table `correo`
 --
 
+LOCK TABLES `correo` WRITE;
 /*!40000 ALTER TABLE `correo` DISABLE KEYS */;
 INSERT INTO `correo` VALUES
 (1,1,'carlos.mendoza@email.com','2024-01-10'),
@@ -221,6 +254,7 @@ INSERT INTO `correo` VALUES
 (4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
 (8,7,'educaysoft@gmail.com','2026-10-06');
 /*!40000 ALTER TABLE `correo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `direccion`
@@ -243,6 +277,7 @@ CREATE TABLE `direccion` (
 -- Dumping data for table `direccion`
 --
 
+LOCK TABLES `direccion` WRITE;
 /*!40000 ALTER TABLE `direccion` DISABLE KEYS */;
 INSERT INTO `direccion` VALUES
 (1,1,'Av. 9 de Octubre y Malecón Simón Bolívar 102'),
@@ -250,6 +285,37 @@ INSERT INTO `direccion` VALUES
 (3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
 (7,7,'tachina');
 /*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `disponibilidadequipo`
+--
+
+DROP TABLE IF EXISTS `disponibilidadequipo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `disponibilidadequipo` (
+  `iddisponibilidadequipo` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`iddisponibilidadequipo`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `disponibilidadequipo`
+--
+
+LOCK TABLES `disponibilidadequipo` WRITE;
+/*!40000 ALTER TABLE `disponibilidadequipo` DISABLE KEYS */;
+INSERT INTO `disponibilidadequipo` VALUES
+(1,'Disponible'),
+(2,'En Uso'),
+(3,'En Mantenimiento'),
+(4,'En Reparación'),
+(5,'Fuera de Servicio'),
+(6,'Reservado');
+/*!40000 ALTER TABLE `disponibilidadequipo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ejecucionprograma`
@@ -271,13 +337,14 @@ CREATE TABLE `ejecucionprograma` (
   KEY `idx_ejecucionprograma_fecha` (`fecha`),
   CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ejecucionprograma`
 --
 
+LOCK TABLES `ejecucionprograma` WRITE;
 /*!40000 ALTER TABLE `ejecucionprograma` DISABLE KEYS */;
 INSERT INTO `ejecucionprograma` VALUES
 (1,1,1,'2026-10-14','08:00:00','08:15:00'),
@@ -288,8 +355,19 @@ INSERT INTO `ejecucionprograma` VALUES
 (6,6,3,'2026-10-16','15:11:00','15:21:00'),
 (7,7,253,'2026-10-16','15:13:00','15:50:00'),
 (8,7,253,'2026-10-16','15:13:00','15:50:00'),
-(9,7,339,'2026-10-16','16:16:00','17:00:00');
+(9,7,339,'2026-10-16','16:16:00','17:00:00'),
+(10,5,268,'2026-10-21','06:25:15','06:35:15'),
+(11,9,2,'2026-10-21','08:25:52','08:35:52'),
+(12,5,466,'2026-10-21','09:25:09','09:26:09'),
+(13,9,2,'2026-10-21','09:53:54','09:55:13'),
+(14,9,1,'2026-10-21','09:56:20','09:57:20'),
+(15,4,356,'2026-10-21','19:11:08','19:22:00'),
+(16,5,131,'2026-10-21','22:38:04','22:39:04'),
+(17,5,223,'2026-10-22','08:05:13','08:06:41'),
+(18,5,356,'2026-10-22','08:55:50','09:25:30'),
+(19,5,383,'2026-10-22','09:34:39','09:36:18');
 /*!40000 ALTER TABLE `ejecucionprograma` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ejercicio`
@@ -306,13 +384,14 @@ CREATE TABLE `ejercicio` (
   `urlvideo` varchar(255) DEFAULT NULL,
   `imagen` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`idejercicio`)
-) ENGINE=InnoDB AUTO_INCREMENT=464 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=470 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ejercicio`
 --
 
+LOCK TABLES `ejercicio` WRITE;
 /*!40000 ALTER TABLE `ejercicio` DISABLE KEYS */;
 INSERT INTO `ejercicio` VALUES
 (1,'Sentadilla Trasera con Barra','Barbell Back Squat','Un movimiento compuesto de tren inferior que trabaja cuádriceps, glúteos e isquiotibiales.\n\nInstrucciones de ejecución:\n1. Coloca la barra sobre tus trapecios superiores.\n2. Desrackea y da un paso atrás, con los pies al ancho de los hombros.\n3. Contrae el core y haz la sentadilla hasta que los muslos queden paralelos.\n4. Empuja a través de los talones para volver a la posición de pie.\n5. Repite.\n\nConsejos técnicos:\n• Mantén el pecho arriba durante todo el movimiento.\n• Empuja las rodillas hacia afuera en línea con los dedos de los pies.\n\nMúsculos principales: gluteus_maximus, quadriceps','https://www.youtube.com/watch?v=bEv6CCg2BC8','squat.webp'),
@@ -674,7 +753,7 @@ INSERT INTO `ejercicio` VALUES
 (357,'Giro Ruso','Russian Twist','Un ejercicio de core rotacional que trabaja los oblicuos.\n\nInstrucciones de ejecución:\n1. Siéntate en el suelo con las rodillas flexionadas e inclínate ligeramente hacia atrás.\n2. Junta las manos o sostén un peso a la altura del pecho.\n3. Rota el torso hacia un lado, luego hacia el otro.\n4. Mantén el core apretado en todo momento.\n5. Repite.\n\nConsejos técnicos:\n• Gira desde el torso, no solo con los brazos.\n• Mantén la espalda recta aunque estés ligeramente reclinado.\n• Hazlo lento y controlado; la velocidad resta trabajo a los oblicuos.\n\nMúsculos principales: obliques, rectus_abdominis',NULL,'russian-twist.webp'),
 (358,'Dominadas Escapulares','Scapular Pull Ups','Un ejercicio en barra de dominadas con brazos extendidos, que entrena la depresión y retracción de las escápulas.\n\nInstrucciones de ejecución:\n1. Cuélgate de una barra de dominadas con los brazos completamente extendidos.\n2. Mantén los brazos rectos durante todo el movimiento.\n3. Deprime y retrae las escápulas para elevar el pecho.\n4. Haz una breve pausa en la parte superior del movimiento.\n5. Regresa a la posición de cuelgue completo.\n6. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Piensa en alejar los hombros de las orejas al subir el pecho.\n• No intentes convertirlo en una dominada; el recorrido es corto.\n• Controla la vuelta a la posición colgada sin desplomarte.\n\nMúsculos principales: latissimus_dorsi, trapezius',NULL,'scapular-pull-ups.webp'),
 (359,'Tijeras','Scissor Kicks','Un ejercicio de core realizado boca arriba, cruzando alternadamente las piernas rectas para trabajar el abdomen bajo y los flexores de cadera.\n\nInstrucciones de ejecución:\n1. Recuéstate boca arriba con las manos bajo los glúteos.\n2. Eleva ambas piernas unos centímetros del suelo.\n3. Cruza alternadamente una pierna sobre la otra en un movimiento de tijera.\n4. Mantén la zona lumbar presionada contra el suelo.\n5. Mantén un ritmo constante durante todo el ejercicio.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Presiona la zona lumbar contra el suelo en todo momento.\n• Mantén las piernas rectas y cerca del suelo.\n• Muévete con control, no con velocidad.\n\nMúsculos principales: hip_flexors, rectus_abdominis',NULL,'scissor-kicks.webp'),
-(360,'Remo Sentado en Polea','Seated Cable Row','Un ejercicio de espalda en una máquina de remo con polea, tirando de una manija hacia el torso estando sentado.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo y coloca los pies en los apoyos.\n2. Sujeta la manija y siéntate erguido con una ligera inclinación hacia adelante.\n3. Lleva los codos hacia atrás y tira de la manija hacia la parte baja del abdomen.\n4. Contrae los omóplatos al final del tirón.\n5. Extiende los brazos con control de vuelta a la posición inicial.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén el torso erguido con un balanceo mínimo.\n• Lleva los codos directamente hacia atrás, no hacia los lados.\n• Contrae los omóplatos al final del tirón.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'seated-cable-row.webp'),
+(360,'Remo Sentado en Polea (Agarre Estrecho)','Seated Cable Row','Un ejercicio de espalda en una máquina de remo con polea, tirando de una manija hacia el torso estando sentado.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo y coloca los pies en los apoyos.\n2. Sujeta la manija y siéntate erguido con una ligera inclinación hacia adelante.\n3. Lleva los codos hacia atrás y tira de la manija hacia la parte baja del abdomen.\n4. Contrae los omóplatos al final del tirón.\n5. Extiende los brazos con control de vuelta a la posición inicial.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén el torso erguido con un balanceo mínimo.\n• Lleva los codos directamente hacia atrás, no hacia los lados.\n• Contrae los omóplatos al final del tirón.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'01_remo_sentado_agarre_estrecho.webp'),
 (361,'Elevación de Talones Sentado','Seated Calf Raise','Una elevación de talones en máquina realizada sentado para trabajar específicamente el músculo sóleo.\n\nInstrucciones de ejecución:\n1. Siéntate en la máquina de elevación de talones con los pads apoyados en los muslos.\n2. Baja los talones lo más posible.\n3. Elévate sobre las puntas de los pies.\n4. Baja con control.\n5. Repite.\n\nConsejos técnicos:\n• La posición sentada pre-estira el sóleo.\n• Utiliza un rango completo de movimiento.\n\nMúsculos principales: soleus',NULL,'seated-calf-raise.webp'),
 (362,'Press de Hombro con Mancuernas Sentado','Seated Dumbbell Shoulder Press','Un movimiento de press sentado para los hombros usando mancuernas.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco con respaldo sosteniendo mancuernas a la altura de los hombros.\n2. Empuja las mancuernas sobre la cabeza hasta extender completamente los brazos.\n3. Baja las mancuernas de vuelta a la altura de los hombros.\n4. Repite.\n\nConsejos técnicos:\n• No arquees la espalda baja; mantén el contacto con el respaldo.\n• Sube las mancuernas en línea recta, sin chocarlas arriba.\n• Exhala al empujar y mantén el core firme.\n\nMúsculos principales: anterior_deltoid, lateral_deltoid',NULL,'seated-db-press.webp'),
 (363,'Curl con Mancuernas Sentado','Seated Dumbbell Curl','Un curl de bíceps sentado con mancuernas, donde la posición sentada y erguida elimina el impulso para una técnica más estricta.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco con una mancuerna en cada mano.\n2. Deja los brazos colgando a los lados con las palmas hacia adelante.\n3. Sube ambas mancuernas hacia los hombros flexionando los bíceps.\n4. Aprieta en la parte superior del movimiento.\n5. Baja las mancuernas con control.\n6. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Mantén los codos pegados a los costados en todo momento.\n• Evita inclinarte hacia atrás para ayudar a levantar el peso.\n• Estira los brazos por completo al final de cada repetición.\n\nMúsculos principales: biceps_brachii',NULL,'seated-dumbbell-curl.webp'),
@@ -773,12 +852,59 @@ INSERT INTO `ejercicio` VALUES
 (456,'Press de Banca en Agarre Ancho','Wide-Grip Bench Press','Una variante del press de banca con un agarre más ancho que los hombros para maximizar la activación del pectoral.\n\nInstrucciones de ejecución:\n1. Túmbate en un banco plano. Agarra la barra más ancha que los hombros.\n2. Baja la barra hasta la mitad del pecho.\n3. Empuja de vuelta a la extensión completa.\n4. Repite.\n\nConsejos técnicos:\n• Un agarre más ancho reduce la participación de los tríceps.\n• Evita doblar las muñecas en exceso.\n\nMúsculos principales: pectoralis_major',NULL,'wide-grip-bench-press.webp'),
 (457,'Dominadas en Agarre Ancho','Wide Grip Pull Ups','Una dominada con agarre prono más ancho que los hombros, que enfatiza el desarrollo de los dorsales.\n\nInstrucciones de ejecución:\n1. Agarra la barra de dominadas con un agarre en pronación más ancho que los hombros.\n2. Cuélgate con los brazos completamente extendidos y el core contraído.\n3. Tira del pecho hacia la barra empujando los codos hacia abajo.\n4. Mantén los hombros hacia atrás al subir.\n5. Baja de forma controlada hasta la extensión completa.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Cuelga con los brazos extendidos y el core firme.\n• Lleva el pecho hacia la barra bajando los codos.\n• Desciende con control hasta la extensión completa.\n\nMúsculos principales: latissimus_dorsi',NULL,'wide-grip-pull-ups.webp'),
 (458,'Flexiones con Agarre Ancho','Wide Grip Push Ups','Una variante de flexión con las manos colocadas más separadas para enfatizar el pecho.\n\nInstrucciones de ejecución:\n1. Comienza en una plancha alta con las manos más separadas que el ancho de hombros.\n2. Mantén el cuerpo en línea recta de la cabeza a los talones.\n3. Baja el pecho hacia el suelo flexionando los codos.\n4. Mantén el core activado y los glúteos contraídos.\n5. Empuja de vuelta hasta extender los brazos.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén los codos a unos 45 grados respecto al torso.\n• Mantén una línea recta de la cabeza a los talones.\n• Baja hasta que el pecho quede cerca del suelo.\n\nMúsculos principales: pectoralis_major',NULL,'wide-grip-push-ups.webp'),
-(459,'Remo en Polea Sentado en Agarre Ancho','Wide Grip Seated Cable Row','Una variante del remo sentado con agarre ancho que hace énfasis en la parte superior de la espalda.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo con los pies en la plataforma.\n2. Agarra la barra ancha con un agarre en pronación.\n3. Tira de la barra hacia el abdomen superior apretando los omóplatos.\n4. Extiende los brazos de vuelta a la posición inicial de forma controlada.\n5. Repite.\n\nConsejos técnicos:\n• Sujeta la barra ancha con agarre prono.\n• Lleva la barra hacia el abdomen alto juntando los omóplatos.\n• Extiende los brazos al frente de forma controlada.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'wide-grip-seated-cable-row.webp'),
+(459,'Remo Sentado con Barra Ancha en Polea','Wide Grip Seated Cable Row','Una variante del remo sentado con agarre ancho que hace énfasis en la parte superior de la espalda.\n\nInstrucciones de ejecución:\n1. Siéntate en la estación de remo con los pies en la plataforma.\n2. Agarra la barra ancha con un agarre en pronación.\n3. Tira de la barra hacia el abdomen superior apretando los omóplatos.\n4. Extiende los brazos de vuelta a la posición inicial de forma controlada.\n5. Repite.\n\nConsejos técnicos:\n• Sujeta la barra ancha con agarre prono.\n• Lleva la barra hacia el abdomen alto juntando los omóplatos.\n• Extiende los brazos al frente de forma controlada.\n\nMúsculos principales: latissimus_dorsi, rhomboids',NULL,'02_remo_sentado_barra_ancha.webp'),
 (460,'Prensa de piernas con postura amplia','Wide-Stance Leg Press','Una prensa de piernas con una postura amplia y ligeramente abierta, que aumenta la participación de los aductores junto con la extensión de cadera y rodilla.\n\nInstrucciones de ejecución:\n1. Ajusta el asiento y el respaldo para que la zona lumbar permanezca apoyada en la parte baja del recorrido.\n2. Coloca los pies separados en la plataforma y gira las puntas hacia fuera solo hasta donde las rodillas puedan seguirlas.\n3. Baja el carro flexionando caderas y rodillas y mantén las rodillas en la misma dirección que los pies.\n4. Empuja con todo el pie y extiende caderas y rodillas sin forzar el bloqueo.\n5. Baja el carro bajo control y repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Elige una anchura y un ángulo de los pies que puedas controlar desde la cadera; más ancho no siempre es mejor.\n• Mantén las rodillas siguiendo a los pies y evita que se hundan hacia dentro.\n• Detén el descenso antes de que la pelvis se despegue y la espalda pierda contacto con el respaldo.\n\nMúsculos principales: adductors',NULL,'wide-stance-leg-press.webp'),
 (461,'Curl de Muñeca con Mancuernas Bilateral','Bilateral Dumbbell Wrist Curl','Un curl de muñeca con mancuernas realizado con ambos brazos a la vez, que aísla los flexores del antebrazo para un entrenamiento eficiente.\n\nInstrucciones de ejecución:\n1. Siéntate en un banco sujetando una mancuerna en cada mano, con los antebrazos apoyados sobre los muslos, palmas hacia arriba.\n2. Deja que ambas mancuernas rueden hacia las puntas de los dedos.\n3. Flexiona las muñecas para levantar ambas mancuernas.\n4. Aprieta arriba y baja con control.\n5. Repite el número deseado de repeticiones.\n\nConsejos técnicos:\n• Mantén los antebrazos apoyados en los muslos durante todo el movimiento — solo se mueven las muñecas.\n• Usa una carga por mano más ligera que en la versión unilateral, ya que ambos lados trabajan a la vez.\n\nMúsculos principales: forearm_flexors',NULL,'wrist-curl.webp'),
 (462,'Rodillo de Muñeca','Wrist Roller','Un ejercicio para el antebrazo que consiste en enrollar un peso con la cuerda mediante el giro de las muñecas.\n\nInstrucciones de ejecución:\n1. Agarra el mango del rodillo con los brazos extendidos al frente a la altura de los hombros.\n2. Deja que el peso cuelgue del cordón.\n3. Enrolla el mango hacia adelante con movimientos alternos de muñeca para subir el peso.\n4. Mantén los brazos rectos durante todo el movimiento.\n5. Una vez enrollado por completo, invierte la rotación para bajar el peso.\n6. Repite el número de repeticiones deseado.\n\nConsejos técnicos:\n• Mantén los brazos extendidos al frente a la altura de los hombros.\n• Enrolla la cuerda con giros alternos de las muñecas.\n• Invierte la rotación para bajar el peso de forma controlada.\n\nMúsculos principales: forearm_extensors, forearm_flexors',NULL,'wrist-roller.webp'),
-(463,'Curl Zottman','Zottman Curl','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl.webp');
+(463,'Curl Zottman','Zottman Curl','Un curl con mancuernas de pie que sube con agarre supinado, gira las palmas hacia abajo en la parte superior y desciende en pronación para combinar el trabajo del bíceps con una fase excéntrica centrada en los antebrazos.\n\nInstrucciones de ejecución:\n1. Colócate de pie con los pies aproximadamente al ancho de las caderas, los brazos extendidos a los lados y una mancuerna en cada mano con las palmas hacia delante.\n2. Mantén los brazos junto a las costillas y lleva ambas mancuernas hacia los hombros sin balancear el torso.\n3. En la parte superior, conserva los codos flexionados y gira los antebrazos hasta que las palmas miren hacia abajo.\n4. Baja lentamente las mancuernas con el agarre pronado hasta extender los brazos.\n5. Vuelve a girar las palmas hacia delante en la parte inferior y repite las repeticiones deseadas.\n\nConsejos técnicos:\n• Usa menos peso que en un curl con mancuernas convencional; la bajada con las palmas hacia abajo suele ser la parte limitante.\n• Gira desde los antebrazos y mantén las muñecas rectas en lugar de doblarlas alrededor de las empuñaduras.\n• Mantén los codos cerca de las costillas y evita convertir el curl en un balanceo de hombros.\n\nMúsculos principales: biceps_brachii',NULL,'zottman-curl.webp'),
+(464,'Remo Unilateral Sentado en Polea','Single-Arm Seated Cable Row','Variación unilateral del remo sentado en polea baja con maneral individual. Permite corregir desequilibrios musculares bilaterales y lograr un mayor rango de recorrido y contracción del dorsal ancho y romboides.',NULL,'03_remo_unilateral_sentado.webp'),
+(465,'Face Pull Sentado con Cuerda','Seated Cable Rope Face Pull','Variación de face pull ejecutada sentado en máquina de polea baja / remo con agarre de cuerda hacia el rostro. Enfocada en el aislamiento del deltoides posterior, manguito rotador externo y trapecio medio/superior.',NULL,'04_face_pull_sentado_cuerda.webp'),
+(466,'Curl de Bíceps Sentado en Polea','Seated Cable Bicep Curl','Curl de bíceps ejecutado sentado en el banco de la polea baja / long pull. Asegura tensión mecánica continua durante todo el rango de flexión del codo, maximizando la activación del bíceps braquial y braquial anterior.',NULL,'05_curl_biceps_sentado_polea.webp'),
+(467,'Encogimiento de Hombros Sentado en Polea','Seated Cable Shrug','Encogimiento de hombros para trapecios realizado sentado frente a la polea baja. Elimina la sobrecarga lumbar de las variantes de pie y enfoca la tracción vertical de las escápulas directamente en el trapecio superior.',NULL,'06_encogimiento_hombros_sentado.webp'),
+(468,'Pedaleo en Bicicleta Estática (Spinning)','Stationary Bike Cycling','Entrenamiento cardiovascular y de resistencia en bicicleta estática/spinning. Desarrolla potencia en el tren inferior (cuádriceps, glúteos, isquiotibiales y gemelos) con bajo impacto articular.','',''),
+(469,'Sprint en Bicicleta de Aire (Air Bike HIIT)','Air Bike HIIT Sprints','Ejercicio metabólico de cuerpo entero en bicicleta de aire. Combina pedaleo potente con empuje y tirón sincronizado de brazos, reclutando piernas, pecho, espalda, hombros, brazos y core.','','');
 /*!40000 ALTER TABLE `ejercicio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ejerciciocliente`
+--
+
+DROP TABLE IF EXISTS `ejerciciocliente`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ejerciciocliente` (
+  `idejerciciocliente` int(11) NOT NULL AUTO_INCREMENT,
+  `idejercicio` int(11) NOT NULL,
+  `idcliente` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `duracionminutos` int(11) NOT NULL,
+  PRIMARY KEY (`idejerciciocliente`),
+  KEY `idx_ejerciciocliente_ejercicio` (`idejercicio`),
+  KEY `idx_ejerciciocliente_cliente` (`idcliente`),
+  KEY `idx_ejerciciocliente_fecha` (`fecha`),
+  CONSTRAINT `fk_ejerciciocliente_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ejerciciocliente_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ejerciciocliente`
+--
+
+LOCK TABLES `ejerciciocliente` WRITE;
+/*!40000 ALTER TABLE `ejerciciocliente` DISABLE KEYS */;
+INSERT INTO `ejerciciocliente` VALUES
+(1,1,1,'2026-10-01',25),
+(2,2,1,'2026-10-01',20),
+(3,4,2,'2026-10-02',15),
+(4,3,2,'2026-10-03',30),
+(5,5,1,'2026-10-05',20),
+(7,635,6,'2026-10-06',20),
+(8,1,1,'2026-10-10',15),
+(9,9,6,'2026-10-12',3);
+/*!40000 ALTER TABLE `ejerciciocliente` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `ejercicioequipo`
@@ -796,14 +922,15 @@ CREATE TABLE `ejercicioequipo` (
   KEY `fk_ee_ejercicio` (`idejercicio`),
   KEY `fk_ee_equipo` (`idequipo`),
   CONSTRAINT `fk_ee_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipos` (`id_equipo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=377 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+  CONSTRAINT `fk_ee_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=385 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `ejercicioequipo`
 --
 
+LOCK TABLES `ejercicioequipo` WRITE;
 /*!40000 ALTER TABLE `ejercicioequipo` DISABLE KEYS */;
 INSERT INTO `ejercicioequipo` VALUES
 (1,1,17),
@@ -1097,6 +1224,7 @@ INSERT INTO `ejercicioequipo` VALUES
 (289,355,46),
 (290,358,14),
 (291,360,57),
+(377,360,62),
 (292,361,39),
 (293,362,29),
 (294,363,29),
@@ -1178,21 +1306,29 @@ INSERT INTO `ejercicioequipo` VALUES
 (370,456,17),
 (371,457,14),
 (372,459,57),
+(378,459,62),
 (373,460,3),
 (374,461,29),
 (375,462,58),
-(376,463,29);
+(376,463,29),
+(379,464,62),
+(380,465,62),
+(381,466,62),
+(382,467,62),
+(383,468,2),
+(384,469,18);
 /*!40000 ALTER TABLE `ejercicioequipo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
--- Table structure for table `equipos`
+-- Table structure for table `equipo`
 --
 
-DROP TABLE IF EXISTS `equipos`;
+DROP TABLE IF EXISTS `equipo`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8mb4 */;
-CREATE TABLE `equipos` (
-  `id_equipo` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `equipo` (
+  `idequipo` int(11) NOT NULL AUTO_INCREMENT,
   `codigo` varchar(30) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `imagen` varchar(255) DEFAULT NULL,
@@ -1205,81 +1341,502 @@ CREATE TABLE `equipos` (
   `fecha_adquisicion` date DEFAULT NULL,
   `valor_adquisicion` decimal(10,2) DEFAULT NULL,
   `id_estado` int(11) DEFAULT 1,
+  `iddisponibilidadequipo` int(11) DEFAULT 1,
   `activo` tinyint(1) DEFAULT 1,
   `observaciones` text DEFAULT NULL,
   `fecha_registro` datetime DEFAULT current_timestamp(),
-  PRIMARY KEY (`id_equipo`),
-  UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB AUTO_INCREMENT=62 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+  PRIMARY KEY (`idequipo`),
+  UNIQUE KEY `codigo` (`codigo`),
+  KEY `fk_equipo_disponibilidad` (`iddisponibilidadequipo`),
+  CONSTRAINT `fk_equipo_disponibilidad` FOREIGN KEY (`iddisponibilidadequipo`) REFERENCES `disponibilidadequipo` (`iddisponibilidadequipo`) ON DELETE SET NULL ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `equipos`
+-- Dumping data for table `equipo`
 --
 
-/*!40000 ALTER TABLE `equipos` DISABLE KEYS */;
-INSERT INTO `equipos` VALUES
-(1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
-(2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
-(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
-(5,'EQ-004','Anillas de Gimnasia','anillas.webp',4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(6,'EQ-005','Balón Medicinal','balon-medicinal.webp',4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(7,'EQ-006','Balón Slam','balon-slam.webp',4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(8,'EQ-007','Banco Declinado','banco-declinado.webp',3,1,'Gim360 Pro',NULL,'Banco declinado para press de pecho declinado y trabajo de abdominales',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(9,'EQ-008','Banco GHD (Glute Ham Developer)','banco-ghd.webp',2,1,'Gim360 Pro',NULL,'Banco especializado para hipertrofia y fortalecimiento de glúteos e isquiotibiales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(10,'EQ-009','Banco Inclinado','banco-inclinado.webp',3,1,'Gim360 Pro',NULL,'Banco multiposición inclinado para press de pecho superior y hombros',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(11,'EQ-010','Banco Plano Olímpico','banco-plano.webp',3,1,'Gim360 Pro',NULL,'Banco horizontal plano para levantamiento de potencia y press de banca',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(12,'EQ-011','Banda de Resistencia Circular (Loop Band)','banda-de-resistencia-circular.webp',5,1,'Gim360 Pro',NULL,'Banda de látex cerrada para activación de glúteos y calentamiento',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(13,'EQ-012','Banda Elástica de Resistencia','banda-elastica.webp',5,1,'Gim360 Pro',NULL,'Banda elástica con diferentes niveles de resistencia para movilidad y fuerza',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(14,'EQ-013','Barra de Dominadas','barra-de-dominadas.webp',4,1,'Gim360 Pro',NULL,'Estructura metálica para dominadas, agarres pronos, supinos y neutros',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(15,'EQ-014','Barra Hexagonal (Trap Bar)','barra-hexagonal.webp',3,1,'Gim360 Pro',NULL,'Barra con marco hexagonal para peso muerto neutral y encogimientos',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(16,'EQ-015','Barra Z (EZ Bar)','barra-z.webp',3,1,'Gim360 Pro',NULL,'Barra curva ergonómica diseñada para reducir tensión en muñecas durante curls y extensiones',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(17,'EQ-016','Barra Olímpica Estándar (20 kg)','barra.webp',3,1,'Gim360 Pro',NULL,'Barra olímpica de acero con rodamientos y moleteado de competición',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(18,'EQ-017','Bicicleta de Aire (Air Bike)','bicicleta-de-aire.webp',1,1,'Gim360 Pro',NULL,'Bicicleta con resistencia de aire y ventilador para entrenamientos HIIT de máxima intensidad',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(19,'EQ-018','Caja Pliométrica (Plyo Box)','caja-pliometrica.webp',4,1,'Gim360 Pro',NULL,'Cajón de salto multifuncional con 3 alturas ajustables para potencia de salto',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(20,'EQ-019','Cuerda de Batalla (Battle Rope)','cuerda-de-batalla.webp',4,1,'Gim360 Pro',NULL,'Cuerda gruesa de polidacrón para acondicionamiento metabólico y core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(21,'EQ-020','Cuerda de Escalada','cuerda-de-escalada.webp',4,1,'Gim360 Pro',NULL,'Cuerda de cáñamo reforzada suspendida para trepa y fuerza de tracción',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(22,'EQ-021','Cuerda de Saltar de Velocidad','cuerda-de-saltar.webp',1,1,'Gim360 Pro',NULL,'Cuerda de saltar con cable de acero y rodamientos de alta velocidad',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(23,'EQ-022','Máquina de Curl Femoral Tumbado','curl-femoral.webp',2,1,'Gim360 Pro',NULL,'Aparato selectorizado de placas para aislamiento del bíceps femoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(24,'EQ-023','Discos Olímpicos de Peso (Bumper Plates)','discos.webp',3,1,'Gim360 Pro',NULL,'Set de discos de goma maciza de alta densidad para barras olímpicas',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(25,'EQ-024','Máquina Elíptica Profesional','eliptica.webp',1,1,'Gim360 Pro',NULL,'Entrenador elíptico de bajo impacto articular con monitor de frecuencia cardíaca',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(26,'EQ-025','Estación de Fondos y Paralelas','estacion-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Barras paralelas fijas para inmersiones de tríceps y pecho',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(27,'EQ-026','Máquina de Extensión de Piernas (Leg Extension)','extension-de-piernas.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada para desarrollo y aislamiento de cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(28,'EQ-027','Soporte Landmine para Barra','landmine.webp',3,1,'Gim360 Pro',NULL,'Articulación multidireccional fijada al suelo para barra olímpica',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(29,'EQ-028','Mancuernas de Uretano / Goma','mancuerna.webp',3,1,'Gim360 Pro',NULL,'Juego de mancuernas fijas de diferentes pesos para levantamiento libre',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(30,'EQ-029','Máquina de Crunch Abdominal','maquina-crunch-abdominal.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada de placas para sobrecarga progresiva en flexión de tronco',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(31,'EQ-030','Máquina de Curl de Bíceps','maquina-curl-de-biceps.webp',2,1,'Gim360 Pro',NULL,'Máquina de placas para aislamiento concéntrico y excéntrico de bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(32,'EQ-031','Máquina de Curl Predicador','maquina-curl-predicador.webp',2,1,'Gim360 Pro',NULL,'Banco Scott integrado con palancas selectorizadas para brazo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(33,'EQ-032','Máquina de Abducción de Cadera','maquina-de-abduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para fortalecimiento de glúteo medio y cadera hacia afuera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(34,'EQ-033','Máquina de Aducción de Cadera','maquina-de-aduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para trabajo de aductores de muslo hacia adentro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(35,'EQ-034','Máquina de Aperturas de Pecho (Chest Fly)','maquina-de-aperturas-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Aparato de brazos articulados para aducción horizontal de hombro',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(36,'EQ-035','Máquina de Dominadas y Fondos Asistidos','maquina-de-dominadas-asistidas.webp',2,1,'Gim360 Pro',NULL,'Torre con plataforma contrapesada para facilitar dominadas y fondos',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(37,'EQ-036','Máquina de Gemelos a la Burra (Donkey Calf)','maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp',2,1,'Gim360 Pro',NULL,'Aparato para flexión plantar de tobillo con tronco flexionado a 90 grados',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(38,'EQ-037','Máquina de Gemelos de Pie (Standing Calf)','maquina-de-elevaciones-de-pantorrilla-de-pie.webp',2,1,'Gim360 Pro',NULL,'Máquina con almohadillas en hombros para hipertrofia del gastrocnemio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(39,'EQ-038','Máquina de Gemelos Sentado (Seated Calf)','maquina-de-elevaciones-de-pantorrilla-sentado.webp',2,1,'Gim360 Pro',NULL,'Aparato con rodillera acolchada para trabajo selectivo del músculo sóleo',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(40,'EQ-039','Máquina de Elevaciones Laterales a Discos','maquina-de-elevaciones-laterales-de-discos.webp',2,1,'Gim360 Pro',NULL,'Máquina de palanca de carga directa de discos para deltoides lateral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(41,'EQ-040','Máquina de Elevaciones Laterales (Selectorizada)','maquina-de-elevaciones-laterales.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas guiado para aislamiento del hombro medio',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(42,'EQ-041','Máquina de Encogimientos de Hombros','maquina-de-encogimientos.webp',2,1,'Gim360 Pro',NULL,'Palancas de agarre neutro para trapecio superior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(43,'EQ-042','Máquina de Extensión de Espalda / Lumbares','maquina-de-extension-de-espalda.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas para fortalecimiento de erectores espinales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(44,'EQ-043','Máquina de Extensión de Tríceps','maquina-de-extension-de-triceps.webp',2,1,'Gim360 Pro',NULL,'Máquina sentada con soporte de codos para empuje vertical de tríceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(45,'EQ-044','Máquina de Fondos Asistida / Selectorizada','maquina-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Aparato con palancas para press hacia abajo de tríceps y pectoral inferior',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(46,'EQ-045','Máquina de Remo Ergométrico (Rower)','maquina-de-remo.webp',1,1,'Gim360 Pro',NULL,'Remo de aire y resistencia magnética para cardio total y espalda',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(47,'EQ-046','Máquina Escaladora (StairMaster)','maquina-escaladora.webp',1,1,'Gim360 Pro',NULL,'Escalera sin fin motorizada para entrenamiento cardiovascular y tren inferior',1,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(48,'EQ-047','Máquina Hack Squat (Sentadilla Hack)','maquina-hack-squat.webp',2,1,'Gim360 Pro',NULL,'Trineo inclinado con respaldo fijo para sobrecarga en cuádriceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(49,'EQ-048','Máquina de Hip Thrust (Empuje de Cadera)','maquina-hip-thrust.webp',2,1,'Gim360 Pro',NULL,'Aparato especializado con cinturón acolchado para extensión de cadera',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(50,'EQ-049','Máquina de Jalón al Pecho (Lat Pulldown)','maquina-jalon-al-pecho.webp',2,1,'Gim360 Pro',NULL,'Torre de polea alta con barra para dorsales y bíceps',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(51,'EQ-050','Máquina de Press Militar / Hombros','maquina-press-de-hombros.webp',2,1,'Gim360 Pro',NULL,'Aparato convergente para empuje vertical seguro de hombros',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(52,'EQ-051','Máquina de Press de Pecho (Chest Press)','maquina-press-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Máquina con agarres múltiples para empuje horizontal de pectoral',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(53,'EQ-052','Máquina Smith (Multipower)','maquina-smith.webp',2,1,'Gim360 Pro',NULL,'Estructura con barra olímpica guiada por rieles y ganchos de seguridad',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(54,'EQ-053','Máquina Pec Deck / Contractora de Pectoral','pec-deck.webp',2,1,'Gim360 Pro',NULL,'Máquina clásica de almohadillas en codos para aperturas pectorales',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(55,'EQ-054','Pelota Suiza / Fitball','pelota-de-estabilidad.webp',5,1,'Gim360 Pro',NULL,'Balón inflable de PVC anti-explosión para estabilidad, core y rehabilitación',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(56,'EQ-055','Pesa Rusa de Competición (Kettlebell)','pesa-rusa.webp',3,1,'Gim360 Pro',NULL,'Pesa de hierro fundido con asa superior para swings, snatches y cleans',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(57,'EQ-056','Torre de Polea Cruzada (Cable Crossover)','polea.webp',2,1,'Gim360 Pro',NULL,'Estación doble de poleas regulables en altura para cruces y jalones',2,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02'),
-(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,NULL,'2026-10-09 11:27:02');
-/*!40000 ALTER TABLE `equipos` ENABLE KEYS */;
+LOCK TABLES `equipo` WRITE;
+/*!40000 ALTER TABLE `equipo` DISABLE KEYS */;
+INSERT INTO `equipo` VALUES
+(1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
+(2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
+(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
+(5,'EQ-004','Anillas de Gimnasia','anillas.webp',4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(6,'EQ-005','Balón Medicinal','balon-medicinal.webp',4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(7,'EQ-006','Balón Slam','balon-slam.webp',4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(8,'EQ-007','Banco Declinado','banco-declinado.webp',3,1,'Gim360 Pro',NULL,'Banco declinado para press de pecho declinado y trabajo de abdominales',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(9,'EQ-008','Banco GHD (Glute Ham Developer)','banco-ghd.webp',2,1,'Gim360 Pro',NULL,'Banco especializado para hipertrofia y fortalecimiento de glúteos e isquiotibiales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(10,'EQ-009','Banco Inclinado','banco-inclinado.webp',3,1,'Gim360 Pro',NULL,'Banco multiposición inclinado para press de pecho superior y hombros',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(11,'EQ-010','Banco Plano Olímpico','banco-plano.webp',3,1,'Gim360 Pro',NULL,'Banco horizontal plano para levantamiento de potencia y press de banca',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(12,'EQ-011','Banda de Resistencia Circular (Loop Band)','banda-de-resistencia-circular.webp',5,1,'Gim360 Pro',NULL,'Banda de látex cerrada para activación de glúteos y calentamiento',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(13,'EQ-012','Banda Elástica de Resistencia','banda-elastica.webp',5,1,'Gim360 Pro',NULL,'Banda elástica con diferentes niveles de resistencia para movilidad y fuerza',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(14,'EQ-013','Barra de Dominadas','barra-de-dominadas.webp',4,1,'Gim360 Pro',NULL,'Estructura metálica para dominadas, agarres pronos, supinos y neutros',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(15,'EQ-014','Barra Hexagonal (Trap Bar)','barra-hexagonal.webp',3,1,'Gim360 Pro',NULL,'Barra con marco hexagonal para peso muerto neutral y encogimientos',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(16,'EQ-015','Barra Z (EZ Bar)','barra-z.webp',3,1,'Gim360 Pro',NULL,'Barra curva ergonómica diseñada para reducir tensión en muñecas durante curls y extensiones',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(17,'EQ-016','Barra Olímpica Estándar (20 kg)','barra.webp',3,1,'Gim360 Pro',NULL,'Barra olímpica de acero con rodamientos y moleteado de competición',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(18,'EQ-017','Bicicleta de Aire (Air Bike)','bicicleta-de-aire.webp',1,1,'Gim360 Pro',NULL,'Bicicleta con resistencia de aire y ventilador para entrenamientos HIIT de máxima intensidad',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(19,'EQ-018','Caja Pliométrica (Plyo Box)','caja-pliometrica.webp',4,1,'Gim360 Pro',NULL,'Cajón de salto multifuncional con 3 alturas ajustables para potencia de salto',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(20,'EQ-019','Cuerda de Batalla (Battle Rope)','cuerda-de-batalla.webp',4,1,'Gim360 Pro',NULL,'Cuerda gruesa de polidacrón para acondicionamiento metabólico y core',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(21,'EQ-020','Cuerda de Escalada','cuerda-de-escalada.webp',4,1,'Gim360 Pro',NULL,'Cuerda de cáñamo reforzada suspendida para trepa y fuerza de tracción',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(22,'EQ-021','Cuerda de Saltar de Velocidad','cuerda-de-saltar.webp',1,1,'Gim360 Pro',NULL,'Cuerda de saltar con cable de acero y rodamientos de alta velocidad',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(23,'EQ-022','Máquina de Curl Femoral Tumbado','curl-femoral.webp',2,1,'Gim360 Pro',NULL,'Aparato selectorizado de placas para aislamiento del bíceps femoral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(24,'EQ-023','Discos Olímpicos de Peso (Bumper Plates)','discos.webp',3,1,'Gim360 Pro',NULL,'Set de discos de goma maciza de alta densidad para barras olímpicas',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(25,'EQ-024','Máquina Elíptica Profesional','eliptica.webp',1,1,'Gim360 Pro',NULL,'Entrenador elíptico de bajo impacto articular con monitor de frecuencia cardíaca',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(26,'EQ-025','Estación de Fondos y Paralelas','estacion-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Barras paralelas fijas para inmersiones de tríceps y pecho',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(27,'EQ-026','Máquina de Extensión de Piernas (Leg Extension)','extension-de-piernas.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada para desarrollo y aislamiento de cuádriceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(28,'EQ-027','Soporte Landmine para Barra','landmine.webp',3,1,'Gim360 Pro',NULL,'Articulación multidireccional fijada al suelo para barra olímpica',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(29,'EQ-028','Mancuernas de Uretano / Goma','mancuerna.webp',3,1,'Gim360 Pro',NULL,'Juego de mancuernas fijas de diferentes pesos para levantamiento libre',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(30,'EQ-029','Máquina de Crunch Abdominal','maquina-crunch-abdominal.webp',2,1,'Gim360 Pro',NULL,'Máquina selectorizada de placas para sobrecarga progresiva en flexión de tronco',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(31,'EQ-030','Máquina de Curl de Bíceps','maquina-curl-de-biceps.webp',2,1,'Gim360 Pro',NULL,'Máquina de placas para aislamiento concéntrico y excéntrico de bíceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(32,'EQ-031','Máquina de Curl Predicador','maquina-curl-predicador.webp',2,1,'Gim360 Pro',NULL,'Banco Scott integrado con palancas selectorizadas para brazo',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(33,'EQ-032','Máquina de Abducción de Cadera','maquina-de-abduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para fortalecimiento de glúteo medio y cadera hacia afuera',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(34,'EQ-033','Máquina de Aducción de Cadera','maquina-de-aduccion-de-cadera.webp',2,1,'Gim360 Pro',NULL,'Máquina para trabajo de aductores de muslo hacia adentro',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(35,'EQ-034','Máquina de Aperturas de Pecho (Chest Fly)','maquina-de-aperturas-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Aparato de brazos articulados para aducción horizontal de hombro',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(36,'EQ-035','Máquina de Dominadas y Fondos Asistidos','maquina-de-dominadas-asistidas.webp',2,1,'Gim360 Pro',NULL,'Torre con plataforma contrapesada para facilitar dominadas y fondos',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(37,'EQ-036','Máquina de Gemelos a la Burra (Donkey Calf)','maquina-de-elevaciones-de-pantorrilla-a-la-burra.webp',2,1,'Gim360 Pro',NULL,'Aparato para flexión plantar de tobillo con tronco flexionado a 90 grados',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(38,'EQ-037','Máquina de Gemelos de Pie (Standing Calf)','maquina-de-elevaciones-de-pantorrilla-de-pie.webp',2,1,'Gim360 Pro',NULL,'Máquina con almohadillas en hombros para hipertrofia del gastrocnemio',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(39,'EQ-038','Máquina de Gemelos Sentado (Seated Calf)','maquina-de-elevaciones-de-pantorrilla-sentado.webp',2,1,'Gim360 Pro',NULL,'Aparato con rodillera acolchada para trabajo selectivo del músculo sóleo',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(40,'EQ-039','Máquina de Elevaciones Laterales a Discos','maquina-de-elevaciones-laterales-de-discos.webp',2,1,'Gim360 Pro',NULL,'Máquina de palanca de carga directa de discos para deltoides lateral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(41,'EQ-040','Máquina de Elevaciones Laterales (Selectorizada)','maquina-de-elevaciones-laterales.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas guiado para aislamiento del hombro medio',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(42,'EQ-041','Máquina de Encogimientos de Hombros','maquina-de-encogimientos.webp',2,1,'Gim360 Pro',NULL,'Palancas de agarre neutro para trapecio superior',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(43,'EQ-042','Máquina de Extensión de Espalda / Lumbares','maquina-de-extension-de-espalda.webp',2,1,'Gim360 Pro',NULL,'Aparato de placas para fortalecimiento de erectores espinales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(44,'EQ-043','Máquina de Extensión de Tríceps','maquina-de-extension-de-triceps.webp',2,1,'Gim360 Pro',NULL,'Máquina sentada con soporte de codos para empuje vertical de tríceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(45,'EQ-044','Máquina de Fondos Asistida / Selectorizada','maquina-de-fondos.webp',2,1,'Gim360 Pro',NULL,'Aparato con palancas para press hacia abajo de tríceps y pectoral inferior',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(46,'EQ-045','Máquina de Remo Ergométrico (Rower)','maquina-de-remo.webp',1,1,'Gim360 Pro',NULL,'Remo de aire y resistencia magnética para cardio total y espalda',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(47,'EQ-046','Máquina Escaladora (StairMaster)','maquina-escaladora.webp',1,1,'Gim360 Pro',NULL,'Escalera sin fin motorizada para entrenamiento cardiovascular y tren inferior',1,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(48,'EQ-047','Máquina Hack Squat (Sentadilla Hack)','maquina-hack-squat.webp',2,1,'Gim360 Pro',NULL,'Trineo inclinado con respaldo fijo para sobrecarga en cuádriceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(49,'EQ-048','Máquina de Hip Thrust (Empuje de Cadera)','maquina-hip-thrust.webp',2,1,'Gim360 Pro',NULL,'Aparato especializado con cinturón acolchado para extensión de cadera',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(50,'EQ-049','Máquina de Jalón al Pecho (Lat Pulldown)','maquina-jalon-al-pecho.webp',2,1,'Gim360 Pro',NULL,'Torre de polea alta con barra para dorsales y bíceps',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(51,'EQ-050','Máquina de Press Militar / Hombros','maquina-press-de-hombros.webp',2,1,'Gim360 Pro',NULL,'Aparato convergente para empuje vertical seguro de hombros',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(52,'EQ-051','Máquina de Press de Pecho (Chest Press)','maquina-press-de-pecho.webp',2,1,'Gim360 Pro',NULL,'Máquina con agarres múltiples para empuje horizontal de pectoral',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(53,'EQ-052','Máquina Smith (Multipower)','maquina-smith.webp',2,1,'Gim360 Pro',NULL,'Estructura con barra olímpica guiada por rieles y ganchos de seguridad',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(54,'EQ-053','Máquina Pec Deck / Contractora de Pectoral','pec-deck.webp',2,1,'Gim360 Pro',NULL,'Máquina clásica de almohadillas en codos para aperturas pectorales',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(55,'EQ-054','Pelota Suiza / Fitball','pelota-de-estabilidad.webp',5,1,'Gim360 Pro',NULL,'Balón inflable de PVC anti-explosión para estabilidad, core y rehabilitación',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(56,'EQ-055','Pesa Rusa de Competición (Kettlebell)','pesa-rusa.webp',3,1,'Gim360 Pro',NULL,'Pesa de hierro fundido con asa superior para swings, snatches y cleans',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(57,'EQ-056','Torre de Polea Cruzada (Cable Crossover)','polea.webp',2,1,'Gim360 Pro',NULL,'Estación doble de poleas regulables en altura para cruces y jalones',2,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(58,'EQ-057','Rodillo de Muñeca (Wrist Roller)','rodillo-de-muneca.webp',5,1,'Gim360 Pro',NULL,'Dispositivo cilíndrico con cuerda y soporte de discos para flexo-extensión de antebrazo',5,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
+(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg',2,1,'Gim360 Pro',NULL,'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',2,'2026-10-20',850.00,1,1,1,'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.','2026-10-20 22:09:49');
+/*!40000 ALTER TABLE `equipo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `equipomusculo`
+--
+
+DROP TABLE IF EXISTS `equipomusculo`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `equipomusculo` (
+  `idequipomusculo` int(11) NOT NULL AUTO_INCREMENT,
+  `idequipo` int(11) NOT NULL,
+  `idmusculo` int(11) NOT NULL,
+  PRIMARY KEY (`idequipomusculo`),
+  UNIQUE KEY `uk_equipo_musculo` (`idequipo`,`idmusculo`),
+  KEY `fk_em_equipo` (`idequipo`),
+  KEY `fk_em_musculo` (`idmusculo`),
+  CONSTRAINT `fk_em_equipo` FOREIGN KEY (`idequipo`) REFERENCES `equipo` (`idequipo`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_em_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=534 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `equipomusculo`
+--
+
+LOCK TABLES `equipomusculo` WRITE;
+/*!40000 ALTER TABLE `equipomusculo` DISABLE KEYS */;
+INSERT INTO `equipomusculo` VALUES
+(513,2,6),
+(518,2,13),
+(516,2,15),
+(515,2,16),
+(514,2,18),
+(519,2,21),
+(517,2,24),
+(1,3,2),
+(2,3,6),
+(3,3,16),
+(4,3,18),
+(5,5,3),
+(6,5,7),
+(7,5,9),
+(8,5,10),
+(9,5,14),
+(10,5,20),
+(11,5,21),
+(12,5,22),
+(13,5,23),
+(14,5,26),
+(15,5,27),
+(16,7,10),
+(17,7,16),
+(18,7,19),
+(19,7,21),
+(20,9,15),
+(21,9,16),
+(22,9,18),
+(23,11,7),
+(24,11,20),
+(25,11,27),
+(26,12,2),
+(27,12,6),
+(28,12,11),
+(29,12,15),
+(30,12,16),
+(31,12,17),
+(32,12,18),
+(33,13,3),
+(34,13,9),
+(35,13,10),
+(36,13,14),
+(37,13,22),
+(38,13,26),
+(39,14,3),
+(40,14,4),
+(41,14,7),
+(42,14,9),
+(43,14,10),
+(44,14,13),
+(45,14,14),
+(46,14,19),
+(47,14,20),
+(48,14,21),
+(49,14,22),
+(50,14,26),
+(51,14,27),
+(52,15,6),
+(53,15,11),
+(54,15,14),
+(55,15,16),
+(56,15,18),
+(57,15,26),
+(58,16,3),
+(59,16,4),
+(60,16,5),
+(61,16,7),
+(62,16,8),
+(63,16,9),
+(64,16,10),
+(65,16,12),
+(66,16,14),
+(67,16,20),
+(68,16,22),
+(69,16,23),
+(70,16,26),
+(71,16,27),
+(72,17,2),
+(73,17,3),
+(74,17,4),
+(75,17,5),
+(76,17,6),
+(77,17,7),
+(78,17,8),
+(79,17,9),
+(80,17,10),
+(81,17,11),
+(82,17,12),
+(83,17,14),
+(84,17,15),
+(85,17,16),
+(86,17,17),
+(87,17,18),
+(88,17,19),
+(89,17,20),
+(90,17,21),
+(91,17,22),
+(92,17,23),
+(93,17,24),
+(94,17,25),
+(95,17,26),
+(96,17,27),
+(530,18,3),
+(520,18,6),
+(526,18,7),
+(529,18,10),
+(525,18,13),
+(523,18,15),
+(522,18,16),
+(521,18,18),
+(533,18,19),
+(527,18,20),
+(532,18,21),
+(531,18,22),
+(524,18,24),
+(528,18,27),
+(97,19,6),
+(98,19,15),
+(99,19,16),
+(100,19,18),
+(101,19,24),
+(102,20,6),
+(103,20,7),
+(104,20,10),
+(105,20,14),
+(106,20,16),
+(107,20,19),
+(108,20,21),
+(109,20,26),
+(110,23,15),
+(111,23,18),
+(112,24,6),
+(113,24,7),
+(114,24,10),
+(115,24,11),
+(116,24,14),
+(117,24,16),
+(118,24,18),
+(119,24,19),
+(120,24,20),
+(121,24,21),
+(122,24,23),
+(123,24,26),
+(124,24,27),
+(125,26,7),
+(126,26,20),
+(127,26,27),
+(128,27,6),
+(129,29,2),
+(130,29,3),
+(131,29,4),
+(132,29,5),
+(133,29,6),
+(134,29,7),
+(135,29,8),
+(136,29,9),
+(137,29,10),
+(138,29,11),
+(139,29,12),
+(140,29,14),
+(141,29,15),
+(142,29,16),
+(143,29,17),
+(144,29,18),
+(145,29,19),
+(146,29,20),
+(147,29,21),
+(148,29,22),
+(149,29,23),
+(150,29,24),
+(151,29,25),
+(152,29,26),
+(153,29,27),
+(154,30,19),
+(155,30,21),
+(156,30,25),
+(157,31,3),
+(158,31,4),
+(159,32,3),
+(160,32,4),
+(161,33,1),
+(162,33,17),
+(163,34,2),
+(164,35,7),
+(165,35,20),
+(166,35,23),
+(167,36,3),
+(168,36,9),
+(169,36,10),
+(170,36,14),
+(171,36,22),
+(172,37,15),
+(173,37,24),
+(174,38,15),
+(175,38,24),
+(176,39,15),
+(177,39,24),
+(178,40,7),
+(179,40,8),
+(180,40,26),
+(181,42,14),
+(182,42,26),
+(183,43,11),
+(184,43,16),
+(185,43,18),
+(186,44,27),
+(187,45,7),
+(188,45,20),
+(189,45,22),
+(190,45,27),
+(191,46,3),
+(192,46,6),
+(193,46,10),
+(194,46,11),
+(195,46,16),
+(196,46,18),
+(197,46,22),
+(198,46,26),
+(199,48,6),
+(200,48,15),
+(201,48,16),
+(202,48,18),
+(203,48,24),
+(204,49,6),
+(205,49,16),
+(206,49,17),
+(207,49,18),
+(208,50,3),
+(209,50,9),
+(210,50,10),
+(211,50,22),
+(212,50,26),
+(213,51,7),
+(214,51,8),
+(215,51,26),
+(216,51,27),
+(217,52,7),
+(218,52,20),
+(219,52,27),
+(220,53,3),
+(221,53,6),
+(222,53,7),
+(223,53,8),
+(224,53,9),
+(225,53,10),
+(226,53,11),
+(227,53,14),
+(228,53,15),
+(229,53,16),
+(230,53,17),
+(231,53,18),
+(232,53,20),
+(233,53,22),
+(234,53,24),
+(235,53,26),
+(236,53,27),
+(237,54,7),
+(238,54,20),
+(239,54,23),
+(240,55,6),
+(241,55,7),
+(242,55,13),
+(243,55,15),
+(244,55,16),
+(245,55,18),
+(246,55,19),
+(247,55,20),
+(248,55,21),
+(249,55,23),
+(250,55,27),
+(251,56,2),
+(252,56,3),
+(253,56,4),
+(254,56,5),
+(255,56,6),
+(256,56,7),
+(257,56,8),
+(258,56,9),
+(259,56,10),
+(260,56,11),
+(261,56,12),
+(262,56,13),
+(263,56,14),
+(264,56,16),
+(265,56,17),
+(266,56,18),
+(267,56,19),
+(268,56,20),
+(269,56,21),
+(270,56,22),
+(271,56,23),
+(272,56,26),
+(273,56,27),
+(274,57,3),
+(275,57,4),
+(276,57,5),
+(277,57,7),
+(278,57,8),
+(279,57,9),
+(280,57,10),
+(281,57,11),
+(282,57,12),
+(283,57,14),
+(284,57,16),
+(285,57,17),
+(286,57,18),
+(287,57,19),
+(288,57,20),
+(289,57,21),
+(290,57,22),
+(291,57,23),
+(292,57,25),
+(293,57,26),
+(294,57,27),
+(295,58,7),
+(296,58,12),
+(297,58,14),
+(298,59,7),
+(299,59,10),
+(300,59,19),
+(301,59,21),
+(302,59,23),
+(303,59,25),
+(304,60,3),
+(305,60,4),
+(306,60,5),
+(307,60,6),
+(308,60,7),
+(309,60,8),
+(310,60,9),
+(311,60,10),
+(312,60,15),
+(313,60,16),
+(314,60,17),
+(315,60,18),
+(316,60,20),
+(317,60,21),
+(318,60,22),
+(319,60,26),
+(320,60,27),
+(321,61,3),
+(322,61,9),
+(323,61,10),
+(324,61,16),
+(325,61,22),
+(326,61,26),
+(327,62,3),
+(328,62,4),
+(329,62,5),
+(330,62,8),
+(331,62,9),
+(332,62,10),
+(333,62,11),
+(334,62,22),
+(335,62,26);
+/*!40000 ALTER TABLE `equipomusculo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `equipos`
+--
+
+DROP TABLE IF EXISTS `equipos`;
+/*!50001 DROP VIEW IF EXISTS `equipos`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `equipos` AS SELECT
+ NULL AS `id_equipo`,
+ NULL AS `idequipo`,
+ NULL AS `codigo`,
+ NULL AS `nombre`,
+ NULL AS `imagen`,
+ NULL AS `id_tipo`,
+ NULL AS `id_marca`,
+ NULL AS `modelo`,
+ NULL AS `numero_serie`,
+ NULL AS `descripcion`,
+ NULL AS `id_ubicacion`,
+ NULL AS `fecha_adquisicion`,
+ NULL AS `valor_adquisicion`,
+ NULL AS `id_estado`,
+ NULL AS `iddisponibilidadequipo`,
+ NULL AS `activo`,
+ NULL AS `observaciones`,
+ NULL AS `fecha_registro` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `estadocivil`
@@ -1299,6 +1856,7 @@ CREATE TABLE `estadocivil` (
 -- Dumping data for table `estadocivil`
 --
 
+LOCK TABLES `estadocivil` WRITE;
 /*!40000 ALTER TABLE `estadocivil` DISABLE KEYS */;
 INSERT INTO `estadocivil` VALUES
 (1,'Soltero/a'),
@@ -1307,6 +1865,7 @@ INSERT INTO `estadocivil` VALUES
 (4,'Viudo/a'),
 (5,'Unión de Hecho');
 /*!40000 ALTER TABLE `estadocivil` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `estadocivilpersona`
@@ -1331,6 +1890,7 @@ CREATE TABLE `estadocivilpersona` (
 -- Dumping data for table `estadocivilpersona`
 --
 
+LOCK TABLES `estadocivilpersona` WRITE;
 /*!40000 ALTER TABLE `estadocivilpersona` DISABLE KEYS */;
 INSERT INTO `estadocivilpersona` VALUES
 (1,1,1),
@@ -1338,6 +1898,7 @@ INSERT INTO `estadocivilpersona` VALUES
 (3,3,1),
 (6,7,2);
 /*!40000 ALTER TABLE `estadocivilpersona` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `estadoprogramacliente`
@@ -1358,6 +1919,7 @@ CREATE TABLE `estadoprogramacliente` (
 -- Dumping data for table `estadoprogramacliente`
 --
 
+LOCK TABLES `estadoprogramacliente` WRITE;
 /*!40000 ALTER TABLE `estadoprogramacliente` DISABLE KEYS */;
 INSERT INTO `estadoprogramacliente` VALUES
 (1,'Activo'),
@@ -1366,6 +1928,7 @@ INSERT INTO `estadoprogramacliente` VALUES
 (2,'En Espera'),
 (4,'Pausado');
 /*!40000 ALTER TABLE `estadoprogramacliente` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `genero`
@@ -1385,6 +1948,7 @@ CREATE TABLE `genero` (
 -- Dumping data for table `genero`
 --
 
+LOCK TABLES `genero` WRITE;
 /*!40000 ALTER TABLE `genero` DISABLE KEYS */;
 INSERT INTO `genero` VALUES
 (1,'Cisgénero Masculino'),
@@ -1393,6 +1957,7 @@ INSERT INTO `genero` VALUES
 (4,'No Binario'),
 (5,'Otro');
 /*!40000 ALTER TABLE `genero` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `generopersona`
@@ -1417,6 +1982,7 @@ CREATE TABLE `generopersona` (
 -- Dumping data for table `generopersona`
 --
 
+LOCK TABLES `generopersona` WRITE;
 /*!40000 ALTER TABLE `generopersona` DISABLE KEYS */;
 INSERT INTO `generopersona` VALUES
 (1,1,1),
@@ -1424,6 +1990,7 @@ INSERT INTO `generopersona` VALUES
 (3,3,1),
 (6,7,1);
 /*!40000 ALTER TABLE `generopersona` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `motivoentrenamiento`
@@ -1446,6 +2013,7 @@ CREATE TABLE `motivoentrenamiento` (
 -- Dumping data for table `motivoentrenamiento`
 --
 
+LOCK TABLES `motivoentrenamiento` WRITE;
 /*!40000 ALTER TABLE `motivoentrenamiento` DISABLE KEYS */;
 INSERT INTO `motivoentrenamiento` VALUES
 (1,'Hipertrofia Muscular','Aumentar la masa muscular magra mediante entrenamiento de sobrecarga progresiva y nutrición orientada al superávit calórico.','modelado_proporciones.webp','Estética Física'),
@@ -1464,6 +2032,7 @@ INSERT INTO `motivoentrenamiento` VALUES
 (14,'Impacto visual de la postura corporal','Un torso erguido, una cintura escapular retraída y una pelvis alineada modifican de inmediato la presencia corporal: proyectan una figura más estilizada, firme y esbelta sin necesidad de un cambio drástico de peso en la balanza.','impacto_postura.webp','Estética Física'),
 (15,'Vascularización y definición superficial','La reducción controlada del porcentaje de grasa unida a la hipertrofia muscular resalta los surcos naturales de los grupos musculares (abdominales, brazos, piernas), generando un contorno definido y simétrico.','definicion_vascularizacion.webp','Estética Física');
 /*!40000 ALTER TABLE `motivoentrenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `musculo`
@@ -1485,6 +2054,7 @@ CREATE TABLE `musculo` (
 -- Dumping data for table `musculo`
 --
 
+LOCK TABLES `musculo` WRITE;
 /*!40000 ALTER TABLE `musculo` DISABLE KEYS */;
 INSERT INTO `musculo` VALUES
 (1,'Abductores','abductores.webp'),
@@ -1515,6 +2085,7 @@ INSERT INTO `musculo` VALUES
 (26,'Trapecio','trapecio.webp'),
 (27,'Tríceps Braquial','triceps-braquial.webp');
 /*!40000 ALTER TABLE `musculo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `musculoejercicio`
@@ -1533,13 +2104,14 @@ CREATE TABLE `musculoejercicio` (
   KEY `fk_me_musculo` (`idmusculo`),
   CONSTRAINT `fk_me_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_me_musculo` FOREIGN KEY (`idmusculo`) REFERENCES `musculo` (`idmusculo`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=1666 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1702 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `musculoejercicio`
 --
 
+LOCK TABLES `musculoejercicio` WRITE;
 /*!40000 ALTER TABLE `musculoejercicio` DISABLE KEYS */;
 INSERT INTO `musculoejercicio` VALUES
 (2,1,6),
@@ -3206,8 +3778,45 @@ INSERT INTO `musculoejercicio` VALUES
 (1662,463,3),
 (1663,463,4),
 (1664,463,5),
-(1665,463,12);
+(1665,463,12),
+(1668,464,3),
+(1669,464,9),
+(1666,464,10),
+(1670,464,11),
+(1667,464,22),
+(1671,464,26),
+(1675,465,8),
+(1672,465,9),
+(1674,465,22),
+(1673,465,26),
+(1676,466,3),
+(1677,466,4),
+(1678,466,5),
+(1680,467,22),
+(1679,467,26),
+(1681,468,6),
+(1686,468,13),
+(1684,468,15),
+(1683,468,16),
+(1682,468,18),
+(1687,468,21),
+(1685,468,24),
+(1698,469,3),
+(1688,469,6),
+(1694,469,7),
+(1697,469,10),
+(1693,469,13),
+(1691,469,15),
+(1690,469,16),
+(1689,469,18),
+(1701,469,19),
+(1695,469,20),
+(1700,469,21),
+(1699,469,22),
+(1692,469,24),
+(1696,469,27);
 /*!40000 ALTER TABLE `musculoejercicio` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `persona`
@@ -3227,13 +3836,14 @@ CREATE TABLE `persona` (
   UNIQUE KEY `cedula` (`cedula`),
   KEY `fk_persona_sexo` (`idsexo`),
   CONSTRAINT `fk_persona_sexo` FOREIGN KEY (`idsexo`) REFERENCES `sexo` (`idsexo`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `persona`
 --
 
+LOCK TABLES `persona` WRITE;
 /*!40000 ALTER TABLE `persona` DISABLE KEYS */;
 INSERT INTO `persona` VALUES
 (1,'0801234567','Mendoza Reyes','Carlos Alberto','1995-04-12',1),
@@ -3242,8 +3852,33 @@ INSERT INTO `persona` VALUES
 (7,'0801560517','Francis Quinde','Stalin Adalberto','1980-07-01',1),
 (8,'0803597285','San Luca Arroyo','Edwin','2001-03-18',1),
 (9,'0804932341','QUIÑONEZ SANCHEZ','MIRKA GERALDY','2003-07-30',2),
-(10,'0809999999','Gomez Perez','Andrea Carolina','1999-05-20',2);
+(10,'0809999999','Gomez Perez','Andrea Carolina','1999-05-20',2),
+(11,'0998877665','User','Test',NULL,1),
+(12,'0850359514','Chávez Salazar','David Bolivar','2004-03-04',1);
 /*!40000 ALTER TABLE `persona` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `plan_ejercicio_personalizado`
+--
+
+DROP TABLE IF EXISTS `plan_ejercicio_personalizado`;
+/*!50001 DROP VIEW IF EXISTS `plan_ejercicio_personalizado`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `plan_ejercicio_personalizado` AS SELECT
+ NULL AS `idplanpersonalizado`,
+ NULL AS `idplanejerciciomodelo`,
+ NULL AS `nombre`,
+ NULL AS `idejercicio`,
+ NULL AS `diassemanas`,
+ NULL AS `repeticiones`,
+ NULL AS `series`,
+ NULL AS `tiempodescanso`,
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `planejercicio`
@@ -3271,6 +3906,7 @@ CREATE TABLE `planejercicio` (
 -- Dumping data for table `planejercicio`
 --
 
+LOCK TABLES `planejercicio` WRITE;
 /*!40000 ALTER TABLE `planejercicio` DISABLE KEYS */;
 INSERT INTO `planejercicio` VALUES
 (1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00),
@@ -3282,7 +3918,6 @@ INSERT INTO `planejercicio` VALUES
 (7,'Plan Peso Muerto con Barra',3,3,5,5,180,100.00),
 (8,'Plan Sentadilla Trasera con Barra',1,3,5,5,180,85.00),
 (9,'Plan Dominadas Arquero',7,4,15,3,60,30.00),
-(10,'Plan Dominadas Arquero',7,3,12,3,60,20.00),
 (11,'Plan Crunch Declinado',131,3,10,4,10,0.00),
 (12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00),
 (14,'Plan Apertura con mancuernas en banco inclinado',223,3,10,4,10,5.00),
@@ -3291,6 +3926,110 @@ INSERT INTO `planejercicio` VALUES
 (17,'Plan Push Press con Mancuerna a Un Brazo',290,2,15,8,60,5.00),
 (18,'Plan Apertura de Deltoides Posterior',339,2,15,4,60,10.00);
 /*!40000 ALTER TABLE `planejercicio` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `planejerciciomodelo`
+--
+
+DROP TABLE IF EXISTS `planejerciciomodelo`;
+/*!50001 DROP VIEW IF EXISTS `planejerciciomodelo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `planejerciciomodelo` AS SELECT
+ NULL AS `idplanejercicio`,
+ NULL AS `nombre`,
+ NULL AS `idejercicio`,
+ NULL AS `diassemanas`,
+ NULL AS `repeticiones`,
+ NULL AS `series`,
+ NULL AS `tiempodescanso`,
+ NULL AS `peso` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `planejerciciopersonalizado`
+--
+
+DROP TABLE IF EXISTS `planejerciciopersonalizado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `planejerciciopersonalizado` (
+  `idplanpersonalizado` int(11) NOT NULL AUTO_INCREMENT,
+  `idplanejerciciomodelo` int(11) DEFAULT NULL,
+  `nombre` varchar(150) DEFAULT NULL,
+  `idejercicio` int(11) NOT NULL,
+  `diassemanas` int(11) DEFAULT NULL,
+  `repeticiones` int(11) DEFAULT NULL,
+  `series` int(11) DEFAULT NULL,
+  `tiempodescanso` int(11) DEFAULT NULL,
+  `peso` decimal(8,2) DEFAULT 0.00,
+  `fechainicio` date DEFAULT NULL,
+  `duracionsemana` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idplanpersonalizado`),
+  KEY `fk_pep_ejercicio` (`idejercicio`),
+  KEY `fk_pep_planmodelo` (`idplanejerciciomodelo`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `planejerciciopersonalizado`
+--
+
+LOCK TABLES `planejerciciopersonalizado` WRITE;
+/*!40000 ALTER TABLE `planejerciciopersonalizado` DISABLE KEYS */;
+INSERT INTO `planejerciciopersonalizado` VALUES
+(1,1,'Plan Sentadilla Trasera con Barra',1,3,8,5,90,95.50,NULL,4),
+(2,2,'Plan Press de Banca con Barra',2,3,10,4,120,40.00,NULL,4),
+(3,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(4,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(5,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(6,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(7,3,'Plan Dominada',4,4,12,3,60,50.00,NULL,4),
+(8,4,'Plan Press de Barra sobre la Cabeza Sentado',5,4,15,3,60,45.00,NULL,4),
+(9,5,'Plan Máquina de Remo',355,5,20,4,45,0.00,NULL,4),
+(12,12,'Calentamiento persona de 56 años',28,3,10,4,20,0.00,NULL,4),
+(13,7,'Plan Peso Muerto con Barra',3,3,5,5,180,100.00,NULL,4),
+(14,15,'Plan Aperturas con Mancuernas en Banco Declinado adulto 18 - 29 años',132,3,5,4,60,10.00,NULL,4),
+(15,16,'Plan Sentadilla con Kettlebell',253,2,15,4,60,5.00,NULL,4),
+(16,17,'Plan Push Press con Mancuerna a Un Brazo',290,2,15,8,60,5.00,NULL,4),
+(17,18,'Plan Apertura de Deltoides Posterior',339,2,15,4,60,10.00,NULL,4),
+(19,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(20,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(21,10,'Plan Dominadas Arquero',7,3,12,3,60,20.00,NULL,4),
+(22,NULL,'Plan Extensión de Cuádriceps a Una Pierna',383,3,12,3,60,0.00,NULL,4),
+(23,1,'Plan Sentadilla Trasera con Barra',1,3,12,4,90,60.00,NULL,4),
+(24,2,'Plan Press de Banca con Barra',2,3,10,4,120,80.00,NULL,4),
+(26,NULL,'Plan Press Arnold',9,3,10,5,120,5.00,NULL,4),
+(27,NULL,'Plan Curl de Bíceps Sentado en Polea',466,3,12,3,60,0.00,NULL,4),
+(28,NULL,'Plan Aperturas con Cable',74,2,12,3,120,20.00,NULL,4),
+(29,NULL,'Plan Correr',356,3,12,3,60,0.00,NULL,4),
+(30,NULL,'Plan Apertura con mancuernas en banco inclinado',223,3,12,3,120,0.00,NULL,4),
+(31,NULL,'Plan Correr',356,3,50,5,60,0.00,NULL,4);
+/*!40000 ALTER TABLE `planejerciciopersonalizado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `planpersonalizado`
+--
+
+DROP TABLE IF EXISTS `planpersonalizado`;
+/*!50001 DROP VIEW IF EXISTS `planpersonalizado`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `planpersonalizado` AS SELECT
+ NULL AS `idplanpersonalizado`,
+ NULL AS `idplanejerciciomodelo`,
+ NULL AS `nombre`,
+ NULL AS `idejercicio`,
+ NULL AS `diassemanas`,
+ NULL AS `repeticiones`,
+ NULL AS `series`,
+ NULL AS `tiempodescanso`,
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `programacliente`
@@ -3302,6 +4041,7 @@ DROP TABLE IF EXISTS `programacliente`;
 CREATE TABLE `programacliente` (
   `idprogramacliente` int(11) NOT NULL AUTO_INCREMENT,
   `idprogramaentrenamiento` int(11) NOT NULL,
+  `idprogramapersonalizado` int(11) DEFAULT NULL,
   `idcliente` int(11) NOT NULL,
   `fechainicio` date NOT NULL,
   `idestadoprogramacliente` int(11) NOT NULL,
@@ -3312,23 +4052,28 @@ CREATE TABLE `programacliente` (
   CONSTRAINT `fk_pc_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_estado` FOREIGN KEY (`idestadoprogramacliente`) REFERENCES `estadoprogramacliente` (`idestadoprogramacliente`) ON UPDATE CASCADE,
   CONSTRAINT `fk_pc_programa` FOREIGN KEY (`idprogramaentrenamiento`) REFERENCES `programaentrenamiento` (`idprogramaentrenamiento`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `programacliente`
 --
 
+LOCK TABLES `programacliente` WRITE;
 /*!40000 ALTER TABLE `programacliente` DISABLE KEYS */;
 INSERT INTO `programacliente` VALUES
-(1,1,1,'2026-01-15',1),
-(2,2,1,'2026-02-01',1),
-(3,3,2,'2026-03-10',1),
-(4,5,6,'2026-04-05',1),
-(5,12,6,'2026-10-15',1),
-(6,13,7,'2026-10-16',1),
-(7,14,8,'2026-10-16',1);
+(1,1,1,1,'2026-01-15',1),
+(2,2,2,1,'2026-02-01',1),
+(3,3,3,2,'2026-03-10',1),
+(4,5,4,6,'2026-04-05',1),
+(5,12,5,6,'2026-10-15',1),
+(6,13,6,7,'2026-10-16',1),
+(7,14,7,8,'2026-10-16',1),
+(8,1,8,2,'2026-10-20',1),
+(9,1,NULL,10,'2026-10-21',1),
+(10,1,9,10,'2026-10-21',1);
 /*!40000 ALTER TABLE `programacliente` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `programaentrenamiento`
@@ -3354,6 +4099,7 @@ CREATE TABLE `programaentrenamiento` (
 -- Dumping data for table `programaentrenamiento`
 --
 
+LOCK TABLES `programaentrenamiento` WRITE;
 /*!40000 ALTER TABLE `programaentrenamiento` DISABLE KEYS */;
 INSERT INTO `programaentrenamiento` VALUES
 (1,'Hipertrofia Muscular - Full Body A',1,2),
@@ -3370,6 +4116,82 @@ INSERT INTO `programaentrenamiento` VALUES
 (13,'fuerza y potencias adulto joven 18-29',3,2),
 (14,'PROGRAMA MIRKA',1,2);
 /*!40000 ALTER TABLE `programaentrenamiento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `programaentrenamientomodelo`
+--
+
+DROP TABLE IF EXISTS `programaentrenamientomodelo`;
+/*!50001 DROP VIEW IF EXISTS `programaentrenamientomodelo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `programaentrenamientomodelo` AS SELECT
+ NULL AS `idprogramaentrenamiento`,
+ NULL AS `nombre`,
+ NULL AS `idmotivoentrenamiento`,
+ NULL AS `idrangoedad` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `programaentrenamientopersonalizado`
+--
+
+DROP TABLE IF EXISTS `programaentrenamientopersonalizado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `programaentrenamientopersonalizado` (
+  `idprogramapersonalizado` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogramaentrenamientomodelo` int(11) DEFAULT NULL,
+  `idcliente` int(11) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  `idmotivoentrenamiento` int(11) NOT NULL,
+  `idrangoedad` int(11) DEFAULT NULL,
+  `fechacreacion` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`idprogramapersonalizado`),
+  KEY `fk_pep_cliente` (`idcliente`),
+  KEY `fk_pep_modelo` (`idprogramaentrenamientomodelo`),
+  KEY `fk_pep_motivo` (`idmotivoentrenamiento`),
+  KEY `fk_pep_rango` (`idrangoedad`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `programaentrenamientopersonalizado`
+--
+
+LOCK TABLES `programaentrenamientopersonalizado` WRITE;
+/*!40000 ALTER TABLE `programaentrenamientopersonalizado` DISABLE KEYS */;
+INSERT INTO `programaentrenamientopersonalizado` VALUES
+(1,1,1,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-20 13:53:44'),
+(2,2,1,'Hipertrofia Muscular - Full Body B',1,2,'2026-10-20 13:53:44'),
+(3,3,2,'Hipertrofia Torso y Pierna A',1,3,'2026-10-20 13:53:44'),
+(4,5,6,'Definición y Quema Grasa - HIIT A',2,2,'2026-10-20 13:53:44'),
+(5,12,6,'Acondicionamiento físico y salud 56 años',4,4,'2026-10-20 13:53:44'),
+(6,13,7,'fuerza y potencias adulto joven 18-29',3,2,'2026-10-20 13:53:44'),
+(7,14,8,'PROGRAMA MIRKA',1,2,'2026-10-20 13:53:44'),
+(8,1,2,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-20 18:58:48'),
+(9,1,10,'Hipertrofia Muscular - Full Body A',1,2,'2026-10-21 13:42:05');
+/*!40000 ALTER TABLE `programaentrenamientopersonalizado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `programapersonalizado`
+--
+
+DROP TABLE IF EXISTS `programapersonalizado`;
+/*!50001 DROP VIEW IF EXISTS `programapersonalizado`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `programapersonalizado` AS SELECT
+ NULL AS `idprogramapersonalizado`,
+ NULL AS `idprogramaentrenamientomodelo`,
+ NULL AS `idcliente`,
+ NULL AS `nombre`,
+ NULL AS `idmotivoentrenamiento`,
+ NULL AS `idrangoedad`,
+ NULL AS `fechacreacion` */;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `rangoedad`
@@ -3391,6 +4213,7 @@ CREATE TABLE `rangoedad` (
 -- Dumping data for table `rangoedad`
 --
 
+LOCK TABLES `rangoedad` WRITE;
 /*!40000 ALTER TABLE `rangoedad` DISABLE KEYS */;
 INSERT INTO `rangoedad` VALUES
 (1,'Juvenil / Adolescentes',14,17),
@@ -3399,6 +4222,7 @@ INSERT INTO `rangoedad` VALUES
 (4,'Master / Adulto Maduro',50,64),
 (5,'Senior / Tercera Edad',65,99);
 /*!40000 ALTER TABLE `rangoedad` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `rutinaejecicio`
@@ -3418,6 +4242,7 @@ CREATE TABLE `rutinaejecicio` (
 -- Dumping data for table `rutinaejecicio`
 --
 
+LOCK TABLES `rutinaejecicio` WRITE;
 /*!40000 ALTER TABLE `rutinaejecicio` DISABLE KEYS */;
 INSERT INTO `rutinaejecicio` VALUES
 (1,'Full Body Principiante'),
@@ -3430,6 +4255,7 @@ INSERT INTO `rutinaejecicio` VALUES
 (9,'fuerza y potencia adunso 18- 29'),
 (10,'RUTINA MIRKA');
 /*!40000 ALTER TABLE `rutinaejecicio` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Temporary table structure for view `rutinaejercicio`
@@ -3442,6 +4268,89 @@ SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `rutinaejercicio` AS SELECT
  NULL AS `idrutinaejercicio`,
  NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `rutinaejerciciomodelo`
+--
+
+DROP TABLE IF EXISTS `rutinaejerciciomodelo`;
+/*!50001 DROP VIEW IF EXISTS `rutinaejerciciomodelo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaejerciciomodelo` AS SELECT
+ NULL AS `idrutinaejercicio`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `rutinaejerciciopersonalizada`
+--
+
+DROP TABLE IF EXISTS `rutinaejerciciopersonalizada`;
+/*!50001 DROP VIEW IF EXISTS `rutinaejerciciopersonalizada`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaejerciciopersonalizada` AS SELECT
+ NULL AS `idrutinapersonalizada`,
+ NULL AS `idrutinaejerciciomodelo`,
+ NULL AS `idcliente`,
+ NULL AS `nombre`,
+ NULL AS `fechacreacion` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `rutinaejerciciopersonalizado`
+--
+
+DROP TABLE IF EXISTS `rutinaejerciciopersonalizado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaejerciciopersonalizado` (
+  `idrutinapersonalizada` int(11) NOT NULL AUTO_INCREMENT,
+  `idrutinaejerciciomodelo` int(11) DEFAULT NULL,
+  `idcliente` int(11) DEFAULT NULL,
+  `nombre` varchar(100) NOT NULL,
+  `fechacreacion` datetime DEFAULT current_timestamp(),
+  PRIMARY KEY (`idrutinapersonalizada`),
+  KEY `fk_rep_modelo` (`idrutinaejerciciomodelo`),
+  KEY `fk_rep_cliente` (`idcliente`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaejerciciopersonalizado`
+--
+
+LOCK TABLES `rutinaejerciciopersonalizado` WRITE;
+/*!40000 ALTER TABLE `rutinaejerciciopersonalizado` DISABLE KEYS */;
+INSERT INTO `rutinaejerciciopersonalizado` VALUES
+(1,1,1,'Full Body Principiante','2026-10-20 13:53:44'),
+(2,1,1,'Full Body Principiante','2026-10-20 13:53:44'),
+(3,2,2,'Torso / Pierna Intermedio','2026-10-20 13:53:44'),
+(4,4,6,'Circuito Funcional HIIT','2026-10-20 13:53:44'),
+(5,7,6,'Acondicionamiento físico y salud 56 años','2026-10-20 13:53:44'),
+(6,8,7,'fuerza y potencia para adunto 18-19','2026-10-20 13:53:44'),
+(7,10,8,'RUTINA MIRKA','2026-10-20 13:53:44'),
+(8,1,2,'Full Body Principiante','2026-10-20 18:58:48'),
+(9,1,10,'Full Body Principiante','2026-10-21 13:42:05');
+/*!40000 ALTER TABLE `rutinaejerciciopersonalizado` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `rutinapersonalizada`
+--
+
+DROP TABLE IF EXISTS `rutinapersonalizada`;
+/*!50001 DROP VIEW IF EXISTS `rutinapersonalizada`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinapersonalizada` AS SELECT
+ NULL AS `idrutinapersonalizada`,
+ NULL AS `idrutinaejerciciomodelo`,
+ NULL AS `idcliente`,
+ NULL AS `nombre`,
+ NULL AS `fechacreacion` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3467,6 +4376,7 @@ CREATE TABLE `rutinaplan` (
 -- Dumping data for table `rutinaplan`
 --
 
+LOCK TABLES `rutinaplan` WRITE;
 /*!40000 ALTER TABLE `rutinaplan` DISABLE KEYS */;
 INSERT INTO `rutinaplan` VALUES
 (1,1,1),
@@ -3478,7 +4388,6 @@ INSERT INTO `rutinaplan` VALUES
 (7,5,7),
 (8,5,8),
 (9,3,9),
-(10,1,10),
 (14,7,11),
 (15,7,12),
 (16,9,14),
@@ -3488,6 +4397,75 @@ INSERT INTO `rutinaplan` VALUES
 (20,10,17),
 (21,10,18);
 /*!40000 ALTER TABLE `rutinaplan` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `rutinaplanmodelo`
+--
+
+DROP TABLE IF EXISTS `rutinaplanmodelo`;
+/*!50001 DROP VIEW IF EXISTS `rutinaplanmodelo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaplanmodelo` AS SELECT
+ NULL AS `id_rutina_plan`,
+ NULL AS `idrutinaejercicio`,
+ NULL AS `idplanejercicio` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `rutinaplanpersonalizado`
+--
+
+DROP TABLE IF EXISTS `rutinaplanpersonalizado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaplanpersonalizado` (
+  `idrutinaplanpersonalizado` int(11) NOT NULL AUTO_INCREMENT,
+  `idrutinapersonalizada` int(11) NOT NULL,
+  `idplanpersonalizado` int(11) NOT NULL,
+  PRIMARY KEY (`idrutinaplanpersonalizado`),
+  KEY `fk_rplp_rutina` (`idrutinapersonalizada`),
+  KEY `fk_rplp_plan` (`idplanpersonalizado`)
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaplanpersonalizado`
+--
+
+LOCK TABLES `rutinaplanpersonalizado` WRITE;
+/*!40000 ALTER TABLE `rutinaplanpersonalizado` DISABLE KEYS */;
+INSERT INTO `rutinaplanpersonalizado` VALUES
+(1,1,1),
+(2,1,2),
+(3,1,3),
+(4,2,4),
+(5,2,5),
+(6,2,6),
+(7,3,7),
+(8,3,8),
+(9,4,9),
+(12,5,12),
+(13,6,13),
+(14,6,14),
+(15,7,15),
+(16,7,16),
+(17,7,17),
+(19,8,19),
+(20,8,20),
+(21,8,21),
+(22,5,22),
+(23,9,23),
+(24,9,24),
+(26,1,26),
+(27,5,27),
+(28,1,28),
+(29,4,29),
+(30,5,30),
+(31,5,31);
+/*!40000 ALTER TABLE `rutinaplanpersonalizado` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `rutinaprograma`
@@ -3512,6 +4490,7 @@ CREATE TABLE `rutinaprograma` (
 -- Dumping data for table `rutinaprograma`
 --
 
+LOCK TABLES `rutinaprograma` WRITE;
 /*!40000 ALTER TABLE `rutinaprograma` DISABLE KEYS */;
 INSERT INTO `rutinaprograma` VALUES
 (1,1,1),
@@ -3528,6 +4507,57 @@ INSERT INTO `rutinaprograma` VALUES
 (17,13,8),
 (18,14,10);
 /*!40000 ALTER TABLE `rutinaprograma` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `rutinaprogramamodelo`
+--
+
+DROP TABLE IF EXISTS `rutinaprogramamodelo`;
+/*!50001 DROP VIEW IF EXISTS `rutinaprogramamodelo`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `rutinaprogramamodelo` AS SELECT
+ NULL AS `idrutinaprograma`,
+ NULL AS `idprogramaentrenamiento`,
+ NULL AS `idrutinaejercicio` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `rutinaprogramapersonalizado`
+--
+
+DROP TABLE IF EXISTS `rutinaprogramapersonalizado`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `rutinaprogramapersonalizado` (
+  `idrutinaprogramapersonalizado` int(11) NOT NULL AUTO_INCREMENT,
+  `idprogramapersonalizado` int(11) NOT NULL,
+  `idrutinapersonalizada` int(11) NOT NULL,
+  PRIMARY KEY (`idrutinaprogramapersonalizado`),
+  KEY `fk_rpp_prog` (`idprogramapersonalizado`),
+  KEY `fk_rpp_rutina` (`idrutinapersonalizada`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `rutinaprogramapersonalizado`
+--
+
+LOCK TABLES `rutinaprogramapersonalizado` WRITE;
+/*!40000 ALTER TABLE `rutinaprogramapersonalizado` DISABLE KEYS */;
+INSERT INTO `rutinaprogramapersonalizado` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,3),
+(4,4,4),
+(5,5,5),
+(6,6,6),
+(7,7,7),
+(8,8,8),
+(9,9,9);
+/*!40000 ALTER TABLE `rutinaprogramapersonalizado` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `sexo`
@@ -3547,12 +4577,14 @@ CREATE TABLE `sexo` (
 -- Dumping data for table `sexo`
 --
 
+LOCK TABLES `sexo` WRITE;
 /*!40000 ALTER TABLE `sexo` DISABLE KEYS */;
 INSERT INTO `sexo` VALUES
 (1,'Masculino'),
 (2,'Femenino'),
 (3,'Intersexual');
 /*!40000 ALTER TABLE `sexo` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `usuario`
@@ -3570,20 +4602,24 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `idx_usuario_nombreusuario` (`nombreusuario`),
   KEY `fk_usuario_persona` (`idpersona`),
   CONSTRAINT `fk_usuario_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `usuario`
 --
 
+LOCK TABLES `usuario` WRITE;
 /*!40000 ALTER TABLE `usuario` DISABLE KEYS */;
 INSERT INTO `usuario` VALUES
 (1,1,'carlos.admin','$2y$10$abcdefghijklmnopqrstuv1234567890abcdefghijklmnopqrstuv'),
 (2,10,'andrea.fit','$2y$12$osUsQNr08fZ07X/70i0uxeJu6pkJ6hYAbPUpqOIG9nd/VpDdCSx4S'),
 (3,2,'maria.torres','$2y$12$jyHOGOPaSzdyLOy44TcX9OYvtG.d/ZXPXZvJ3YQyhwV5HdKhhjRq2'),
-(4,7,'admin','$2y$12$VpLb9p.YAQF7hwCRbPlI8OgHag1qmo/mY864jhpDSaC1QGCC6QAPO');
+(4,7,'admin','$2y$12$VpLb9p.YAQF7hwCRbPlI8OgHag1qmo/mY864jhpDSaC1QGCC6QAPO'),
+(5,11,'testuser','$2y$12$SyijhCiTCi9Q0fcKUxJWDOjJGYaHKQO72AFujTNH1O0M.Rkt8GC8i'),
+(6,12,'DavidCs4','$2y$10$U8KQg/OlktS/m9.QIBn39.nZ0mKbuVPcqW9D0Ox0jOTEDt2cIXWxa');
 /*!40000 ALTER TABLE `usuario` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `visitasgim`
@@ -3602,13 +4638,14 @@ CREATE TABLE `visitasgim` (
   KEY `idx_visitasgim_cliente` (`idcliente`),
   KEY `idx_visitasgim_fecha` (`fecha`),
   CONSTRAINT `fk_visitasgim_cliente` FOREIGN KEY (`idcliente`) REFERENCES `cliente` (`idcliente`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `visitasgim`
 --
 
+LOCK TABLES `visitasgim` WRITE;
 /*!40000 ALTER TABLE `visitasgim` DISABLE KEYS */;
 INSERT INTO `visitasgim` VALUES
 (1,1,'2026-10-01','07:15:00','08:30:00'),
@@ -3616,12 +4653,34 @@ INSERT INTO `visitasgim` VALUES
 (3,1,'2026-10-05','06:45:00','08:00:00'),
 (4,2,'2026-10-05','19:00:00','21:15:00'),
 (6,1,'2026-10-10','17:30:00','18:45:00'),
-(7,6,'2026-10-10','18:53:53',NULL);
+(7,6,'2026-10-10','18:53:53','03:54:04'),
+(8,6,'2026-10-21','09:25:41','09:25:45'),
+(9,6,'2026-10-21','09:25:47',NULL),
+(10,10,'2026-10-21','09:51:45',NULL);
 /*!40000 ALTER TABLE `visitasgim` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'gim360'
 --
+
+--
+-- Final view structure for view `DisponibilidadEquipo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `DisponibilidadEquipo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `DisponibilidadEquipo` AS select `disponibilidadequipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`disponibilidadequipo`.`nombre` AS `nombre` from `disponibilidadequipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
 -- Final view structure for view `EjercicioEquipo`
@@ -3631,12 +4690,30 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `EjercicioEquipo` AS select `ejercicioequipo`.`idejercicioequipo` AS `idejercicioequipo`,`ejercicioequipo`.`idejercicio` AS `idejercicio`,`ejercicioequipo`.`idequipo` AS `idequipo` from `ejercicioequipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `EquipoMusculo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `EquipoMusculo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `EquipoMusculo` AS select `equipomusculo`.`idequipomusculo` AS `idequipomusculo`,`equipomusculo`.`idequipo` AS `idequipo`,`equipomusculo`.`idmusculo` AS `idmusculo` from `equipomusculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3649,11 +4726,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `EstadoProgramaCliente` AS select `estadoprogramacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente`,`estadoprogramacliente`.`nombre` AS `nombre` from `estadoprogramacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3667,11 +4744,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `Musculo` AS select `musculo`.`idmusculo` AS `idmusculo`,`musculo`.`nombre` AS `nombre`,`musculo`.`imagen` AS `imagen` from `musculo` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3685,11 +4762,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `MusculoEjercicio` AS select `musculoejercicio`.`idmusculoejecicio` AS `idmusculoejecicio`,`musculoejercicio`.`idejercicio` AS `idejercicio`,`musculoejercicio`.`idmusculo` AS `idmusculo` from `musculoejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3703,11 +4780,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `PlanEjercicio` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3721,11 +4798,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `ProgramaCliente` AS select `programacliente`.`idprogramacliente` AS `idprogramacliente`,`programacliente`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programacliente`.`idcliente` AS `idcliente`,`programacliente`.`fechainicio` AS `fechainicio`,`programacliente`.`idestadoprogramacliente` AS `idestadoprogramacliente` from `programacliente` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3739,11 +4816,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `ProgramaEntrenamiento` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamiento`.`idrangoedad` AS `idrangoedad` from `programaentrenamiento` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3757,11 +4834,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `RangoEdad` AS select `rangoedad`.`idrangoedad` AS `idrangoedad`,`rangoedad`.`nombre` AS `nombre`,`rangoedad`.`edadminima` AS `edadminima`,`rangoedad`.`edadmaxima` AS `edadmaxima` from `rangoedad` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3775,11 +4852,11 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `RutinaPlan` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
@@ -3793,12 +4870,120 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `RutinaPrograma` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `equipos`
+--
+
+/*!50001 DROP VIEW IF EXISTS `equipos`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `equipos` AS select `equipo`.`idequipo` AS `id_equipo`,`equipo`.`idequipo` AS `idequipo`,`equipo`.`codigo` AS `codigo`,`equipo`.`nombre` AS `nombre`,`equipo`.`imagen` AS `imagen`,`equipo`.`id_tipo` AS `id_tipo`,`equipo`.`id_marca` AS `id_marca`,`equipo`.`modelo` AS `modelo`,`equipo`.`numero_serie` AS `numero_serie`,`equipo`.`descripcion` AS `descripcion`,`equipo`.`id_ubicacion` AS `id_ubicacion`,`equipo`.`fecha_adquisicion` AS `fecha_adquisicion`,`equipo`.`valor_adquisicion` AS `valor_adquisicion`,`equipo`.`id_estado` AS `id_estado`,`equipo`.`iddisponibilidadequipo` AS `iddisponibilidadequipo`,`equipo`.`activo` AS `activo`,`equipo`.`observaciones` AS `observaciones`,`equipo`.`fecha_registro` AS `fecha_registro` from `equipo` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `plan_ejercicio_personalizado`
+--
+
+/*!50001 DROP VIEW IF EXISTS `plan_ejercicio_personalizado`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `plan_ejercicio_personalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso`,`planejerciciopersonalizado`.`fechainicio` AS `fechainicio`,`planejerciciopersonalizado`.`duracionsemana` AS `duracionsemana` from `planejerciciopersonalizado` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `planejerciciomodelo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `planejerciciomodelo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `planejerciciomodelo` AS select `planejercicio`.`idplanejercicio` AS `idplanejercicio`,`planejercicio`.`nombre` AS `nombre`,`planejercicio`.`idejercicio` AS `idejercicio`,`planejercicio`.`diassemanas` AS `diassemanas`,`planejercicio`.`repeticiones` AS `repeticiones`,`planejercicio`.`series` AS `series`,`planejercicio`.`tiempodescanso` AS `tiempodescanso`,`planejercicio`.`peso` AS `peso` from `planejercicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `planpersonalizado`
+--
+
+/*!50001 DROP VIEW IF EXISTS `planpersonalizado`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `planpersonalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso`,`planejerciciopersonalizado`.`fechainicio` AS `fechainicio`,`planejerciciopersonalizado`.`duracionsemana` AS `duracionsemana` from `planejerciciopersonalizado` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `programaentrenamientomodelo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `programaentrenamientomodelo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `programaentrenamientomodelo` AS select `programaentrenamiento`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`programaentrenamiento`.`nombre` AS `nombre`,`programaentrenamiento`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamiento`.`idrangoedad` AS `idrangoedad` from `programaentrenamiento` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `programapersonalizado`
+--
+
+/*!50001 DROP VIEW IF EXISTS `programapersonalizado`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `programapersonalizado` AS select `programaentrenamientopersonalizado`.`idprogramapersonalizado` AS `idprogramapersonalizado`,`programaentrenamientopersonalizado`.`idprogramaentrenamientomodelo` AS `idprogramaentrenamientomodelo`,`programaentrenamientopersonalizado`.`idcliente` AS `idcliente`,`programaentrenamientopersonalizado`.`nombre` AS `nombre`,`programaentrenamientopersonalizado`.`idmotivoentrenamiento` AS `idmotivoentrenamiento`,`programaentrenamientopersonalizado`.`idrangoedad` AS `idrangoedad`,`programaentrenamientopersonalizado`.`fechacreacion` AS `fechacreacion` from `programaentrenamientopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3811,12 +4996,102 @@ INSERT INTO `visitasgim` VALUES
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb4 */;
-/*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_spanish_ci */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `rutinaejercicio` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinaejerciciomodelo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinaejerciciomodelo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinaejerciciomodelo` AS select `rutinaejecicio`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaejecicio`.`nombre` AS `nombre` from `rutinaejecicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinaejerciciopersonalizada`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinaejerciciopersonalizada`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinaejerciciopersonalizada` AS select `rutinaejerciciopersonalizado`.`idrutinapersonalizada` AS `idrutinapersonalizada`,`rutinaejerciciopersonalizado`.`idrutinaejerciciomodelo` AS `idrutinaejerciciomodelo`,`rutinaejerciciopersonalizado`.`idcliente` AS `idcliente`,`rutinaejerciciopersonalizado`.`nombre` AS `nombre`,`rutinaejerciciopersonalizado`.`fechacreacion` AS `fechacreacion` from `rutinaejerciciopersonalizado` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinapersonalizada`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinapersonalizada`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinapersonalizada` AS select `rutinaejerciciopersonalizado`.`idrutinapersonalizada` AS `idrutinapersonalizada`,`rutinaejerciciopersonalizado`.`idrutinaejerciciomodelo` AS `idrutinaejerciciomodelo`,`rutinaejerciciopersonalizado`.`idcliente` AS `idcliente`,`rutinaejerciciopersonalizado`.`nombre` AS `nombre`,`rutinaejerciciopersonalizado`.`fechacreacion` AS `fechacreacion` from `rutinaejerciciopersonalizado` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinaplanmodelo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinaplanmodelo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinaplanmodelo` AS select `rutinaplan`.`id_rutina_plan` AS `id_rutina_plan`,`rutinaplan`.`idrutinaejercicio` AS `idrutinaejercicio`,`rutinaplan`.`idplanejercicio` AS `idplanejercicio` from `rutinaplan` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `rutinaprogramamodelo`
+--
+
+/*!50001 DROP VIEW IF EXISTS `rutinaprogramamodelo`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `rutinaprogramamodelo` AS select `rutinaprograma`.`idrutinaprograma` AS `idrutinaprograma`,`rutinaprograma`.`idprogramaentrenamiento` AS `idprogramaentrenamiento`,`rutinaprograma`.`idrutinaejercicio` AS `idrutinaejercicio` from `rutinaprograma` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -3830,4 +5105,4 @@ INSERT INTO `visitasgim` VALUES
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-16 23:27:07
+-- Dump completed on 2026-10-22 11:06:07
