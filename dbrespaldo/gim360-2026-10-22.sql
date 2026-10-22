@@ -1371,7 +1371,7 @@ LOCK TABLES `equipo` WRITE;
 INSERT INTO `equipo` VALUES
 (1,'EQ-001','Caminadora Profesional ProRun','cinta-de-correr.webp',NULL,1,1,'ProRun T900','SN-CAM-2023-001','Caminadora de alta resistencia con pantalla LED',1,'2023-01-15',2450.00,1,1,1,'Mantenimiento preventivo cada 3 meses','2026-10-05 19:33:34'),
 (2,'EQ-002','Bicicleta Estática Spinning Pro','bicicleta-estatica.webp','https://www.youtube.com/watch?v=kYJv8y6_D60',1,2,'SpinMaster 500','SN-SPIN-2023-014','Bicicleta con volante de inercia de 22kg',1,'2023-02-20',890.00,1,1,1,'Correa en excelente estado','2026-10-05 19:33:34'),
-(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-de-piernas.webp',NULL,2,3,'PowerLeg 45','SN-PREN-2023-088','Prensa inclinada para discos olímpicos',2,'2023-05-10',1650.00,1,1,1,'Requiere lubricación periódica de rieles','2026-10-05 19:33:34'),
+(3,'EQ-003','Prensa de Piernas 45 Grados','prensa-piernas.webp','https://www.youtube.com/watch?v=IZxyjW7MPJQ',2,3,'Plate Loaded 45','SN-LEG-2023-088','Prensa inclinada a 45 grados con rieles lineales',2,'2023-03-15',2100.00,1,1,1,NULL,'2026-10-05 19:33:34'),
 (5,'EQ-004','Anillas de Gimnasia','anillas.webp',NULL,4,1,'Gim360 Pro',NULL,'Anillas olímpicas de madera con correas de sujeción reforzadas para calistenia y gimnasia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
 (6,'EQ-005','Balón Medicinal','balon-medicinal.webp',NULL,4,1,'Gim360 Pro',NULL,'Balón medicinal con peso para ejercicios pliométricos y acondicionamiento',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
 (7,'EQ-006','Balón Slam','balon-slam.webp',NULL,4,1,'Gim360 Pro',NULL,'Balón de impacto sin rebote para lanzamientos de potencia y resistencia',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
@@ -1429,7 +1429,7 @@ INSERT INTO `equipo` VALUES
 (59,'EQ-058','Rueda Abdominal (Ab Wheel)','rueda-abdominal.webp',NULL,4,1,'Gim360 Pro',NULL,'Rodillo de doble rueda con manillares ergonómicos para despliegues de core',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
 (60,'EQ-059','Sistema de Suspensión (TRX)','suspension-trx.webp',NULL,4,1,'Gim360 Pro',NULL,'Arnés de correas ajustables ancladas para entrenamiento en suspensión con peso corporal',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
 (61,'EQ-060','Trineo de Empuje y Arrastre (Sled)','trineo.webp',NULL,4,1,'Gim360 Pro',NULL,'Trineo metálico de alta fricción para empuje y tracción sobre césped sintético',4,NULL,650.00,1,1,1,NULL,'2026-10-09 11:27:02'),
-(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg',NULL,2,1,'Gim360 Pro',NULL,'Máquina de polea baja con asiento y apoyo para pies (Long Pull / Seated Row) diseñada para trabajo de espalda, dorsales, trapecio, bíceps y deltoides posterior.',2,'2026-10-20',850.00,1,1,1,'Máquina de remo sentado / polea baja con 6 ejercicios vinculados.','2026-10-20 22:09:49');
+(62,'EQ-061','Máquina de Remo Sentado (Long Pull)','long_pull_seated_row_machine.jpg','https://www.youtube.com/watch?v=GZbfZ033f74',2,1,NULL,NULL,'Remo Sentado Long Pull para espalda',2,NULL,NULL,1,1,1,NULL,'2026-10-20 22:09:49');
 /*!40000 ALTER TABLE `equipo` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -5269,4 +5269,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-22 16:22:54
+-- Dump completed on 2026-10-22 17:58:00

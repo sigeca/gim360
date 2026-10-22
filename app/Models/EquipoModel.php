@@ -32,7 +32,7 @@ class EquipoModel extends Model
     ];
 
     protected $validationRules = [
-        'codigo'                 => 'required|min_length[2]|max_length[30]|is_unique[equipo.codigo,idequipo,{idequipo}]',
+        'codigo'                 => 'required|min_length[2]|max_length[30]',
         'nombre'                 => 'required|min_length[2]|max_length[100]',
         'imagen'                 => 'permit_empty|max_length[255]',
         'video'                  => 'permit_empty|max_length[300]',

@@ -155,7 +155,7 @@ class Equipo extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $id = $this->equipoModel->insert([
+        $id = $this->equipoModel->skipValidation(true)->insert([
             'codigo'                 => strtoupper(trim($this->request->getPost('codigo'))),
             'nombre'                 => trim($this->request->getPost('nombre')),
             'imagen'                 => trim($this->request->getPost('imagen')) ?: null,
@@ -173,6 +173,10 @@ class Equipo extends BaseController
             'activo'                 => $this->request->getPost('activo') !== null ? (int)$this->request->getPost('activo') : 1,
             'observaciones'          => trim($this->request->getPost('observaciones')) ?: null,
         ]);
+
+        if (!$id) {
+            return redirect()->back()->withInput()->with('errors', $this->equipoModel->errors() ?: ['No se pudo registrar el equipo.']);
+        }
 
         return redirect()->to(base_url('equipo/actual/' . $id))->with('success', 'Equipo registrado exitosamente.');
     }
@@ -230,7 +234,7 @@ class Equipo extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
-        $this->equipoModel->update($id, [
+        $updateData = [
             'codigo'                 => strtoupper(trim($this->request->getPost('codigo'))),
             'nombre'                 => trim($this->request->getPost('nombre')),
             'imagen'                 => trim($this->request->getPost('imagen')) ?: null,
@@ -247,7 +251,13 @@ class Equipo extends BaseController
             'iddisponibilidadequipo' => $this->request->getPost('iddisponibilidadequipo') ?: 1,
             'activo'                 => $this->request->getPost('activo') !== null ? (int)$this->request->getPost('activo') : 1,
             'observaciones'          => trim($this->request->getPost('observaciones')) ?: null,
-        ]);
+        ];
+
+        $updated = $this->equipoModel->skipValidation(true)->update($id, $updateData);
+        if ($updated === false) {
+            log_message('error', 'FALLO UPDATE EQUIPO ' . $id . ': ' . json_encode($this->equipoModel->errors()));
+            return redirect()->back()->withInput()->with('errors', $this->equipoModel->errors() ?: ['No se pudo actualizar el equipo en la base de datos.']);
+        }
 
         return redirect()->to(base_url('equipo/actual/' . $id))->with('success', 'Equipo actualizado exitosamente.');
     }
