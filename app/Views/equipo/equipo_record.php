@@ -8,6 +8,14 @@
         <?php if (empty($equipo)): ?>
             <?= view('layout/empty_record', ['module' => 'equipo']) ?>
         <?php else: ?>
+            <?php
+                $youtubeEmbedUrl = null;
+                if (!empty($equipo['video'])) {
+                    if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/|youtube\.com/shorts/)([^"&?/\s]{11})%i', $equipo['video'], $match)) {
+                        $youtubeEmbedUrl = 'https://www.youtube.com/embed/' . $match[1];
+                    }
+                }
+            ?>
 
             <!-- Menú Superior de Navegación y Gestión -->
             <?= view('layout/nav_toolbar', [
@@ -147,6 +155,19 @@
                                             <?= esc($ubicaciones[$equipo['id_ubicacion']] ?? 'No asignada') ?>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <th class="table-light text-muted">Video de Uso / Guía</th>
+                                        <td>
+                                            <?php if (!empty($equipo['video'])): ?>
+                                                <a href="<?= esc($equipo['video']) ?>" target="_blank" class="btn btn-outline-danger btn-sm">
+                                                    <i class="bi bi-youtube me-1"></i>Ver en YouTube <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                                </a>
+                                                <small class="d-block text-muted font-monospace mt-1"><?= esc($equipo['video']) ?></small>
+                                            <?php else: ?>
+                                                <span class="text-muted small"><i class="bi bi-camera-video-off me-1"></i>Sin video asignado</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -199,6 +220,34 @@
                             </table>
                         </div>
                     </div>
+
+                    <!-- Video Demostrativo y Guía de Uso del Equipo -->
+                    <?php if (!empty($equipo['video'])): ?>
+                        <div class="mb-4 border-top pt-4">
+                            <h6 class="fw-bold text-dark mb-3 d-flex align-items-center">
+                                <i class="bi bi-youtube text-danger me-2 fs-5"></i>Video Demostrativo y Guía de Uso del Equipo:
+                            </h6>
+                            <div class="p-3 bg-light rounded-4 border">
+                                <?php if ($youtubeEmbedUrl): ?>
+                                    <div class="ratio ratio-16x9 rounded-3 shadow-sm overflow-hidden mb-3">
+                                        <iframe src="<?= $youtubeEmbedUrl ?>" title="Video de <?= esc($equipo['nombre']) ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-play-circle-fill text-danger fs-4"></i>
+                                        <div>
+                                            <span class="fw-semibold text-dark">Enlace del video tutorial:</span>
+                                            <small class="d-block text-muted font-monospace"><?= esc($equipo['video']) ?></small>
+                                        </div>
+                                    </div>
+                                    <a href="<?= esc($equipo['video']) ?>" target="_blank" class="btn btn-danger btn-sm">
+                                        <i class="bi bi-youtube me-1"></i>Ver en YouTube <i class="bi bi-box-arrow-up-right ms-1"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Descripción y Observaciones -->
                     <?php if (!empty($equipo['descripcion']) || !empty($equipo['observaciones'])): ?>

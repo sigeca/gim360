@@ -83,6 +83,11 @@
                                     <a href="<?= base_url('equipo/actual/' . $e['idequipo']) ?>" class="fw-bold text-dark text-decoration-none">
                                         <?= esc($e['nombre']) ?>
                                     </a>
+                                    <?php if (!empty($e['video'])): ?>
+                                        <a href="<?= esc($e['video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video en YouTube">
+                                            <i class="bi bi-youtube me-1"></i>Video
+                                        </a>
+                                    <?php endif; ?>
                                     <?php if (!empty($e['modelo'])): ?>
                                         <small class="d-block text-muted">Mod: <?= esc($e['modelo']) ?></small>
                                     <?php endif; ?>

@@ -64,6 +64,18 @@
                         </div>
                     </div>
 
+                    <!-- Video Demostrativo (YouTube) -->
+                    <div class="mb-3">
+                        <label for="video" class="form-label fw-semibold">
+                            <i class="bi bi-youtube text-danger me-1"></i>URL de Video de YouTube (Uso y Guía del Equipo)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-white text-danger"><i class="bi bi-play-btn-fill"></i></span>
+                            <input type="url" name="video" id="video" class="form-control" placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." value="<?= old('video', $equipo['video'] ?? '') ?>" maxlength="300">
+                        </div>
+                        <div class="form-text">Enlace web de YouTube que muestra el funcionamiento, postura y uso correcto de este equipo.</div>
+                    </div>
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="id_tipo" class="form-label fw-semibold">Tipo / Categoría</label>

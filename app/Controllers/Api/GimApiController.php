@@ -572,6 +572,8 @@ class GimApiController extends ResourceController
         foreach ($equipos as &$eq) {
             $idEq = (int)$eq['idequipo'];
             $eq['id_equipo'] = $idEq;
+            $eq['video'] = $eq['video'] ?? null;
+            $eq['video_url'] = $eq['video'] ?? null;
             $eq['imagen_url'] = $this->getImageUrl('equipos/imagen', $eq['imagen'] ?? null);
             $eq['tipo_nombre'] = $tipos[$eq['id_tipo']] ?? null;
             $eq['marca_nombre'] = $marcas[$eq['id_marca']] ?? null;
@@ -608,6 +610,14 @@ class GimApiController extends ResourceController
         }
 
         $equipo['id_equipo'] = (int)$equipo['idequipo'];
+        $equipo['video'] = $equipo['video'] ?? null;
+        $equipo['video_url'] = $equipo['video'] ?? null;
+        $equipo['youtube_embed_url'] = null;
+        if (!empty($equipo['video'])) {
+            if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/|youtube\.com/shorts/)([^"&?/\s]{11})%i', $equipo['video'], $match)) {
+                $equipo['youtube_embed_url'] = 'https://www.youtube.com/embed/' . $match[1];
+            }
+        }
         $equipo['imagen_url'] = $this->getImageUrl('equipos/imagen', $equipo['imagen'] ?? null);
 
         $tipos = EquipoModel::getTipos();

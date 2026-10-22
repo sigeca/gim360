@@ -44,6 +44,7 @@ $RECYCLE.BIN/
 .env.*
 dbrespaldo/config_nube.env
 dbrespaldo/.env.nube
+dbrespaldo/gim360_local_*.sql
 .vagrant
 Vagrantfile
 
