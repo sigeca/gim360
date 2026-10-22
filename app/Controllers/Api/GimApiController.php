@@ -1038,9 +1038,17 @@ class GimApiController extends ResourceController
 
         $progClienteModel = new ProgramaClienteModel();
 
+        $duracionSemana = !empty($input['duracionsemana']) ? (int)$input['duracionsemana'] : (!empty($input['duracionsemanas']) ? (int)$input['duracionsemanas'] : 4);
+
         // Particularizar: clonar el programa modelo hacia las tablas personalizadas del cliente
         try {
-            $idProgPersonalizado = $progClienteModel->clonarProgramaModeloACliente($idPrograma, $idCliente);
+            $idProgPersonalizado = $progClienteModel->clonarProgramaModeloACliente(
+                $idPrograma, 
+                $idCliente, 
+                null, 
+                $fechaInicio, 
+                $duracionSemana
+            );
         } catch (\Exception $e) {
             return $this->failServerError('Error al particularizar el programa de entrenamiento: ' . $e->getMessage());
         }
@@ -1335,6 +1343,9 @@ class GimApiController extends ResourceController
         $tiempodescanso = isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '' ? (int)$input['tiempodescanso'] : 60;
         $peso = isset($input['peso']) && $input['peso'] !== '' ? (float)$input['peso'] : 0.0;
 
+        $fechaInicioPlan = !empty($input['fechainicio']) ? $input['fechainicio'] : (!empty($input['fecha_inicio']) ? $input['fecha_inicio'] : date('Y-m-d'));
+        $duracionSemanaPlan = !empty($input['duracionsemana']) ? (int)$input['duracionsemana'] : (!empty($input['duracionsemanas']) ? (int)$input['duracionsemanas'] : (!empty($input['duracion_semanas']) ? (int)$input['duracion_semanas'] : 4));
+
         // 1. Verificar si la rutina es una rutina personalizada de cliente
         $rutinaPersModel = new \App\Models\RutinaPersonalizadaModel();
         $rutinaPers = $rutinaPersModel->find($idRutina);
@@ -1348,6 +1359,8 @@ class GimApiController extends ResourceController
                 'series'         => $series > 0 ? $series : 3,
                 'tiempodescanso' => $tiempodescanso >= 0 ? $tiempodescanso : 60,
                 'peso'           => $peso >= 0 ? $peso : 0.0,
+                'fechainicio'    => $fechaInicioPlan,
+                'duracionsemana' => $duracionSemanaPlan,
             ]);
 
             if (!$idPlan) {
@@ -1471,6 +1484,18 @@ class GimApiController extends ResourceController
         }
         if (isset($input['peso']) && $input['peso'] !== '') {
             $updateData['peso'] = (float)$input['peso'];
+        }
+        if (!empty($input['fechainicio'])) {
+            $updateData['fechainicio'] = $input['fechainicio'];
+        } elseif (!empty($input['fecha_inicio'])) {
+            $updateData['fechainicio'] = $input['fecha_inicio'];
+        }
+        if (isset($input['duracionsemana']) && $input['duracionsemana'] !== '') {
+            $updateData['duracionsemana'] = (int)$input['duracionsemana'];
+        } elseif (isset($input['duracionsemanas']) && $input['duracionsemanas'] !== '') {
+            $updateData['duracionsemana'] = (int)$input['duracionsemanas'];
+        } elseif (isset($input['duracion_semanas']) && $input['duracion_semanas'] !== '') {
+            $updateData['duracionsemana'] = (int)$input['duracion_semanas'];
         }
 
         // 1. Verificar si el plan pertenece a las tablas personalizadas del cliente

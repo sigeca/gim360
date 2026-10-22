@@ -64,16 +64,25 @@
 
                     <div class="row">
                         <!-- 3. Fecha de Inicio -->
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="fechainicio" class="form-label fw-semibold">
                                 <i class="bi bi-calendar-event text-primary me-1"></i>Fecha de Inicio <span class="text-danger">*</span>
                             </label>
                             <input type="date" name="fechainicio" id="fechainicio" class="form-control" value="<?= old('fechainicio', date('Y-m-d')) ?>" required>
-                            <div class="form-text">Día programado para comenzar el plan de entrenamiento.</div>
+                            <div class="form-text">Día programado para comenzar el plan.</div>
+                        </div>
+
+                        <!-- Duración en Semanas -->
+                        <div class="col-md-4 mb-3">
+                            <label for="duracionsemana" class="form-label fw-semibold">
+                                <i class="bi bi-hourglass-split text-warning me-1"></i>Duración (Semanas) <span class="text-danger">*</span>
+                            </label>
+                            <input type="number" name="duracionsemana" id="duracionsemana" class="form-control" value="<?= old('duracionsemana', 4) ?>" min="1" max="104" required>
+                            <div class="form-text">Duración en semanas de los ejercicios.</div>
                         </div>
 
                         <!-- 4. Estado del Programa -->
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="idestadoprogramacliente" class="form-label fw-semibold">
                                 <i class="bi bi-flag text-info me-1"></i>Estado del Programa <span class="text-danger">*</span>
                             </label>

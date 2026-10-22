@@ -118,10 +118,18 @@ class ProgramaCliente extends BaseController
 
         $idCliente = (int)$this->request->getPost('idcliente');
         $idProgModelo = (int)$this->request->getPost('idprogramaentrenamiento');
+        $fechaInicio = $this->request->getPost('fechainicio');
+        $duracionSemana = $this->request->getPost('duracionsemana') ? (int)$this->request->getPost('duracionsemana') : 4;
 
         // Clonar el programa modelo hacia las tablas personalizadas del cliente
         try {
-            $idProgPersonalizado = $this->programaClienteModel->clonarProgramaModeloACliente($idProgModelo, $idCliente);
+            $idProgPersonalizado = $this->programaClienteModel->clonarProgramaModeloACliente(
+                $idProgModelo, 
+                $idCliente, 
+                null, 
+                $fechaInicio, 
+                $duracionSemana
+            );
         } catch (\Exception $e) {
             return redirect()->back()->withInput()->with('error', 'Error al particularizar el programa: ' . $e->getMessage());
         }
@@ -130,7 +138,7 @@ class ProgramaCliente extends BaseController
             'idcliente'               => $idCliente,
             'idprogramaentrenamiento' => $idProgModelo,
             'idprogramapersonalizado' => $idProgPersonalizado,
-            'fechainicio'             => $this->request->getPost('fechainicio'),
+            'fechainicio'             => $fechaInicio,
             'idestadoprogramacliente' => (int)$this->request->getPost('idestadoprogramacliente'),
         ]);
 

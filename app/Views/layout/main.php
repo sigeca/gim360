@@ -251,10 +251,11 @@ $isProgramaActive = (strpos($uri, 'programaentrenamiento') === 0);
 $isRangoEdadActive = (strpos($uri, 'rangoedad') === 0 || strpos($uri, 'rango-edad') === 0);
 $isRutinaProgramaActive = (strpos($uri, 'rutinaprograma') === 0 || strpos($uri, 'rutina-programa') === 0);
 $isProgramaClienteActive = (strpos($uri, 'programacliente') === 0 || strpos($uri, 'programa-cliente') === 0);
+$isPlanPersonalizadoActive = (strpos($uri, 'planpersonalizado') === 0 || strpos($uri, 'plan-personalizado') === 0 || strpos($uri, 'planejerciciopersonalizado') === 0);
 $isEjecucionProgramaActive = (strpos($uri, 'ejecucionprograma') === 0 || strpos($uri, 'ejecucion-programa') === 0);
 $isEstadoProgramaClienteActive = (strpos($uri, 'estadoprogramacliente') === 0 || strpos($uri, 'estado-programa-cliente') === 0);
 $groupPlanificacionOpen = $isEjercicioActive || $isMotivoActive || $isRangoEdadActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isEstadoProgramaClienteActive;
-$groupEjecucionOpen = $isProgramaClienteActive || $isEjecucionProgramaActive;
+$groupEjecucionOpen = $isProgramaClienteActive || $isPlanPersonalizadoActive || $isEjecucionProgramaActive;
 
 $isCorreoActive = (strpos($uri, 'correo') === 0);
 $isDireccionActive = (strpos($uri, 'direccion') === 0);
@@ -461,6 +462,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('programacliente') ?>" class="submenu-link <?= $isProgramaClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-person-lines-fill text-primary"></i>
                             <span>Programas Personalizados (Cliente)</span>
+                        </a>
+                        <a href="<?= base_url('planpersonalizado') ?>" class="submenu-link <?= $isPlanPersonalizadoActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-check-fill text-info"></i>
+                            <span>Planes Personalizados (Ejercicios)</span>
                         </a>
                         <a href="<?= base_url('ejecucionprograma') ?>" class="submenu-link <?= $isEjecucionProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-play-btn-fill text-warning"></i>

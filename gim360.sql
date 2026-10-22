@@ -113,7 +113,9 @@ SET character_set_client = utf8mb4;
  NULL AS `repeticiones`,
  NULL AS `series`,
  NULL AS `tiempodescanso`,
- NULL AS `peso` */;
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3866,7 +3868,9 @@ SET character_set_client = utf8mb4;
  NULL AS `repeticiones`,
  NULL AS `series`,
  NULL AS `tiempodescanso`,
- NULL AS `peso` */;
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -3886,6 +3890,8 @@ CREATE TABLE `planejerciciopersonalizado` (
   `series` int(11) DEFAULT NULL,
   `tiempodescanso` int(11) DEFAULT NULL,
   `peso` decimal(8,2) DEFAULT 0.00,
+  `fechainicio` date DEFAULT NULL,
+  `duracionsemana` int(11) DEFAULT NULL,
   PRIMARY KEY (`idplanpersonalizado`),
   KEY `fk_pep_ejercicio` (`idejercicio`),
   KEY `fk_pep_planmodelo` (`idplanejerciciomodelo`)
@@ -3939,7 +3945,9 @@ SET character_set_client = utf8mb4;
  NULL AS `repeticiones`,
  NULL AS `series`,
  NULL AS `tiempodescanso`,
- NULL AS `peso` */;
+ NULL AS `peso`,
+ NULL AS `fechainicio`,
+ NULL AS `duracionsemana` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -4821,7 +4829,7 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `planpersonalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso` from `planejerciciopersonalizado` */;
+/*!50001 VIEW `planpersonalizado` AS select `planejerciciopersonalizado`.`idplanpersonalizado` AS `idplanpersonalizado`,`planejerciciopersonalizado`.`idplanejerciciomodelo` AS `idplanejerciciomodelo`,`planejerciciopersonalizado`.`nombre` AS `nombre`,`planejerciciopersonalizado`.`idejercicio` AS `idejercicio`,`planejerciciopersonalizado`.`diassemanas` AS `diassemanas`,`planejerciciopersonalizado`.`repeticiones` AS `repeticiones`,`planejerciciopersonalizado`.`series` AS `series`,`planejerciciopersonalizado`.`tiempodescanso` AS `tiempodescanso`,`planejerciciopersonalizado`.`peso` AS `peso`,`planejerciciopersonalizado`.`fechainicio` AS `fechainicio`,`planejerciciopersonalizado`.`duracionsemana` AS `duracionsemana` from `planejerciciopersonalizado` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;

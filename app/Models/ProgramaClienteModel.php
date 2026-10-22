@@ -49,7 +49,7 @@ class ProgramaClienteModel extends Model
     /**
      * Clona un programa de entrenamiento modelo a las tablas personalizadas de un cliente
      */
-    public function clonarProgramaModeloACliente(int $idProgramaModelo, int $idCliente, ?string $nombrePersonalizado = null): int
+    public function clonarProgramaModeloACliente(int $idProgramaModelo, int $idCliente, ?string $nombrePersonalizado = null, ?string $fechaInicio = null, ?int $duracionSemana = 4): int
     {
         $db = \Config\Database::connect();
         
@@ -63,6 +63,8 @@ class ProgramaClienteModel extends Model
         }
 
         $nombreProg = !empty($nombrePersonalizado) ? trim($nombrePersonalizado) : $modelo['nombre'];
+        $fechaInicioFinal = !empty($fechaInicio) ? $fechaInicio : date('Y-m-d');
+        $duracionSemanaFinal = ($duracionSemana !== null && $duracionSemana > 0) ? $duracionSemana : 4;
 
         // 1. Crear Programa Personalizado
         $db->table('programaentrenamientopersonalizado')->insert([
@@ -119,6 +121,8 @@ class ProgramaClienteModel extends Model
                     'series'                => isset($pm['series']) ? (int)$pm['series'] : null,
                     'tiempodescanso'        => isset($pm['tiempodescanso']) ? (int)$pm['tiempodescanso'] : null,
                     'peso'                  => isset($pm['peso']) ? (float)$pm['peso'] : 0.0,
+                    'fechainicio'           => $fechaInicioFinal,
+                    'duracionsemana'        => $duracionSemanaFinal,
                 ]);
                 $idPlanPers = (int)$db->insertID();
 

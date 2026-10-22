@@ -233,6 +233,8 @@
                                         <tr>
                                             <th>Ejercicio</th>
                                             <th>Rutina</th>
+                                            <th class="text-center"><i class="bi bi-calendar-event text-primary me-1"></i>Inicio</th>
+                                            <th class="text-center"><i class="bi bi-hourglass-split text-warning me-1"></i>Duración</th>
                                             <th class="text-center">Días/Sem</th>
                                             <th class="text-center">Series</th>
                                             <th class="text-center">Reps</th>
@@ -243,6 +245,18 @@
                                     </thead>
                                     <tbody>
                                         <?php foreach ($programaCliente['planes'] as $pl): ?>
+                                            <?php
+                                                $isPersonalizado = !empty($pl['idplanpersonalizado']);
+                                                $planUrl = $isPersonalizado 
+                                                    ? base_url('planpersonalizado/actual/' . $pl['idplanpersonalizado']) 
+                                                    : base_url('planejercicio/actual/' . $pl['idplanejercicio']);
+                                                $planEditUrl = $isPersonalizado 
+                                                    ? base_url('planpersonalizado/edit/' . $pl['idplanpersonalizado']) 
+                                                    : base_url('planejercicio/edit/' . $pl['idplanejercicio']);
+                                                $planId = $isPersonalizado ? $pl['idplanpersonalizado'] : $pl['idplanejercicio'];
+                                                $planFechaInicio = $pl['fechainicio'] ?? $pl['plan_fechainicio'] ?? $programaCliente['fechainicio'] ?? null;
+                                                $planDuracion = $pl['duracionsemana'] ?? $pl['plan_duracionsemana'] ?? null;
+                                            ?>
                                             <tr>
                                                 <td>
                                                     <div class="d-flex align-items-center gap-2">
@@ -260,8 +274,8 @@
                                                             <a href="<?= base_url('ejercicio/actual/' . $pl['idejercicio']) ?>" class="fw-semibold text-dark text-decoration-none d-block">
                                                                 <?= esc($pl['ejercicio_nombre']) ?>
                                                             </a>
-                                                            <a href="<?= base_url('planejercicio/actual/' . $pl['idplanejercicio']) ?>" class="small text-muted text-decoration-none">
-                                                                Plan #<?= $pl['idplanejercicio'] ?>
+                                                            <a href="<?= $planUrl ?>" class="small text-muted text-decoration-none">
+                                                                <?= $isPersonalizado ? 'Plan Pers. #' . $planId : 'Plan #' . $planId ?>
                                                             </a>
                                                         </div>
                                                     </div>
@@ -270,6 +284,26 @@
                                                     <span class="badge bg-light text-dark border">
                                                         <i class="bi bi-calendar2-week text-info me-1"></i><?= esc($pl['rutina_nombre'] ?? 'General') ?>
                                                     </span>
+                                                </td>
+                                                <!-- FECHA INICIO -->
+                                                <td class="text-center">
+                                                    <?php if (!empty($planFechaInicio)): ?>
+                                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                                            <i class="bi bi-calendar-check me-1"></i><?= esc($planFechaInicio) ?>
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <!-- DURACIÓN EN SEMANAS -->
+                                                <td class="text-center">
+                                                    <?php if (isset($planDuracion) && $planDuracion !== null && $planDuracion !== ''): ?>
+                                                        <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1 fw-bold">
+                                                            <i class="bi bi-hourglass-split text-warning me-1"></i><?= esc($planDuracion) ?> sem
+                                                        </span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td class="text-center">
                                                     <span class="badge bg-primary-subtle text-primary border border-primary">
@@ -292,7 +326,10 @@
                                                         <a href="<?= base_url('ejercicio/actual/' . $pl['idejercicio']) ?>" class="btn btn-outline-danger" title="Ver Ejercicio">
                                                             <i class="bi bi-fire"></i>
                                                         </a>
-                                                        <a href="<?= base_url('planejercicio/actual/' . $pl['idplanejercicio']) ?>" class="btn btn-outline-primary" title="Ver Plan">
+                                                        <a href="<?= $planEditUrl ?>" class="btn btn-outline-secondary" title="Editar Plan y Duración">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </a>
+                                                        <a href="<?= $planUrl ?>" class="btn btn-outline-primary" title="Ver Plan">
                                                             <i class="bi bi-eye"></i>
                                                         </a>
                                                     </div>

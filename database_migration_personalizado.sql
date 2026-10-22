@@ -64,6 +64,8 @@ CREATE TABLE IF NOT EXISTS `planejerciciopersonalizado` (
   `series` int(11) DEFAULT NULL,
   `tiempodescanso` int(11) DEFAULT NULL,
   `peso` decimal(8,2) DEFAULT 0.00,
+  `fechainicio` date DEFAULT NULL,
+  `duracionsemana` int(11) DEFAULT NULL,
   PRIMARY KEY (`idplanpersonalizado`),
   KEY `fk_pep_ejercicio` (`idejercicio`),
   KEY `fk_pep_planmodelo` (`idplanejerciciomodelo`)
@@ -92,3 +94,20 @@ SET @alter_sql = IF(@col_exists = 0, 'ALTER TABLE programacliente ADD COLUMN idp
 PREPARE stmt FROM @alter_sql;
 EXECUTE stmt;
 DEALLOCATE PREPARE stmt;
+
+-- 9. Agregar fechainicio y duracionsemana a planejerciciopersonalizado si no existen
+SET @col_fi_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS 
+                      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'planejerciciopersonalizado' AND COLUMN_NAME = 'fechainicio');
+SET @alter_sql_fi = IF(@col_fi_exists = 0, 'ALTER TABLE planejerciciopersonalizado ADD COLUMN fechainicio date DEFAULT NULL AFTER peso', 'SELECT 1');
+PREPARE stmt_fi FROM @alter_sql_fi;
+EXECUTE stmt_fi;
+DEALLOCATE PREPARE stmt_fi;
+
+SET @col_ds_exists = (SELECT COUNT(*) FROM information_schema.COLUMNS 
+                      WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'planejerciciopersonalizado' AND COLUMN_NAME = 'duracionsemana');
+SET @alter_sql_ds = IF(@col_ds_exists = 0, 'ALTER TABLE planejerciciopersonalizado ADD COLUMN duracionsemana int(11) DEFAULT NULL AFTER fechainicio', 'SELECT 1');
+PREPARE stmt_ds FROM @alter_sql_ds;
+EXECUTE stmt_ds;
+DEALLOCATE PREPARE stmt_ds;
+
+CREATE OR REPLACE VIEW planpersonalizado AS SELECT * FROM planejerciciopersonalizado;
