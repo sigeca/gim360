@@ -65,6 +65,18 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th class="table-light text-muted">Tren Muscular</th>
+                                            <td>
+                                                <?php if (!empty($musculo['idtrenmuscular'])): ?>
+                                                    <a href="<?= base_url('trenmuscular/actual/' . $musculo['idtrenmuscular']) ?>" class="badge bg-info-subtle text-info border border-info text-decoration-none px-3 py-2 fs-6">
+                                                        <i class="bi bi-layers-half me-1"></i><?= esc($musculo['tren_nombre'] ?? 'ID #' . $musculo['idtrenmuscular']) ?>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="badge bg-light text-muted border px-2 py-1">Sin asignar</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th class="table-light text-muted">Archivo de Imagen</th>
                                             <td>
                                                 <span class="badge bg-secondary-subtle text-secondary border px-2 py-1">

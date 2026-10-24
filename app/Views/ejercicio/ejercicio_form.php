@@ -31,6 +31,22 @@
                         </div>
                     </div>
 
+                    <!-- Tren Muscular -->
+                    <div class="mb-3">
+                        <label for="idtrenmuscular" class="form-label fw-semibold">
+                            <i class="bi bi-layers-half text-info me-1"></i>Tren Muscular
+                        </label>
+                        <select name="idtrenmuscular" id="idtrenmuscular" class="form-select">
+                            <option value="">-- Sin asignar / General --</option>
+                            <?php foreach ($todosLosTrenes ?? [] as $tren): ?>
+                                <option value="<?= $tren['idtrenmuscular'] ?>" <?= (old('idtrenmuscular', $idtrenPreselected ?? '') == $tren['idtrenmuscular']) ? 'selected' : '' ?>>
+                                    <?= esc($tren['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small class="text-muted">Clasificación anatómica del ejercicio (Tren Superior, Tren Inferior, Core, etc.).</small>
+                    </div>
+
                     <div class="mb-3">
                         <label for="imagen" class="form-label fw-semibold">Nombre de Archivo de Imagen Animada</label>
                         <div class="input-group">

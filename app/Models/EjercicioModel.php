@@ -12,14 +12,15 @@ class EjercicioModel extends Model
     protected $primaryKey       = 'idejercicio';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    protected $allowedFields    = ['nombreespanol', 'nombreingles', 'descripcion', 'urlvideo', 'imagen'];
+    protected $allowedFields    = ['nombreespanol', 'nombreingles', 'descripcion', 'urlvideo', 'imagen', 'idtrenmuscular'];
 
     protected $validationRules = [
-        'nombreespanol' => 'required|min_length[2]|max_length[150]',
-        'nombreingles'  => 'required|min_length[2]|max_length[150]',
-        'descripcion'   => 'permit_empty',
-        'urlvideo'      => 'permit_empty|max_length[255]',
-        'imagen'        => 'permit_empty|max_length[255]',
+        'nombreespanol'  => 'required|min_length[2]|max_length[150]',
+        'nombreingles'   => 'required|min_length[2]|max_length[150]',
+        'descripcion'    => 'permit_empty',
+        'urlvideo'       => 'permit_empty|max_length[255]',
+        'imagen'         => 'permit_empty|max_length[255]',
+        'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
     ];
 
     protected $validationMessages = [
@@ -35,17 +36,35 @@ class EjercicioModel extends Model
         ],
     ];
 
+    /**
+     * Obtiene un ejercicio con la información de su tren muscular
+     */
+    public function getEjercicioWithDetails($id)
+    {
+        return $this->select('ejercicio.*, trenmuscular.nombre AS tren_nombre')
+                    ->join('trenmuscular', 'trenmuscular.idtrenmuscular = ejercicio.idtrenmuscular', 'left')
+                    ->where('ejercicio.idejercicio', $id)
+                    ->first();
+    }
+
     public function getEjercicios($search = null, $perPage = 20)
     {
-        $builder = $this->orderBy('idejercicio', 'ASC');
+        $builder = $this->select('ejercicio.*, trenmuscular.nombre AS tren_nombre')
+                        ->join('trenmuscular', 'trenmuscular.idtrenmuscular = ejercicio.idtrenmuscular', 'left')
+                        ->orderBy('ejercicio.idejercicio', 'ASC');
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('nombreespanol', $search)
-                    ->orLike('nombreingles', $search)
-                    ->orLike('descripcion', $search)
-                    ->orLike('imagen', $search)
-                    ->groupEnd();
+                    ->like('ejercicio.nombreespanol', $search)
+                    ->orLike('ejercicio.nombreingles', $search)
+                    ->orLike('ejercicio.descripcion', $search)
+                    ->orLike('ejercicio.imagen', $search)
+                    ->orLike('trenmuscular.nombre', $search);
+            if (is_numeric($search)) {
+                $builder->orWhere('ejercicio.idejercicio', (int)$search)
+                        ->orWhere('ejercicio.idtrenmuscular', (int)$search);
+            }
+            $builder->groupEnd();
         }
 
         if ($perPage > 0) {

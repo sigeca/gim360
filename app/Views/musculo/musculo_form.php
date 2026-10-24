@@ -32,6 +32,22 @@
                         <div class="form-text">Nombre descriptivo en español del músculo o grupo muscular.</div>
                     </div>
 
+                    <!-- Tren Muscular -->
+                    <div class="mb-3">
+                        <label for="idtrenmuscular" class="form-label fw-semibold">
+                            <i class="bi bi-layers-half text-info me-1"></i>Tren Muscular
+                        </label>
+                        <select name="idtrenmuscular" id="idtrenmuscular" class="form-select">
+                            <option value="">-- Sin asignar / General --</option>
+                            <?php foreach ($todosLosTrenes ?? [] as $tren): ?>
+                                <option value="<?= $tren['idtrenmuscular'] ?>" <?= (old('idtrenmuscular', $idtrenPreselected ?? '') == $tren['idtrenmuscular']) ? 'selected' : '' ?>>
+                                    <?= esc($tren['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                        <div class="form-text">Clasificación anatómica (Tren Superior, Tren Inferior, Core, etc.).</div>
+                    </div>
+
                     <!-- Archivo de Imagen del Repositorio -->
                     <div class="mb-3">
                         <label for="imagenSelect" class="form-label fw-semibold">

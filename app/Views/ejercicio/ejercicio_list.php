@@ -87,7 +87,12 @@
                                             <?= esc($ej['nombreingles']) ?>
                                         </div>
                                     </div>
-                                    <div class="mt-1">
+                                    <div class="mt-1 d-flex align-items-center gap-1 flex-wrap">
+                                        <?php if (!empty($ej['tren_nombre'])): ?>
+                                            <a href="<?= base_url('trenmuscular/actual/' . $ej['idtrenmuscular']) ?>" class="badge bg-info-subtle text-info border border-info py-0 px-2 text-decoration-none" style="font-size: 0.72rem;">
+                                                <i class="bi bi-layers-half me-1"></i><?= esc($ej['tren_nombre']) ?>
+                                            </a>
+                                        <?php endif; ?>
                                         <?php if (!empty($ej['imagen'])): ?>
                                             <span class="badge bg-danger-subtle text-danger border border-danger-subtle py-0 px-2" style="font-size: 0.72rem;">Animado .webp</span>
                                             <small class="text-muted ms-1 font-monospace" style="font-size: 0.75rem;"><?= esc($ej['imagen']) ?></small>

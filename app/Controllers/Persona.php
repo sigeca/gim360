@@ -66,18 +66,28 @@ class Persona extends BaseController
 
         $idpersona = $persona['idpersona'];
 
+        $pnModel = new \App\Models\PerfilNutricionalModel();
+        $perfilesNutricionales = $pnModel->getPerfilesByPersona($idpersona);
+        $ultimoPerfil = !empty($perfilesNutricionales) ? $perfilesNutricionales[0] : null;
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $planesAlimentacion = $planModel->getPlanesByPersona($idpersona);
+
         $data = [
-            'title'          => 'Ficha de Persona: ' . esc($persona['apellidos'] . ' ' . $persona['nombres']),
-            'persona'        => $persona,
-            'module'         => 'persona',
-            'correos'        => $this->correoModel->getCorreosByPersona($idpersona),
-            'direcciones'    => $this->direccionModel->getDireccionesByPersona($idpersona),
-            'estadosCiviles' => $this->ecpModel->getEstadosCivilesByPersona($idpersona),
-            'generos'        => $this->gpModel->getGenerosByPersona($idpersona),
-            'usuarios'       => $this->usuarioModel->getUsuariosByPersona($idpersona),
-            'catalogoSexo'   => $this->sexoModel->findAll(),
-            'catalogoEC'     => $this->estadoCivilModel->findAll(),
-            'catalogoGen'    => $this->generoModel->findAll(),
+            'title'                 => 'Ficha de Persona: ' . esc($persona['apellidos'] . ' ' . $persona['nombres']),
+            'persona'               => $persona,
+            'module'                => 'persona',
+            'correos'               => $this->correoModel->getCorreosByPersona($idpersona),
+            'direcciones'           => $this->direccionModel->getDireccionesByPersona($idpersona),
+            'estadosCiviles'        => $this->ecpModel->getEstadosCivilesByPersona($idpersona),
+            'generos'               => $this->gpModel->getGenerosByPersona($idpersona),
+            'usuarios'              => $this->usuarioModel->getUsuariosByPersona($idpersona),
+            'perfilesNutricionales' => $perfilesNutricionales,
+            'ultimoPerfil'          => $ultimoPerfil,
+            'planesAlimentacion'    => $planesAlimentacion,
+            'catalogoSexo'          => $this->sexoModel->findAll(),
+            'catalogoEC'            => $this->estadoCivilModel->findAll(),
+            'catalogoGen'           => $this->generoModel->findAll(),
         ];
 
         return view('persona/persona_record', $data);

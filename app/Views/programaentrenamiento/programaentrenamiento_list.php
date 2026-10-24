@@ -44,6 +44,7 @@
                         <th>Nombre del Programa</th>
                         <th>Motivo de Entrenamiento</th>
                         <th>Rango de Edad</th>
+                        <th>Tren Muscular</th>
                         <th>Rutinas Asignadas</th>
                         <th class="text-center">Total Planes</th>
                         <th class="text-end pe-4">Acciones</th>
@@ -52,7 +53,7 @@
                 <tbody>
                     <?php if (empty($programas)): ?>
                         <tr>
-                            <td colspan="7" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
+                            <td colspan="8" class="text-center py-5 text-muted">No se encontraron registros de programas de entrenamiento.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($programas as $p): ?>
@@ -78,6 +79,17 @@
                                         </a>
                                     <?php else: ?>
                                         <span class="badge bg-light text-muted border px-2 py-1">Sin rango</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($p['tren_nombre'])): ?>
+                                        <a href="<?= base_url('trenmuscular/actual/' . $p['idtrenmuscular']) ?>" class="text-decoration-none">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                                <i class="bi bi-layers-half me-1"></i><?= esc($p['tren_nombre']) ?>
+                                            </span>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="badge bg-light text-muted border px-2 py-1">General</span>
                                     <?php endif; ?>
                                 </td>
                                 <td>

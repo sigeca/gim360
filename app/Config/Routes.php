@@ -20,6 +20,33 @@ $routes->get('logout', 'Auth::logout');
 $modulos = [
     'persona'            => 'Persona',
     'cliente'            => 'Cliente',
+    'perfilnutricional'  => 'PerfilNutricional',
+    'perfil-nutricional' => 'PerfilNutricional',
+    'controlnutricional' => 'PerfilNutricional',
+    'control-nutricional'=> 'PerfilNutricional',
+    'grupoalimento'      => 'GrupoAlimento',
+    'grupo-alimento'     => 'GrupoAlimento',
+    'gruposalimentos'    => 'GrupoAlimento',
+    'alimento'           => 'Alimento',
+    'alimentos'          => 'Alimento',
+    'planalimentacion'   => 'PlanAlimentacion',
+    'plan-alimentacion'  => 'PlanAlimentacion',
+    'planesalimentacion' => 'PlanAlimentacion',
+    'receta'             => 'Receta',
+    'recetas'            => 'Receta',
+    'unidadalimento'     => 'UnidadAlimento',
+    'unidad-alimento'    => 'UnidadAlimento',
+    'unidadesalimento'   => 'UnidadAlimento',
+    'alimentoreceta'     => 'AlimentoReceta',
+    'alimento-receta'    => 'AlimentoReceta',
+    'tipocomida'         => 'TipoComida',
+    'tipo-comida'        => 'TipoComida',
+    'tiposcomida'        => 'TipoComida',
+    'diasemana'          => 'DiaSemana',
+    'dia-semana'         => 'DiaSemana',
+    'dias-semana'        => 'DiaSemana',
+    'comida'             => 'Comida',
+    'comidas'            => 'Comida',
     'correo'             => 'Correo',
     'direccion'          => 'Direccion',
     'sexo'               => 'Sexo',
@@ -39,6 +66,9 @@ $modulos = [
     'rutina-plan'          => 'RutinaPlan',
     'musculo'              => 'Musculo',
     'musculos'             => 'Musculo',
+    'trenmuscular'         => 'TrenMuscular',
+    'trenmusculo'          => 'TrenMuscular',
+    'tren-muscular'        => 'TrenMuscular',
     'musculoejercicio'     => 'MusculoEjercicio',
     'musculo-ejercicio'    => 'MusculoEjercicio',
     'programaentrenamiento'=> 'ProgramaEntrenamiento',
@@ -183,6 +213,51 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('cliente/(:num)/ejecuciones', 'GimApiController::getClienteEjecuciones/$1');
     $routes->get('cliente/(:num)/progreso', 'GimApiController::getClienteProgreso/$1');
 
+    // Control Nutricional y Antropométrico
+    $routes->get('perfilnutricional', 'GimApiController::getPerfilesNutricionales');
+    $routes->get('perfilnutricional/(:num)', 'GimApiController::getPerfilNutricionalDetail/$1');
+    $routes->get('persona/(:num)/nutricion', 'GimApiController::getPersonaNutricion/$1');
+    $routes->post('perfilnutricional', 'GimApiController::guardarPerfilNutricional');
+    $routes->get('gruposalimentos', 'GimApiController::getGruposAlimentos');
+    $routes->get('grupoalimento', 'GimApiController::getGruposAlimentos');
+    $routes->get('grupoalimento/(:num)', 'GimApiController::getGrupoAlimentoDetail/$1');
+    $routes->get('grupoalimento/(:num)/alimentos', 'GimApiController::getAlimentosPorGrupo/$1');
+    $routes->get('alimentos', 'GimApiController::getAlimentos');
+    $routes->get('alimento', 'GimApiController::getAlimentos');
+    $routes->get('alimento/(:num)', 'GimApiController::getAlimentoDetail/$1');
+    $routes->get('planesalimentacion', 'GimApiController::getPlanesAlimentacion');
+    $routes->get('planalimentacion', 'GimApiController::getPlanesAlimentacion');
+    $routes->get('planalimentacion/(:num)', 'GimApiController::getPlanAlimentacionDetail/$1');
+    $routes->get('persona/(:num)/planesalimentacion', 'GimApiController::getPersonaPlanesAlimentacion/$1');
+    $routes->post('planalimentacion', 'GimApiController::guardarPlanAlimentacion');
+    $routes->get('recetas', 'GimApiController::getRecetas');
+    $routes->get('receta', 'GimApiController::getRecetas');
+    $routes->get('receta/(:num)', 'GimApiController::getRecetaDetail/$1');
+    $routes->post('receta', 'GimApiController::guardarReceta');
+    $routes->get('unidadesalimento', 'GimApiController::getUnidadesAlimento');
+    $routes->get('unidadalimento', 'GimApiController::getUnidadesAlimento');
+    $routes->get('unidadalimento/(:num)', 'GimApiController::getUnidadAlimentoDetail/$1');
+    $routes->post('unidadalimento', 'GimApiController::guardarUnidadAlimento');
+    $routes->get('receta/(:num)/ingredientes', 'GimApiController::getRecetaIngredientes/$1');
+    $routes->get('alimentoreceta', 'GimApiController::getAlimentosReceta');
+    $routes->get('alimentoreceta/(:num)', 'GimApiController::getAlimentoRecetaDetail/$1');
+    $routes->post('alimentoreceta', 'GimApiController::guardarAlimentoReceta');
+    $routes->delete('alimentoreceta/(:num)', 'GimApiController::eliminarAlimentoReceta/$1');
+    $routes->get('tiposcomida', 'GimApiController::getTiposComida');
+    $routes->get('tipocomida', 'GimApiController::getTiposComida');
+    $routes->get('tipocomida/(:num)', 'GimApiController::getTipoComidaDetail/$1');
+    $routes->post('tipocomida', 'GimApiController::guardarTipoComida');
+    $routes->get('diassemana', 'GimApiController::getDiasSemana');
+    $routes->get('diasemana', 'GimApiController::getDiasSemana');
+    $routes->get('diasemana/(:num)', 'GimApiController::getDiaSemanaDetail/$1');
+    $routes->post('diasemana', 'GimApiController::guardarDiaSemana');
+    $routes->get('comidas', 'GimApiController::getComidas');
+    $routes->get('comida', 'GimApiController::getComidas');
+    $routes->get('comida/(:num)', 'GimApiController::getComidaDetail/$1');
+    $routes->get('planalimentacion/(:num)/comidas', 'GimApiController::getPlanComidas/$1');
+    $routes->post('comida', 'GimApiController::guardarComida');
+    $routes->delete('comida/(:num)', 'GimApiController::eliminarComida/$1');
+
     // Programas y Rutinas de Entrenamiento
     $routes->get('programas', 'GimApiController::getProgramas');
     $routes->get('programa/(:num)', 'GimApiController::getProgramaDetail/$1');
@@ -201,6 +276,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('rangoedad', 'GimApiController::getRangosEdad');
 
     // Catálogo de Ejercicios, Músculos y Equipos
+    $routes->get('trenesmusculares', 'GimApiController::getTrenesMusculares');
+    $routes->get('trenmuscular', 'GimApiController::getTrenesMusculares');
+    $routes->get('trenmuscular/(:num)', 'GimApiController::getTrenMuscularDetail/$1');
     $routes->get('ejercicios', 'GimApiController::getEjercicios');
     $routes->get('ejercicio/(:num)', 'GimApiController::getEjercicioDetail/$1');
     $routes->get('musculos', 'GimApiController::getMusculos');

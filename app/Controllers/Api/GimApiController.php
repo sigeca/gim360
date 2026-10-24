@@ -301,6 +301,879 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/perfilnutricional
+     */
+    public function getPerfilesNutricionales()
+    {
+        $search = $this->request->getGet('q');
+        $idpersona = $this->request->getGet('idpersona');
+
+        $pnModel = new \App\Models\PerfilNutricionalModel();
+        if (!empty($idpersona)) {
+            $perfiles = $pnModel->getPerfilesByPersona((int)$idpersona);
+        } else {
+            $perfiles = $pnModel->getPerfilesWithPersona($search);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Controles nutricionales obtenidos correctamente',
+            'data'    => $perfiles,
+            'total'   => count($perfiles),
+        ]);
+    }
+
+    /**
+     * GET /api/perfilnutricional/{id}
+     */
+    public function getPerfilNutricionalDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de perfil nutricional no proporcionado');
+        }
+
+        $pnModel = new \App\Models\PerfilNutricionalModel();
+        $perfil = $pnModel->getPerfilWithDetails((int)$id);
+
+        if (!$perfil) {
+            return $this->failNotFound("Perfil nutricional no encontrado con ID: {$id}");
+        }
+
+        $perfil['historial'] = $pnModel->getPerfilesByPersona((int)$perfil['idpersona']);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del perfil nutricional obtenido correctamente',
+            'data'    => $perfil,
+        ]);
+    }
+
+    /**
+     * GET /api/persona/{id}/nutricion
+     */
+    public function getPersonaNutricion($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de persona no proporcionado');
+        }
+
+        $pnModel = new \App\Models\PerfilNutricionalModel();
+        $perfiles = $pnModel->getPerfilesByPersona((int)$id);
+        $ultimo = !empty($perfiles) ? $perfiles[0] : null;
+
+        return $this->respond([
+            'status'        => 200,
+            'message'       => 'Historial nutricional obtenido correctamente',
+            'ultimo_perfil' => $ultimo,
+            'historial'     => $perfiles,
+            'total'         => count($perfiles),
+        ]);
+    }
+
+    /**
+     * POST /api/perfilnutricional
+     */
+    public function guardarPerfilNutricional()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $pnModel = new \App\Models\PerfilNutricionalModel();
+        if (!$pnModel->validate($json)) {
+            return $this->failValidationErrors($pnModel->errors());
+        }
+
+        $id = $pnModel->insert([
+            'idpersona'         => (int)$json['idpersona'],
+            'peso_kg'           => (float)$json['peso_kg'],
+            'estatura_cm'       => (float)$json['estatura_cm'],
+            'fechamedicion'     => $json['fechamedicion'] ?? date('Y-m-d'),
+            'porcentajegrasa'   => isset($json['porcentajegrasa']) && $json['porcentajegrasa'] !== '' ? (float)$json['porcentajegrasa'] : null,
+            'porcentajemusculo' => isset($json['porcentajemusculo']) && $json['porcentajemusculo'] !== '' ? (float)$json['porcentajemusculo'] : null,
+            'observaciones'     => $json['observaciones'] ?? null,
+        ]);
+
+        $nuevo = $pnModel->getPerfilWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Control nutricional registrado exitosamente',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * GET /api/gruposalimentos
+     */
+    public function getGruposAlimentos()
+    {
+        $search = $this->request->getGet('q');
+        $grupoModel = new \App\Models\GrupoAlimentoModel();
+        $grupos = $grupoModel->getGrupos($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Grupos de alimentos obtenidos correctamente',
+            'data'    => $grupos,
+            'total'   => count($grupos),
+        ]);
+    }
+
+    /**
+     * GET /api/grupoalimento/{id}
+     */
+    public function getGrupoAlimentoDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de grupo de alimento no proporcionado');
+        }
+
+        $grupoModel = new \App\Models\GrupoAlimentoModel();
+        $grupo = $grupoModel->find($id);
+
+        if (!$grupo) {
+            return $this->failNotFound("Grupo de alimento no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del grupo de alimento obtenido correctamente',
+            'data'    => $grupo,
+        ]);
+    }
+
+    /**
+     * GET /api/alimentos
+     */
+    public function getAlimentos()
+    {
+        $search = $this->request->getGet('q');
+        $idgrupo = $this->request->getGet('idgrupo');
+        $idgrupo = (!empty($idgrupo) && is_numeric($idgrupo)) ? (int)$idgrupo : null;
+
+        $alimentoModel = new \App\Models\AlimentoModel();
+        $alimentos = $alimentoModel->getAlimentos($search, $idgrupo);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Alimentos obtenidos correctamente',
+            'data'    => $alimentos,
+            'total'   => count($alimentos),
+        ]);
+    }
+
+    /**
+     * GET /api/alimento/{id}
+     */
+    public function getAlimentoDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de alimento no proporcionado');
+        }
+
+        $alimentoModel = new \App\Models\AlimentoModel();
+        $alimento = $alimentoModel->getAlimentoWithDetails((int)$id);
+
+        if (!$alimento) {
+            return $this->failNotFound("Alimento no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del alimento obtenido correctamente',
+            'data'    => $alimento,
+        ]);
+    }
+
+    /**
+     * GET /api/grupoalimento/{id}/alimentos
+     */
+    public function getAlimentosPorGrupo($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de grupo de alimento no proporcionado');
+        }
+
+        $grupoModel = new \App\Models\GrupoAlimentoModel();
+        $grupo = $grupoModel->find($id);
+
+        if (!$grupo) {
+            return $this->failNotFound("Grupo de alimento no encontrado con ID: {$id}");
+        }
+
+        $alimentoModel = new \App\Models\AlimentoModel();
+        $alimentos = $alimentoModel->where('idgrupo', (int)$id)->orderBy('nombre', 'ASC')->findAll();
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Alimentos del grupo obtenidos correctamente',
+            'grupo'   => $grupo,
+            'data'    => $alimentos,
+            'total'   => count($alimentos),
+        ]);
+    }
+
+    /**
+     * GET /api/planesalimentacion
+     */
+    public function getPlanesAlimentacion()
+    {
+        $search    = $this->request->getGet('q');
+        $idpersona = $this->request->getGet('idpersona');
+        $idpersona = (!empty($idpersona) && is_numeric($idpersona)) ? (int)$idpersona : null;
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $planes = $planModel->getPlanesWithPersona($search, $idpersona);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Planes de alimentación obtenidos correctamente',
+            'data'    => $planes,
+            'total'   => count($planes),
+        ]);
+    }
+
+    /**
+     * GET /api/planalimentacion/{id}
+     */
+    public function getPlanAlimentacionDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de plan de alimentación no proporcionado');
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $plan = $planModel->getPlanWithDetails((int)$id);
+
+        if (!$plan) {
+            return $this->failNotFound("Plan de alimentación no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del plan de alimentación obtenido correctamente',
+            'data'    => $plan,
+        ]);
+    }
+
+    /**
+     * GET /api/persona/{id}/planesalimentacion
+     */
+    public function getPersonaPlanesAlimentacion($idpersona = null)
+    {
+        if (empty($idpersona)) {
+            return $this->failNotFound('ID de persona no proporcionado');
+        }
+
+        $personaModel = new \App\Models\PersonaModel();
+        $persona = $personaModel->find($idpersona);
+
+        if (!$persona) {
+            return $this->failNotFound("Persona no encontrada con ID: {$idpersona}");
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $planes = $planModel->getPlanesByPersona((int)$idpersona);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Planes de alimentación de la persona obtenidos correctamente',
+            'persona' => [
+                'idpersona' => $persona['idpersona'],
+                'cedula'    => $persona['cedula'],
+                'nombres'   => $persona['nombres'],
+                'apellidos' => $persona['apellidos'],
+            ],
+            'data'    => $planes,
+            'total'   => count($planes),
+        ]);
+    }
+
+    /**
+     * POST /api/planalimentacion
+     */
+    public function guardarPlanAlimentacion()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        if (!$planModel->validate($json)) {
+            return $this->failValidationErrors($planModel->errors());
+        }
+
+        $fechaInicio = $json['fechainicio'] ?? date('Y-m-d');
+        $fechaFin    = !empty($json['fechafin']) ? trim($json['fechafin']) : null;
+
+        if (!empty($fechaFin) && $fechaFin < $fechaInicio) {
+            return $this->failValidationErrors([
+                'fechafin' => 'La fecha de fin no puede ser anterior a la fecha de inicio.'
+            ]);
+        }
+
+        $id = $planModel->insert([
+            'idpersona'   => (int)$json['idpersona'],
+            'nombre'      => trim($json['nombre']),
+            'fechainicio' => $fechaInicio,
+            'fechafin'    => $fechaFin,
+            'objetivo'    => isset($json['objetivo']) ? (trim($json['objetivo']) ?: null) : null,
+        ]);
+
+        $nuevo = $planModel->getPlanWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Plan de alimentación registrado exitosamente',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * GET /api/recetas
+     */
+    public function getRecetas()
+    {
+        $search = $this->request->getGet('q');
+        $recetaModel = new \App\Models\RecetaModel();
+        $recetas = $recetaModel->getRecetas($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Recetas obtenidas correctamente',
+            'data'    => $recetas,
+            'total'   => count($recetas),
+        ]);
+    }
+
+    /**
+     * GET /api/receta/{id}
+     */
+    public function getRecetaDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de receta no proporcionado');
+        }
+
+        $recetaModel = new \App\Models\RecetaModel();
+        $receta = $recetaModel->getRecetaWithDetails((int)$id);
+
+        if (!$receta) {
+            return $this->failNotFound("Receta no encontrada con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de la receta obtenido correctamente',
+            'data'    => $receta,
+        ]);
+    }
+
+    /**
+     * POST /api/receta
+     */
+    public function guardarReceta()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $recetaModel = new \App\Models\RecetaModel();
+        if (!$recetaModel->validate($json)) {
+            return $this->failValidationErrors($recetaModel->errors());
+        }
+
+        $porciones = isset($json['porciones']) && is_numeric($json['porciones']) ? (int)$json['porciones'] : 1;
+        $tiempo    = isset($json['tiempopreparacion']) && is_numeric($json['tiempopreparacion']) ? (int)$json['tiempopreparacion'] : null;
+
+        $id = $recetaModel->insert([
+            'nombre'            => trim($json['nombre']),
+            'instrucciones'     => isset($json['instrucciones']) ? (trim($json['instrucciones']) ?: null) : null,
+            'porciones'         => $porciones,
+            'tiempopreparacion' => $tiempo,
+        ]);
+
+        $nueva = $recetaModel->getRecetaWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Receta registrada exitosamente',
+            'data'    => $nueva,
+        ]);
+    }
+
+    /**
+     * GET /api/unidadesalimento
+     */
+    public function getUnidadesAlimento()
+    {
+        $search = $this->request->getGet('q');
+        $unidadModel = new \App\Models\UnidadAlimentoModel();
+        $unidades = $unidadModel->getUnidades($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Unidades de medida obtenidas correctamente',
+            'data'    => $unidades,
+            'total'   => count($unidades),
+        ]);
+    }
+
+    /**
+     * GET /api/unidadalimento/{id}
+     */
+    public function getUnidadAlimentoDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de unidad no proporcionado');
+        }
+
+        $unidadModel = new \App\Models\UnidadAlimentoModel();
+        $unidad = $unidadModel->find($id);
+
+        if (!$unidad) {
+            return $this->failNotFound("Unidad no encontrada con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de la unidad obtenido correctamente',
+            'data'    => $unidad,
+        ]);
+    }
+
+    /**
+     * POST /api/unidadalimento
+     */
+    public function guardarUnidadAlimento()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $unidadModel = new \App\Models\UnidadAlimentoModel();
+        if (!$unidadModel->validate($json)) {
+            return $this->failValidationErrors($unidadModel->errors());
+        }
+
+        $id = $unidadModel->insert([
+            'nombre'      => trim($json['nombre']),
+            'abreviatura' => trim($json['abreviatura']),
+        ]);
+
+        $nueva = $unidadModel->find($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Unidad de medida registrada exitosamente',
+            'data'    => $nueva,
+        ]);
+    }
+
+    /**
+     * GET /api/receta/{id}/ingredientes
+     */
+    public function getRecetaIngredientes($idreceta = null)
+    {
+        if (empty($idreceta)) {
+            return $this->failNotFound('ID de receta no proporcionado');
+        }
+
+        $recetaModel = new \App\Models\RecetaModel();
+        $receta = $recetaModel->find($idreceta);
+
+        if (!$receta) {
+            return $this->failNotFound("Receta no encontrada con ID: {$idreceta}");
+        }
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        $ingredientes = $arModel->getIngredientesByReceta((int)$idreceta);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Ingredientes de la receta obtenidos correctamente',
+            'receta'  => $receta,
+            'data'    => $ingredientes,
+            'total'   => count($ingredientes),
+        ]);
+    }
+
+    /**
+     * GET /api/alimentoreceta
+     */
+    public function getAlimentosReceta()
+    {
+        $search     = $this->request->getGet('q');
+        $idreceta   = $this->request->getGet('idreceta');
+        $idalimento = $this->request->getGet('idalimento');
+
+        $idreceta   = (!empty($idreceta) && is_numeric($idreceta)) ? (int)$idreceta : null;
+        $idalimento = (!empty($idalimento) && is_numeric($idalimento)) ? (int)$idalimento : null;
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        $registros = $arModel->getRecordsWithDetails($search, $idreceta, $idalimento);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Relaciones alimento-receta obtenidas correctamente',
+            'data'    => $registros,
+            'total'   => count($registros),
+        ]);
+    }
+
+    /**
+     * GET /api/alimentoreceta/{id}
+     */
+    public function getAlimentoRecetaDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de registro no proporcionado');
+        }
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        $record = $arModel->getRecordWithDetails((int)$id);
+
+        if (!$record) {
+            return $this->failNotFound("Registro no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del ingrediente obtenido correctamente',
+            'data'    => $record,
+        ]);
+    }
+
+    /**
+     * POST /api/alimentoreceta
+     */
+    public function guardarAlimentoReceta()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        if (!$arModel->validate($json)) {
+            return $this->failValidationErrors($arModel->errors());
+        }
+
+        $id = $arModel->insert([
+            'idreceta'         => (int)$json['idreceta'],
+            'idalimento'       => (int)$json['idalimento'],
+            'cantidad'         => (float)$json['cantidad'],
+            'idunidadalimento' => (int)$json['idunidadalimento'],
+        ]);
+
+        $nuevo = $arModel->getRecordWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Ingrediente asignado exitosamente a la receta',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * DELETE /api/alimentoreceta/{id}
+     */
+    public function eliminarAlimentoReceta($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID no proporcionado');
+        }
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        $existente = $arModel->find($id);
+
+        if (!$existente) {
+            return $this->failNotFound("Registro no encontrado con ID: {$id}");
+        }
+
+        $arModel->delete($id);
+
+        return $this->respondDeleted([
+            'status'  => 200,
+            'message' => 'Ingrediente removido de la receta exitosamente',
+            'data'    => ['idalimentoreceta' => $id],
+        ]);
+    }
+
+    /**
+     * GET /api/tiposcomida
+     */
+    public function getTiposComida()
+    {
+        $search = $this->request->getGet('q');
+        $tipoModel = new \App\Models\TipoComidaModel();
+        $tipos = $tipoModel->getTiposComida($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Tipos de comida obtenidos correctamente',
+            'data'    => $tipos,
+            'total'   => count($tipos),
+        ]);
+    }
+
+    /**
+     * GET /api/tipocomida/{id}
+     */
+    public function getTipoComidaDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de tipo de comida no proporcionado');
+        }
+
+        $tipoModel = new \App\Models\TipoComidaModel();
+        $tipo = $tipoModel->find($id);
+
+        if (!$tipo) {
+            return $this->failNotFound("Tipo de comida no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del tipo de comida obtenido correctamente',
+            'data'    => $tipo,
+        ]);
+    }
+
+    /**
+     * POST /api/tipocomida
+     */
+    public function guardarTipoComida()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $tipoModel = new \App\Models\TipoComidaModel();
+        if (!$tipoModel->validate($json)) {
+            return $this->failValidationErrors($tipoModel->errors());
+        }
+
+        $id = $tipoModel->insert([
+            'nombre' => trim($json['nombre']),
+        ]);
+
+        $nuevo = $tipoModel->find($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Tipo de comida registrado exitosamente',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * GET /api/diassemana
+     */
+    public function getDiasSemana()
+    {
+        $search = $this->request->getGet('q');
+        $diaModel = new \App\Models\DiaSemanaModel();
+        $dias = $diaModel->getDiasSemana($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Días de la semana obtenidos correctamente',
+            'data'    => $dias,
+            'total'   => count($dias),
+        ]);
+    }
+
+    /**
+     * GET /api/diasemana/{id}
+     */
+    public function getDiaSemanaDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de día no proporcionado');
+        }
+
+        $diaModel = new \App\Models\DiaSemanaModel();
+        $dia = $diaModel->find($id);
+
+        if (!$dia) {
+            return $this->failNotFound("Día de la semana no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del día obtenido correctamente',
+            'data'    => $dia,
+        ]);
+    }
+
+    /**
+     * POST /api/diasemana
+     */
+    public function guardarDiaSemana()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $diaModel = new \App\Models\DiaSemanaModel();
+        if (!$diaModel->validate($json)) {
+            return $this->failValidationErrors($diaModel->errors());
+        }
+
+        $id = $diaModel->insert([
+            'nombre' => trim($json['nombre']),
+        ]);
+
+        $nuevo = $diaModel->find($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Día de la semana registrado exitosamente',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * GET /api/comidas
+     */
+    public function getComidas()
+    {
+        $search       = $this->request->getGet('q');
+        $idplan       = $this->request->getGet('idplanalimentacion');
+        $idtipocomida = $this->request->getGet('idtipocomida');
+        $idreceta     = $this->request->getGet('idreceta');
+
+        $idplan       = (!empty($idplan) && is_numeric($idplan)) ? (int)$idplan : null;
+        $idtipocomida = (!empty($idtipocomida) && is_numeric($idtipocomida)) ? (int)$idtipocomida : null;
+        $idreceta     = (!empty($idreceta) && is_numeric($idreceta)) ? (int)$idreceta : null;
+
+        $comidaModel = new \App\Models\ComidaModel();
+        $comidas = $comidaModel->getRecordsWithDetails($search, $idplan, $idtipocomida, $idreceta);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Comidas obtenidas correctamente',
+            'data'    => $comidas,
+            'total'   => count($comidas),
+        ]);
+    }
+
+    /**
+     * GET /api/comida/{id}
+     */
+    public function getComidaDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de comida no proporcionado');
+        }
+
+        $comidaModel = new \App\Models\ComidaModel();
+        $comida = $comidaModel->getRecordWithDetails((int)$id);
+
+        if (!$comida) {
+            return $this->failNotFound("Comida no encontrada con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de la comida obtenido correctamente',
+            'data'    => $comida,
+        ]);
+    }
+
+    /**
+     * GET /api/planalimentacion/{id}/comidas
+     */
+    public function getPlanComidas($idplan = null)
+    {
+        if (empty($idplan)) {
+            return $this->failNotFound('ID de plan de alimentación no proporcionado');
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $plan = $planModel->getPlanWithDetails((int)$idplan);
+
+        if (!$plan) {
+            return $this->failNotFound("Plan no encontrado con ID: {$idplan}");
+        }
+
+        $comidaModel = new \App\Models\ComidaModel();
+        $comidas = $comidaModel->getComidasByPlan((int)$idplan);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Comidas del plan obtenidas correctamente',
+            'plan'    => $plan,
+            'data'    => $comidas,
+            'total'   => count($comidas),
+        ]);
+    }
+
+    /**
+     * POST /api/comida
+     */
+    public function guardarComida()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $comidaModel = new \App\Models\ComidaModel();
+        if (!$comidaModel->validate($json)) {
+            return $this->failValidationErrors($comidaModel->errors());
+        }
+
+        $id = $comidaModel->insert([
+            'idplanalimentacion' => (int)$json['idplanalimentacion'],
+            'idtipocomida'       => (int)$json['idtipocomida'],
+            'idreceta'           => (int)$json['idreceta'],
+            'horarecomendada'    => isset($json['horarecomendada']) ? (trim($json['horarecomendada']) ?: null) : null,
+        ]);
+
+        $nueva = $comidaModel->getRecordWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Comida programada exitosamente en el plan',
+            'data'    => $nueva,
+        ]);
+    }
+
+    /**
+     * DELETE /api/comida/{id}
+     */
+    public function eliminarComida($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID no proporcionado');
+        }
+
+        $comidaModel = new \App\Models\ComidaModel();
+        $existente = $comidaModel->find($id);
+
+        if (!$existente) {
+            return $this->failNotFound("Comida no encontrada con ID: {$id}");
+        }
+
+        $comidaModel->delete($id);
+
+        return $this->respondDeleted([
+            'status'  => 200,
+            'message' => 'Comida eliminada del plan exitosamente',
+            'data'    => ['idcomida' => $id],
+        ]);
+    }
+
+    /**
      * GET /api/rutinas
      * List all routines
      */
@@ -362,6 +1235,56 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/trenesmusculares
+     */
+    public function getTrenesMusculares()
+    {
+        $search = $this->request->getGet('q');
+        $trenModel = new \App\Models\TrenMuscularModel();
+        $trenes = $trenModel->getTrenes($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Trenes musculares obtenidos correctamente',
+            'data'    => $trenes,
+        ]);
+    }
+
+    /**
+     * GET /api/trenmuscular/{id}
+     */
+    public function getTrenMuscularDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de tren muscular no proporcionado');
+        }
+
+        $trenModel = new \App\Models\TrenMuscularModel();
+        $tren = $trenModel->getTrenWithCounts((int)$id);
+
+        if (!$tren) {
+            return $this->failNotFound("Tren muscular no encontrado con ID: {$id}");
+        }
+
+        $tren['musculos']   = $trenModel->getMusculosByTren((int)$id);
+        $tren['ejercicios'] = $trenModel->getEjerciciosByTren((int)$id);
+        $tren['programas']  = $trenModel->getProgramasByTren((int)$id);
+
+        foreach ($tren['musculos'] as &$m) {
+            $m['imagen_url'] = $this->getImageUrl('musculo/imagen', $m['imagen'] ?? null);
+        }
+        foreach ($tren['ejercicios'] as &$ej) {
+            $ej['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $ej['imagen'] ?? null);
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del tren muscular obtenido correctamente',
+            'data'    => $tren,
+        ]);
+    }
+
+    /**
      * GET /api/ejercicios
      * Exercise catalog with search, filter, pagination
      */
@@ -370,12 +1293,18 @@ class GimApiController extends ResourceController
         $search = $this->request->getGet('q');
         $idmusculo = $this->request->getGet('idmusculo');
         $idequipo = $this->request->getGet('idequipo');
+        $idtren = $this->request->getGet('idtrenmuscular') ?: $this->request->getGet('idtren');
         $page = (int)($this->request->getGet('page') ?? 1);
         $limit = (int)($this->request->getGet('limit') ?? 25);
         $offset = ($page - 1) * $limit;
 
         $ejercicioModel = new EjercicioModel();
-        $builder = $ejercicioModel->select('ejercicio.*, ejercicio.nombreespanol AS nombre');
+        $builder = $ejercicioModel->select('ejercicio.*, ejercicio.nombreespanol AS nombre, trenmuscular.nombre AS tren_nombre')
+                                  ->join('trenmuscular', 'trenmuscular.idtrenmuscular = ejercicio.idtrenmuscular', 'left');
+
+        if (!empty($idtren)) {
+            $builder->where('ejercicio.idtrenmuscular', (int)$idtren);
+        }
 
         if (!empty($idmusculo)) {
             $builder->join('musculoejercicio', 'musculoejercicio.idejercicio = ejercicio.idejercicio', 'inner')
@@ -431,7 +1360,7 @@ class GimApiController extends ResourceController
         }
 
         $ejercicioModel = new EjercicioModel();
-        $ejercicio = $ejercicioModel->find($id);
+        $ejercicio = $ejercicioModel->getEjercicioWithDetails($id);
         if (!$ejercicio) {
             return $this->failNotFound("Ejercicio no encontrado con ID: {$id}");
         }
@@ -497,7 +1426,7 @@ class GimApiController extends ResourceController
         }
 
         $musculoModel = new MusculoModel();
-        $musculo = $musculoModel->find((int)$id);
+        $musculo = $musculoModel->getMusculoWithDetails((int)$id);
 
         if (!$musculo) {
             return $this->failNotFound('Músculo no encontrado');

@@ -323,6 +323,139 @@
                     </div>
                 </div>
 
+                <!-- 6. Control Nutricional & Antropométrico (perfilnutricional) -->
+                <div class="col-12">
+                    <div class="card card-custom bg-white border-top border-3 border-danger shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i class="bi bi-heart-pulse-fill text-danger me-2 fs-5"></i>Control Nutricional & IMC (<code>perfilnutricional</code>)
+                            </h6>
+                            <a href="<?= base_url('perfilnutricional/add?idpersona=' . $persona['idpersona']) ?>" class="btn btn-sm btn-outline-danger">
+                                <i class="bi bi-plus-lg me-1"></i> Nueva Medición
+                            </a>
+                        </div>
+                        <div class="card-body p-3">
+                            <?php if (empty($perfilesNutricionales)): ?>
+                                <div class="text-center py-3 text-muted small">
+                                    <i class="bi bi-speedometer2 fs-3 d-block mb-1 text-secondary"></i>
+                                    Esta persona aún no tiene registros de peso ni control nutricional.
+                                    <div class="mt-2">
+                                        <a href="<?= base_url('perfilnutricional/add?idpersona=' . $persona['idpersona']) ?>" class="btn btn-xs btn-outline-danger">
+                                            <i class="bi bi-plus-circle me-1"></i>Registrar primer pesaje
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0 small">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="ps-3">ID</th>
+                                                <th>Fecha</th>
+                                                <th>Peso</th>
+                                                <th>Estatura</th>
+                                                <th>IMC</th>
+                                                <th>Estado</th>
+                                                <th class="text-end pe-3">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($perfilesNutricionales as $pn): ?>
+                                                <tr>
+                                                    <td class="ps-3 fw-bold text-muted">#<?= $pn['idperfilnutricional'] ?></td>
+                                                    <td><?= !empty($pn['fechamedicion']) ? date('d/m/Y', strtotime($pn['fechamedicion'])) : '-' ?></td>
+                                                    <td class="fw-bold"><?= number_format((float)$pn['peso_kg'], 2) ?> kg</td>
+                                                    <td><?= number_format((float)$pn['estatura_cm'], 1) ?> cm</td>
+                                                    <td class="fw-bold"><?= $pn['imc'] !== null ? number_format($pn['imc'], 2) : '-' ?></td>
+                                                    <td>
+                                                        <span class="badge <?= $pn['clasificacion']['badge_class'] ?>">
+                                                            <?= $pn['clasificacion']['categoria'] ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-end pe-3">
+                                                        <a href="<?= base_url('perfilnutricional/actual/' . $pn['idperfilnutricional']) ?>" class="btn btn-outline-primary btn-sm py-0 px-2" title="Ver ficha">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7. Planes de Alimentación (planalimentacion) -->
+                <div class="col-12">
+                    <div class="card card-custom bg-white border-top border-3 border-success shadow-sm">
+                        <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center">
+                            <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i class="bi bi-journal-medical text-success me-2 fs-5"></i>Planes de Alimentación (<code>planalimentacion</code>)
+                            </h6>
+                            <a href="<?= base_url('planalimentacion/add?idpersona=' . $persona['idpersona']) ?>" class="btn btn-sm btn-success">
+                                <i class="bi bi-plus-lg me-1"></i> Nuevo Plan de Alimentación
+                            </a>
+                        </div>
+                        <div class="card-body p-3">
+                            <?php if (empty($planesAlimentacion)): ?>
+                                <div class="text-center py-3 text-muted small">
+                                    <i class="bi bi-calendar2-range fs-3 d-block mb-1 text-secondary"></i>
+                                    Esta persona aún no tiene planes de alimentación asignados.
+                                    <div class="mt-2">
+                                        <a href="<?= base_url('planalimentacion/add?idpersona=' . $persona['idpersona']) ?>" class="btn btn-xs btn-outline-success">
+                                            <i class="bi bi-plus-circle me-1"></i>Asignar primer plan nutricional
+                                        </a>
+                                    </div>
+                                </div>
+                            <?php else: ?>
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0 small">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="ps-3">ID</th>
+                                                <th>Nombre del Plan</th>
+                                                <th>Fecha Inicio</th>
+                                                <th>Fecha Fin</th>
+                                                <th>Estado</th>
+                                                <th>Objetivo</th>
+                                                <th class="text-end pe-3">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($planesAlimentacion as $pla): ?>
+                                                <tr>
+                                                    <td class="ps-3 fw-bold text-muted">#<?= $pla['idplanalimentacion'] ?></td>
+                                                    <td class="fw-bold text-dark">
+                                                        <i class="bi bi-bookmark-check-fill text-success me-1"></i>
+                                                        <?= esc($pla['nombre']) ?>
+                                                    </td>
+                                                    <td><?= esc($pla['fechainicio']) ?></td>
+                                                    <td><?= !empty($pla['fechafin']) ? esc($pla['fechafin']) : '<span class="text-muted fst-italic">Indefinido</span>' ?></td>
+                                                    <td>
+                                                        <span class="badge <?= $pla['estado_info']['badge_class'] ?>">
+                                                            <?= $pla['estado_info']['etiqueta'] ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-secondary text-truncate" style="max-width: 250px;" title="<?= esc($pla['objetivo'] ?? '') ?>">
+                                                        <?= esc($pla['objetivo'] ?? '-') ?>
+                                                    </td>
+                                                    <td class="text-end pe-3">
+                                                        <a href="<?= base_url('planalimentacion/actual/' . $pla['idplanalimentacion']) ?>" class="btn btn-outline-primary btn-sm py-0 px-2" title="Ver plan">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         <?php endif; ?>

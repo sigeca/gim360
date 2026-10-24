@@ -93,6 +93,11 @@
                     <div class="card-body p-3 text-center d-flex flex-column justify-content-between">
                         <div>
                             <h6 class="fw-bold text-dark mb-1"><?= esc($m['nombre']) ?></h6>
+                            <?php if (!empty($m['tren_nombre'])): ?>
+                                <span class="badge bg-info-subtle text-info border border-info px-2 py-1 small mb-1">
+                                    <i class="bi bi-layers-half me-1"></i><?= esc($m['tren_nombre']) ?>
+                                </span>
+                            <?php endif; ?>
                             <span class="text-muted small fst-italic d-block text-truncate" title="<?= esc($m['imagen'] ?? '') ?>">
                                 <i class="bi bi-file-earmark-image me-1"></i><?= esc($m['imagen'] ?? 'Sin archivo') ?>
                             </span>
@@ -149,6 +154,7 @@
                             <th class="ps-4">ID</th>
                             <th>Imagen</th>
                             <th>Nombre del Músculo</th>
+                            <th>Tren Muscular</th>
                             <th>Archivo de Imagen</th>
                             <th class="text-end pe-4">Acciones</th>
                         </tr>
@@ -174,6 +180,15 @@
                                     <a href="<?= base_url('musculo/actual/' . $m['idmusculo']) ?>" class="fw-bold text-dark text-decoration-none fs-6">
                                         <?= esc($m['nombre']) ?>
                                     </a>
+                                </td>
+                                <td>
+                                    <?php if (!empty($m['tren_nombre'])): ?>
+                                        <span class="badge bg-info-subtle text-info border border-info px-2 py-1">
+                                            <i class="bi bi-layers-half me-1"></i><?= esc($m['tren_nombre']) ?>
+                                        </span>
+                                    <?php else: ?>
+                                        <span class="text-muted small fst-italic">Sin asignar</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="badge bg-secondary-subtle text-secondary border px-2 py-1">

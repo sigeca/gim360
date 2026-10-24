@@ -73,6 +73,22 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th class="table-light text-muted">Tren Muscular</th>
+                                    <td>
+                                        <?php if (!empty($programa['idtrenmuscular'])): ?>
+                                            <a href="<?= base_url('trenmuscular/actual/' . $programa['idtrenmuscular']) ?>" class="text-decoration-none fw-semibold">
+                                                <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-2 fs-6">
+                                                    <i class="bi bi-layers-half text-primary me-1"></i><?= esc($programa['tren_nombre']) ?>
+                                                </span>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="badge bg-light text-muted border px-3 py-2">
+                                                <i class="bi bi-info-circle me-1"></i>Sin tren muscular específico (General)
+                                            </span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th class="table-light text-muted">Total de Rutinas Asignadas</th>
                                     <td>
                                         <span class="badge bg-info-subtle text-info-emphasis border border-info px-3 py-2 fs-6">

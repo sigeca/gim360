@@ -34,10 +34,10 @@ class Musculo extends BaseController
     public function actual($id = null)
     {
         if ($id) {
-            $musculo = $this->musculoModel->find($id);
+            $musculo = $this->musculoModel->getMusculoWithDetails($id);
         } else {
             $last = $this->musculoModel->elultimo();
-            $musculo = $last ?: null;
+            $musculo = $last ? $this->musculoModel->getMusculoWithDetails($last['idmusculo']) : null;
         }
 
         $equipos = [];
@@ -65,6 +65,8 @@ class Musculo extends BaseController
                 ->findAll();
         }
 
+        $todosLosTrenes = (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll();
+
         $data = [
             'title'              => 'Ficha de Músculo' . ($musculo ? ': ' . $musculo['nombre'] : ''),
             'musculo'            => $musculo,
@@ -72,6 +74,7 @@ class Musculo extends BaseController
             'ejercicios'         => $ejercicios,
             'todosLosEquipos'    => $todosLosEquipos,
             'todosLosEjercicios' => $todosLosEjercicios,
+            'todosLosTrenes'     => $todosLosTrenes,
             'module'             => 'musculo',
         ];
 
@@ -180,9 +183,11 @@ class Musculo extends BaseController
     public function add()
     {
         $data = [
-            'title'           => 'Registrar Nuevo Músculo',
-            'availableImages' => $this->musculoModel->getAvailableImages(),
-            'module'          => 'musculo',
+            'title'             => 'Registrar Nuevo Músculo',
+            'availableImages'   => $this->musculoModel->getAvailableImages(),
+            'todosLosTrenes'    => (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll(),
+            'idtrenPreselected' => $this->request->getGet('idtrenmuscular'),
+            'module'            => 'musculo',
         ];
 
         return view('musculo/musculo_form', $data);
@@ -191,17 +196,21 @@ class Musculo extends BaseController
     public function save()
     {
         $rules = [
-            'nombre' => 'required|min_length[2]|max_length[100]',
-            'imagen' => 'permit_empty|max_length[255]',
+            'nombre'         => 'required|min_length[2]|max_length[100]',
+            'imagen'         => 'permit_empty|max_length[255]',
+            'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idtren = $this->request->getPost('idtrenmuscular');
+
         $id = $this->musculoModel->insert([
-            'nombre' => trim($this->request->getPost('nombre')),
-            'imagen' => trim($this->request->getPost('imagen')) ?: null,
+            'nombre'         => trim($this->request->getPost('nombre')),
+            'imagen'         => trim($this->request->getPost('imagen')) ?: null,
+            'idtrenmuscular' => !empty($idtren) ? (int)$idtren : null,
         ]);
 
         return redirect()->to(base_url('musculo/actual/' . $id))->with('success', 'Músculo registrado exitosamente.');
@@ -218,6 +227,7 @@ class Musculo extends BaseController
             'title'           => 'Editar Músculo: ' . $musculo['nombre'],
             'musculo'         => $musculo,
             'availableImages' => $this->musculoModel->getAvailableImages(),
+            'todosLosTrenes'  => (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll(),
             'module'          => 'musculo',
         ];
 
@@ -232,17 +242,21 @@ class Musculo extends BaseController
         }
 
         $rules = [
-            'nombre' => 'required|min_length[2]|max_length[100]',
-            'imagen' => 'permit_empty|max_length[255]',
+            'nombre'         => 'required|min_length[2]|max_length[100]',
+            'imagen'         => 'permit_empty|max_length[255]',
+            'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idtren = $this->request->getPost('idtrenmuscular');
+
         $this->musculoModel->update($id, [
-            'nombre' => trim($this->request->getPost('nombre')),
-            'imagen' => trim($this->request->getPost('imagen')) ?: null,
+            'nombre'         => trim($this->request->getPost('nombre')),
+            'imagen'         => trim($this->request->getPost('imagen')) ?: null,
+            'idtrenmuscular' => !empty($idtren) ? (int)$idtren : null,
         ]);
 
         return redirect()->to(base_url('musculo/actual/' . $id))->with('success', 'Músculo actualizado exitosamente.');

@@ -22,10 +22,10 @@ class Ejercicio extends BaseController
     public function actual($id = null)
     {
         if ($id) {
-            $ejercicio = $this->ejercicioModel->find($id);
+            $ejercicio = $this->ejercicioModel->getEjercicioWithDetails($id);
         } else {
             $first = $this->ejercicioModel->elprimero();
-            $ejercicio = $first ? $this->ejercicioModel->find($first['idejercicio']) : null;
+            $ejercicio = $first ? $this->ejercicioModel->getEjercicioWithDetails($first['idejercicio']) : null;
         }
 
         $youtubeId = null;
@@ -69,6 +69,9 @@ class Ejercicio extends BaseController
         $equipos = $ejercicio ? $this->ejercicioModel->getEquipos((int)$ejercicio['idejercicio']) : [];
         $todosLosEquipos = (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll();
 
+        // Trenes musculares
+        $todosLosTrenes = (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll();
+
         $data = [
             'title'            => 'Ficha Técnica de Ejercicio: ' . ($ejercicio['nombreespanol'] ?? ''),
             'ejercicio'        => $ejercicio,
@@ -79,6 +82,7 @@ class Ejercicio extends BaseController
             'todosLosMusculos' => $todosLosMusculos,
             'equipos'          => $equipos,
             'todosLosEquipos'  => $todosLosEquipos,
+            'todosLosTrenes'   => $todosLosTrenes,
             'tiposEquipo'      => \App\Models\EquipoModel::getTipos(),
             'module'           => 'ejercicio',
         ];
@@ -166,6 +170,8 @@ class Ejercicio extends BaseController
             'musculosAsignados' => [],
             'todosLosEquipos'   => (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll(),
             'equiposAsignados'  => [],
+            'todosLosTrenes'    => (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll(),
+            'idtrenPreselected' => $this->request->getGet('idtrenmuscular'),
             'module'            => 'ejercicio',
         ];
 
@@ -175,23 +181,27 @@ class Ejercicio extends BaseController
     public function save()
     {
         $rules = [
-            'nombreespanol' => 'required|min_length[2]|max_length[150]',
-            'nombreingles'  => 'required|min_length[2]|max_length[150]',
-            'descripcion'   => 'permit_empty',
-            'urlvideo'      => 'permit_empty|max_length[255]',
-            'imagen'        => 'permit_empty|max_length[255]',
+            'nombreespanol'  => 'required|min_length[2]|max_length[150]',
+            'nombreingles'   => 'required|min_length[2]|max_length[150]',
+            'descripcion'    => 'permit_empty',
+            'urlvideo'       => 'permit_empty|max_length[255]',
+            'imagen'         => 'permit_empty|max_length[255]',
+            'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idtren = $this->request->getPost('idtrenmuscular');
+
         $id = $this->ejercicioModel->insert([
-            'nombreespanol' => trim($this->request->getPost('nombreespanol')),
-            'nombreingles'  => trim($this->request->getPost('nombreingles')),
-            'descripcion'   => trim($this->request->getPost('descripcion')) ?: null,
-            'urlvideo'      => trim($this->request->getPost('urlvideo')) ?: null,
-            'imagen'        => trim($this->request->getPost('imagen')) ?: null,
+            'nombreespanol'  => trim($this->request->getPost('nombreespanol')),
+            'nombreingles'   => trim($this->request->getPost('nombreingles')),
+            'descripcion'    => trim($this->request->getPost('descripcion')) ?: null,
+            'urlvideo'       => trim($this->request->getPost('urlvideo')) ?: null,
+            'imagen'         => trim($this->request->getPost('imagen')) ?: null,
+            'idtrenmuscular' => !empty($idtren) ? (int)$idtren : null,
         ]);
 
         // Sincronizar músculos seleccionados
@@ -236,6 +246,7 @@ class Ejercicio extends BaseController
             'musculosAsignados' => $musculosAsignados,
             'todosLosEquipos'   => (new \App\Models\EquipoModel())->orderBy('nombre', 'ASC')->findAll(),
             'equiposAsignados'  => $equiposAsignados,
+            'todosLosTrenes'    => (new \App\Models\TrenMuscularModel())->orderBy('nombre', 'ASC')->findAll(),
             'module'            => 'ejercicio',
         ];
 
@@ -250,23 +261,27 @@ class Ejercicio extends BaseController
         }
 
         $rules = [
-            'nombreespanol' => 'required|min_length[2]|max_length[150]',
-            'nombreingles'  => 'required|min_length[2]|max_length[150]',
-            'descripcion'   => 'permit_empty',
-            'urlvideo'      => 'permit_empty|max_length[255]',
-            'imagen'        => 'permit_empty|max_length[255]',
+            'nombreespanol'  => 'required|min_length[2]|max_length[150]',
+            'nombreingles'   => 'required|min_length[2]|max_length[150]',
+            'descripcion'    => 'permit_empty',
+            'urlvideo'       => 'permit_empty|max_length[255]',
+            'imagen'         => 'permit_empty|max_length[255]',
+            'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
         ];
 
         if (!$this->validate($rules)) {
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idtren = $this->request->getPost('idtrenmuscular');
+
         $this->ejercicioModel->update($id, [
-            'nombreespanol' => trim($this->request->getPost('nombreespanol')),
-            'nombreingles'  => trim($this->request->getPost('nombreingles')),
-            'descripcion'   => trim($this->request->getPost('descripcion')) ?: null,
-            'urlvideo'      => trim($this->request->getPost('urlvideo')) ?: null,
-            'imagen'        => trim($this->request->getPost('imagen')) ?: null,
+            'nombreespanol'  => trim($this->request->getPost('nombreespanol')),
+            'nombreingles'   => trim($this->request->getPost('nombreingles')),
+            'descripcion'    => trim($this->request->getPost('descripcion')) ?: null,
+            'urlvideo'       => trim($this->request->getPost('urlvideo')) ?: null,
+            'imagen'         => trim($this->request->getPost('imagen')) ?: null,
+            'idtrenmuscular' => !empty($idtren) ? (int)$idtren : null,
         ]);
 
         // Sincronizar músculos seleccionados

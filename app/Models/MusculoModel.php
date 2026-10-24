@@ -15,11 +15,13 @@ class MusculoModel extends Model
     protected $allowedFields    = [
         'nombre',
         'imagen',
+        'idtrenmuscular',
     ];
 
     protected $validationRules = [
-        'nombre' => 'required|min_length[2]|max_length[100]',
-        'imagen' => 'permit_empty|max_length[255]',
+        'nombre'         => 'required|min_length[2]|max_length[100]',
+        'imagen'         => 'permit_empty|max_length[255]',
+        'idtrenmuscular' => 'permit_empty|is_natural_no_zero',
     ];
 
     protected $validationMessages = [
@@ -34,17 +36,32 @@ class MusculoModel extends Model
     ];
 
     /**
-     * Obtiene músculos con filtro de búsqueda opcional
+     * Obtiene un músculo con la información de su tren muscular
+     */
+    public function getMusculoWithDetails($id)
+    {
+        return $this->select('musculo.*, trenmuscular.nombre AS tren_nombre')
+                    ->join('trenmuscular', 'trenmuscular.idtrenmuscular = musculo.idtrenmuscular', 'left')
+                    ->where('musculo.idmusculo', $id)
+                    ->first();
+    }
+
+    /**
+     * Obtiene músculos con filtro de búsqueda opcional y nombre de tren muscular
      */
     public function getMusculos(?string $search = null)
     {
-        $builder = $this->orderBy($this->primaryKey, 'ASC');
+        $builder = $this->select('musculo.*, trenmuscular.nombre AS tren_nombre')
+                        ->join('trenmuscular', 'trenmuscular.idtrenmuscular = musculo.idtrenmuscular', 'left')
+                        ->orderBy('musculo.idmusculo', 'ASC');
 
         if (!empty($search)) {
             $builder->groupStart()
-                    ->like('nombre', $search);
+                    ->like('musculo.nombre', $search)
+                    ->orLike('trenmuscular.nombre', $search);
             if (is_numeric($search)) {
-                $builder->orWhere($this->primaryKey, (int)$search);
+                $builder->orWhere('musculo.idmusculo', (int)$search)
+                        ->orWhere('musculo.idtrenmuscular', (int)$search);
             }
             $builder->groupEnd();
         }

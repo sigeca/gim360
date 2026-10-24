@@ -230,9 +230,18 @@ $uri = uri_string();
 
 $isPersonaActive = (strpos($uri, 'persona') === 0 && strpos($uri, 'generopersona') === false && strpos($uri, 'estadocivilpersona') === false);
 $isClienteActive = (strpos($uri, 'cliente') === 0);
+$isPerfilNutricionalActive = (strpos($uri, 'perfilnutricional') === 0 || strpos($uri, 'perfil-nutricional') === 0 || strpos($uri, 'controlnutricional') === 0);
+$isGrupoAlimentoActive = (strpos($uri, 'grupoalimento') === 0 || strpos($uri, 'grupo-alimento') === 0 || strpos($uri, 'gruposalimentos') === 0);
+$isAlimentoActive = (strpos($uri, 'alimento') === 0 && strpos($uri, 'grupoalimento') === false && strpos($uri, 'grupo-alimento') === false);
+$isPlanAlimentacionActive = (strpos($uri, 'planalimentacion') === 0 || strpos($uri, 'plan-alimentacion') === 0 || strpos($uri, 'planesalimentacion') === 0);
+$isRecetaActive = (strpos($uri, 'receta') === 0 || strpos($uri, 'recetas') === 0) && strpos($uri, 'alimentoreceta') === false;
+$isUnidadAlimentoActive = (strpos($uri, 'unidadalimento') === 0 || strpos($uri, 'unidad-alimento') === 0 || strpos($uri, 'unidadesalimento') === 0);
+$isAlimentoRecetaActive = (strpos($uri, 'alimentoreceta') === 0 || strpos($uri, 'alimento-receta') === 0);
+$isTipoComidaActive = (strpos($uri, 'tipocomida') === 0 || strpos($uri, 'tipo-comida') === 0 || strpos($uri, 'tiposcomida') === 0);
+$isComidaActive = (strpos($uri, 'comida') === 0 || strpos($uri, 'comidas') === 0) && strpos($uri, 'tipocomida') === false;
 $isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
 $isUsuarioActive = (strpos($uri, 'usuario') === 0);
-$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive || $isUsuarioActive;
+$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isPerfilNutricionalActive || $isGrupoAlimentoActive || $isAlimentoActive || $isPlanAlimentacionActive || $isComidaActive || $isRecetaActive || $isUnidadAlimentoActive || $isAlimentoRecetaActive || $isTipoComidaActive || $isVisitaActive || $isUsuarioActive;
 
 $isEquiposActive = (strpos($uri, 'equipo') === 0 && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false && strpos($uri, 'equipomusculo') === false && strpos($uri, 'equipo-musculo') === false && strpos($uri, 'disponibilidadequipo') === false && strpos($uri, 'disponibilidad-equipo') === false) || (strpos($uri, 'equipos') === 0);
 $isEquipoMusculoActive = (strpos($uri, 'equipomusculo') === 0 || strpos($uri, 'equipo-musculo') === 0);
@@ -245,6 +254,7 @@ $isRutinaActive = (strpos($uri, 'rutinaejecicio') === 0 || strpos($uri, 'rutinae
 $isPlanEjercicioActive = (strpos($uri, 'planejercicio') === 0);
 $isRutinaPlanActive = (strpos($uri, 'rutinaplan') === 0 || strpos($uri, 'rutina-plan') === 0);
 $isMusculoActive = (strpos($uri, 'musculo') === 0 || strpos($uri, 'musculos') === 0);
+$isTrenMuscularActive = (strpos($uri, 'trenmuscular') === 0 || strpos($uri, 'trenmusculo') === 0 || strpos($uri, 'tren-muscular') === 0);
 $isMusculoEjercicioActive = (strpos($uri, 'musculoejercicio') === 0 || strpos($uri, 'musculo-ejercicio') === 0);
 $isEjercicioEquipoActive = (strpos($uri, 'ejercicioequipo') === 0 || strpos($uri, 'ejercicio-equipo') === 0);
 $isProgramaActive = (strpos($uri, 'programaentrenamiento') === 0);
@@ -254,7 +264,7 @@ $isProgramaClienteActive = (strpos($uri, 'programacliente') === 0 || strpos($uri
 $isPlanPersonalizadoActive = (strpos($uri, 'planpersonalizado') === 0 || strpos($uri, 'plan-personalizado') === 0 || strpos($uri, 'planejerciciopersonalizado') === 0);
 $isEjecucionProgramaActive = (strpos($uri, 'ejecucionprograma') === 0 || strpos($uri, 'ejecucion-programa') === 0);
 $isEstadoProgramaClienteActive = (strpos($uri, 'estadoprogramacliente') === 0 || strpos($uri, 'estado-programa-cliente') === 0);
-$groupPlanificacionOpen = $isEjercicioActive || $isMotivoActive || $isRangoEdadActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isEstadoProgramaClienteActive;
+$groupPlanificacionOpen = $isEjercicioActive || $isMotivoActive || $isRangoEdadActive || $isRutinaActive || $isPlanEjercicioActive || $isRutinaPlanActive || $isMusculoActive || $isTrenMuscularActive || $isMusculoEjercicioActive || $isEjercicioEquipoActive || $isProgramaActive || $isRutinaProgramaActive || $isEstadoProgramaClienteActive;
 $groupEjecucionOpen = $isProgramaClienteActive || $isPlanPersonalizadoActive || $isEjecucionProgramaActive;
 
 $isCorreoActive = (strpos($uri, 'correo') === 0);
@@ -264,7 +274,8 @@ $groupContactoOpen = $isCorreoActive || $isDireccionActive;
 $isSexoActive = (strpos($uri, 'sexo') === 0);
 $isEstadoCivilActive = (strpos($uri, 'estadocivil') === 0 && strpos($uri, 'estadocivilpersona') === false);
 $isGeneroActive = (strpos($uri, 'genero') === 0 && strpos($uri, 'generopersona') === false);
-$groupCatalogosOpen = $isSexoActive || $isEstadoCivilActive || $isGeneroActive;
+$isDiaSemanaActive = (strpos($uri, 'diasemana') === 0 || strpos($uri, 'dia-semana') === 0 || strpos($uri, 'dias-semana') === 0);
+$groupCatalogosOpen = $isSexoActive || $isEstadoCivilActive || $isGeneroActive || $isDiaSemanaActive;
 
 $isECPActive = (strpos($uri, 'estadocivilpersona') === 0);
 $isGPActive = (strpos($uri, 'generopersona') === 0);
@@ -330,6 +341,42 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('cliente') ?>" class="submenu-link <?= $isClienteActive ? 'active' : '' ?>">
                             <i class="bi bi-person-badge text-success"></i>
                             <span>Clientes</span>
+                        </a>
+                        <a href="<?= base_url('perfilnutricional') ?>" class="submenu-link <?= $isPerfilNutricionalActive ? 'active' : '' ?>">
+                            <i class="bi bi-heart-pulse-fill text-danger"></i>
+                            <span>Control Nutricional</span>
+                        </a>
+                        <a href="<?= base_url('grupoalimento') ?>" class="submenu-link <?= $isGrupoAlimentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-egg-fried text-success"></i>
+                            <span>Grupos de Alimentos</span>
+                        </a>
+                        <a href="<?= base_url('alimento') ?>" class="submenu-link <?= $isAlimentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-apple text-success"></i>
+                            <span>Alimentos</span>
+                        </a>
+                        <a href="<?= base_url('planalimentacion') ?>" class="submenu-link <?= $isPlanAlimentacionActive ? 'active' : '' ?>">
+                            <i class="bi bi-journal-medical text-success"></i>
+                            <span>Planes de Alimentación</span>
+                        </a>
+                        <a href="<?= base_url('comida') ?>" class="submenu-link <?= $isComidaActive ? 'active' : '' ?>">
+                            <i class="bi bi-calendar2-heart text-success"></i>
+                            <span>Comidas en Planes</span>
+                        </a>
+                        <a href="<?= base_url('receta') ?>" class="submenu-link <?= $isRecetaActive ? 'active' : '' ?>">
+                            <i class="bi bi-book-half text-warning"></i>
+                            <span>Recetas Saludables</span>
+                        </a>
+                        <a href="<?= base_url('alimentoreceta') ?>" class="submenu-link <?= $isAlimentoRecetaActive ? 'active' : '' ?>">
+                            <i class="bi bi-diagram-3-fill text-warning"></i>
+                            <span>Ingredientes Recetas</span>
+                        </a>
+                        <a href="<?= base_url('unidadalimento') ?>" class="submenu-link <?= $isUnidadAlimentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-rulers text-info"></i>
+                            <span>Unidades de Medida</span>
+                        </a>
+                        <a href="<?= base_url('tipocomida') ?>" class="submenu-link <?= $isTipoComidaActive ? 'active' : '' ?>">
+                            <i class="bi bi-clock-history text-warning"></i>
+                            <span>Tipos de Comida</span>
                         </a>
                         <a href="<?= base_url('visitasgim') ?>" class="submenu-link <?= $isVisitaActive ? 'active' : '' ?>">
                             <i class="bi bi-clock-history text-warning"></i>
@@ -398,6 +445,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('musculo') ?>" class="submenu-link <?= $isMusculoActive ? 'active' : '' ?>">
                             <i class="bi bi-person-arms-up text-danger"></i>
                             <span>Catálogo Músculos</span>
+                        </a>
+                        <a href="<?= base_url('trenmuscular') ?>" class="submenu-link <?= $isTrenMuscularActive ? 'active' : '' ?>">
+                            <i class="bi bi-layers-half text-info"></i>
+                            <span>Trenes Musculares</span>
                         </a>
                         <a href="<?= base_url('musculoejercicio') ?>" class="submenu-link <?= $isMusculoEjercicioActive ? 'active' : '' ?>">
                             <i class="bi bi-diagram-3-fill text-warning"></i>
@@ -532,6 +583,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('genero') ?>" class="submenu-link <?= $isGeneroActive ? 'active' : '' ?>">
                             <i class="bi bi-person-lines-fill text-primary"></i>
                             <span>Género</span>
+                        </a>
+                        <a href="<?= base_url('diasemana') ?>" class="submenu-link <?= $isDiaSemanaActive ? 'active' : '' ?>">
+                            <i class="bi bi-calendar-week text-primary"></i>
+                            <span>Días de la Semana</span>
                         </a>
                     </div>
                 </div>

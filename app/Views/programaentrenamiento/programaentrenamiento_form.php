@@ -88,6 +88,24 @@
                         <div class="form-text">Segmento etario al que está orientado este programa de entrenamiento.</div>
                     </div>
 
+                    <!-- 3. Tren Muscular -->
+                    <div class="mb-3">
+                        <label for="idtrenmuscular" class="form-label fw-semibold">
+                            <i class="bi bi-layers-half text-info me-1"></i>Tren Muscular Enfoque
+                        </label>
+                        <select name="idtrenmuscular" id="idtrenmuscular" class="form-select">
+                            <option value="">-- Sin tren específico (General / Full Body) --</option>
+                            <?php if (!empty($trenes)): ?>
+                                <?php foreach ($trenes as $t): ?>
+                                    <option value="<?= $t['idtrenmuscular'] ?>" <?= old('idtrenmuscular', $idtrenPreselected ?? '') == $t['idtrenmuscular'] ? 'selected' : '' ?>>
+                                        <?= esc($t['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
+                        </select>
+                        <div class="form-text">Región o división anatómica en la que se enfoca el programa (Tren Superior, Tren Inferior, etc.).</div>
+                    </div>
+
                     <div class="alert alert-light border small text-muted d-flex align-items-center gap-2 mb-4">
                         <i class="bi bi-info-circle-fill text-info fs-5"></i>
                         <div>
