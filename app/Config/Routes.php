@@ -230,6 +230,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('planalimentacion/(:num)', 'GimApiController::getPlanAlimentacionDetail/$1');
     $routes->get('persona/(:num)/planesalimentacion', 'GimApiController::getPersonaPlanesAlimentacion/$1');
     $routes->post('planalimentacion', 'GimApiController::guardarPlanAlimentacion');
+    $routes->put('planalimentacion/(:num)', 'GimApiController::actualizarPlanAlimentacion/$1');
+    $routes->delete('planalimentacion/(:num)', 'GimApiController::eliminarPlanAlimentacion/$1');
     $routes->get('recetas', 'GimApiController::getRecetas');
     $routes->get('receta', 'GimApiController::getRecetas');
     $routes->get('receta/(:num)', 'GimApiController::getRecetaDetail/$1');

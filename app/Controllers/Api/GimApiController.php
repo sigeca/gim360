@@ -551,6 +551,14 @@ class GimApiController extends ResourceController
             return $this->failNotFound("Plan de alimentación no encontrado con ID: {$id}");
         }
 
+        $comidaModel = new \App\Models\ComidaModel();
+        $comidas = $comidaModel->getComidasByPlan((int)$id);
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        foreach ($comidas as &$c) {
+            $c['ingredientes'] = $arModel->getIngredientesByReceta((int)$c['idreceta']);
+        }
+        $plan['comidas'] = $comidas;
+
         return $this->respond([
             'status'  => 200,
             'message' => 'Detalle del plan de alimentación obtenido correctamente',
@@ -633,6 +641,70 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * PUT /api/planalimentacion/{id}
+     */
+    public function actualizarPlanAlimentacion($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de plan de alimentación no proporcionado');
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $plan = $planModel->find($id);
+        if (!$plan) {
+            return $this->failNotFound("Plan no encontrado con ID: {$id}");
+        }
+
+        $json = $this->request->getJSON(true) ?: $this->request->getRawInput();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $data = [];
+        if (isset($json['nombre'])) $data['nombre'] = trim($json['nombre']);
+        if (isset($json['fechainicio'])) $data['fechainicio'] = trim($json['fechainicio']);
+        if (array_key_exists('fechafin', $json)) $data['fechafin'] = !empty($json['fechafin']) ? trim($json['fechafin']) : null;
+        if (array_key_exists('objetivo', $json)) $data['objetivo'] = !empty($json['objetivo']) ? trim($json['objetivo']) : null;
+
+        if (empty($data)) {
+            return $this->failValidationErrors('No hay datos para actualizar');
+        }
+
+        $planModel->update($id, $data);
+        $actualizado = $planModel->getPlanWithDetails($id);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Plan de alimentación actualizado exitosamente',
+            'data'    => $actualizado,
+        ]);
+    }
+
+    /**
+     * DELETE /api/planalimentacion/{id}
+     */
+    public function eliminarPlanAlimentacion($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de plan de alimentación no proporcionado');
+        }
+
+        $planModel = new \App\Models\PlanAlimentacionModel();
+        $plan = $planModel->find($id);
+        if (!$plan) {
+            return $this->failNotFound("Plan no encontrado con ID: {$id}");
+        }
+
+        $planModel->delete($id);
+
+        return $this->respondDeleted([
+            'status'  => 200,
+            'message' => 'Plan de alimentación eliminado exitosamente',
+            'data'    => ['idplanalimentacion' => $id],
+        ]);
+    }
+
+    /**
      * GET /api/recetas
      */
     public function getRecetas()
@@ -664,6 +736,9 @@ class GimApiController extends ResourceController
         if (!$receta) {
             return $this->failNotFound("Receta no encontrada con ID: {$id}");
         }
+
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        $receta['ingredientes'] = $arModel->getIngredientesByReceta((int)$id);
 
         return $this->respond([
             'status'  => 200,
@@ -1107,6 +1182,10 @@ class GimApiController extends ResourceController
 
         $comidaModel = new \App\Models\ComidaModel();
         $comidas = $comidaModel->getComidasByPlan((int)$idplan);
+        $arModel = new \App\Models\AlimentoRecetaModel();
+        foreach ($comidas as &$c) {
+            $c['ingredientes'] = $arModel->getIngredientesByReceta((int)$c['idreceta']);
+        }
 
         return $this->respond([
             'status'  => 200,

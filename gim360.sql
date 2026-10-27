@@ -516,7 +516,7 @@ CREATE TABLE `comida` (
   CONSTRAINT `fk_comida_plan` FOREIGN KEY (`idplanalimentacion`) REFERENCES `planalimentacion` (`idplanalimentacion`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comida_receta` FOREIGN KEY (`idreceta`) REFERENCES `receta` (`idreceta`) ON UPDATE CASCADE,
   CONSTRAINT `fk_comida_tipo` FOREIGN KEY (`idtipocomida`) REFERENCES `tipocomida` (`idtipocomida`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -532,7 +532,8 @@ INSERT INTO `comida` VALUES
 (4,1,7,4,'20:30:00'),
 (5,2,1,3,'08:00:00'),
 (6,2,3,2,'13:30:00'),
-(7,2,7,4,'20:00:00');
+(7,2,7,4,'20:00:00'),
+(9,4,1,3,'08:42:00');
 /*!40000 ALTER TABLE `comida` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -6093,4 +6094,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-23 17:52:30
+-- Dump completed on 2026-10-26 21:54:19

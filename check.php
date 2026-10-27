@@ -438,6 +438,281 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
   CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `video` VARCHAR(300) DEFAULT NULL AFTER `imagen`;
+
+CREATE TABLE IF NOT EXISTS `trenmuscular` (
+  `idtrenmuscular` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  PRIMARY KEY (`idtrenmuscular`),
+  UNIQUE KEY `uk_trenmuscular_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+INSERT IGNORE INTO `trenmuscular` (`idtrenmuscular`, `nombre`) VALUES
+(1, 'Tren Superior'),
+(2, 'Tren Inferior'),
+(3, 'Core / Tronco'),
+(4, 'Cuerpo Completo');
+
+ALTER TABLE `programaentrenamiento` ADD COLUMN IF NOT EXISTS `idtrenmuscular` int(11) NULL DEFAULT NULL AFTER `idrangoedad`;
+ALTER TABLE `ejercicio` ADD COLUMN IF NOT EXISTS `idtrenmuscular` int(11) NULL DEFAULT NULL AFTER `imagen`;
+ALTER TABLE `musculo` ADD COLUMN IF NOT EXISTS `idtrenmuscular` int(11) NULL DEFAULT NULL AFTER `imagen`;
+
+UPDATE `musculo` SET `idtrenmuscular` = 1 
+WHERE `nombre` IN (
+    'Bíceps Braquial', 'Braquial', 'Braquiorradial', 
+    'Deltoides Anterior', 'Deltoides Lateral', 'Deltoides Posterior', 
+    'Dorsal Ancho', 'Extensores del Antebrazo', 'Flexores del Antebrazo', 
+    'Pectoral Mayor', 'Romboides', 'Serrato Anterior', 
+    'Trapecio', 'Tríceps Braquial'
+) AND `idtrenmuscular` IS NULL;
+
+UPDATE `musculo` SET `idtrenmuscular` = 2 
+WHERE `nombre` IN (
+    'Abductores', 'Aductores', 'Cuádriceps', 
+    'Flexores de Cadera', 'Gastrocnemio (Gemelos)', 'Glúteo Mayor', 
+    'Glúteo Medio', 'Isquiotibiales', 'Sóleo'
+) AND `idtrenmuscular` IS NULL;
+
+UPDATE `musculo` SET `idtrenmuscular` = 3 
+WHERE `nombre` IN (
+    'Erector Espinal', 'Oblicuos', 'Recto Abdominal', 'Transverso Abdominal'
+) AND `idtrenmuscular` IS NULL;
+
+CREATE OR REPLACE VIEW `TrenMuscular` AS 
+SELECT `idtrenmuscular`, `nombre` FROM `trenmuscular`;
+
+CREATE OR REPLACE VIEW `Musculo` AS 
+SELECT `idmusculo`, `nombre`, `imagen`, `idtrenmuscular` FROM `musculo`;
+
+CREATE OR REPLACE VIEW `ProgramaEntrenamiento` AS 
+SELECT `idprogramaentrenamiento`, `nombre`, `idmotivoentrenamiento`, `idrangoedad`, `idtrenmuscular` 
+FROM `programaentrenamiento`;
+
+CREATE TABLE IF NOT EXISTS `perfilnutricional` (
+  `idperfilnutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `peso_kg` decimal(5,2) NOT NULL,
+  `estatura_cm` decimal(5,2) NOT NULL,
+  `fechamedicion` date DEFAULT (CURRENT_DATE),
+  `porcentajegrasa` decimal(4,1) DEFAULT NULL,
+  `porcentajemusculo` decimal(4,1) DEFAULT NULL,
+  `observaciones` text DEFAULT NULL,
+  PRIMARY KEY (`idperfilnutricional`),
+  KEY `fk_pn_persona` (`idpersona`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `PerfilNutricional` AS
+SELECT `idperfilnutricional`, `idpersona`, `peso_kg`, `estatura_cm`, `fechamedicion`, `porcentajegrasa`, `porcentajemusculo`, `observaciones`
+FROM `perfilnutricional`;
+
+CREATE TABLE IF NOT EXISTS `grupoalimento` (
+  `idgrupoalimento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  PRIMARY KEY (`idgrupoalimento`),
+  UNIQUE KEY `uk_grupoalimento_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `GrupoAlimento` AS
+SELECT `idgrupoalimento`, `nombre`, `descripcion`
+FROM `grupoalimento`;
+
+INSERT IGNORE INTO `grupoalimento` (`idgrupoalimento`, `nombre`, `descripcion`) VALUES
+(1, 'Proteínas (Carnes, Pescados y Huevos)', 'Alimentos con alto valor biológico fundamentales para el desarrollo, recuperación y mantenimiento de la masa muscular.'),
+(2, 'Lácteos y Derivados', 'Leche, quesos, yogur y derivados ricos en calcio, proteínas de lenta y rápida asimilación (caseína y suero) y vitamina D.'),
+(3, 'Cereales, Granos y Tubérculos', 'Avena, arroz, quinua, pasta, papas y camote. Fuentes principales de carbohidratos complejos y energía para el entrenamiento.'),
+(4, 'Legumbres y Semillas', 'Lentejas, garbanzos, frijoles, chía y lino. Aportan fibra, carbohidratos de bajo índice glucémico y proteínas vegetales.'),
+(5, 'Frutas', 'Plátano, manzana, frutos rojos, cítricos. Ricas en vitaminas, minerales, antioxidantes y fructosa para recarga de glucógeno.'),
+(6, 'Verduras y Hortalizas', 'Espinacas, brócoli, zanahorias, lechuga. Aporte esencial de micronutrientes, fitonutrientes, fibra y baja densidad calórica.'),
+(7, 'Grasas Saludables y Aceites', 'Aceite de oliva virgen extra, frutos secos, aguacate. Esenciales para la función hormonal, absorción de vitaminas y salud cardiovascular.'),
+(8, 'Suplementos y Complementos Dietéticos', 'Proteína de suero (whey), creatina, multivitaminas, BCAAs y aminoácidos esenciales para optimización del rendimiento atlético.');
+
+CREATE TABLE IF NOT EXISTS `alimento` (
+  `idalimento` int(11) NOT NULL AUTO_INCREMENT,
+  `idgrupo` int(11) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  PRIMARY KEY (`idalimento`),
+  KEY `fk_alimento_grupo` (`idgrupo`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `Alimento` AS
+SELECT `idalimento`, `idgrupo`, `nombre`, `descripcion`
+FROM `alimento`;
+
+INSERT IGNORE INTO `alimento` (`idalimento`, `idgrupo`, `nombre`, `descripcion`) VALUES
+(1, 1, 'Pechuga de Pollo', 'Excelente fuente de proteína magra de alto valor biológico con bajo contenido de grasa.'),
+(2, 1, 'Huevos Enteros y Claras', 'Proteína de referencia biológica rica en albúmina, colina, vitaminas B12 y minerales.'),
+(3, 1, 'Atún al Natural', 'Pescado magro con alto contenido proteico y aporte de ácidos grasos omega-3.'),
+(4, 1, 'Lomo de Ternera Magra', 'Carne roja magra con alto contenido de hierro hemo, zinc, creatina natural y vitaminas B.'),
+(5, 3, 'Avena en Hojuelas', 'Carbohidrato complejo de absorción lenta rico en fibra soluble (betaglucanos) y micronutrientes.'),
+(6, 3, 'Arroz Integral / Jazmín', 'Fuente energética limpia y de fácil digestión para recarga de glucógeno muscular.'),
+(7, 3, 'Quinoa', 'Pseudocereal con aminoácidos completos, fibra y minerales para deportistas.'),
+(8, 3, 'Batata / Camote', 'Carbohidrato con bajo índice glucémico rico en provitamina A y potasio.'),
+(9, 7, 'Aceite de Oliva Virgen Extra', 'Ácidos grasos monoinsaturados saludables, antiinflamatorio natural para articulaciones.'),
+(10, 7, 'Aguacate', 'Grasas monoinsaturadas, fibra y potasio para soporte cardiovascular y hormonal.'),
+(11, 7, 'Nueces y Almendras', 'Frutos secos con magnesio, vitamina E, grasas poliinsaturadas y saciedad.'),
+(12, 6, 'Brócoli al Vapor', 'Rico en sulforafano, vitamina C, folatos y antioxidantes para control estrogénico.'),
+(13, 6, 'Espinacas Frescas', 'Hojas verdes ricas en nitratos naturales, magnesio, hierro y fibra.'),
+(14, 6, 'Zanahorias', 'Ricas en betacarotenos y antioxidantes para recuperación celular.'),
+(15, 5, 'Plátano / Banana', 'Fruta rica en carbohidratos de absorción rápida y potasio, ideal pre/post entreno.'),
+(16, 5, 'Manzana Verde', 'Bajo índice glucémico, rica en pectina para digestión y saciedad.'),
+(17, 5, 'Arándanos y Frutos Rojos', 'Potentes antioxidantes que combaten el daño oxidativo del entrenamiento intenso.'),
+(18, 2, 'Leche Descremada / Bebida de Almendras', 'Aporte líquido de proteínas o alternativa baja en calorías para batidos.'),
+(19, 2, 'Yogur Griego Natural (0% Grasa)', 'Alto en caseína y probióticos para síntesis proteica nocturna y salud intestinal.'),
+(20, 2, 'Queso Cottage Bajo en Grasa', 'Proteína de digestión lenta ideal para antes de dormir o snacks saciantes.'),
+(21, 4, 'Lentejas Cocidas', 'Legumbre con proteínas vegetales, hierro y fibra prebiótica.'),
+(22, 8, 'Proteína Whey Aislada (Isolate)', 'Suplemento proteico ultra rápido de alta pureza para ventana anabólica post-entreno.'),
+(23, 8, 'Creatina Monohidrato', 'Incrementa reservas de fosfocreatina muscular, mejorando fuerza explosiva e hidratación.');
+
+CREATE TABLE IF NOT EXISTS `unidadalimento` (
+  `idunidadalimento` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(50) NOT NULL,
+  `abreviatura` varchar(15) NOT NULL,
+  PRIMARY KEY (`idunidadalimento`),
+  UNIQUE KEY `uq_unidad_nombre` (`nombre`),
+  UNIQUE KEY `uq_unidad_abrev` (`abreviatura`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `UnidadAlimento` AS
+SELECT `idunidadalimento`, `nombre`, `abreviatura`
+FROM `unidadalimento`;
+
+INSERT IGNORE INTO `unidadalimento` (`idunidadalimento`, `nombre`, `abreviatura`) VALUES
+(1, 'Gramo', 'g'),
+(2, 'Kilogramo', 'kg'),
+(3, 'Mililitro', 'ml'),
+(4, 'Litro', 'l'),
+(5, 'Cucharada', 'cda'),
+(6, 'Cucharadita', 'cdta'),
+(7, 'Taza', 'tz'),
+(8, 'Unidad / Pieza', 'unid'),
+(9, 'Medida / Scoop', 'scoop'),
+(10, 'Rebanada / Rodaja', 'reb'),
+(11, 'Onza', 'oz');
+
+CREATE TABLE IF NOT EXISTS `receta` (
+  `idreceta` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(150) NOT NULL,
+  `instrucciones` text DEFAULT NULL,
+  `porciones` int(11) DEFAULT 1,
+  `tiempopreparacion` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idreceta`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `Receta` AS
+SELECT `idreceta`, `nombre`, `instrucciones`, `porciones`, `tiempopreparacion`
+FROM `receta`;
+
+INSERT IGNORE INTO `receta` (`idreceta`, `nombre`, `instrucciones`, `porciones`, `tiempopreparacion`) VALUES
+(1, 'Tortilla de Avena y Claras de Huevo', '1. Batir 4 claras de huevo con 1 yema.\n2. Incorporar 40g de avena en hojuelas y una pizca de canela al gusto.\n3. Calentar una sartén antiadherente con 2 gotas de aceite de oliva virgen.\n4. Verter la mezcla y cocinar a fuego medio durante 3 minutos por cada lado hasta dorar.', 1, 10),
+(2, 'Bowl de Pollo a la Plancha con Quinoa y Aguacate', '1. Cocinar 100g de quinoa en agua con sal durante 15 minutos y escurrir.\n2. Sazonar 250g de pechuga de pollo con ajo, orégano, sal y pimienta.\n3. Cocinar el pollo a la plancha durante 5-6 minutos por lado a fuego medio-alto.\n4. Cortar en tiras y servir sobre la quinoa templada con rodajas de aguacate fresco y hojas de espinaca.', 2, 25),
+(3, 'Batido Proteico Post-Entreno de Plátano y Avena', '1. Colocar en el vaso de la licuadora 250ml de leche desnatada o bebida vegetal de almendras.\n2. Agregar 1 plátano maduro cortado en rodajas, 35g de avena en copos y 1 medida (scoop) de proteína de suero.\n3. Añadir 3 cubos de hielo y licuar a máxima potencia durante 60 segundos hasta lograr una textura suave y homogénea.', 1, 5),
+(4, 'Salmón al Horno con Espárragos y Batata Asada', '1. Precalentar el horno a 200°C.\n2. Lavar y cortar la batata en rodajas finas y distribuirlas en una bandeja con papel vegetal junto con los espárragos trigueros.\n3. Rociar con una cucharadita de aceite de oliva, sal marina y romero.\n4. Hornear durante 15 minutos, luego incorporar los lomos de salmón salpimentados y cocinar 12 a 15 minutos adicionales hasta que el pescado esté jugoso.', 2, 35),
+(5, 'Yogur Griego con Nueces y Arándanos', 'Servir 150g de yogur griego natural, agregar un puñado de arándanos frescos y nueces picadas con un toque de miel pura.', 1, 5);
+
+CREATE TABLE IF NOT EXISTS `alimentoreceta` (
+  `idalimentoreceta` int(11) NOT NULL AUTO_INCREMENT,
+  `idreceta` int(11) NOT NULL,
+  `idalimento` int(11) NOT NULL,
+  `cantidad` decimal(8,2) NOT NULL,
+  `idunidadalimento` int(11) NOT NULL,
+  PRIMARY KEY (`idalimentoreceta`),
+  KEY `fk_ar_receta` (`idreceta`),
+  KEY `fk_ar_alimento` (`idalimento`),
+  KEY `fk_ar_unidad` (`idunidadalimento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `AlimentoReceta` AS
+SELECT `idalimentoreceta`, `idreceta`, `idalimento`, `cantidad`, `idunidadalimento`
+FROM `alimentoreceta`;
+
+INSERT IGNORE INTO `alimentoreceta` (`idalimentoreceta`, `idreceta`, `idalimento`, `cantidad`, `idunidadalimento`) VALUES
+(1, 1, 2, 4.00, 8),
+(2, 1, 5, 40.00, 1),
+(3, 1, 9, 5.00, 3),
+(4, 2, 1, 250.00, 1),
+(5, 2, 7, 100.00, 1),
+(6, 2, 10, 1.00, 8),
+(7, 2, 13, 50.00, 1),
+(8, 3, 18, 250.00, 3),
+(9, 3, 15, 1.00, 8),
+(10, 3, 5, 35.00, 1),
+(11, 3, 22, 1.00, 9);
+
+CREATE TABLE IF NOT EXISTS `tipocomida` (
+  `idtipocomida` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(60) NOT NULL,
+  PRIMARY KEY (`idtipocomida`),
+  UNIQUE KEY `uq_tipocomida_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `TipoComida` AS
+SELECT `idtipocomida`, `nombre`
+FROM `tipocomida`;
+
+INSERT IGNORE INTO `tipocomida` (`idtipocomida`, `nombre`) VALUES
+(1, 'Desayuno'),
+(2, 'Media Mañana (Snack 1)'),
+(3, 'Almuerzo'),
+(4, 'Merienda (Snack 2)'),
+(5, 'Pre-Entrenamiento'),
+(6, 'Post-Entrenamiento'),
+(7, 'Cena'),
+(8, 'Colación Nocturna'),
+(9, 'Snack General');
+
+CREATE TABLE IF NOT EXISTS `diasemana` (
+  `iddiasemana` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(30) NOT NULL,
+  PRIMARY KEY (`iddiasemana`),
+  UNIQUE KEY `uq_diasemana_nombre` (`nombre`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `DiaSemana` AS
+SELECT `iddiasemana`, `nombre`
+FROM `diasemana`;
+
+INSERT IGNORE INTO `diasemana` (`iddiasemana`, `nombre`) VALUES
+(1, 'Lunes'),
+(2, 'Martes'),
+(3, 'Miércoles'),
+(4, 'Jueves'),
+(5, 'Viernes'),
+(6, 'Sábado'),
+(7, 'Domingo');
+
+CREATE TABLE IF NOT EXISTS `planalimentacion` (
+  `idplanalimentacion` int(11) NOT NULL AUTO_INCREMENT,
+  `idpersona` int(11) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  `fechainicio` date NOT NULL,
+  `fechafin` date DEFAULT NULL,
+  `objetivo` text DEFAULT NULL,
+  PRIMARY KEY (`idplanalimentacion`),
+  KEY `fk_planalimentacion_persona` (`idpersona`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `PlanAlimentacion` AS
+SELECT `idplanalimentacion`, `idpersona`, `nombre`, `fechainicio`, `fechafin`, `objetivo`
+FROM `planalimentacion`;
+
+CREATE TABLE IF NOT EXISTS `comida` (
+  `idcomida` int(11) NOT NULL AUTO_INCREMENT,
+  `idplanalimentacion` int(11) NOT NULL,
+  `idtipocomida` int(11) NOT NULL,
+  `idreceta` int(11) NOT NULL,
+  `horarecomendada` time DEFAULT NULL,
+  PRIMARY KEY (`idcomida`),
+  KEY `fk_comida_plan` (`idplanalimentacion`),
+  KEY `fk_comida_tipo` (`idtipocomida`),
+  KEY `fk_comida_receta` (`idreceta`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+
+CREATE OR REPLACE VIEW `Comida` AS
+SELECT `idcomida`, `idplanalimentacion`, `idtipocomida`, `idreceta`, `horarecomendada`
+FROM `comida`;
 ";
             if ($conn->multi_query($migrationSql)) {
                 do {
@@ -445,9 +720,9 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
                         $resMulti->free();
                     }
                 } while ($conn->more_results() && $conn->next_result());
-                echo "<div style='background:#dcfce7;border:1px solid #86efac;color:#166534;padding:12px;border-radius:6px;margin:15px 0;font-weight:bold;'>✓ ¡Tablas y registros creados exitosamente!</div>";
+                echo "<div style='background:#dcfce7;border:1px solid #86efac;color:#166534;padding:12px;border-radius:6px;margin:15px 0;font-weight:bold;'>✓ ¡Tablas y registros creados/actualizados exitosamente!</div>";
             } else {
-                echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Error al crear tablas: " . htmlspecialchars($conn->error) . "</div>";
+                echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Error al procesar migración: " . htmlspecialchars($conn->error) . "</div>";
             }
         }
 
@@ -459,21 +734,30 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
                 $existingTables[] = strtolower($row[0]);
             }
         }
-        $requiredTables = ['motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 'estadoprogramacliente', 'programacliente', 'ejercicioequipo', 'equipomusculo', 'disponibilidadequipo', 'rangoedad', 'ejecucionprograma'];
+        $requiredTables = [
+            'motivoentrenamiento', 'rutinaejecicio', 'planejercicio', 'programaentrenamiento', 
+            'rutinaprograma', 'rutinaplan', 'musculo', 'musculoejercicio', 
+            'estadoprogramacliente', 'programacliente', 'ejercicioequipo', 'equipomusculo', 
+            'disponibilidadequipo', 'rangoedad', 'ejecucionprograma',
+            'trenmuscular', 'perfilnutricional', 'grupoalimento', 'alimento',
+            'unidadalimento', 'receta', 'alimentoreceta', 'tipocomida', 'diasemana',
+            'planalimentacion', 'comida'
+        ];
         $missingTables = array_diff($requiredTables, $existingTables);
 
-        echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount >= 16 && empty($missingTables), "OK ({$tableCount} tablas encontradas)", "Incompleta ({$tableCount} tablas encontradas)") . "</td></tr>";
+        echo "<tr><td>Base de datos '{$db}'</td><td>" . badge($tableCount >= 20 && empty($missingTables), "OK ({$tableCount} tablas/vistas encontradas)", "Incompleta ({$tableCount} tablas/vistas encontradas)") . "</td></tr>";
 
         if (!empty($missingTables)) {
             echo "<tr><td colspan='2' style='background:#fef2f2;padding:15px;'>";
             echo "<p style='color:#b91c1c;margin:0 0 10px 0;font-weight:bold;'>⚠️ ¡Faltan las siguientes tablas requeridas: " . implode(', ', $missingTables) . "!</p>";
-            echo "<p style='margin:0 0 12px 0;font-size:14px;color:#4b5563;'>Este es el motivo exacto del error <code>Whoops!</code> en la página de inicio de GIM360.</p>";
+            echo "<p style='margin:0 0 12px 0;font-size:14px;color:#4b5563;'>Presiona el botón a continuación para crearlas automáticamente:</p>";
             echo "<a href='?migrar=1' style='background:#0284c7;color:#fff;text-decoration:none;padding:10px 18px;border-radius:6px;font-weight:bold;display:inline-block;'>⚡ Crear tablas faltantes ahora (1 Clic)</a>";
             echo "</td></tr>";
         } else {
             echo "<tr><td colspan='2' style='background:#f0fdf4;padding:12px;'>";
             echo "<span style='color:#166534;font-weight:bold;'>✓ Todas las tablas requeridas están presentes.</span> ";
-            echo "<a href='./' style='background:#10b981;color:#fff;text-decoration:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-left:15px;display:inline-block;'>Ir a GIM360</a>";
+            echo "<a href='?migrar=1' style='background:#0284c7;color:#fff;text-decoration:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-left:15px;display:inline-block;'>⚡ Sincronizar / Migrar BD</a>";
+            echo "<a href='./' style='background:#10b981;color:#fff;text-decoration:none;padding:6px 14px;border-radius:6px;font-weight:bold;margin-left:10px;display:inline-block;'>Ir a GIM360</a>";
             echo "</td></tr>";
         }
     }
