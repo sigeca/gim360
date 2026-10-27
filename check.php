@@ -82,9 +82,14 @@ echo "<tr><td>Host</td><td>{$host}:{$port}</td></tr>";
 echo "<tr><td>Usuario</td><td>{$user}</td></tr>";
 echo "<tr><td>Base de Datos</td><td>{$db}</td></tr>";
 
-$conn = @new mysqli($host, $user, $pass, null, $port);
-if ($conn->connect_error) {
-    echo "<tr><td>Conexión al servidor MySQL</td><td>" . badge(false, '', 'Falló: ' . $conn->connect_error) . "</td></tr>";
+mysqli_report(MYSQLI_REPORT_OFF);
+try {
+    $conn = @new mysqli($host, $user, $pass, null, $port);
+} catch (\Throwable $e) {
+    $conn = null;
+}
+if (!$conn || $conn->connect_error) {
+    echo "<tr><td>Conexión al servidor MySQL</td><td>" . badge(false, '', 'Falló: ' . ($conn ? $conn->connect_error : 'Error de conexión')) . "</td></tr>";
 } else {
     echo "<tr><td>Conexión al servidor MySQL</td><td>" . badge(true, 'Conectado exitosamente') . "</td></tr>";
     
@@ -95,16 +100,20 @@ if ($conn->connect_error) {
     } else {
         // Ejecutar migración si se solicita
         if (isset($_GET['migrar']) || isset($_POST['migrar'])) {
-            // Migración preventiva de renombramiento de tablas y columnas
-            @$conn->query("ALTER TABLE `ejercicioequipo` DROP FOREIGN KEY `fk_ee_equipo`");
-            $resEquipos = $conn->query("SHOW TABLES LIKE 'equipos'");
-            $resEquipo = $conn->query("SHOW TABLES LIKE 'equipo'");
-            if ($resEquipos && $resEquipos->num_rows > 0 && (!$resEquipo || $resEquipo->num_rows == 0)) {
-                @$conn->query("ALTER TABLE `equipos` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
-                @$conn->query("RENAME TABLE `equipos` TO `equipo`");
-            }
-            @$conn->query("ALTER TABLE `equipo` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
-            @$conn->query("ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `iddisponibilidadequipo` INT(11) DEFAULT 1 AFTER `id_estado`");
+            try {
+                // Migración preventiva de renombramiento de tablas y columnas
+                @$conn->query("ALTER TABLE `ejercicioequipo` DROP FOREIGN KEY `fk_ee_equipo`");
+            } catch (\Throwable $ignored) {}
+            try {
+                $resEquipos = $conn->query("SHOW TABLES LIKE 'equipos'");
+                $resEquipo = $conn->query("SHOW TABLES LIKE 'equipo'");
+                if ($resEquipos && $resEquipos->num_rows > 0 && (!$resEquipo || $resEquipo->num_rows == 0)) {
+                    @$conn->query("ALTER TABLE `equipos` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
+                    @$conn->query("RENAME TABLE `equipos` TO `equipo`");
+                }
+                @$conn->query("ALTER TABLE `equipo` CHANGE COLUMN `id_equipo` `idequipo` INT(11) NOT NULL AUTO_INCREMENT");
+                @$conn->query("ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `iddisponibilidadequipo` INT(11) DEFAULT 1 AFTER `id_estado`");
+            } catch (\Throwable $ignored) {}
 
             $migrationSql = "
 CREATE TABLE IF NOT EXISTS `motivoentrenamiento` (
@@ -714,15 +723,19 @@ CREATE OR REPLACE VIEW `Comida` AS
 SELECT `idcomida`, `idplanalimentacion`, `idtipocomida`, `idreceta`, `horarecomendada`
 FROM `comida`;
 ";
-            if ($conn->multi_query($migrationSql)) {
-                do {
-                    if ($resMulti = $conn->store_result()) {
-                        $resMulti->free();
-                    }
-                } while ($conn->more_results() && $conn->next_result());
-                echo "<div style='background:#dcfce7;border:1px solid #86efac;color:#166534;padding:12px;border-radius:6px;margin:15px 0;font-weight:bold;'>✓ ¡Tablas y registros creados/actualizados exitosamente!</div>";
-            } else {
-                echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Error al procesar migración: " . htmlspecialchars($conn->error) . "</div>";
+            try {
+                if ($conn->multi_query($migrationSql)) {
+                    do {
+                        if ($resMulti = $conn->store_result()) {
+                            $resMulti->free();
+                        }
+                    } while ($conn->more_results() && $conn->next_result());
+                    echo "<div style='background:#dcfce7;border:1px solid #86efac;color:#166534;padding:12px;border-radius:6px;margin:15px 0;font-weight:bold;'>✓ ¡Tablas y registros creados/actualizados exitosamente!</div>";
+                } else {
+                    echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Error al procesar migración: " . htmlspecialchars($conn->error) . "</div>";
+                }
+            } catch (\Throwable $e) {
+                echo "<div style='background:#fee2e2;border:1px solid #fca5a5;color:#991b1b;padding:12px;border-radius:6px;margin:15px 0;'>✗ Excepción en migración: " . htmlspecialchars($e->getMessage()) . "</div>";
             }
         }
 
