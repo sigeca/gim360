@@ -128,7 +128,7 @@
                     </div>
 
                     <!-- Instrucciones y Modo de Preparación -->
-                    <div class="card border border-warning-subtle shadow-sm">
+                    <div class="card border border-warning-subtle shadow-sm mb-4">
                         <div class="card-header bg-warning bg-opacity-10 py-3 border-bottom border-warning-subtle">
                             <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
                                 <i class="bi bi-card-checklist text-warning me-2 fs-5"></i>Instrucciones de Preparación
@@ -143,6 +143,42 @@
                                 <div class="text-center py-4 text-muted">
                                     <i class="bi bi-file-earmark-text fs-2 d-block mb-2 text-secondary"></i>
                                     <p class="mb-0">No se han registrado pasos o instrucciones para esta receta.</p>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+                    <!-- Componentes Nutricionales de la Receta -->
+                    <div class="card border border-info-subtle shadow-sm mb-4">
+                        <div class="card-header bg-info bg-opacity-10 py-3 d-flex justify-content-between align-items-center border-bottom border-info-subtle">
+                            <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i class="bi bi-pie-chart-fill text-info me-2 fs-5"></i>Componentes Nutricionales Destacados
+                                <span class="badge bg-info-subtle text-info border border-info ms-2"><?= count($componentes ?? []) ?></span>
+                            </h6>
+                            <a href="<?= base_url('recetacomponentenutricional/add?idreceta=' . $receta['idreceta']) ?>" class="btn btn-sm btn-info text-white">
+                                <i class="bi bi-plus-circle me-1"></i> Asignar Componente
+                            </a>
+                        </div>
+                        <div class="card-body p-3">
+                            <?php if (empty($componentes)): ?>
+                                <div class="text-center py-3 text-muted">
+                                    <i class="bi bi-pie-chart fs-2 d-block mb-2 text-secondary"></i>
+                                    <p class="mb-2 small">No se han asociado componentes nutricionales a esta receta.</p>
+                                    <a href="<?= base_url('recetacomponentenutricional/add?idreceta=' . $receta['idreceta']) ?>" class="btn btn-sm btn-outline-info">
+                                        <i class="bi bi-plus-lg me-1"></i>Asignar primer nutriente
+                                    </a>
+                                </div>
+                            <?php else: ?>
+                                <div class="d-flex flex-wrap gap-2">
+                                    <?php foreach ($componentes as $comp): ?>
+                                        <div class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2 shadow-sm">
+                                            <i class="bi bi-check-circle-fill text-info"></i>
+                                            <span class="fw-semibold"><?= esc($comp['componente_nombre']) ?></span>
+                                            <a href="<?= base_url('recetacomponentenutricional/actual/' . $comp['idrecetacomponentenutricional']) ?>" class="text-primary text-decoration-none" title="Ver asignación">
+                                                <i class="bi bi-box-arrow-up-right"></i>
+                                            </a>
+                                        </div>
+                                    <?php endforeach; ?>
                                 </div>
                             <?php endif; ?>
                         </div>

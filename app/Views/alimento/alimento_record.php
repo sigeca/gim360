@@ -102,6 +102,42 @@
                 </div>
             </div>
 
+            <!-- Componentes Nutricionales Asociados -->
+            <div class="card card-custom bg-white shadow-sm mb-4">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center border-bottom">
+                    <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                        <i class="bi bi-pie-chart-fill text-info me-2 fs-5"></i>Componentes Nutricionales del Alimento
+                        <span class="badge bg-info-subtle text-info border border-info ms-2"><?= count($componentes ?? []) ?></span>
+                    </h6>
+                    <a href="<?= base_url('alimentocomponentenutricional/add?idalimento=' . $alimento['idalimento']) ?>" class="btn btn-sm btn-info text-white">
+                        <i class="bi bi-plus-circle me-1"></i> Asignar Componente
+                    </a>
+                </div>
+                <div class="card-body p-3">
+                    <?php if (empty($componentes)): ?>
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-pie-chart fs-2 d-block mb-2 text-secondary"></i>
+                            <p class="mb-2">No se han asociado componentes nutricionales a este alimento.</p>
+                            <a href="<?= base_url('alimentocomponentenutricional/add?idalimento=' . $alimento['idalimento']) ?>" class="btn btn-sm btn-outline-info">
+                                <i class="bi bi-plus-lg me-1"></i>Asignar primer nutriente
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div class="d-flex flex-wrap gap-2">
+                            <?php foreach ($componentes as $comp): ?>
+                                <div class="badge bg-light text-dark border p-2 d-flex align-items-center gap-2 shadow-sm">
+                                    <i class="bi bi-check-circle-fill text-success"></i>
+                                    <span class="fw-semibold"><?= esc($comp['componente_nombre']) ?></span>
+                                    <a href="<?= base_url('alimentocomponentenutricional/actual/' . $comp['idalimentocomponentenutricional']) ?>" class="text-primary text-decoration-none" title="Ver asignación">
+                                        <i class="bi bi-box-arrow-up-right"></i>
+                                    </a>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
         <?php endif; ?>
 
     </div>

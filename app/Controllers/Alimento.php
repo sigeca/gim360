@@ -31,10 +31,17 @@ class Alimento extends BaseController
             $alimento = $first ? $this->alimentoModel->getAlimentoWithDetails((int)$first['idalimento']) : null;
         }
 
+        $componentes = [];
+        if ($alimento) {
+            $acnModel = new \App\Models\AlimentoComponenteNutricionalModel();
+            $componentes = $acnModel->getComponentesByAlimento((int)$alimento['idalimento']);
+        }
+
         $data = [
-            'title'    => 'Ficha de Alimento' . ($alimento ? ': ' . $alimento['nombre'] : ''),
-            'alimento' => $alimento,
-            'module'   => 'alimento',
+            'title'       => 'Ficha de Alimento' . ($alimento ? ': ' . $alimento['nombre'] : ''),
+            'alimento'    => $alimento,
+            'componentes' => $componentes,
+            'module'      => 'alimento',
         ];
 
         return view('alimento/alimento_record', $data);

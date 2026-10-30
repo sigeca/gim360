@@ -42,6 +42,12 @@ $modulos = [
     'unidadesalimento'   => 'UnidadAlimento',
     'alimentoreceta'     => 'AlimentoReceta',
     'alimento-receta'    => 'AlimentoReceta',
+    'alimentocomponentenutricional'   => 'AlimentoComponenteNutricional',
+    'alimento-componente-nutricional'  => 'AlimentoComponenteNutricional',
+    'alimentocomponente'              => 'AlimentoComponenteNutricional',
+    'recetacomponentenutricional'     => 'RecetaComponenteNutricional',
+    'receta-componente-nutricional'   => 'RecetaComponenteNutricional',
+    'recetacomponente'                => 'RecetaComponenteNutricional',
     'tipocomida'         => 'TipoComida',
     'tipo-comida'        => 'TipoComida',
     'tiposcomida'        => 'TipoComida',
@@ -224,6 +230,12 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('componentenutricional', 'GimApiController::getComponentesNutricionales');
     $routes->get('componentesnutricionales', 'GimApiController::getComponentesNutricionales');
     $routes->get('componentenutricional/(:num)', 'GimApiController::getComponenteNutricionalDetail/$1');
+    $routes->get('alimentocomponentenutricional', 'GimApiController::getAlimentosComponentesNutricionales');
+    $routes->get('alimentocomponentenutricional/(:num)', 'GimApiController::getAlimentoComponenteNutricionalDetail/$1');
+    $routes->get('alimento/(:num)/componentes', 'GimApiController::getComponentesPorAlimento/$1');
+    $routes->get('recetacomponentenutricional', 'GimApiController::getRecetasComponentesNutricionales');
+    $routes->get('recetacomponentenutricional/(:num)', 'GimApiController::getRecetaComponenteNutricionalDetail/$1');
+    $routes->get('receta/(:num)/componentes', 'GimApiController::getComponentesPorReceta/$1');
     $routes->get('gruposalimentos', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento/(:num)', 'GimApiController::getGrupoAlimentoDetail/$1');

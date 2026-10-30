@@ -29,15 +29,19 @@ class Receta extends BaseController
         }
 
         $ingredientes = [];
+        $componentes  = [];
         if ($receta) {
-            $arModel = new \App\Models\AlimentoRecetaModel();
+            $arModel  = new \App\Models\AlimentoRecetaModel();
+            $rcnModel = new \App\Models\RecetaComponenteNutricionalModel();
             $ingredientes = $arModel->getIngredientesByReceta((int)$receta['idreceta']);
+            $componentes  = $rcnModel->getComponentesByReceta((int)$receta['idreceta']);
         }
 
         $data = [
             'title'        => 'Ficha de Receta' . ($receta ? ': ' . $receta['nombre'] : ''),
             'receta'       => $receta,
             'ingredientes' => $ingredientes,
+            'componentes'  => $componentes,
             'module'       => 'receta',
         ];
 

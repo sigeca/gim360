@@ -446,6 +446,124 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/alimentocomponentenutricional
+     */
+    public function getAlimentosComponentesNutricionales()
+    {
+        $search       = $this->request->getGet('q');
+        $idalimento   = $this->request->getGet('idalimento');
+        $idcomponente = $this->request->getGet('idcomponente');
+        $model        = new \App\Models\AlimentoComponenteNutricionalModel();
+        $list         = $model->getRecordsWithDetails($search, $idalimento ? (int)$idalimento : null, $idcomponente ? (int)$idcomponente : null);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Componentes por alimento obtenidos correctamente',
+            'data'    => $list,
+            'total'   => count($list),
+        ]);
+    }
+
+    /**
+     * GET /api/alimentocomponentenutricional/{id}
+     */
+    public function getAlimentoComponenteNutricionalDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID no proporcionado');
+        }
+        $model = new \App\Models\AlimentoComponenteNutricionalModel();
+        $record = $model->getRecordWithDetails((int)$id);
+        if (!$record) {
+            return $this->failNotFound('Registro no encontrado');
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle obtenido',
+            'data'    => $record,
+        ]);
+    }
+
+    /**
+     * GET /api/alimento/{id}/componentes
+     */
+    public function getComponentesPorAlimento($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de alimento no proporcionado');
+        }
+        $model = new \App\Models\AlimentoComponenteNutricionalModel();
+        $componentes = $model->getComponentesByAlimento((int)$id);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Componentes del alimento obtenidos',
+            'data'    => $componentes,
+            'total'   => count($componentes),
+        ]);
+    }
+
+    /**
+     * GET /api/recetacomponentenutricional
+     */
+    public function getRecetasComponentesNutricionales()
+    {
+        $search       = $this->request->getGet('q');
+        $idreceta     = $this->request->getGet('idreceta');
+        $idcomponente = $this->request->getGet('idcomponente');
+        $model        = new \App\Models\RecetaComponenteNutricionalModel();
+        $list         = $model->getRecordsWithDetails($search, $idreceta ? (int)$idreceta : null, $idcomponente ? (int)$idcomponente : null);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Componentes por receta obtenidos correctamente',
+            'data'    => $list,
+            'total'   => count($list),
+        ]);
+    }
+
+    /**
+     * GET /api/recetacomponentenutricional/{id}
+     */
+    public function getRecetaComponenteNutricionalDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID no proporcionado');
+        }
+        $model = new \App\Models\RecetaComponenteNutricionalModel();
+        $record = $model->getRecordWithDetails((int)$id);
+        if (!$record) {
+            return $this->failNotFound('Registro no encontrado');
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle obtenido',
+            'data'    => $record,
+        ]);
+    }
+
+    /**
+     * GET /api/receta/{id}/componentes
+     */
+    public function getComponentesPorReceta($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de receta no proporcionado');
+        }
+        $model = new \App\Models\RecetaComponenteNutricionalModel();
+        $componentes = $model->getComponentesByReceta((int)$id);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Componentes de la receta obtenidos',
+            'data'    => $componentes,
+            'total'   => count($componentes),
+        ]);
+    }
+
+    /**
      * GET /api/gruposalimentos
      */
     public function getGruposAlimentos()
