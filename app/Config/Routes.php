@@ -24,6 +24,9 @@ $modulos = [
     'perfil-nutricional' => 'PerfilNutricional',
     'controlnutricional' => 'PerfilNutricional',
     'control-nutricional'=> 'PerfilNutricional',
+    'componentenutricional'   => 'ComponenteNutricional',
+    'componente-nutricional'  => 'ComponenteNutricional',
+    'componentesnutricionales'=> 'ComponenteNutricional',
     'grupoalimento'      => 'GrupoAlimento',
     'grupo-alimento'     => 'GrupoAlimento',
     'gruposalimentos'    => 'GrupoAlimento',
@@ -218,6 +221,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('perfilnutricional/(:num)', 'GimApiController::getPerfilNutricionalDetail/$1');
     $routes->get('persona/(:num)/nutricion', 'GimApiController::getPersonaNutricion/$1');
     $routes->post('perfilnutricional', 'GimApiController::guardarPerfilNutricional');
+    $routes->get('componentenutricional', 'GimApiController::getComponentesNutricionales');
+    $routes->get('componentesnutricionales', 'GimApiController::getComponentesNutricionales');
+    $routes->get('componentenutricional/(:num)', 'GimApiController::getComponenteNutricionalDetail/$1');
     $routes->get('gruposalimentos', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento/(:num)', 'GimApiController::getGrupoAlimentoDetail/$1');

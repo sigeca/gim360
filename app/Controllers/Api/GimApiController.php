@@ -405,6 +405,47 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/componentesnutricionales
+     * GET /api/componentenutricional
+     */
+    public function getComponentesNutricionales()
+    {
+        $search = $this->request->getGet('q');
+        $componenteModel = new \App\Models\ComponenteNutricionalModel();
+        $componentes = $componenteModel->getComponentes($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Componentes nutricionales obtenidos correctamente',
+            'data'    => $componentes,
+            'total'   => count($componentes),
+        ]);
+    }
+
+    /**
+     * GET /api/componentenutricional/{id}
+     */
+    public function getComponenteNutricionalDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de componente nutricional no proporcionado');
+        }
+
+        $componenteModel = new \App\Models\ComponenteNutricionalModel();
+        $componente = $componenteModel->find($id);
+
+        if (!$componente) {
+            return $this->failNotFound('Componente nutricional no encontrado');
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle del componente nutricional obtenido',
+            'data'    => $componente,
+        ]);
+    }
+
+    /**
      * GET /api/gruposalimentos
      */
     public function getGruposAlimentos()
