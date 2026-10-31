@@ -498,10 +498,12 @@ class GimApiController extends ResourceController
         $imagenModel = new \App\Models\ImagenModel();
         $imagenes = $imagenModel->getImagenes($search);
 
-        $uploadPath = ROOTPATH . 'repositorio/imagen/';
         foreach ($imagenes as &$img) {
-            $img['archivoExiste'] = !empty($img['nombre']) && file_exists($uploadPath . $img['nombre']);
-            $img['urlImagen']     = !empty($img['nombre']) ? base_url('imagen/imagen/' . $img['nombre']) : null;
+            $dirRuta = !empty($img['directorio_ruta']) ? trim($img['directorio_ruta'], '/\\') : 'repositorio/imagen';
+            $filePath = ROOTPATH . $dirRuta . '/' . ($img['nombre'] ?? '');
+            $fallbackPath = ROOTPATH . 'repositorio/imagen/' . ($img['nombre'] ?? '');
+            $img['archivoExiste'] = !empty($img['nombre']) && (file_exists($filePath) || file_exists($fallbackPath));
+            $img['urlImagen']     = !empty($img['nombre']) ? base_url($dirRuta . '/' . $img['nombre']) : null;
         }
 
         return $this->respond([
@@ -528,9 +530,11 @@ class GimApiController extends ResourceController
             return $this->failNotFound('Imagen no encontrada');
         }
 
-        $uploadPath = ROOTPATH . 'repositorio/imagen/';
-        $imagen['archivoExiste'] = !empty($imagen['nombre']) && file_exists($uploadPath . $imagen['nombre']);
-        $imagen['urlImagen']     = !empty($imagen['nombre']) ? base_url('imagen/imagen/' . $imagen['nombre']) : null;
+        $dirRuta = !empty($imagen['directorio_ruta']) ? trim($imagen['directorio_ruta'], '/\\') : 'repositorio/imagen';
+        $filePath = ROOTPATH . $dirRuta . '/' . ($imagen['nombre'] ?? '');
+        $fallbackPath = ROOTPATH . 'repositorio/imagen/' . ($imagen['nombre'] ?? '');
+        $imagen['archivoExiste'] = !empty($imagen['nombre']) && (file_exists($filePath) || file_exists($fallbackPath));
+        $imagen['urlImagen']     = !empty($imagen['nombre']) ? base_url($dirRuta . '/' . $imagen['nombre']) : null;
 
         return $this->respond([
             'status'  => 200,

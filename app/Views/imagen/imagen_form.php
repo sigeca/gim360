@@ -46,7 +46,7 @@
                         </label>
                         <input type="file" name="archivo_imagen" id="archivo_imagen" class="form-control" accept="image/*">
                         <div class="form-text text-muted">
-                            Se guardará físicamente en <code>repositorio/imagen/</code> con el formato de nombre automático SICA: <code>YYYYmmdd_HHiiss-00000.ext</code>.
+                            Se guardará físicamente en el directorio seleccionado (ej. <code>repositorio/imagen/</code>) con el formato de nombre automático SICA: <code>YYYYmmdd_HHiiss-00000.ext</code>.
                         </div>
                     </div>
 

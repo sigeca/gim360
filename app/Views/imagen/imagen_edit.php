@@ -45,12 +45,13 @@
                             <div class="d-flex align-items-center gap-3">
                                 <?php if (!empty($archivoExiste) && !empty($urlImagen)): ?>
                                     <img src="<?= $urlImagen ?>" 
-                                         onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($imagen['nombre'])) ?>';"
+                                         onerror="this.onerror=null; this.src='<?= !empty($urlFallback) ? $urlFallback : base_url('imagen/imagen/' . esc($imagen['nombre'])) ?>';"
                                          alt="Preview" class="rounded border shadow-sm" style="width: 54px; height: 54px; object-fit: cover;">
                                 <?php endif; ?>
                                 <div>
                                     <span class="small text-muted d-block">Nombre de Archivo Actual:</span>
                                     <strong class="font-monospace text-dark"><?= esc($imagen['nombre'] ?: 'Sin archivo') ?></strong>
+                                    <span class="d-block small text-muted font-monospace"><i class="bi bi-folder me-1"></i><?= esc($directorioRuta ?? ($imagen['directorio_ruta'] ?: 'repositorio/imagen')) ?></span>
                                 </div>
                             </div>
                             <span class="badge bg-secondary">ID #<?= $imagen['idimagen'] ?></span>
@@ -64,7 +65,7 @@
                         </label>
                         <input type="file" name="archivo_imagen" id="archivo_imagen" class="form-control" accept="image/*">
                         <div class="form-text text-muted">
-                            Si selecciona un nuevo archivo, se sobrescribirá en <code>repositorio/imagen/<?= esc($imagen['nombre']) ?></code>.
+                            Si selecciona un nuevo archivo, se guardará en su directorio configurado: <code><?= esc($directorioRuta ?? ($imagen['directorio_ruta'] ?: 'repositorio/imagen')) ?>/<?= esc($imagen['nombre']) ?></code>.
                         </div>
                     </div>
 

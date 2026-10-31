@@ -68,7 +68,12 @@ class Imagen extends BaseController
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;");
 
             @$db->query("CREATE OR REPLACE VIEW `Directorio` AS SELECT `iddirectorio`, `nombre`, `ruta`, `descripcion`, `idordenador` FROM `directorio`;");
-            @$db->query("INSERT IGNORE INTO `directorio` (`iddirectorio`, `nombre`, `ruta`, `descripcion`, `idordenador`) VALUES (1, 'Imagenes Gim360', 'repositorio/imagen', 'Directorio de almacenamiento de imágenes', 1);");
+            @$db->query("INSERT IGNORE INTO `directorio` (`iddirectorio`, `nombre`, `ruta`, `descripcion`, `idordenador`) VALUES 
+              (1, 'Imagenes Gim360', 'repositorio/imagen', 'Directorio principal de almacenamiento de imágenes', 1),
+              (2, 'Equipos', 'repositorio/images/equipment', 'Directorio de imágenes de equipos y máquinas', 1),
+              (3, 'Músculos', 'repositorio/images/muscles', 'Directorio de imágenes anatómicas de músculos', 1),
+              (4, 'Ejercicios', 'repositorio/ejercicios', 'Directorio de imágenes y animaciones de ejercicios', 1),
+              (5, 'Motivos', 'repositorio/motivos', 'Directorio de imágenes de motivos de entrenamiento', 1);");
 
             // 4. imagen
             $db->query("CREATE TABLE IF NOT EXISTS `imagen` (
@@ -95,21 +100,23 @@ class Imagen extends BaseController
     }
 
     /**
-     * Asegura que el directorio repositorio/imagen exista y tenga permisos
+     * Asegura que el directorio exista físicamente y tenga permisos de lectura/escritura
      */
-    protected function ensureUploadDirectory(): bool
+    protected function ensureUploadDirectory(?string $subDir = null): string
     {
+        $relPath = !empty($subDir) ? trim($subDir, '/\\') : 'repositorio/imagen';
+        $fullPath = ROOTPATH . $relPath . '/';
         try {
             $baseRepo = ROOTPATH . 'repositorio/';
             if (!is_dir($baseRepo)) {
                 @mkdir($baseRepo, 0777, true);
             }
 
-            if (!is_dir($this->uploadPath)) {
-                @mkdir($this->uploadPath, 0777, true);
+            if (!is_dir($fullPath)) {
+                @mkdir($fullPath, 0777, true);
             }
 
-            @chmod($this->uploadPath, 0777);
+            @chmod($fullPath, 0777);
 
             // Asegurar symlink público si aplica
             $publicRepo = FCPATH . 'repositorio';
@@ -117,17 +124,25 @@ class Imagen extends BaseController
                 @symlink('../repositorio', $publicRepo);
             }
 
-            return is_writable($this->uploadPath);
+            return $fullPath;
         } catch (\Throwable $e) {
             log_message('error', 'ensureUploadDirectory notice: ' . $e->getMessage());
-            return false;
+            return $this->uploadPath;
         }
     }
 
     /**
-     * Localiza la ruta física absoluta de un archivo en el repositorio
+     * Obtiene la ruta relativa del directorio asignado a un iddirectorio
      */
-    public function getRutaArchivo(?string $filename): ?string
+    public function getDirectorioRuta(?int $iddirectorio): string
+    {
+        return $this->directorioModel->getRutaDirectorio($iddirectorio);
+    }
+
+    /**
+     * Localiza la ruta física absoluta de un archivo en el repositorio respetando su directorio
+     */
+    public function getRutaArchivo(?string $filename, ?string $directorioRuta = null): ?string
     {
         if (empty($filename)) {
             return null;
@@ -136,14 +151,47 @@ class Imagen extends BaseController
         $cleanFilename = basename(trim($filename));
         $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
 
-        $candidates = [
-            $this->uploadPath . $cleanFilename,
-            $baseDir . '/repositorio/imagen/' . $cleanFilename,
-            $baseDir . '/repositorio/images/' . $cleanFilename,
-            $baseDir . '/repositorio/' . $cleanFilename,
-            FCPATH . 'repositorio/imagen/' . $cleanFilename,
-            FCPATH . 'repositorio/' . $cleanFilename,
-        ];
+        // Si no se proporcionó la ruta del directorio, buscar el directorio asignado en la BD
+        if (empty($directorioRuta)) {
+            try {
+                $img = $this->imagenModel->select('directorio.ruta')
+                    ->join('directorio', 'directorio.iddirectorio = imagen.iddirectorio', 'left')
+                    ->where('imagen.nombre', $cleanFilename)
+                    ->first();
+                if ($img && !empty($img['ruta'])) {
+                    $directorioRuta = $img['ruta'];
+                }
+            } catch (\Throwable $e) {
+                // Ignore
+            }
+        }
+
+        $candidates = [];
+
+        // 1. Ruta prioritaria: la del directorio configurado para la imagen
+        if (!empty($directorioRuta)) {
+            $dirClean = trim($directorioRuta, '/\\');
+            $candidates[] = $baseDir . '/' . $dirClean . '/' . $cleanFilename;
+            $candidates[] = FCPATH . $dirClean . '/' . $cleanFilename;
+            $candidates[] = ROOTPATH . $dirClean . '/' . $cleanFilename;
+
+            if (strpos($dirClean, 'repositorio') !== 0) {
+                $candidates[] = $baseDir . '/repositorio/' . $dirClean . '/' . $cleanFilename;
+                $candidates[] = FCPATH . 'repositorio/' . $dirClean . '/' . $cleanFilename;
+            }
+        }
+
+        // 2. Rutas conocidas en el repositorio como fallback
+        $candidates[] = $this->uploadPath . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/imagen/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/images/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/images/equipment/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/images/muscles/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/ejercicios/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/motivos/' . $cleanFilename;
+        $candidates[] = $baseDir . '/repositorio/' . $cleanFilename;
+        $candidates[] = FCPATH . 'repositorio/imagen/' . $cleanFilename;
+        $candidates[] = FCPATH . 'repositorio/' . $cleanFilename;
 
         foreach ($candidates as $cand) {
             if (file_exists($cand) && is_file($cand)) {
@@ -213,21 +261,31 @@ class Imagen extends BaseController
             $imagen = $first ? $this->imagenModel->getImagenWithDetails((int)$first['idimagen']) : null;
         }
 
-        $archivoExiste = false;
-        $urlImagen     = null;
+        $archivoExiste  = false;
+        $urlImagen      = null;
+        $urlFallback    = null;
+        $directorioRuta = 'repositorio/imagen';
+
         if ($imagen && !empty($imagen['nombre'])) {
-            $targetPath = $this->getRutaArchivo($imagen['nombre']);
+            if (!empty($imagen['directorio_ruta'])) {
+                $directorioRuta = trim($imagen['directorio_ruta'], '/\\');
+            }
+            $targetPath    = $this->getRutaArchivo($imagen['nombre'], $directorioRuta);
             $archivoExiste = ($targetPath !== null);
-            $cleanName = basename(trim($imagen['nombre']));
-            $urlImagen = base_url('imagen/imagen/' . $cleanName);
+            $cleanName     = basename(trim($imagen['nombre']));
+            // Se utiliza el directorio asignado a la imagen para visualizarla
+            $urlImagen     = base_url($directorioRuta . '/' . $cleanName);
+            $urlFallback   = base_url('imagen/imagen/' . $cleanName);
         }
 
         $data = [
-            'title'         => 'Ficha de Imagen' . ($imagen ? ' #' . $imagen['idimagen'] : ''),
-            'imagen'        => $imagen,
-            'archivoExiste' => $archivoExiste,
-            'urlImagen'     => $urlImagen,
-            'module'        => 'imagen',
+            'title'          => 'Ficha de Imagen' . ($imagen ? ' #' . $imagen['idimagen'] : ''),
+            'imagen'         => $imagen,
+            'archivoExiste'  => $archivoExiste,
+            'urlImagen'      => $urlImagen,
+            'urlFallback'    => $urlFallback,
+            'directorioRuta' => $directorioRuta,
+            'module'         => 'imagen',
         ];
 
         return view('imagen/imagen_record', $data);
@@ -266,9 +324,14 @@ class Imagen extends BaseController
         $imagenes = $this->imagenModel->getImagenes($search);
 
         foreach ($imagenes as &$img) {
-            $imgExiste = !empty($img['nombre']) && ($this->getRutaArchivo($img['nombre']) !== null);
-            $img['archivoExiste'] = $imgExiste;
-            $img['urlImagen']     = !empty($img['nombre']) ? base_url('imagen/imagen/' . basename(trim($img['nombre']))) : null;
+            $dirRuta = !empty($img['directorio_ruta']) ? trim($img['directorio_ruta'], '/\\') : 'repositorio/imagen';
+            $imgExiste = !empty($img['nombre']) && ($this->getRutaArchivo($img['nombre'], $dirRuta) !== null);
+            $img['archivoExiste']   = $imgExiste;
+            $img['directorio_ruta'] = $dirRuta;
+            $cleanName              = !empty($img['nombre']) ? basename(trim($img['nombre'])) : '';
+            // Se utiliza el directorio configurado para visualizar la imagen
+            $img['urlImagen']       = !empty($cleanName) ? base_url($dirRuta . '/' . $cleanName) : null;
+            $img['urlFallback']     = !empty($cleanName) ? base_url('imagen/imagen/' . $cleanName) : null;
         }
 
         $data = [
@@ -306,7 +369,6 @@ class Imagen extends BaseController
     {
         date_default_timezone_set('America/Guayaquil');
         $this->ensureTables();
-        $this->ensureUploadDirectory();
 
         $file = $this->request->getFile('archivo_imagen');
         $idformato = $this->request->getPost('idformatoimagen') ? (int)$this->request->getPost('idformatoimagen') : null;
@@ -342,6 +404,8 @@ class Imagen extends BaseController
 
         $idordenador = $this->request->getPost('idordenador') ? (int)$this->request->getPost('idordenador') : 1;
         $iddirectorio = $this->request->getPost('iddirectorio') ? (int)$this->request->getPost('iddirectorio') : 1;
+        $dirRuta = $this->directorioModel->getRutaDirectorio($iddirectorio);
+        $targetUploadPath = $this->ensureUploadDirectory($dirRuta);
 
         $fechacaptura = $this->request->getPost('fechacaptura');
         if (empty($fechacaptura)) {
@@ -381,14 +445,14 @@ class Imagen extends BaseController
             log_message('error', 'Error al actualizar nombre de imagen: ' . $e->getMessage());
         }
 
-        // Mover archivo si fue subido
+        // Mover archivo si fue subido en el directorio correspondiente
         if ($file && $file->isValid() && !$file->hasMoved()) {
             try {
-                $file->move($this->uploadPath, $filename, true);
+                $file->move($targetUploadPath, $filename, true);
             } catch (\Throwable $e) {
-                log_message('error', 'Aviso al mover archivo en la nube: ' . $e->getMessage());
+                log_message('error', 'Aviso al mover archivo en directorio: ' . $e->getMessage());
                 return redirect()->to(base_url('imagen/actual/' . $id))
-                    ->with('warning', 'Registro guardado como #' . $id . ', pero verifique los permisos de escritura en la carpeta repositorio/imagen/.');
+                    ->with('warning', 'Registro guardado como #' . $id . ', pero verifique los permisos de escritura en la carpeta ' . $dirRuta . '/.');
             }
         }
 
@@ -402,23 +466,28 @@ class Imagen extends BaseController
     {
         $this->ensureTables();
 
-        $imagen = $this->imagenModel->find($id);
+        $imagen = $this->imagenModel->getImagenWithDetails((int)$id);
         if (!$imagen) {
             throw PageNotFoundException::forPageNotFound('Imagen no encontrada.');
         }
 
-        $archivoExiste = !empty($imagen['nombre']) && ($this->getRutaArchivo($imagen['nombre']) !== null);
-        $urlImagen = !empty($imagen['nombre']) ? base_url('imagen/imagen/' . basename(trim($imagen['nombre']))) : null;
+        $directorioRuta = !empty($imagen['directorio_ruta']) ? trim($imagen['directorio_ruta'], '/\\') : 'repositorio/imagen';
+        $archivoExiste  = !empty($imagen['nombre']) && ($this->getRutaArchivo($imagen['nombre'], $directorioRuta) !== null);
+        $cleanName      = !empty($imagen['nombre']) ? basename(trim($imagen['nombre'])) : '';
+        $urlImagen      = !empty($cleanName) ? base_url($directorioRuta . '/' . $cleanName) : null;
+        $urlFallback    = !empty($cleanName) ? base_url('imagen/imagen/' . $cleanName) : null;
 
         $data = [
-            'title'         => 'Editar Imagen #' . $imagen['idimagen'],
-            'imagen'        => $imagen,
-            'archivoExiste' => $archivoExiste,
-            'urlImagen'     => $urlImagen,
-            'formatos'      => $this->formatoModel->getFormatos(),
-            'ordenadores'   => $this->ordenadorModel->getOrdenadores(),
-            'directorios'   => $this->directorioModel->getDirectorios(),
-            'module'        => 'imagen',
+            'title'          => 'Editar Imagen #' . $imagen['idimagen'],
+            'imagen'         => $imagen,
+            'archivoExiste'  => $archivoExiste,
+            'urlImagen'      => $urlImagen,
+            'urlFallback'    => $urlFallback,
+            'directorioRuta' => $directorioRuta,
+            'formatos'       => $this->formatoModel->getFormatos(),
+            'ordenadores'    => $this->ordenadorModel->getOrdenadores(),
+            'directorios'    => $this->directorioModel->getDirectorios(),
+            'module'         => 'imagen',
         ];
 
         return view('imagen/imagen_edit', $data);
@@ -429,13 +498,16 @@ class Imagen extends BaseController
      */
     public function update($id)
     {
-        $imagen = $this->imagenModel->find($id);
+        $imagen = $this->imagenModel->getImagenWithDetails((int)$id);
         if (!$imagen) {
             return redirect()->to(base_url('imagen'))->with('error', 'Imagen no encontrada.');
         }
 
         date_default_timezone_set('America/Guayaquil');
-        $this->ensureUploadDirectory();
+
+        $iddirectorio = $this->request->getPost('iddirectorio') ? (int)$this->request->getPost('iddirectorio') : (int)($imagen['iddirectorio'] ?? 1);
+        $dirRuta = $this->directorioModel->getRutaDirectorio($iddirectorio);
+        $targetUploadPath = $this->ensureUploadDirectory($dirRuta);
 
         $file = $this->request->getFile('archivo_imagen');
         $idformato = $this->request->getPost('idformatoimagen') ? (int)$this->request->getPost('idformatoimagen') : $imagen['idformatoimagen'];
@@ -448,7 +520,7 @@ class Imagen extends BaseController
                 $filename = $this->imagenModel->generarNombreSica((int)$id, $extension);
             }
             try {
-                $file->move($this->uploadPath, $filename, true);
+                $file->move($targetUploadPath, $filename, true);
             } catch (\Throwable $e) {
                 log_message('error', 'Error al mover archivo reemplazado: ' . $e->getMessage());
             }
@@ -467,7 +539,7 @@ class Imagen extends BaseController
             'palabrasclave'   => $this->request->getPost('palabrasclave'),
             'licencia'        => $this->request->getPost('licencia'),
             'idordenador'     => $this->request->getPost('idordenador') ? (int)$this->request->getPost('idordenador') : $imagen['idordenador'],
-            'iddirectorio'    => $this->request->getPost('iddirectorio') ? (int)$this->request->getPost('iddirectorio') : $imagen['iddirectorio'],
+            'iddirectorio'    => $iddirectorio,
         ];
 
         try {
@@ -484,7 +556,7 @@ class Imagen extends BaseController
      */
     public function upload($id)
     {
-        $imagen = $this->imagenModel->find($id);
+        $imagen = $this->imagenModel->getImagenWithDetails((int)$id);
         if (!$imagen) {
             if ($this->request->isAJAX()) {
                 return $this->response->setJSON(['status' => 'error', 'message' => 'Imagen no encontrada.'])->setStatusCode(404);
@@ -492,7 +564,9 @@ class Imagen extends BaseController
             return redirect()->to(base_url('imagen'))->with('error', 'Imagen no encontrada.');
         }
 
-        $this->ensureUploadDirectory();
+        $iddirectorio = (int)($imagen['iddirectorio'] ?? 1);
+        $dirRuta = $this->directorioModel->getRutaDirectorio($iddirectorio);
+        $targetUploadPath = $this->ensureUploadDirectory($dirRuta);
 
         $file = $this->request->getFile('archivo_imagen') ?: $this->request->getFile('file');
 
@@ -514,7 +588,7 @@ class Imagen extends BaseController
         }
 
         try {
-            $file->move($this->uploadPath, $filename, true);
+            $file->move($targetUploadPath, $filename, true);
         } catch (\Throwable $e) {
             $msg = 'Error al guardar archivo en el servidor: ' . $e->getMessage();
             if ($this->request->isAJAX()) {
@@ -528,12 +602,12 @@ class Imagen extends BaseController
                 'status'    => 'success',
                 'message'   => 'Imagen subida correctamente.',
                 'filename'  => $filename,
-                'url'       => base_url('imagen/imagen/' . $filename),
-                'repoUrl'   => base_url('repositorio/imagen/' . $filename),
+                'url'       => base_url($dirRuta . '/' . $filename),
+                'repoUrl'   => base_url($dirRuta . '/' . $filename),
             ]);
         }
 
-        return redirect()->to(base_url('imagen/actual/' . $id))->with('success', 'Archivo de imagen subido y guardado exitosamente.');
+        return redirect()->to(base_url('imagen/actual/' . $id))->with('success', 'Archivo de imagen subido y guardado exitosamente en ' . $dirRuta . '/.');
     }
 
     /**
@@ -541,17 +615,20 @@ class Imagen extends BaseController
      */
     public function delete($id)
     {
-        $imagen = $this->imagenModel->find($id);
+        $imagen = $this->imagenModel->getImagenWithDetails((int)$id);
         if (!$imagen) {
             return redirect()->to(base_url('imagen'))->with('error', 'Imagen no encontrada.');
         }
 
         try {
-            // Eliminar archivo físico si existe en repositorio/imagen/
+            // Eliminar archivo físico si existe en el directorio asignado o repositorio/imagen/
             if (!empty($imagen['nombre'])) {
-                $filePath = $this->uploadPath . $imagen['nombre'];
+                $dirRuta = !empty($imagen['directorio_ruta']) ? trim($imagen['directorio_ruta'], '/\\') : 'repositorio/imagen';
+                $filePath = ROOTPATH . $dirRuta . '/' . $imagen['nombre'];
                 if (file_exists($filePath)) {
                     @unlink($filePath);
+                } elseif (file_exists($this->uploadPath . $imagen['nombre'])) {
+                    @unlink($this->uploadPath . $imagen['nombre']);
                 }
             }
 

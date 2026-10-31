@@ -60,7 +60,7 @@
                                 <?php if ($archivoExiste && !empty($urlImagen)): ?>
                                     <div class="position-relative d-inline-block w-100 mb-2">
                                         <img src="<?= $urlImagen ?>" 
-                                             onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($imagen['nombre'])) ?>';"
+                                             onerror="this.onerror=null; this.src='<?= !empty($urlFallback) ? $urlFallback : base_url('imagen/imagen/' . esc($imagen['nombre'])) ?>';"
                                              alt="<?= esc($imagen['nombre']) ?>" 
                                              class="img-fluid rounded-3 shadow-sm border" 
                                              style="max-height: 280px; width: auto; object-fit: contain;">
@@ -77,7 +77,7 @@
                                     <div class="py-5 text-center text-muted bg-white rounded-3 border border-dashed">
                                         <i class="bi bi-image-alt fs-1 d-block mb-2 text-secondary"></i>
                                         <span class="d-block fw-semibold text-secondary">No hay archivo en disco</span>
-                                        <small class="text-muted d-block mt-1">Ubicación esperada: <code>repositorio/imagen/<?= esc($imagen['nombre']) ?></code></small>
+                                        <small class="text-muted d-block mt-1">Ubicación esperada: <code><?= esc($directorioRuta ?? ($imagen['directorio_ruta'] ?: 'repositorio/imagen')) ?>/<?= esc($imagen['nombre']) ?></code></small>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -96,7 +96,7 @@
                                             <input type="file" name="archivo_imagen" id="archivo_imagen" class="form-control form-control-sm" accept="image/*" required>
                                         </div>
                                         <button type="submit" class="btn btn-primary btn-sm w-100">
-                                            <i class="bi bi-upload me-1"></i> Guardar en repositorio/imagen
+                                            <i class="bi bi-upload me-1"></i> Guardar en <?= esc($directorioRuta ?? ($imagen['directorio_ruta'] ?: 'repositorio/imagen')) ?>
                                         </button>
                                     </form>
                                 </div>
@@ -208,7 +208,7 @@
 
                 <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center">
                     <span class="small text-muted">
-                        <i class="bi bi-info-circle me-1"></i>Las imágenes se sincronizan directamente en el directorio físico <code>repositorio/imagen/</code>.
+                        <i class="bi bi-info-circle me-1"></i>Las imágenes se sincronizan directamente en el directorio físico asignado: <code><?= esc($directorioRuta ?? ($imagen['directorio_ruta'] ?: 'repositorio/imagen')) ?>/</code>.
                     </span>
                     <a href="<?= base_url('imagen/add') ?>" class="btn btn-sm btn-outline-success">
                         <i class="bi bi-plus-circle me-1"></i>Registrar otra imagen

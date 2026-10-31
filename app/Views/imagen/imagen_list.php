@@ -12,7 +12,7 @@
                     <h4 class="fw-bold text-dark mb-1 d-flex align-items-center">
                         <i class="bi bi-images text-primary me-2 fs-3"></i>Catálogo de Imágenes
                     </h4>
-                    <p class="text-muted small mb-0">Gestión de imágenes y archivos multimedia almacenados en <code>repositorio/imagen/</code> con nomenclatura SICA.</p>
+                    <p class="text-muted small mb-0">Gestión de imágenes y archivos multimedia organizados por su directorio de almacenamiento con nomenclatura SICA.</p>
                 </div>
 
                 <div class="d-flex flex-wrap align-items-center gap-2">
@@ -57,6 +57,7 @@
                             <th class="ps-4" style="width: 70px;">ID</th>
                             <th style="width: 90px;">Miniatura</th>
                             <th>Nombre de Archivo</th>
+                            <th>Directorio</th>
                             <th>Formato</th>
                             <th>Descripción</th>
                             <th>Fecha Captura</th>
@@ -67,7 +68,7 @@
                     <tbody>
                         <?php if (empty($imagenes)): ?>
                             <tr>
-                                <td colspan="8" class="text-center py-5 text-muted">
+                                <td colspan="9" class="text-center py-5 text-muted">
                                     <i class="bi bi-image fs-1 d-block mb-2 text-secondary"></i>
                                     No se encontraron imágenes registradas en el sistema.
                                     <div class="mt-3">
@@ -84,7 +85,7 @@
                                     <td>
                                         <?php if ($img['archivoExiste'] && !empty($img['urlImagen'])): ?>
                                             <img src="<?= $img['urlImagen'] ?>" 
-                                                 onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($img['nombre'])) ?>';"
+                                                 onerror="this.onerror=null; this.src='<?= !empty($img['urlFallback']) ? $img['urlFallback'] : base_url('imagen/imagen/' . esc($img['nombre'])) ?>';"
                                                  alt="Thumb" class="rounded border shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
                                         <?php else: ?>
                                             <div class="rounded bg-light border d-flex align-items-center justify-content-center text-muted" style="width: 50px; height: 50px;">
@@ -99,6 +100,12 @@
                                         <?php if (!empty($img['licencia'])): ?>
                                             <span class="d-block text-muted small" style="font-size: 0.75rem;"><?= esc($img['licencia']) ?></span>
                                         <?php endif; ?>
+                                    </td>
+                                    <td>
+                                        <span class="d-inline-flex align-items-center gap-1 small">
+                                            <i class="bi bi-folder text-warning"></i>
+                                            <code class="text-dark"><?= esc($img['directorio_ruta'] ?: 'repositorio/imagen') ?></code>
+                                        </span>
                                     </td>
                                     <td>
                                         <?php if (!empty($img['formato_nombre'])): ?>
