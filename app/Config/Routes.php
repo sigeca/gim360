@@ -342,6 +342,10 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('planalimentacion/(:num)/comidas', 'GimApiController::getPlanComidas/$1');
     $routes->post('comida', 'GimApiController::guardarComida');
     $routes->delete('comida/(:num)', 'GimApiController::eliminarComida/$1');
+    $routes->get('planalimentacion/(:num)/cumplimientos', 'GimApiController::getPlanCumplimientos/$1');
+    $routes->get('cumplimientosplan/(:num)', 'GimApiController::getPlanCumplimientos/$1');
+    $routes->post('cumplimientoplanalimentacion', 'GimApiController::guardarCumplimientoPlan');
+    $routes->delete('cumplimientoplanalimentacion/(:num)', 'GimApiController::eliminarCumplimientoPlan/$1');
 
     // Programas y Rutinas de Entrenamiento
     $routes->get('programas', 'GimApiController::getProgramas');

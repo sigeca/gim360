@@ -797,6 +797,9 @@ class GimApiController extends ResourceController
         }
         $plan['comidas'] = $comidas;
 
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $plan['cumplimientos'] = $cumplimientoModel->getCumplimientosByPlan((int)$id);
+
         return $this->respond([
             'status'  => 200,
             'message' => 'Detalle del plan de alimentación obtenido correctamente',
@@ -1453,6 +1456,7 @@ class GimApiController extends ResourceController
 
         $id = $comidaModel->insert([
             'idplanalimentacion' => (int)$json['idplanalimentacion'],
+            'iddiasemana'        => isset($json['iddiasemana']) ? ((int)$json['iddiasemana'] ?: 1) : 1,
             'idtipocomida'       => (int)$json['idtipocomida'],
             'idreceta'           => (int)$json['idreceta'],
             'horarecomendada'    => isset($json['horarecomendada']) ? (trim($json['horarecomendada']) ?: null) : null,
@@ -1489,6 +1493,90 @@ class GimApiController extends ResourceController
             'status'  => 200,
             'message' => 'Comida eliminada del plan exitosamente',
             'data'    => ['idcomida' => $id],
+        ]);
+    }
+
+    /**
+     * GET /api/planalimentacion/{id}/cumplimientos
+     */
+    public function getPlanCumplimientos($idplan = null)
+    {
+        if (empty($idplan)) {
+            return $this->failNotFound('ID de plan de alimentación no proporcionado');
+        }
+
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $cumplimientos = $cumplimientoModel->getCumplimientosByPlan((int)$idplan);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Cumplimientos del plan obtenidos correctamente',
+            'data'    => $cumplimientos,
+            'total'   => count($cumplimientos),
+        ]);
+    }
+
+    /**
+     * POST /api/cumplimientoplanalimentacion
+     */
+    public function guardarCumplimientoPlan()
+    {
+        $json = $this->request->getJSON(true) ?: $this->request->getPost();
+        if (empty($json)) {
+            return $this->failValidationErrors('Datos no proporcionados');
+        }
+
+        $idPlan = (int)($json['idplanalimentacion'] ?? 0);
+        $idComida = (int)($json['idcomida'] ?? 0);
+        $fechaHora = !empty($json['fechahora']) ? trim($json['fechahora']) : date('Y-m-d H:i:s');
+
+        if (!$idPlan || !$idComida) {
+            return $this->failValidationErrors('Plan y comida son requeridos');
+        }
+
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $data = [
+            'idplanalimentacion' => $idPlan,
+            'idcomida'           => $idComida,
+            'fechahora'          => $fechaHora,
+        ];
+
+        if (!$cumplimientoModel->validate($data)) {
+            return $this->failValidationErrors($cumplimientoModel->errors());
+        }
+
+        $id = $cumplimientoModel->insert($data);
+        $nuevo = $cumplimientoModel->getCumplimientoWithDetails($id);
+
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Consumo de comida registrado exitosamente',
+            'data'    => $nuevo,
+        ]);
+    }
+
+    /**
+     * DELETE /api/cumplimientoplanalimentacion/{id}
+     */
+    public function eliminarCumplimientoPlan($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID no proporcionado');
+        }
+
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $existente = $cumplimientoModel->find($id);
+
+        if (!$existente) {
+            return $this->failNotFound("Registro de cumplimiento no encontrado con ID: {$id}");
+        }
+
+        $cumplimientoModel->delete($id);
+
+        return $this->respondDeleted([
+            'status'  => 200,
+            'message' => 'Registro de cumplimiento eliminado exitosamente',
+            'data'    => ['idcumplimientoplanalimentacion' => $id],
         ]);
     }
 
