@@ -201,7 +201,8 @@
                             <table class="table table-hover align-middle mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th class="ps-4">Hora</th>
+                                        <th class="ps-4">Día Semana</th>
+                                        <th>Hora</th>
                                         <th>Momento / Tipo</th>
                                         <th>Receta Asignada</th>
                                         <th>Porciones</th>
@@ -212,13 +213,18 @@
                                 <tbody>
                                     <?php foreach ($comidas as $cm): ?>
                                         <tr>
-                                            <td class="ps-4 fw-bold text-dark">
+                                            <td class="ps-4">
+                                                <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1 fw-semibold">
+                                                    <i class="bi bi-calendar3 me-1"></i><?= esc($cm['diasemana_nombre'] ?? 'Lunes') ?>
+                                                </span>
+                                            </td>
+                                            <td class="fw-bold text-dark">
                                                 <?php if (!empty($cm['horarecomendada'])): ?>
-                                                    <span class="badge bg-primary text-white font-monospace">
+                                                    <span class="badge bg-secondary text-white font-monospace">
                                                         <i class="bi bi-alarm-fill me-1"></i><?= substr($cm['horarecomendada'], 0, 5) ?>
                                                     </span>
                                                 <?php else: ?>
-                                                    <span class="badge bg-secondary">Flexible</span>
+                                                    <span class="badge bg-light text-muted border">Flexible</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>

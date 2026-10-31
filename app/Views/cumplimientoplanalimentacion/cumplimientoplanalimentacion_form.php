@@ -68,9 +68,10 @@
                                 <?php 
                                     $currComida = old('idcomida', $preselectedComida ?? '');
                                     foreach ($comidas as $cm): 
+                                        $diaPref = !empty($cm['diasemana_nombre']) ? '[' . $cm['diasemana_nombre'] . '] ' : '';
                                 ?>
                                     <option value="<?= $cm['idcomida'] ?>" <?= ((string)$currComida === (string)$cm['idcomida']) ? 'selected' : '' ?>>
-                                        <?= esc($cm['tipocomida_nombre']) ?>: <?= esc($cm['receta_nombre']) ?> <?= !empty($cm['horarecomendada']) ? '(' . substr($cm['horarecomendada'], 0, 5) . ')' : '' ?>
+                                        <?= esc($diaPref . $cm['tipocomida_nombre']) ?>: <?= esc($cm['receta_nombre']) ?> <?= !empty($cm['horarecomendada']) ? '(' . substr($cm['horarecomendada'], 0, 5) . ')' : '' ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
@@ -146,8 +147,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         data.forEach(item => {
                             const opt = document.createElement('option');
                             opt.value = item.idcomida;
+                            const dia = item.diasemana_nombre ? '[' + item.diasemana_nombre + '] ' : '';
                             const hora = item.horarecomendada ? ' (' + item.horarecomendada.substring(0, 5) + ')' : '';
-                            opt.textContent = item.tipocomida_nombre + ': ' + item.receta_nombre + hora;
+                            opt.textContent = dia + item.tipocomida_nombre + ': ' + item.receta_nombre + hora;
                             comidaSelect.appendChild(opt);
                         });
                     }

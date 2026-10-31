@@ -60,6 +60,14 @@
                                         </td>
                                     </tr>
                                     <tr>
+                                        <th class="table-light text-muted">Día de la Semana</th>
+                                        <td>
+                                            <span class="badge bg-primary-subtle text-primary border border-primary px-3 py-1 fs-6">
+                                                <i class="bi bi-calendar3 me-1"></i><?= esc($comida['diasemana_nombre'] ?? 'Lunes') ?>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    <tr>
                                         <th class="table-light text-muted">Tipo / Momento</th>
                                         <td>
                                             <span class="badge bg-warning-subtle text-dark border border-warning px-3 py-1 fs-6">

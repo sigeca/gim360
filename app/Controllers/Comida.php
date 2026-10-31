@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\ComidaModel;
 use App\Models\PlanAlimentacionModel;
+use App\Models\DiaSemanaModel;
 use App\Models\TipoComidaModel;
 use App\Models\RecetaModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
@@ -12,6 +13,7 @@ class Comida extends BaseController
 {
     protected ComidaModel $comidaModel;
     protected PlanAlimentacionModel $planModel;
+    protected DiaSemanaModel $diaSemanaModel;
     protected TipoComidaModel $tipoComidaModel;
     protected RecetaModel $recetaModel;
 
@@ -19,6 +21,7 @@ class Comida extends BaseController
     {
         $this->comidaModel     = new ComidaModel();
         $this->planModel       = new PlanAlimentacionModel();
+        $this->diaSemanaModel  = new DiaSemanaModel();
         $this->tipoComidaModel = new TipoComidaModel();
         $this->recetaModel     = new RecetaModel();
     }
@@ -74,15 +77,18 @@ class Comida extends BaseController
     {
         $search       = $this->request->getGet('q');
         $idplan       = $this->request->getGet('idplanalimentacion');
+        $iddiasemana  = $this->request->getGet('iddiasemana');
         $idtipocomida = $this->request->getGet('idtipocomida');
         $idreceta     = $this->request->getGet('idreceta');
 
         $idplan       = (!empty($idplan) && is_numeric($idplan)) ? (int)$idplan : null;
+        $iddiasemana  = (!empty($iddiasemana) && is_numeric($iddiasemana)) ? (int)$iddiasemana : null;
         $idtipocomida = (!empty($idtipocomida) && is_numeric($idtipocomida)) ? (int)$idtipocomida : null;
         $idreceta     = (!empty($idreceta) && is_numeric($idreceta)) ? (int)$idreceta : null;
 
-        $comidas = $this->comidaModel->getRecordsWithDetails($search, $idplan, $idtipocomida, $idreceta);
+        $comidas = $this->comidaModel->getRecordsWithDetails($search, $idplan, $idtipocomida, $idreceta, $iddiasemana);
         $planes  = $this->planModel->orderBy('nombre', 'ASC')->findAll();
+        $dias    = $this->diaSemanaModel->orderBy('iddiasemana', 'ASC')->findAll();
         $tipos   = $this->tipoComidaModel->orderBy('idtipocomida', 'ASC')->findAll();
         $recetas = $this->recetaModel->orderBy('nombre', 'ASC')->findAll();
 
@@ -90,10 +96,12 @@ class Comida extends BaseController
             'title'                => 'Catálogo de Comidas en Planes',
             'comidas'              => $comidas,
             'planes'               => $planes,
+            'dias'                 => $dias,
             'tipos'                => $tipos,
             'recetas'              => $recetas,
             'search'               => $search,
             'selectedPlan'         => $idplan,
+            'selectedDia'          => $iddiasemana,
             'selectedTipo'         => $idtipocomida,
             'selectedReceta'       => $idreceta,
             'module'               => 'comida',
@@ -105,13 +113,16 @@ class Comida extends BaseController
     public function add()
     {
         $idplanPre = $this->request->getGet('idplanalimentacion');
+        $iddiaPre  = $this->request->getGet('iddiasemana') ?? 1;
 
         $data = [
             'title'          => 'Programar Comida en Plan',
             'planes'         => $this->planModel->orderBy('nombre', 'ASC')->findAll(),
+            'dias'           => $this->diaSemanaModel->orderBy('iddiasemana', 'ASC')->findAll(),
             'tipos'          => $this->tipoComidaModel->orderBy('idtipocomida', 'ASC')->findAll(),
             'recetas'        => $this->recetaModel->orderBy('nombre', 'ASC')->findAll(),
             'preselectedPlan'=> $idplanPre,
+            'preselectedDia' => $iddiaPre,
             'module'         => 'comida',
         ];
 
@@ -122,6 +133,7 @@ class Comida extends BaseController
     {
         $rules = [
             'idplanalimentacion' => 'required|is_natural_no_zero|is_not_unique[planalimentacion.idplanalimentacion]',
+            'iddiasemana'        => 'required|is_natural_no_zero|is_not_unique[diasemana.iddiasemana]',
             'idtipocomida'       => 'required|is_natural_no_zero|is_not_unique[tipocomida.idtipocomida]',
             'idreceta'           => 'required|is_natural_no_zero|is_not_unique[receta.idreceta]',
             'horarecomendada'    => 'permit_empty',
@@ -131,7 +143,12 @@ class Comida extends BaseController
             'idplanalimentacion' => [
                 'required'           => 'Debe seleccionar un plan de alimentación.',
                 'is_natural_no_zero' => 'Seleccione un plan válido.',
-                'is_not_unique'      => 'El plan de alimentación seleccionado no existe.',
+                'is_not_unique'      => 'El plan seleccionado no existe.',
+            ],
+            'iddiasemana' => [
+                'required'           => 'Debe seleccionar el día de la semana.',
+                'is_natural_no_zero' => 'Seleccione un día válido.',
+                'is_not_unique'      => 'El día de la semana seleccionado no existe.',
             ],
             'idtipocomida' => [
                 'required'           => 'Debe seleccionar un tipo de comida.',
@@ -141,7 +158,7 @@ class Comida extends BaseController
             'idreceta' => [
                 'required'           => 'Debe seleccionar una receta.',
                 'is_natural_no_zero' => 'Seleccione una receta válida.',
-                'is_not_unique'      => 'La receta seleccionada no existe.',
+                'is_not_unique'      => 'La receta no existe.',
             ],
         ];
 
@@ -153,6 +170,7 @@ class Comida extends BaseController
 
         $id = $this->comidaModel->insert([
             'idplanalimentacion' => (int)$this->request->getPost('idplanalimentacion'),
+            'iddiasemana'        => (int)$this->request->getPost('iddiasemana'),
             'idtipocomida'       => (int)$this->request->getPost('idtipocomida'),
             'idreceta'           => (int)$this->request->getPost('idreceta'),
             'horarecomendada'    => $hora,
@@ -177,6 +195,7 @@ class Comida extends BaseController
             'title'   => 'Editar Comida #' . $comida['idcomida'],
             'comida'  => $comida,
             'planes'  => $this->planModel->orderBy('nombre', 'ASC')->findAll(),
+            'dias'    => $this->diaSemanaModel->orderBy('iddiasemana', 'ASC')->findAll(),
             'tipos'   => $this->tipoComidaModel->orderBy('idtipocomida', 'ASC')->findAll(),
             'recetas' => $this->recetaModel->orderBy('nombre', 'ASC')->findAll(),
             'module'  => 'comida',
@@ -194,6 +213,7 @@ class Comida extends BaseController
 
         $rules = [
             'idplanalimentacion' => 'required|is_natural_no_zero|is_not_unique[planalimentacion.idplanalimentacion]',
+            'iddiasemana'        => 'required|is_natural_no_zero|is_not_unique[diasemana.iddiasemana]',
             'idtipocomida'       => 'required|is_natural_no_zero|is_not_unique[tipocomida.idtipocomida]',
             'idreceta'           => 'required|is_natural_no_zero|is_not_unique[receta.idreceta]',
             'horarecomendada'    => 'permit_empty',
@@ -204,6 +224,11 @@ class Comida extends BaseController
                 'required'           => 'Debe seleccionar un plan de alimentación.',
                 'is_natural_no_zero' => 'Seleccione un plan válido.',
                 'is_not_unique'      => 'El plan seleccionado no existe.',
+            ],
+            'iddiasemana' => [
+                'required'           => 'Debe seleccionar el día de la semana.',
+                'is_natural_no_zero' => 'Seleccione un día válido.',
+                'is_not_unique'      => 'El día de la semana seleccionado no existe.',
             ],
             'idtipocomida' => [
                 'required'           => 'Debe seleccionar un tipo de comida.',
@@ -225,6 +250,7 @@ class Comida extends BaseController
 
         $this->comidaModel->update($id, [
             'idplanalimentacion' => (int)$this->request->getPost('idplanalimentacion'),
+            'iddiasemana'        => (int)$this->request->getPost('iddiasemana'),
             'idtipocomida'       => (int)$this->request->getPost('idtipocomida'),
             'idreceta'           => (int)$this->request->getPost('idreceta'),
             'horarecomendada'    => $hora,
@@ -236,7 +262,12 @@ class Comida extends BaseController
     public function delete($id)
     {
         $comida = $this->comidaModel->find($id);
+        $fromPlan = $this->request->getGet('from_plan') ?? $this->request->getPost('from_plan');
+
         if (!$comida) {
+            if ($fromPlan) {
+                return redirect()->back()->with('error', 'Comida no encontrada.');
+            }
             return redirect()->to(base_url('comida'))->with('error', 'Comida no encontrada.');
         }
 
@@ -245,7 +276,6 @@ class Comida extends BaseController
         try {
             $this->comidaModel->delete($id);
 
-            $fromPlan = $this->request->getGet('from_plan');
             if ($fromPlan) {
                 return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', 'Comida removida del plan.');
             }
@@ -254,6 +284,9 @@ class Comida extends BaseController
             $targetUrl = $first ? 'comida/actual/' . $first['idcomida'] : 'comida';
             return redirect()->to(base_url($targetUrl))->with('success', 'Comida eliminada exitosamente.');
         } catch (\Exception $e) {
+            if ($fromPlan) {
+                return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('error', 'No se puede eliminar la comida: ' . $e->getMessage());
+            }
             return redirect()->to(base_url('comida/actual/' . $id))->with('error', 'No se puede eliminar la comida: ' . $e->getMessage());
         }
     }

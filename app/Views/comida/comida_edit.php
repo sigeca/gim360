@@ -52,6 +52,27 @@
                         </div>
                     </div>
 
+                    <!-- Día de la Semana -->
+                    <div class="mb-3">
+                        <label for="iddiasemana" class="form-label fw-bold">
+                            Día de la Semana <span class="text-danger">*</span>
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-calendar3 text-primary"></i></span>
+                            <select name="iddiasemana" id="iddiasemana" class="form-select <?= session('errors.iddiasemana') ? 'is-invalid' : '' ?>" required>
+                                <option value="">-- Seleccione el día de la semana --</option>
+                                <?php 
+                                    $currDia = old('iddiasemana', $comida['iddiasemana'] ?? 1);
+                                    foreach ($dias as $d): 
+                                ?>
+                                    <option value="<?= $d['iddiasemana'] ?>" <?= ((string)$currDia === (string)$d['iddiasemana']) ? 'selected' : '' ?>>
+                                        <?= esc($d['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                    </div>
+
                     <!-- Tipo / Momento de Comida -->
                     <div class="mb-3">
                         <label for="idtipocomida" class="form-label fw-bold">

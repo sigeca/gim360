@@ -14,6 +14,7 @@ class ComidaModel extends Model
     protected $returnType       = 'array';
     protected $allowedFields    = [
         'idplanalimentacion',
+        'iddiasemana',
         'idtipocomida',
         'idreceta',
         'horarecomendada',
@@ -21,6 +22,7 @@ class ComidaModel extends Model
 
     protected $validationRules = [
         'idplanalimentacion' => 'required|is_natural_no_zero|is_not_unique[planalimentacion.idplanalimentacion]',
+        'iddiasemana'        => 'permit_empty|is_natural_no_zero|is_not_unique[diasemana.iddiasemana]',
         'idtipocomida'       => 'required|is_natural_no_zero|is_not_unique[tipocomida.idtipocomida]',
         'idreceta'           => 'required|is_natural_no_zero|is_not_unique[receta.idreceta]',
         'horarecomendada'    => 'permit_empty',
@@ -31,6 +33,10 @@ class ComidaModel extends Model
             'required'           => 'Debe seleccionar un plan de alimentación.',
             'is_natural_no_zero' => 'Seleccione un plan válido.',
             'is_not_unique'      => 'El plan de alimentación seleccionado no existe.',
+        ],
+        'iddiasemana' => [
+            'is_natural_no_zero' => 'Día de la semana seleccionado no válido.',
+            'is_not_unique'      => 'El día de la semana no existe en el sistema.',
         ],
         'idtipocomida' => [
             'required'           => 'Debe seleccionar un tipo de comida.',
@@ -46,13 +52,16 @@ class ComidaModel extends Model
 
     /**
      * Obtiene las comidas asignadas a un plan de alimentación específico
+     * ordenadas cronológicamente por día de la semana y hora recomendada
      */
     public function getComidasByPlan(int $idplan): array
     {
-        return $this->select('comida.*, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
-                    ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'inner')
-                    ->join('receta r', 'r.idreceta = comida.idreceta', 'inner')
+        return $this->select('comida.*, ds.nombre AS diasemana_nombre, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
+                    ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')
+                    ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'left')
+                    ->join('receta r', 'r.idreceta = comida.idreceta', 'left')
                     ->where('comida.idplanalimentacion', $idplan)
+                    ->orderBy('comida.iddiasemana', 'ASC')
                     ->orderBy('comida.horarecomendada', 'ASC')
                     ->orderBy('comida.idtipocomida', 'ASC')
                     ->findAll();
@@ -63,11 +72,12 @@ class ComidaModel extends Model
      */
     public function getRecordWithDetails(int $id): ?array
     {
-        return $this->select('comida.*, pa.nombre AS plan_nombre, pa.idpersona, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
+        return $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, pa.idpersona, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
                     ->join('planalimentacion pa', 'pa.idplanalimentacion = comida.idplanalimentacion', 'inner')
                     ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
-                    ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'inner')
-                    ->join('receta r', 'r.idreceta = comida.idreceta', 'inner')
+                    ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')
+                    ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'left')
+                    ->join('receta r', 'r.idreceta = comida.idreceta', 'left')
                     ->where('comida.idcomida', $id)
                     ->first();
     }
@@ -75,19 +85,24 @@ class ComidaModel extends Model
     /**
      * Obtiene el listado de comidas con filtros opcionales
      */
-    public function getRecordsWithDetails(?string $search = null, ?int $idplan = null, ?int $idtipocomida = null, ?int $idreceta = null): array
+    public function getRecordsWithDetails(?string $search = null, ?int $idplan = null, ?int $idtipocomida = null, ?int $idreceta = null, ?int $iddiasemana = null): array
     {
-        $builder = $this->select('comida.*, pa.nombre AS plan_nombre, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion')
+        $builder = $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion')
                         ->join('planalimentacion pa', 'pa.idplanalimentacion = comida.idplanalimentacion', 'inner')
                         ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
-                        ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'inner')
-                        ->join('receta r', 'r.idreceta = comida.idreceta', 'inner')
-                        ->orderBy('pa.nombre', 'ASC')
+                        ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')
+                        ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'left')
+                        ->join('receta r', 'r.idreceta = comida.idreceta', 'left')
+                        ->orderBy('comida.iddiasemana', 'ASC')
                         ->orderBy('comida.horarecomendada', 'ASC')
                         ->orderBy('comida.idtipocomida', 'ASC');
 
         if (!empty($idplan)) {
             $builder->where('comida.idplanalimentacion', $idplan);
+        }
+
+        if (!empty($iddiasemana)) {
+            $builder->where('comida.iddiasemana', $iddiasemana);
         }
 
         if (!empty($idtipocomida)) {
@@ -101,6 +116,7 @@ class ComidaModel extends Model
         if (!empty($search)) {
             $builder->groupStart()
                     ->like('pa.nombre', $search)
+                    ->orLike('ds.nombre', $search)
                     ->orLike('tc.nombre', $search)
                     ->orLike('r.nombre', $search)
                     ->orLike('p.nombres', $search)

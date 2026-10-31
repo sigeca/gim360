@@ -27,6 +27,16 @@
                             <?php endforeach; ?>
                         </select>
 
+                        <!-- Filtro por Día de la Semana -->
+                        <select name="iddiasemana" class="form-select form-select-sm" style="min-width: 140px;" onchange="this.form.submit()">
+                            <option value="">-- Todos los Días --</option>
+                            <?php foreach ($dias as $d): ?>
+                                <option value="<?= $d['iddiasemana'] ?>" <?= (isset($selectedDia) && (string)$selectedDia === (string)$d['iddiasemana']) ? 'selected' : '' ?>>
+                                    <?= esc($d['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+
                         <!-- Filtro por Tipo de Comida -->
                         <select name="idtipocomida" class="form-select form-select-sm" style="min-width: 140px;" onchange="this.form.submit()">
                             <option value="">-- Todos los Tiempos --</option>
@@ -43,7 +53,7 @@
                             <button class="btn btn-primary" type="submit">
                                 <i class="bi bi-search"></i>
                             </button>
-                            <?php if (!empty($search) || !empty($selectedPlan) || !empty($selectedTipo)): ?>
+                            <?php if (!empty($search) || !empty($selectedPlan) || !empty($selectedDia) || !empty($selectedTipo)): ?>
                                 <a href="<?= base_url('comida/listar') ?>" class="btn btn-outline-secondary" title="Limpiar filtros">
                                     <i class="bi bi-x-lg"></i>
                                 </a>
@@ -69,6 +79,7 @@
                             <th class="ps-4" style="width: 70px;">ID</th>
                             <th>Plan de Alimentación</th>
                             <th>Titular</th>
+                            <th>Día</th>
                             <th>Momento / Tipo</th>
                             <th>Receta Asignada</th>
                             <th>Hora Sugerida</th>
@@ -78,7 +89,7 @@
                     <tbody>
                         <?php if (empty($comidas)): ?>
                             <tr>
-                                <td colspan="7" class="text-center py-5 text-muted">
+                                <td colspan="8" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                     No se encontraron comidas programadas con los filtros seleccionados.
                                 </td>
@@ -95,6 +106,11 @@
                                     <td class="small">
                                         <?= esc($cm['apellidos']) ?>, <?= esc($cm['nombres']) ?>
                                         <div class="text-muted"><i class="bi bi-credit-card-2-front me-1"></i><?= esc($cm['cedula']) ?></div>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1">
+                                            <i class="bi bi-calendar3 me-1"></i><?= esc($cm['diasemana_nombre'] ?? 'Lunes') ?>
+                                        </span>
                                     </td>
                                     <td>
                                         <span class="badge bg-warning-subtle text-dark border border-warning">
