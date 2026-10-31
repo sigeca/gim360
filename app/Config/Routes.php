@@ -101,6 +101,8 @@ $modulos = [
     'ejecucionprograma'    => 'EjecucionPrograma',
     'ejecucion-programa'   => 'EjecucionPrograma',
     'usuario'              => 'Usuario',
+    'imagen'               => 'Imagen',
+    'imagenes'             => 'Imagen',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -156,6 +158,11 @@ foreach ($modulos as $slug => $controller) {
         // Rutas adicionales para motivoentrenamiento
         if ($controller === 'MotivoEntrenamiento') {
             $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'MotivoEntrenamiento::imagen/$1');
+        }
+
+        // Rutas adicionales para imagen
+        if ($controller === 'Imagen') {
+            $routes->post('upload/(:num)', 'Imagen::upload/$1');
         }
     });
 }
@@ -236,6 +243,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('recetacomponentenutricional', 'GimApiController::getRecetasComponentesNutricionales');
     $routes->get('recetacomponentenutricional/(:num)', 'GimApiController::getRecetaComponenteNutricionalDetail/$1');
     $routes->get('receta/(:num)/componentes', 'GimApiController::getComponentesPorReceta/$1');
+    $routes->get('imagenes', 'GimApiController::getImagenes');
+    $routes->get('imagen', 'GimApiController::getImagenes');
+    $routes->get('imagen/(:num)', 'GimApiController::getImagenDetail/$1');
     $routes->get('gruposalimentos', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento', 'GimApiController::getGruposAlimentos');
     $routes->get('grupoalimento/(:num)', 'GimApiController::getGrupoAlimentoDetail/$1');

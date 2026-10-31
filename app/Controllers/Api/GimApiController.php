@@ -489,6 +489,57 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/imagenes
+     * GET /api/imagen
+     */
+    public function getImagenes()
+    {
+        $search = $this->request->getGet('q');
+        $imagenModel = new \App\Models\ImagenModel();
+        $imagenes = $imagenModel->getImagenes($search);
+
+        $uploadPath = ROOTPATH . 'repositorio/imagen/';
+        foreach ($imagenes as &$img) {
+            $img['archivoExiste'] = !empty($img['nombre']) && file_exists($uploadPath . $img['nombre']);
+            $img['urlImagen']     = !empty($img['nombre']) ? base_url('repositorio/imagen/' . $img['nombre']) : null;
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Imágenes obtenidas correctamente',
+            'data'    => $imagenes,
+            'total'   => count($imagenes),
+        ]);
+    }
+
+    /**
+     * GET /api/imagen/{id}
+     */
+    public function getImagenDetail($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de imagen no proporcionado');
+        }
+
+        $imagenModel = new \App\Models\ImagenModel();
+        $imagen = $imagenModel->getImagenWithDetails((int)$id);
+
+        if (!$imagen) {
+            return $this->failNotFound('Imagen no encontrada');
+        }
+
+        $uploadPath = ROOTPATH . 'repositorio/imagen/';
+        $imagen['archivoExiste'] = !empty($imagen['nombre']) && file_exists($uploadPath . $imagen['nombre']);
+        $imagen['urlImagen']     = !empty($imagen['nombre']) ? base_url('repositorio/imagen/' . $imagen['nombre']) : null;
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de la imagen obtenido',
+            'data'    => $imagen,
+        ]);
+    }
+
+    /**
      * GET /api/alimento/{id}/componentes
      */
     public function getComponentesPorAlimento($id = null)

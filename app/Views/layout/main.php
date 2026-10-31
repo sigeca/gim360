@@ -278,7 +278,8 @@ $isSexoActive = (strpos($uri, 'sexo') === 0);
 $isEstadoCivilActive = (strpos($uri, 'estadocivil') === 0 && strpos($uri, 'estadocivilpersona') === false);
 $isGeneroActive = (strpos($uri, 'genero') === 0 && strpos($uri, 'generopersona') === false);
 $isDiaSemanaActive = (strpos($uri, 'diasemana') === 0 || strpos($uri, 'dia-semana') === 0 || strpos($uri, 'dias-semana') === 0);
-$groupCatalogosOpen = $isSexoActive || $isEstadoCivilActive || $isGeneroActive || $isDiaSemanaActive;
+$isImagenActive    = (strpos($uri, 'imagen') === 0 || strpos($uri, 'imagenes') === 0);
+$groupCatalogosOpen = $isSexoActive || $isEstadoCivilActive || $isGeneroActive || $isDiaSemanaActive || $isImagenActive;
 
 $isECPActive = (strpos($uri, 'estadocivilpersona') === 0);
 $isGPActive = (strpos($uri, 'generopersona') === 0);
@@ -602,6 +603,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('diasemana') ?>" class="submenu-link <?= $isDiaSemanaActive ? 'active' : '' ?>">
                             <i class="bi bi-calendar-week text-primary"></i>
                             <span>Días de la Semana</span>
+                        </a>
+                        <a href="<?= base_url('imagen') ?>" class="submenu-link <?= $isImagenActive ? 'active' : '' ?>">
+                            <i class="bi bi-images text-info"></i>
+                            <span>Imágenes / Multimedia</span>
                         </a>
                     </div>
                 </div>
