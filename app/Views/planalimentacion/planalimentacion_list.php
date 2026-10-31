@@ -75,15 +75,30 @@
                             </tr>
                         <?php else: ?>
                             <?php foreach ($planes as $pl): ?>
+                                <?php $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($pl['cedula'] ?? '')) . '.jpg'; ?>
                                 <tr>
                                     <td class="ps-4 fw-bold text-muted">#<?= $pl['idplanalimentacion'] ?></td>
                                     <td>
-                                        <div class="fw-bold text-dark fs-6">
-                                            <a href="<?= base_url('persona/actual/' . $pl['idpersona']) ?>" class="text-decoration-none text-dark">
-                                                <?= esc($pl['apellidos']) ?>, <?= esc($pl['nombres']) ?>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto de <?= esc($pl['nombres']) ?>" class="text-decoration-none flex-shrink-0">
+                                                <img src="<?= esc($fotoUrl) ?>"
+                                                     alt="Foto <?= esc($pl['nombres']) ?>"
+                                                     class="rounded-circle border shadow-sm"
+                                                     style="width: 38px; height: 38px; object-fit: cover;"
+                                                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                                <div class="bg-light border text-secondary rounded-circle align-items-center justify-content-center shadow-sm" style="width: 38px; height: 38px; display: none;">
+                                                    <i class="bi bi-person"></i>
+                                                </div>
                                             </a>
+                                            <div>
+                                                <div class="fw-bold text-dark fs-6">
+                                                    <a href="<?= base_url('persona/actual/' . $pl['idpersona']) ?>" class="text-decoration-none text-dark">
+                                                        <?= esc($pl['apellidos']) ?>, <?= esc($pl['nombres']) ?>
+                                                    </a>
+                                                </div>
+                                                <small class="text-muted"><i class="bi bi-credit-card-2-front me-1"></i>C.I. <?= esc($pl['cedula']) ?></small>
+                                            </div>
                                         </div>
-                                        <small class="text-muted"><i class="bi bi-credit-card-2-front me-1"></i>C.I. <?= esc($pl['cedula']) ?></small>
                                     </td>
                                     <td>
                                         <span class="fw-semibold text-dark">

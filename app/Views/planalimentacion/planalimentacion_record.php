@@ -15,18 +15,34 @@
                 'currentId' => $plan['idplanalimentacion']
             ]) ?>
 
+            <?php 
+                $fotoUrl = 'https://educaysoft.org/descargar.php?archivo=fotos/' . rawurlencode(trim($plan['cedula'] ?? '')) . '.jpg';
+                $est = $plan['estado_info'];
+            ?>
+
             <!-- Ficha Principal del Plan -->
             <div class="card card-custom bg-white border-top border-4 border-success shadow-sm mb-4">
                 <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="bi bi-journal-medical text-success fs-4"></i>
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto de <?= esc($plan['nombres']) ?>" class="text-decoration-none flex-shrink-0">
+                            <img src="<?= esc($fotoUrl) ?>"
+                                 alt="Foto de <?= esc($plan['nombres']) ?>"
+                                 class="rounded-circle border border-2 border-success shadow-sm"
+                                 style="width: 52px; height: 52px; object-fit: cover;"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="bg-success text-white rounded-circle p-2 fs-4 align-items-center justify-content-center shadow-sm" style="width: 52px; height: 52px; display: none;">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                        </a>
                         <div>
                             <h5 class="fw-bold mb-0 text-dark"><?= esc($plan['nombre']) ?></h5>
-                            <small class="text-muted">Plan Nutricional #<?= $plan['idplanalimentacion'] ?></small>
+                            <small class="text-muted">
+                                <i class="bi bi-person-fill me-1 text-success"></i><?= esc($plan['apellidos'] . ', ' . $plan['nombres']) ?> 
+                                (C.I. <?= esc($plan['cedula']) ?>) • Plan Nutricional #<?= $plan['idplanalimentacion'] ?>
+                            </small>
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
-                        <?php $est = $plan['estado_info']; ?>
                         <span class="badge <?= $est['badge_class'] ?> px-3 py-2 fs-6 shadow-sm">
                             <i class="bi <?= $est['icono'] ?> me-1"></i><?= $est['etiqueta'] ?>
                         </span>
@@ -41,9 +57,16 @@
                             <div class="p-3 bg-light rounded-4 border h-100 shadow-sm d-flex flex-column justify-content-between">
                                 <div>
                                     <div class="d-flex align-items-center gap-3 mb-3">
-                                        <div class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center" style="width: 58px; height: 58px;">
-                                            <i class="bi bi-person-fill fs-2"></i>
-                                        </div>
+                                        <a href="<?= esc($fotoUrl) ?>" target="_blank" title="Ver foto de <?= esc($plan['nombres']) ?>" class="text-decoration-none flex-shrink-0">
+                                            <img src="<?= esc($fotoUrl) ?>"
+                                                 alt="Foto de <?= esc($plan['nombres']) ?>"
+                                                 class="rounded-circle border border-2 border-success shadow-sm"
+                                                 style="width: 62px; height: 62px; object-fit: cover;"
+                                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="rounded-circle bg-success bg-opacity-10 text-success d-inline-flex align-items-center justify-content-center border border-success-subtle shadow-sm" style="width: 62px; height: 62px; display: none;">
+                                                <i class="bi bi-person-fill fs-2"></i>
+                                            </div>
+                                        </a>
                                         <div>
                                             <span class="badge bg-secondary-subtle text-secondary small">Persona Asignada</span>
                                             <h6 class="fw-bold mb-0 text-dark">
