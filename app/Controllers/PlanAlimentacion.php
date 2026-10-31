@@ -341,4 +341,20 @@ class PlanAlimentacion extends BaseController
 
         return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', '¡Comida registrada como cumplida exitosamente hoy a las ' . date('H:i') . '!');
     }
+
+    /**
+     * Eliminar un registro de cumplimiento directamente desde el plan
+     */
+    public function eliminarCumplimiento($idplan, $idcumplimiento)
+    {
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $cumplimiento = $cumplimientoModel->find($idcumplimiento);
+
+        if ($cumplimiento && (int)$cumplimiento['idplanalimentacion'] === (int)$idplan) {
+            $cumplimientoModel->delete($idcumplimiento);
+            return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', 'Registro de cumplimiento eliminado exitosamente.');
+        }
+
+        return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('error', 'Registro de cumplimiento no encontrado o no pertenece a este plan.');
+    }
 }

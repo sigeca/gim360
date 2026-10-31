@@ -236,8 +236,13 @@ class CumplimientoPlanAlimentacion extends BaseController
     public function delete($id)
     {
         $cumplimiento = $this->cumplimientoModel->find($id);
+        $fromPlan = $this->request->getGet('from_plan') ?? $this->request->getPost('from_plan');
+
         if (!$cumplimiento) {
-            return redirect()->to(base_url('cumplimientoplanalimentacion'))->with('error', 'Registro no encontrado.');
+            if ($fromPlan) {
+                return redirect()->back()->with('error', 'Registro de cumplimiento no encontrado.');
+            }
+            return redirect()->to(base_url('cumplimientoplanalimentacion/listar'))->with('error', 'Registro no encontrado.');
         }
 
         $idplan = $cumplimiento['idplanalimentacion'];
@@ -245,16 +250,24 @@ class CumplimientoPlanAlimentacion extends BaseController
         try {
             $this->cumplimientoModel->delete($id);
 
-            $fromPlan = $this->request->getGet('from_plan');
             if ($fromPlan) {
-                return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', 'Registro de cumplimiento eliminado del plan.');
+                return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', 'Registro de cumplimiento eliminado exitosamente.');
+            }
+
+            // Si la petición vino del listado general, regresar a listar
+            $referer = (string)$this->request->getServer('HTTP_REFERER');
+            if (strpos($referer, 'listar') !== false) {
+                return redirect()->to(base_url('cumplimientoplanalimentacion/listar'))->with('success', 'Registro de cumplimiento eliminado exitosamente.');
             }
 
             $first = $this->cumplimientoModel->elprimero();
-            $targetUrl = $first ? 'cumplimientoplanalimentacion/actual/' . $first['idcumplimientoplanalimentacion'] : 'cumplimientoplanalimentacion';
+            $targetUrl = $first ? 'cumplimientoplanalimentacion/actual/' . $first['idcumplimientoplanalimentacion'] : 'cumplimientoplanalimentacion/listar';
             return redirect()->to(base_url($targetUrl))->with('success', 'Registro de cumplimiento eliminado exitosamente.');
         } catch (\Exception $e) {
-            return redirect()->to(base_url('cumplimientoplanalimentacion/actual/' . $id))->with('error', 'Error al eliminar: ' . $e->getMessage());
+            if ($fromPlan) {
+                return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('error', 'Error al eliminar: ' . $e->getMessage());
+            }
+            return redirect()->to(base_url('cumplimientoplanalimentacion/listar'))->with('error', 'Error al eliminar: ' . $e->getMessage());
         }
     }
 

@@ -137,8 +137,8 @@ foreach ($modulos as $slug => $controller) {
         $routes->post('create', "{$controller}::save");
         $routes->get('edit/(:num)', "{$controller}::edit/$1");
         $routes->post('update/(:num)', "{$controller}::update/$1");
-        $routes->post('delete/(:num)', "{$controller}::delete/$1");
-        $routes->post('quitar/(:num)', "{$controller}::delete/$1");
+        $routes->match(['GET', 'POST'], 'delete/(:num)', "{$controller}::delete/$1");
+        $routes->match(['GET', 'POST'], 'quitar/(:num)', "{$controller}::delete/$1");
 
         // Rutas adicionales para componentenutricional
         if ($controller === 'ComponenteNutricional') {
@@ -153,8 +153,8 @@ foreach ($modulos as $slug => $controller) {
 
         // Rutas adicionales para planalimentacion
         if ($controller === 'PlanAlimentacion') {
-            $routes->post('marcar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::marcarCumplimiento/$1/$2');
-            $routes->get('marcar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::marcarCumplimiento/$1/$2');
+            $routes->match(['GET', 'POST'], 'marcar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::marcarCumplimiento/$1/$2');
+            $routes->match(['GET', 'POST'], 'eliminar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::eliminarCumplimiento/$1/$2');
         }
 
         // Rutas adicionales para receta (gestión de imágenes)

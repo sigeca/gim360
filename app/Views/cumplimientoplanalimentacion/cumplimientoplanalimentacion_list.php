@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('deleteTargetPlan').textContent = 'Plan: ' + plan;
             document.getElementById('deleteTargetReceta').textContent = 'Receta: ' + receta;
             document.getElementById('deleteTargetFecha').textContent = 'Fecha/Hora: ' + fecha;
-            document.getElementById('formDeleteCumplimiento').action = '<?= base_url('cumplimientoplanalimentacion/delete/') ?>' + id;
+            document.getElementById('formDeleteCumplimiento').action = '<?= rtrim(base_url('cumplimientoplanalimentacion/delete'), '/') ?>/' + id;
         });
     }
 });

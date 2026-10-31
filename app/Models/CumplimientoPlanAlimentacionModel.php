@@ -61,11 +61,11 @@ class CumplimientoPlanAlimentacionModel extends Model
                               r.porciones, 
                               r.tiempopreparacion, 
                               r.instrucciones')
-                    ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'inner')
-                    ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
-                    ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'inner')
-                    ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'inner')
-                    ->join('receta r', 'r.idreceta = c.idreceta', 'inner')
+                    ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'left')
+                    ->join('persona p', 'p.idpersona = pa.idpersona', 'left')
+                    ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
+                    ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'left')
+                    ->join('receta r', 'r.idreceta = c.idreceta', 'left')
                     ->where('cumplimientoplanalimentacion.idcumplimientoplanalimentacion', $id)
                     ->first();
     }
@@ -84,11 +84,11 @@ class CumplimientoPlanAlimentacionModel extends Model
                                   tc.nombre AS tipocomida_nombre, 
                                   r.nombre AS receta_nombre, 
                                   r.porciones')
-                        ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'inner')
-                        ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
-                        ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'inner')
-                        ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'inner')
-                        ->join('receta r', 'r.idreceta = c.idreceta', 'inner')
+                        ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'left')
+                        ->join('persona p', 'p.idpersona = pa.idpersona', 'left')
+                        ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
+                        ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'left')
+                        ->join('receta r', 'r.idreceta = c.idreceta', 'left')
                         ->orderBy('cumplimientoplanalimentacion.fechahora', 'DESC')
                         ->orderBy('cumplimientoplanalimentacion.idcumplimientoplanalimentacion', 'DESC');
 
@@ -134,9 +134,9 @@ class CumplimientoPlanAlimentacionModel extends Model
                               r.nombre AS receta_nombre, 
                               r.porciones, 
                               r.tiempopreparacion')
-                    ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'inner')
-                    ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'inner')
-                    ->join('receta r', 'r.idreceta = c.idreceta', 'inner')
+                    ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
+                    ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'left')
+                    ->join('receta r', 'r.idreceta = c.idreceta', 'left')
                     ->where('cumplimientoplanalimentacion.idplanalimentacion', $idplan)
                     ->orderBy('cumplimientoplanalimentacion.fechahora', 'DESC')
                     ->findAll();
