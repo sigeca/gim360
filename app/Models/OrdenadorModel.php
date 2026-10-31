@@ -16,6 +16,17 @@ class OrdenadorModel extends Model
 
     public function getOrdenadores(): array
     {
-        return $this->orderBy('idordenador', 'ASC')->findAll();
+        try {
+            $ordenadores = $this->orderBy('idordenador', 'ASC')->findAll();
+            if (!empty($ordenadores)) {
+                return $ordenadores;
+            }
+        } catch (\Throwable $e) {
+            // Tabla aún no creada en la nube
+        }
+
+        return [
+            ['idordenador' => 1, 'nombre' => 'Servidor Local gim360'],
+        ];
     }
 }

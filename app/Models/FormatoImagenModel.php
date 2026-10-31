@@ -20,6 +20,21 @@ class FormatoImagenModel extends Model
 
     public function getFormatos(): array
     {
-        return $this->orderBy('idformatoimagen', 'ASC')->findAll();
+        try {
+            $formatos = $this->orderBy('idformatoimagen', 'ASC')->findAll();
+            if (!empty($formatos)) {
+                return $formatos;
+            }
+        } catch (\Throwable $e) {
+            // Tabla aún no creada en la nube o error temporal
+        }
+
+        return [
+            ['idformatoimagen' => 1, 'nombre' => 'jpg'],
+            ['idformatoimagen' => 2, 'nombre' => 'png'],
+            ['idformatoimagen' => 3, 'nombre' => 'webp'],
+            ['idformatoimagen' => 4, 'nombre' => 'gif'],
+            ['idformatoimagen' => 5, 'nombre' => 'jpeg'],
+        ];
     }
 }

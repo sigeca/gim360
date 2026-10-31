@@ -29,15 +29,23 @@ class ImagenModel extends Model
      */
     public function getImagenWithDetails(int $id): ?array
     {
-        return $this->select('imagen.*, 
-                              fi.nombre AS formato_nombre, 
-                              o.nombre AS ordenador_nombre, 
-                              d.nombre AS directorio_nombre, d.ruta AS directorio_ruta')
-                    ->join('formatoimagen fi', 'fi.idformatoimagen = imagen.idformatoimagen', 'left')
-                    ->join('ordenador o', 'o.idordenador = imagen.idordenador', 'left')
-                    ->join('directorio d', 'd.iddirectorio = imagen.iddirectorio', 'left')
-                    ->where('imagen.idimagen', $id)
-                    ->first();
+        try {
+            return $this->select('imagen.*, 
+                                  fi.nombre AS formato_nombre, 
+                                  o.nombre AS ordenador_nombre, 
+                                  d.nombre AS directorio_nombre, d.ruta AS directorio_ruta')
+                        ->join('formatoimagen fi', 'fi.idformatoimagen = imagen.idformatoimagen', 'left')
+                        ->join('ordenador o', 'o.idordenador = imagen.idordenador', 'left')
+                        ->join('directorio d', 'd.iddirectorio = imagen.iddirectorio', 'left')
+                        ->where('imagen.idimagen', $id)
+                        ->first();
+        } catch (\Throwable $e) {
+            try {
+                return $this->find($id);
+            } catch (\Throwable $e2) {
+                return null;
+            }
+        }
     }
 
     /**
@@ -45,28 +53,36 @@ class ImagenModel extends Model
      */
     public function getImagenes(?string $search = null): array
     {
-        $builder = $this->select('imagen.*, 
-                                  fi.nombre AS formato_nombre, 
-                                  o.nombre AS ordenador_nombre, 
-                                  d.nombre AS directorio_nombre, d.ruta AS directorio_ruta')
-                        ->join('formatoimagen fi', 'fi.idformatoimagen = imagen.idformatoimagen', 'left')
-                        ->join('ordenador o', 'o.idordenador = imagen.idordenador', 'left')
-                        ->join('directorio d', 'd.iddirectorio = imagen.iddirectorio', 'left')
-                        ->orderBy('imagen.idimagen', 'DESC');
+        try {
+            $builder = $this->select('imagen.*, 
+                                      fi.nombre AS formato_nombre, 
+                                      o.nombre AS ordenador_nombre, 
+                                      d.nombre AS directorio_nombre, d.ruta AS directorio_ruta')
+                            ->join('formatoimagen fi', 'fi.idformatoimagen = imagen.idformatoimagen', 'left')
+                            ->join('ordenador o', 'o.idordenador = imagen.idordenador', 'left')
+                            ->join('directorio d', 'd.iddirectorio = imagen.iddirectorio', 'left')
+                            ->orderBy('imagen.idimagen', 'DESC');
 
-        if (!empty($search)) {
-            $builder->groupStart()
-                    ->like('imagen.nombre', $search)
-                    ->orLike('imagen.descripcion', $search)
-                    ->orLike('imagen.palabrasclave', $search)
-                    ->orLike('fi.nombre', $search);
-            if (is_numeric($search)) {
-                $builder->orWhere('imagen.idimagen', (int)$search);
+            if (!empty($search)) {
+                $builder->groupStart()
+                        ->like('imagen.nombre', $search)
+                        ->orLike('imagen.descripcion', $search)
+                        ->orLike('imagen.palabrasclave', $search)
+                        ->orLike('fi.nombre', $search);
+                if (is_numeric($search)) {
+                    $builder->orWhere('imagen.idimagen', (int)$search);
+                }
+                $builder->groupEnd();
             }
-            $builder->groupEnd();
-        }
 
-        return $builder->findAll();
+            return $builder->findAll();
+        } catch (\Throwable $e) {
+            try {
+                return $this->orderBy('idimagen', 'DESC')->findAll();
+            } catch (\Throwable $e2) {
+                return [];
+            }
+        }
     }
 
     /**

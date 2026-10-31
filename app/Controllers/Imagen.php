@@ -24,8 +24,103 @@ class Imagen extends BaseController
         $this->directorioModel = new DirectorioModel();
         $this->uploadPath      = ROOTPATH . 'repositorio/imagen/';
 
-        if (!is_dir($this->uploadPath)) {
-            @mkdir($this->uploadPath, 0777, true);
+        $this->ensureTables();
+        $this->ensureUploadDirectory();
+    }
+
+    /**
+     * Asegura de forma preventiva y transparente que las tablas existan en la BD
+     */
+    protected function ensureTables(): void
+    {
+        try {
+            $db = \Config\Database::connect();
+
+            // 1. formatoimagen
+            $db->query("CREATE TABLE IF NOT EXISTS `formatoimagen` (
+              `idformatoimagen` int(11) NOT NULL AUTO_INCREMENT,
+              `nombre` varchar(100) DEFAULT NULL,
+              PRIMARY KEY (`idformatoimagen`),
+              UNIQUE KEY `uk_formatoimagen_nombre` (`nombre`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;");
+
+            @$db->query("CREATE OR REPLACE VIEW `FormatoImagen` AS SELECT `idformatoimagen`, `nombre` FROM `formatoimagen`;");
+            @$db->query("INSERT IGNORE INTO `formatoimagen` (`idformatoimagen`, `nombre`) VALUES (1,'jpg'),(2,'png'),(3,'webp'),(4,'gif'),(5,'jpeg');");
+
+            // 2. ordenador
+            $db->query("CREATE TABLE IF NOT EXISTS `ordenador` (
+              `idordenador` int(11) NOT NULL AUTO_INCREMENT,
+              `nombre` varchar(45) DEFAULT NULL,
+              PRIMARY KEY (`idordenador`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;");
+
+            @$db->query("CREATE OR REPLACE VIEW `Ordenador` AS SELECT `idordenador`, `nombre` FROM `ordenador`;");
+            @$db->query("INSERT IGNORE INTO `ordenador` (`idordenador`, `nombre`) VALUES (1, 'Servidor Local gim360');");
+
+            // 3. directorio
+            $db->query("CREATE TABLE IF NOT EXISTS `directorio` (
+              `iddirectorio` int(11) NOT NULL AUTO_INCREMENT,
+              `nombre` varchar(45) DEFAULT NULL,
+              `ruta` varchar(200) DEFAULT NULL,
+              `descripcion` text DEFAULT NULL,
+              `idordenador` int(11) NOT NULL DEFAULT 1,
+              PRIMARY KEY (`iddirectorio`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;");
+
+            @$db->query("CREATE OR REPLACE VIEW `Directorio` AS SELECT `iddirectorio`, `nombre`, `ruta`, `descripcion`, `idordenador` FROM `directorio`;");
+            @$db->query("INSERT IGNORE INTO `directorio` (`iddirectorio`, `nombre`, `ruta`, `descripcion`, `idordenador`) VALUES (1, 'Imagenes Gim360', 'repositorio/imagen', 'Directorio de almacenamiento de imágenes', 1);");
+
+            // 4. imagen
+            $db->query("CREATE TABLE IF NOT EXISTS `imagen` (
+              `idimagen` int(11) NOT NULL AUTO_INCREMENT,
+              `nombre` varchar(255) DEFAULT NULL,
+              `idformatoimagen` int(11) DEFAULT NULL,
+              `fechacaptura` datetime DEFAULT NULL,
+              `descripcion` text DEFAULT NULL,
+              `palabrasclave` text DEFAULT NULL,
+              `licencia` varchar(50) DEFAULT NULL,
+              `fechacreacion` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+              `idordenador` int(11) DEFAULT 1,
+              `iddirectorio` int(11) DEFAULT 1,
+              PRIMARY KEY (`idimagen`),
+              KEY `idx_imagen_formato` (`idformatoimagen`),
+              KEY `idx_imagen_ordenador` (`idordenador`),
+              KEY `idx_imagen_directorio` (`iddirectorio`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;");
+
+            @$db->query("CREATE OR REPLACE VIEW `Imagen` AS SELECT `idimagen`, `nombre`, `idformatoimagen`, `fechacaptura`, `descripcion`, `palabrasclave`, `licencia`, `fechacreacion`, `idordenador`, `iddirectorio` FROM `imagen`;");
+        } catch (\Throwable $e) {
+            log_message('error', 'Imagen::ensureTables notice: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Asegura que el directorio repositorio/imagen exista y tenga permisos
+     */
+    protected function ensureUploadDirectory(): bool
+    {
+        try {
+            $baseRepo = ROOTPATH . 'repositorio/';
+            if (!is_dir($baseRepo)) {
+                @mkdir($baseRepo, 0777, true);
+            }
+
+            if (!is_dir($this->uploadPath)) {
+                @mkdir($this->uploadPath, 0777, true);
+            }
+
+            @chmod($this->uploadPath, 0777);
+
+            // Asegurar symlink público si aplica
+            $publicRepo = FCPATH . 'repositorio';
+            if (!file_exists($publicRepo) && is_dir($baseRepo)) {
+                @symlink('../repositorio', $publicRepo);
+            }
+
+            return is_writable($this->uploadPath);
+        } catch (\Throwable $e) {
+            log_message('error', 'ensureUploadDirectory notice: ' . $e->getMessage());
+            return false;
         }
     }
 
@@ -117,6 +212,8 @@ class Imagen extends BaseController
      */
     public function add()
     {
+        $this->ensureTables();
+
         $data = [
             'title'           => 'Registrar Nueva Imagen',
             'formatos'        => $this->formatoModel->getFormatos(),
@@ -134,6 +231,8 @@ class Imagen extends BaseController
     public function save()
     {
         date_default_timezone_set('America/Guayaquil');
+        $this->ensureTables();
+        $this->ensureUploadDirectory();
 
         $file = $this->request->getFile('archivo_imagen');
         $idformato = $this->request->getPost('idformatoimagen') ? (int)$this->request->getPost('idformatoimagen') : null;
@@ -145,17 +244,25 @@ class Imagen extends BaseController
                 $extension = $extDetected;
             }
         } elseif ($idformato) {
-            $formatoRow = $this->formatoModel->find($idformato);
-            if ($formatoRow && !empty($formatoRow['nombre'])) {
-                $extension = strtolower(ltrim($formatoRow['nombre'], '.'));
+            try {
+                $formatoRow = $this->formatoModel->find($idformato);
+                if ($formatoRow && !empty($formatoRow['nombre'])) {
+                    $extension = strtolower(ltrim($formatoRow['nombre'], '.'));
+                }
+            } catch (\Throwable $e) {
+                // Ignore
             }
         }
 
         // Si tenemos la extensión pero no idformatoimagen, intentamos resolver el ID
         if (empty($idformato)) {
-            $formatoEncontrado = $this->formatoModel->where('nombre', $extension)->first();
-            if ($formatoEncontrado) {
-                $idformato = (int)$formatoEncontrado['idformatoimagen'];
+            try {
+                $formatoEncontrado = $this->formatoModel->where('nombre', $extension)->first();
+                if ($formatoEncontrado) {
+                    $idformato = (int)$formatoEncontrado['idformatoimagen'];
+                }
+            } catch (\Throwable $e) {
+                $idformato = 1;
             }
         }
 
@@ -181,7 +288,12 @@ class Imagen extends BaseController
             'iddirectorio'    => $iddirectorio,
         ];
 
-        $id = $this->imagenModel->insert($dataInsert);
+        try {
+            $id = $this->imagenModel->insert($dataInsert);
+        } catch (\Throwable $e) {
+            log_message('error', 'Error al insertar imagen: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Error al guardar en base de datos: ' . $e->getMessage());
+        }
 
         if (!$id) {
             return redirect()->back()->withInput()->with('error', 'No se pudo registrar la información de la imagen.');
@@ -189,11 +301,21 @@ class Imagen extends BaseController
 
         // Formato SICA exacto: Ymd_His-00000.ext
         $filename = $this->imagenModel->generarNombreSica((int)$id, $extension);
-        $this->imagenModel->update($id, ['nombre' => $filename]);
+        try {
+            $this->imagenModel->update($id, ['nombre' => $filename]);
+        } catch (\Throwable $e) {
+            log_message('error', 'Error al actualizar nombre de imagen: ' . $e->getMessage());
+        }
 
         // Mover archivo si fue subido
         if ($file && $file->isValid() && !$file->hasMoved()) {
-            $file->move($this->uploadPath, $filename, true);
+            try {
+                $file->move($this->uploadPath, $filename, true);
+            } catch (\Throwable $e) {
+                log_message('error', 'Aviso al mover archivo en la nube: ' . $e->getMessage());
+                return redirect()->to(base_url('imagen/actual/' . $id))
+                    ->with('warning', 'Registro guardado como #' . $id . ', pero verifique los permisos de escritura en la carpeta repositorio/imagen/.');
+            }
         }
 
         return redirect()->to(base_url('imagen/actual/' . $id))->with('success', 'Imagen registrada correctamente con nombre: ' . $filename);
@@ -204,6 +326,8 @@ class Imagen extends BaseController
      */
     public function edit($id)
     {
+        $this->ensureTables();
+
         $imagen = $this->imagenModel->find($id);
         if (!$imagen) {
             throw PageNotFoundException::forPageNotFound('Imagen no encontrada.');
@@ -232,6 +356,7 @@ class Imagen extends BaseController
         }
 
         date_default_timezone_set('America/Guayaquil');
+        $this->ensureUploadDirectory();
 
         $file = $this->request->getFile('archivo_imagen');
         $idformato = $this->request->getPost('idformatoimagen') ? (int)$this->request->getPost('idformatoimagen') : $imagen['idformatoimagen'];
@@ -243,7 +368,11 @@ class Imagen extends BaseController
             if (empty($filename)) {
                 $filename = $this->imagenModel->generarNombreSica((int)$id, $extension);
             }
-            $file->move($this->uploadPath, $filename, true);
+            try {
+                $file->move($this->uploadPath, $filename, true);
+            } catch (\Throwable $e) {
+                log_message('error', 'Error al mover archivo reemplazado: ' . $e->getMessage());
+            }
         }
 
         $fechacaptura = $this->request->getPost('fechacaptura');
@@ -262,7 +391,11 @@ class Imagen extends BaseController
             'iddirectorio'    => $this->request->getPost('iddirectorio') ? (int)$this->request->getPost('iddirectorio') : $imagen['iddirectorio'],
         ];
 
-        $this->imagenModel->update($id, $dataUpdate);
+        try {
+            $this->imagenModel->update($id, $dataUpdate);
+        } catch (\Throwable $e) {
+            return redirect()->back()->withInput()->with('error', 'Error al actualizar: ' . $e->getMessage());
+        }
 
         return redirect()->to(base_url('imagen/actual/' . $id))->with('success', 'Imagen actualizada exitosamente.');
     }
@@ -279,6 +412,8 @@ class Imagen extends BaseController
             }
             return redirect()->to(base_url('imagen'))->with('error', 'Imagen no encontrada.');
         }
+
+        $this->ensureUploadDirectory();
 
         $file = $this->request->getFile('archivo_imagen') ?: $this->request->getFile('file');
 
@@ -299,7 +434,15 @@ class Imagen extends BaseController
             $this->imagenModel->update($id, ['nombre' => $filename]);
         }
 
-        $file->move($this->uploadPath, $filename, true);
+        try {
+            $file->move($this->uploadPath, $filename, true);
+        } catch (\Throwable $e) {
+            $msg = 'Error al guardar archivo en el servidor: ' . $e->getMessage();
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => $msg])->setStatusCode(500);
+            }
+            return redirect()->back()->with('error', $msg);
+        }
 
         if ($this->request->isAJAX()) {
             return $this->response->setJSON([
@@ -337,7 +480,7 @@ class Imagen extends BaseController
             $first = $this->imagenModel->elprimero();
             $targetUrl = $first ? 'imagen/actual/' . $first['idimagen'] : 'imagen';
             return redirect()->to(base_url($targetUrl))->with('success', 'Imagen eliminada exitosamente.');
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return redirect()->to(base_url('imagen/actual/' . $id))->with('error', 'Error al eliminar imagen: ' . $e->getMessage());
         }
     }
