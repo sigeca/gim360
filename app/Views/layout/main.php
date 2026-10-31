@@ -230,6 +230,10 @@ $uri = uri_string();
 
 $isPersonaActive = (strpos($uri, 'persona') === 0 && strpos($uri, 'generopersona') === false && strpos($uri, 'estadocivilpersona') === false);
 $isClienteActive = (strpos($uri, 'cliente') === 0);
+$isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
+$isUsuarioActive = (strpos($uri, 'usuario') === 0);
+$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isVisitaActive || $isUsuarioActive;
+
 $isPerfilNutricionalActive = (strpos($uri, 'perfilnutricional') === 0 || strpos($uri, 'perfil-nutricional') === 0 || strpos($uri, 'controlnutricional') === 0);
 $isComponenteNutricionalActive = (strpos($uri, 'componentenutricional') === 0 || strpos($uri, 'componente-nutricional') === 0 || strpos($uri, 'componentesnutricionales') === 0);
 $isImagenComponenteActive = (strpos($uri, 'imagencomponentenutricional') === 0 || strpos($uri, 'imagen-componente') === 0 || strpos($uri, 'imagencomponente') === 0);
@@ -245,9 +249,7 @@ $isUnidadAlimentoActive = (strpos($uri, 'unidadalimento') === 0 || strpos($uri, 
 $isAlimentoRecetaActive = (strpos($uri, 'alimentoreceta') === 0 || strpos($uri, 'alimento-receta') === 0);
 $isTipoComidaActive = (strpos($uri, 'tipocomida') === 0 || strpos($uri, 'tipo-comida') === 0 || strpos($uri, 'tiposcomida') === 0);
 $isComidaActive = (strpos($uri, 'comida') === 0 || strpos($uri, 'comidas') === 0) && strpos($uri, 'tipocomida') === false;
-$isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
-$isUsuarioActive = (strpos($uri, 'usuario') === 0);
-$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isPerfilNutricionalActive || $isComponenteNutricionalActive || $isImagenComponenteActive || $isImagenRecetaActive || $isAlimentoComponenteActive || $isRecetaComponenteActive || $isGrupoAlimentoActive || $isAlimentoActive || $isPlanAlimentacionActive || $isObjetivoNutricionalActive || $isComidaActive || $isRecetaActive || $isUnidadAlimentoActive || $isAlimentoRecetaActive || $isTipoComidaActive || $isVisitaActive || $isUsuarioActive;
+$groupNutricionOpen = $isPerfilNutricionalActive || $isPlanAlimentacionActive || $isObjetivoNutricionalActive || $isComidaActive || $isTipoComidaActive || $isRecetaActive || $isImagenRecetaActive || $isAlimentoRecetaActive || $isRecetaComponenteActive || $isAlimentoActive || $isGrupoAlimentoActive || $isAlimentoComponenteActive || $isComponenteNutricionalActive || $isImagenComponenteActive || $isUnidadAlimentoActive;
 
 $isEquiposActive = (strpos($uri, 'equipo') === 0 && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false && strpos($uri, 'equipomusculo') === false && strpos($uri, 'equipo-musculo') === false && strpos($uri, 'disponibilidadequipo') === false && strpos($uri, 'disponibilidad-equipo') === false) || (strpos($uri, 'equipos') === 0);
 $isEquipoMusculoActive = (strpos($uri, 'equipomusculo') === 0 || strpos($uri, 'equipo-musculo') === 0);
@@ -349,29 +351,37 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-person-badge text-success"></i>
                             <span>Clientes</span>
                         </a>
+                        <a href="<?= base_url('visitasgim') ?>" class="submenu-link <?= $isVisitaActive ? 'active' : '' ?>">
+                            <i class="bi bi-clock-history text-warning"></i>
+                            <span>Visitas Gimnasio</span>
+                        </a>
+                        <a href="<?= base_url('usuario') ?>" class="submenu-link <?= $isUsuarioActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-lock text-primary"></i>
+                            <span>Usuarios del Sistema</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: NUTRICIÓN -->
+            <div class="sidebar-item">
+                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupNutricionOpen ? '' : 'collapsed' ?>" 
+                   data-bs-toggle="collapse" 
+                   href="#menuNutricionCollapse" 
+                   role="button" 
+                   aria-expanded="<?= $groupNutricionOpen ? 'true' : 'false' ?>"
+                   aria-controls="menuNutricionCollapse">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-apple text-success fs-5"></i>
+                        <span>Nutrición</span>
+                    </div>
+                    <i class="bi bi-chevron-down arrow-indicator"></i>
+                </a>
+                <div class="collapse <?= $groupNutricionOpen ? 'show' : '' ?>" id="menuNutricionCollapse">
+                    <div class="sidebar-submenu">
                         <a href="<?= base_url('perfilnutricional') ?>" class="submenu-link <?= $isPerfilNutricionalActive ? 'active' : '' ?>">
                             <i class="bi bi-heart-pulse-fill text-danger"></i>
                             <span>Control Nutricional</span>
-                        </a>
-                        <a href="<?= base_url('componentenutricional') ?>" class="submenu-link <?= $isComponenteNutricionalActive ? 'active' : '' ?>">
-                            <i class="bi bi-pie-chart-fill text-info"></i>
-                            <span>Componentes Nutricionales</span>
-                        </a>
-                        <a href="<?= base_url('imagencomponentenutricional') ?>" class="submenu-link <?= $isImagenComponenteActive ? 'active' : '' ?>">
-                            <i class="bi bi-images text-info"></i>
-                            <span>Imágenes de Componentes</span>
-                        </a>
-                        <a href="<?= base_url('grupoalimento') ?>" class="submenu-link <?= $isGrupoAlimentoActive ? 'active' : '' ?>">
-                            <i class="bi bi-egg-fried text-success"></i>
-                            <span>Grupos de Alimentos</span>
-                        </a>
-                        <a href="<?= base_url('alimento') ?>" class="submenu-link <?= $isAlimentoActive ? 'active' : '' ?>">
-                            <i class="bi bi-apple text-success"></i>
-                            <span>Alimentos</span>
-                        </a>
-                        <a href="<?= base_url('alimentocomponentenutricional') ?>" class="submenu-link <?= $isAlimentoComponenteActive ? 'active' : '' ?>">
-                            <i class="bi bi-link-45deg text-success"></i>
-                            <span>Nutrientes de Alimentos</span>
                         </a>
                         <a href="<?= base_url('planalimentacion') ?>" class="submenu-link <?= $isPlanAlimentacionActive ? 'active' : '' ?>">
                             <i class="bi bi-journal-medical text-success"></i>
@@ -385,6 +395,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-calendar2-heart text-success"></i>
                             <span>Comidas en Planes</span>
                         </a>
+                        <a href="<?= base_url('tipocomida') ?>" class="submenu-link <?= $isTipoComidaActive ? 'active' : '' ?>">
+                            <i class="bi bi-clock-history text-warning"></i>
+                            <span>Tipos de Comida</span>
+                        </a>
                         <a href="<?= base_url('receta') ?>" class="submenu-link <?= $isRecetaActive ? 'active' : '' ?>">
                             <i class="bi bi-book-half text-warning"></i>
                             <span>Recetas Saludables</span>
@@ -393,29 +407,37 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-images text-warning"></i>
                             <span>Imágenes de Recetas</span>
                         </a>
-                        <a href="<?= base_url('recetacomponentenutricional') ?>" class="submenu-link <?= $isRecetaComponenteActive ? 'active' : '' ?>">
-                            <i class="bi bi-pie-chart text-warning"></i>
-                            <span>Nutrientes de Recetas</span>
-                        </a>
                         <a href="<?= base_url('alimentoreceta') ?>" class="submenu-link <?= $isAlimentoRecetaActive ? 'active' : '' ?>">
                             <i class="bi bi-diagram-3-fill text-warning"></i>
                             <span>Ingredientes Recetas</span>
                         </a>
+                        <a href="<?= base_url('recetacomponentenutricional') ?>" class="submenu-link <?= $isRecetaComponenteActive ? 'active' : '' ?>">
+                            <i class="bi bi-pie-chart text-warning"></i>
+                            <span>Nutrientes de Recetas</span>
+                        </a>
+                        <a href="<?= base_url('alimento') ?>" class="submenu-link <?= $isAlimentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-apple text-success"></i>
+                            <span>Alimentos</span>
+                        </a>
+                        <a href="<?= base_url('grupoalimento') ?>" class="submenu-link <?= $isGrupoAlimentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-egg-fried text-success"></i>
+                            <span>Grupos de Alimentos</span>
+                        </a>
+                        <a href="<?= base_url('alimentocomponentenutricional') ?>" class="submenu-link <?= $isAlimentoComponenteActive ? 'active' : '' ?>">
+                            <i class="bi bi-link-45deg text-success"></i>
+                            <span>Nutrientes de Alimentos</span>
+                        </a>
+                        <a href="<?= base_url('componentenutricional') ?>" class="submenu-link <?= $isComponenteNutricionalActive ? 'active' : '' ?>">
+                            <i class="bi bi-pie-chart-fill text-info"></i>
+                            <span>Componentes Nutricionales</span>
+                        </a>
+                        <a href="<?= base_url('imagencomponentenutricional') ?>" class="submenu-link <?= $isImagenComponenteActive ? 'active' : '' ?>">
+                            <i class="bi bi-images text-info"></i>
+                            <span>Imágenes de Componentes</span>
+                        </a>
                         <a href="<?= base_url('unidadalimento') ?>" class="submenu-link <?= $isUnidadAlimentoActive ? 'active' : '' ?>">
                             <i class="bi bi-rulers text-info"></i>
                             <span>Unidades de Medida</span>
-                        </a>
-                        <a href="<?= base_url('tipocomida') ?>" class="submenu-link <?= $isTipoComidaActive ? 'active' : '' ?>">
-                            <i class="bi bi-clock-history text-warning"></i>
-                            <span>Tipos de Comida</span>
-                        </a>
-                        <a href="<?= base_url('visitasgim') ?>" class="submenu-link <?= $isVisitaActive ? 'active' : '' ?>">
-                            <i class="bi bi-clock-history text-warning"></i>
-                            <span>Visitas Gimnasio</span>
-                        </a>
-                        <a href="<?= base_url('usuario') ?>" class="submenu-link <?= $isUsuarioActive ? 'active' : '' ?>">
-                            <i class="bi bi-person-lock text-primary"></i>
-                            <span>Usuarios del Sistema</span>
                         </a>
                     </div>
                 </div>
