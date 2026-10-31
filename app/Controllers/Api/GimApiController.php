@@ -501,7 +501,7 @@ class GimApiController extends ResourceController
         $uploadPath = ROOTPATH . 'repositorio/imagen/';
         foreach ($imagenes as &$img) {
             $img['archivoExiste'] = !empty($img['nombre']) && file_exists($uploadPath . $img['nombre']);
-            $img['urlImagen']     = !empty($img['nombre']) ? base_url('repositorio/imagen/' . $img['nombre']) : null;
+            $img['urlImagen']     = !empty($img['nombre']) ? base_url('imagen/imagen/' . $img['nombre']) : null;
         }
 
         return $this->respond([
@@ -530,7 +530,7 @@ class GimApiController extends ResourceController
 
         $uploadPath = ROOTPATH . 'repositorio/imagen/';
         $imagen['archivoExiste'] = !empty($imagen['nombre']) && file_exists($uploadPath . $imagen['nombre']);
-        $imagen['urlImagen']     = !empty($imagen['nombre']) ? base_url('repositorio/imagen/' . $imagen['nombre']) : null;
+        $imagen['urlImagen']     = !empty($imagen['nombre']) ? base_url('imagen/imagen/' . $imagen['nombre']) : null;
 
         return $this->respond([
             'status'  => 200,

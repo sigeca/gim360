@@ -162,10 +162,18 @@ foreach ($modulos as $slug => $controller) {
 
         // Rutas adicionales para imagen
         if ($controller === 'Imagen') {
+            $routes->match(['GET', 'HEAD'], 'imagen/(:any)', 'Imagen::imagen/$1');
+            $routes->match(['GET', 'HEAD'], 'archivo/(:any)', 'Imagen::archivo/$1');
             $routes->post('upload/(:num)', 'Imagen::upload/$1');
         }
     });
 }
+
+// --------------------------------------------------------------------
+// RUTAS UNIVERSALES PARA SERVIR ARCHIVOS DEL REPOSITORIO (LOCAL Y NUBE)
+// --------------------------------------------------------------------
+$routes->match(['GET', 'HEAD'], 'repositorio/(:any)', 'Repositorio::index/$1');
+$routes->match(['GET', 'HEAD'], 'public/repositorio/(:any)', 'Repositorio::index/$1');
 
 // --------------------------------------------------------------------
 // RUTAS API REST PARA LA APLICACIÓN MÓVIL GIM360

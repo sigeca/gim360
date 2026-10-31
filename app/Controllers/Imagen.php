@@ -124,6 +124,78 @@ class Imagen extends BaseController
         }
     }
 
+    /**
+     * Localiza la ruta física absoluta de un archivo en el repositorio
+     */
+    public function getRutaArchivo(?string $filename): ?string
+    {
+        if (empty($filename)) {
+            return null;
+        }
+
+        $cleanFilename = basename(trim($filename));
+        $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+
+        $candidates = [
+            $this->uploadPath . $cleanFilename,
+            $baseDir . '/repositorio/imagen/' . $cleanFilename,
+            $baseDir . '/repositorio/images/' . $cleanFilename,
+            $baseDir . '/repositorio/' . $cleanFilename,
+            FCPATH . 'repositorio/imagen/' . $cleanFilename,
+            FCPATH . 'repositorio/' . $cleanFilename,
+        ];
+
+        foreach ($candidates as $cand) {
+            if (file_exists($cand) && is_file($cand)) {
+                return $cand;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Servir archivo de imagen con Content-Type y Cache-Control adecuados
+     * Permite visualizar la imagen en cualquier servidor (local o nube)
+     */
+    public function imagen($filename = null)
+    {
+        return $this->archivo($filename);
+    }
+
+    public function archivo($filename = null)
+    {
+        if (empty($filename)) {
+            throw PageNotFoundException::forPageNotFound("Nombre de archivo no especificado.");
+        }
+
+        $targetPath = $this->getRutaArchivo($filename);
+
+        if (!$targetPath) {
+            throw PageNotFoundException::forPageNotFound("Archivo no encontrado en repositorio/imagen/: " . basename($filename));
+        }
+
+        $extension = strtolower(pathinfo($targetPath, PATHINFO_EXTENSION));
+        $mimeTypes = [
+            'webp' => 'image/webp',
+            'png'  => 'image/png',
+            'jpg'  => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'gif'  => 'image/gif',
+            'svg'  => 'image/svg+xml',
+            'bmp'  => 'image/bmp',
+            'ico'  => 'image/x-icon',
+        ];
+
+        $contentType = $mimeTypes[$extension] ?? (mime_content_type($targetPath) ?: 'image/jpeg');
+
+        return $this->response
+            ->setHeader('Content-Type', $contentType)
+            ->setHeader('Content-Length', (string)filesize($targetPath))
+            ->setHeader('Cache-Control', 'public, max-age=86400')
+            ->setBody(file_get_contents($targetPath));
+    }
+
     public function index($id = null)
     {
         return $this->actual($id);
@@ -144,9 +216,10 @@ class Imagen extends BaseController
         $archivoExiste = false;
         $urlImagen     = null;
         if ($imagen && !empty($imagen['nombre'])) {
-            $archivoRuta = $this->uploadPath . $imagen['nombre'];
-            $archivoExiste = file_exists($archivoRuta);
-            $urlImagen = base_url('repositorio/imagen/' . $imagen['nombre']);
+            $targetPath = $this->getRutaArchivo($imagen['nombre']);
+            $archivoExiste = ($targetPath !== null);
+            $cleanName = basename(trim($imagen['nombre']));
+            $urlImagen = base_url('imagen/imagen/' . $cleanName);
         }
 
         $data = [
@@ -193,8 +266,9 @@ class Imagen extends BaseController
         $imagenes = $this->imagenModel->getImagenes($search);
 
         foreach ($imagenes as &$img) {
-            $img['archivoExiste'] = !empty($img['nombre']) && file_exists($this->uploadPath . $img['nombre']);
-            $img['urlImagen']     = !empty($img['nombre']) ? base_url('repositorio/imagen/' . $img['nombre']) : null;
+            $imgExiste = !empty($img['nombre']) && ($this->getRutaArchivo($img['nombre']) !== null);
+            $img['archivoExiste'] = $imgExiste;
+            $img['urlImagen']     = !empty($img['nombre']) ? base_url('imagen/imagen/' . basename(trim($img['nombre']))) : null;
         }
 
         $data = [
@@ -333,13 +407,18 @@ class Imagen extends BaseController
             throw PageNotFoundException::forPageNotFound('Imagen no encontrada.');
         }
 
+        $archivoExiste = !empty($imagen['nombre']) && ($this->getRutaArchivo($imagen['nombre']) !== null);
+        $urlImagen = !empty($imagen['nombre']) ? base_url('imagen/imagen/' . basename(trim($imagen['nombre']))) : null;
+
         $data = [
-            'title'       => 'Editar Imagen #' . $imagen['idimagen'],
-            'imagen'      => $imagen,
-            'formatos'    => $this->formatoModel->getFormatos(),
-            'ordenadores' => $this->ordenadorModel->getOrdenadores(),
-            'directorios' => $this->directorioModel->getDirectorios(),
-            'module'      => 'imagen',
+            'title'         => 'Editar Imagen #' . $imagen['idimagen'],
+            'imagen'        => $imagen,
+            'archivoExiste' => $archivoExiste,
+            'urlImagen'     => $urlImagen,
+            'formatos'      => $this->formatoModel->getFormatos(),
+            'ordenadores'   => $this->ordenadorModel->getOrdenadores(),
+            'directorios'   => $this->directorioModel->getDirectorios(),
+            'module'        => 'imagen',
         ];
 
         return view('imagen/imagen_edit', $data);
@@ -449,7 +528,8 @@ class Imagen extends BaseController
                 'status'    => 'success',
                 'message'   => 'Imagen subida correctamente.',
                 'filename'  => $filename,
-                'url'       => base_url('repositorio/imagen/' . $filename),
+                'url'       => base_url('imagen/imagen/' . $filename),
+                'repoUrl'   => base_url('repositorio/imagen/' . $filename),
             ]);
         }
 

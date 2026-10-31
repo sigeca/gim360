@@ -42,9 +42,16 @@
                     <!-- Nombre de Archivo Actual -->
                     <div class="mb-3 p-3 bg-light rounded-3 border">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <span class="small text-muted d-block">Nombre de Archivo Actual:</span>
-                                <strong class="font-monospace text-dark"><?= esc($imagen['nombre'] ?: 'Sin archivo') ?></strong>
+                            <div class="d-flex align-items-center gap-3">
+                                <?php if (!empty($archivoExiste) && !empty($urlImagen)): ?>
+                                    <img src="<?= $urlImagen ?>" 
+                                         onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($imagen['nombre'])) ?>';"
+                                         alt="Preview" class="rounded border shadow-sm" style="width: 54px; height: 54px; object-fit: cover;">
+                                <?php endif; ?>
+                                <div>
+                                    <span class="small text-muted d-block">Nombre de Archivo Actual:</span>
+                                    <strong class="font-monospace text-dark"><?= esc($imagen['nombre'] ?: 'Sin archivo') ?></strong>
+                                </div>
                             </div>
                             <span class="badge bg-secondary">ID #<?= $imagen['idimagen'] ?></span>
                         </div>

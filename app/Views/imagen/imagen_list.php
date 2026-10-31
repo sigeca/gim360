@@ -83,7 +83,9 @@
                                     <td class="ps-4 fw-bold text-muted">#<?= $img['idimagen'] ?></td>
                                     <td>
                                         <?php if ($img['archivoExiste'] && !empty($img['urlImagen'])): ?>
-                                            <img src="<?= $img['urlImagen'] ?>" alt="Thumb" class="rounded border shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
+                                            <img src="<?= $img['urlImagen'] ?>" 
+                                                 onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($img['nombre'])) ?>';"
+                                                 alt="Thumb" class="rounded border shadow-sm" style="width: 50px; height: 50px; object-fit: cover;">
                                         <?php else: ?>
                                             <div class="rounded bg-light border d-flex align-items-center justify-content-center text-muted" style="width: 50px; height: 50px;">
                                                 <i class="bi bi-image"></i>

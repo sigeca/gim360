@@ -60,6 +60,7 @@
                                 <?php if ($archivoExiste && !empty($urlImagen)): ?>
                                     <div class="position-relative d-inline-block w-100 mb-2">
                                         <img src="<?= $urlImagen ?>" 
+                                             onerror="this.onerror=null; this.src='<?= base_url('repositorio/imagen/' . esc($imagen['nombre'])) ?>';"
                                              alt="<?= esc($imagen['nombre']) ?>" 
                                              class="img-fluid rounded-3 shadow-sm border" 
                                              style="max-height: 280px; width: auto; object-fit: contain;">
