@@ -51,7 +51,14 @@ class ComponenteNutricionalModel extends Model
             $builder->groupEnd();
         }
 
-        return $builder->findAll();
+        $records = $builder->findAll();
+        foreach ($records as &$rec) {
+            $rec['imagenes']       = $this->getImagenesByComponente((int)$rec['idcomponentenutricional']);
+            $rec['total_imagenes'] = count($rec['imagenes']);
+            $rec['primera_imagen'] = !empty($rec['imagenes']) ? $rec['imagenes'][0] : null;
+        }
+
+        return $records;
     }
 
     /**
@@ -59,7 +66,7 @@ class ComponenteNutricionalModel extends Model
      */
     public function getAlimentosByComponente(int $idcomponente): array
     {
-        return $this->db->table('alimentocomponentenutricional acn')
+        $results = $this->db->table('alimentocomponentenutricional acn')
             ->select('acn.idalimentocomponentenutricional,
                       a.idalimento, 
                       a.nombre AS alimento_nombre, 
@@ -72,6 +79,15 @@ class ComponenteNutricionalModel extends Model
             ->orderBy('a.nombre', 'ASC')
             ->get()
             ->getResultArray();
+
+        $alimentoModel = new \App\Models\AlimentoModel();
+        foreach ($results as &$row) {
+            $row['imagenes']       = $alimentoModel->getImagenesByAlimento((int)$row['idalimento']);
+            $row['total_imagenes'] = count($row['imagenes']);
+            $row['primera_imagen'] = !empty($row['imagenes']) ? $row['imagenes'][0] : null;
+        }
+
+        return $results;
     }
 
     /**
@@ -120,6 +136,13 @@ class ComponenteNutricionalModel extends Model
             }
             $row['es_directa'] = !empty($row['idrecetacomponentenutricional']);
             $row['por_ingredientes'] = (int)$row['total_alimentos_con_componente'] > 0;
+        }
+
+        $recetaModel = new \App\Models\RecetaModel();
+        foreach ($results as &$row) {
+            $row['imagenes']       = $recetaModel->getImagenesByReceta((int)$row['idreceta']);
+            $row['total_imagenes'] = count($row['imagenes']);
+            $row['primera_imagen'] = !empty($row['imagenes']) ? $row['imagenes'][0] : null;
         }
 
         return $results;

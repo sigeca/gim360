@@ -456,8 +456,11 @@ class GimApiController extends ResourceController
             return $this->failNotFound('Componente nutricional no encontrado');
         }
 
-        $componente['alimentos'] = $componenteModel->getAlimentosByComponente((int)$id);
-        $componente['recetas']   = $componenteModel->getRecetasByComponente((int)$id);
+        $componente['imagenes']       = $componenteModel->getImagenesByComponente((int)$id);
+        $componente['total_imagenes'] = count($componente['imagenes']);
+        $componente['primera_imagen'] = !empty($componente['imagenes']) ? $componente['imagenes'][0] : null;
+        $componente['alimentos']      = $componenteModel->getAlimentosByComponente((int)$id);
+        $componente['recetas']        = $componenteModel->getRecetasByComponente((int)$id);
 
         return $this->respond([
             'status'  => 200,
