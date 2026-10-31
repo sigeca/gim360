@@ -236,6 +236,9 @@
                                                 <?= esc($cm['tiempopreparacion'] ? $cm['tiempopreparacion'] . ' min' : 'No especificado') ?>
                                             </td>
                                             <td class="text-end pe-4">
+                                                <a href="<?= base_url('planalimentacion/marcar-cumplimiento/' . $plan['idplanalimentacion'] . '/' . $cm['idcomida']) ?>" class="btn btn-xs btn-success text-white me-1" title="Registrar que se consumió esta comida ahora" onclick="return confirm('¿Registrar consumo de \'<?= esc($cm['receta_nombre']) ?>\' en este momento?');">
+                                                    <i class="bi bi-check-lg"></i> Cumplir
+                                                </a>
                                                 <a href="<?= base_url('comida/actual/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-primary" title="Ver ficha">
                                                     <i class="bi bi-eye"></i>
                                                 </a>
@@ -244,6 +247,82 @@
                                                 </a>
                                                 <a href="<?= base_url('comida/delete/' . $cm['idcomida'] . '?from_plan=1') ?>" class="btn btn-xs btn-outline-danger" title="Remover del plan" onclick="return confirm('¿Remover esta comida del plan?');">
                                                     <i class="bi bi-x-lg"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            </div>
+
+            <!-- Registro de Cumplimiento de Comidas del Plan -->
+            <div class="card card-custom bg-white shadow-sm mb-4">
+                <div class="card-header bg-white py-3 border-bottom d-flex flex-wrap justify-content-between align-items-center gap-2">
+                    <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                        <i class="bi bi-check2-circle text-success me-2 fs-5"></i>Registro de Cumplimiento de Ingestas
+                        <span class="badge bg-success text-white ms-2"><?= count($cumplimientos ?? []) ?></span>
+                    </h6>
+                    <div class="d-flex gap-2">
+                        <a href="<?= base_url('cumplimientoplanalimentacion/add?idplanalimentacion=' . $plan['idplanalimentacion']) ?>" class="btn btn-sm btn-outline-success">
+                            <i class="bi bi-plus-circle me-1"></i> Registrar Cumplimiento Manual
+                        </a>
+                        <a href="<?= base_url('cumplimientoplanalimentacion/listar?idplanalimentacion=' . $plan['idplanalimentacion']) ?>" class="btn btn-sm btn-outline-secondary">
+                            <i class="bi bi-list-check me-1"></i> Ver Todos
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <?php if (empty($cumplimientos)): ?>
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-calendar2-check fs-2 d-block mb-2 text-secondary"></i>
+                            <p class="mb-2">No se han registrado cumplimientos de comidas para este plan aún.</p>
+                            <small class="text-muted">Puede marcar cumplimientos rápidamente con el botón <strong>Cumplir</strong> en las comidas programadas arriba o registrar con fecha y hora personalizada.</small>
+                        </div>
+                    <?php else: ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="ps-4">ID</th>
+                                        <th>Fecha y Hora</th>
+                                        <th>Momento / Tipo</th>
+                                        <th>Receta Consumida</th>
+                                        <th>Hora Sugerida</th>
+                                        <th class="text-end pe-4">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($cumplimientos as $cp): ?>
+                                        <tr>
+                                            <td class="ps-4 text-muted small">#<?= $cp['idcumplimientoplanalimentacion'] ?></td>
+                                            <td class="fw-bold text-success">
+                                                <i class="bi bi-calendar-check me-1"></i><?= esc($cp['fechahora']) ?>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">
+                                                    <?= esc($cp['tipocomida_nombre']) ?>
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="<?= base_url('receta/actual/' . $cp['idreceta']) ?>" class="fw-semibold text-decoration-none text-primary">
+                                                    <i class="bi bi-book me-1"></i><?= esc($cp['receta_nombre']) ?>
+                                                </a>
+                                            </td>
+                                            <td class="text-muted small">
+                                                <?= !empty($cp['horarecomendada']) ? substr($cp['horarecomendada'], 0, 5) : 'Flexible' ?>
+                                            </td>
+                                            <td class="text-end pe-4">
+                                                <a href="<?= base_url('cumplimientoplanalimentacion/actual/' . $cp['idcumplimientoplanalimentacion']) ?>" class="btn btn-xs btn-outline-primary" title="Ver detalle de cumplimiento">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a href="<?= base_url('cumplimientoplanalimentacion/edit/' . $cp['idcumplimientoplanalimentacion']) ?>" class="btn btn-xs btn-outline-warning text-dark" title="Editar">
+                                                    <i class="bi bi-pencil-square"></i>
+                                                </a>
+                                                <a href="<?= base_url('cumplimientoplanalimentacion/delete/' . $cp['idcumplimientoplanalimentacion'] . '?from_plan=1') ?>" class="btn btn-xs btn-outline-danger" title="Eliminar registro" onclick="return confirm('¿Eliminar este registro de cumplimiento?');">
+                                                    <i class="bi bi-trash"></i>
                                                 </a>
                                             </td>
                                         </tr>

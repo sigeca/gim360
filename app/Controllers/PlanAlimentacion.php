@@ -46,17 +46,22 @@ class PlanAlimentacion extends BaseController
         }
 
         $comidas = [];
+        $cumplimientos = [];
         if ($plan) {
             $comidaModel = new \App\Models\ComidaModel();
             $comidas = $comidaModel->getComidasByPlan((int)$plan['idplanalimentacion']);
+
+            $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+            $cumplimientos = $cumplimientoModel->getCumplimientosByPlan((int)$plan['idplanalimentacion']);
         }
 
         $data = [
-            'title'       => 'Plan de Alimentación' . ($plan ? ': ' . $plan['nombre'] : ''),
-            'plan'        => $plan,
-            'comidas'     => $comidas,
-            'otrosPlanes' => $otrosPlanes,
-            'module'      => 'planalimentacion',
+            'title'         => 'Plan de Alimentación' . ($plan ? ': ' . $plan['nombre'] : ''),
+            'plan'          => $plan,
+            'comidas'       => $comidas,
+            'cumplimientos' => $cumplimientos,
+            'otrosPlanes'   => $otrosPlanes,
+            'module'        => 'planalimentacion',
         ];
 
         return view('planalimentacion/planalimentacion_record', $data);
@@ -309,5 +314,31 @@ class PlanAlimentacion extends BaseController
         } catch (\Exception $e) {
             return redirect()->to(base_url('planalimentacion/actual/' . $id))->with('error', 'No se puede eliminar el plan: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Marcar una comida programada como cumplida directamente desde el plan
+     */
+    public function marcarCumplimiento($idplan, $idcomida)
+    {
+        $plan = $this->planModel->find($idplan);
+        if (!$plan) {
+            return redirect()->to(base_url('planalimentacion'))->with('error', 'Plan no encontrado.');
+        }
+
+        $comidaModel = new \App\Models\ComidaModel();
+        $comida = $comidaModel->find($idcomida);
+        if (!$comida || (int)$comida['idplanalimentacion'] !== (int)$idplan) {
+            return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('error', 'La comida no corresponde a este plan.');
+        }
+
+        $cumplimientoModel = new \App\Models\CumplimientoPlanAlimentacionModel();
+        $cumplimientoModel->insert([
+            'idplanalimentacion' => (int)$idplan,
+            'idcomida'           => (int)$idcomida,
+            'fechahora'          => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->to(base_url('planalimentacion/actual/' . $idplan))->with('success', '¡Comida registrada como cumplida exitosamente hoy a las ' . date('H:i') . '!');
     }
 }

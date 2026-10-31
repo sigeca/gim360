@@ -60,6 +60,10 @@ $modulos = [
     'imagenalimento'                  => 'ImagenAlimento',
     'imagen-alimento'                 => 'ImagenAlimento',
     'imagenesalimentos'               => 'ImagenAlimento',
+    'cumplimientoplanalimentacion'    => 'CumplimientoPlanAlimentacion',
+    'cumplimiento-plan-alimentacion' => 'CumplimientoPlanAlimentacion',
+    'cumplimientoplan'                => 'CumplimientoPlanAlimentacion',
+    'cumplimientosplanes'             => 'CumplimientoPlanAlimentacion',
     'tipocomida'         => 'TipoComida',
     'tipo-comida'        => 'TipoComida',
     'tiposcomida'        => 'TipoComida',
@@ -140,6 +144,17 @@ foreach ($modulos as $slug => $controller) {
         if ($controller === 'ComponenteNutricional') {
             $routes->post('asignarImagen/(:num)', 'ComponenteNutricional::asignarImagen/$1');
             $routes->post('quitarImagen/(:num)/(:num)', 'ComponenteNutricional::quitarImagen/$1/$2');
+        }
+
+        // Rutas adicionales para cumplimientoplanalimentacion
+        if ($controller === 'CumplimientoPlanAlimentacion') {
+            $routes->get('comidas-plan/(:num)', 'CumplimientoPlanAlimentacion::getComidasPorPlanAjax/$1');
+        }
+
+        // Rutas adicionales para planalimentacion
+        if ($controller === 'PlanAlimentacion') {
+            $routes->post('marcar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::marcarCumplimiento/$1/$2');
+            $routes->get('marcar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::marcarCumplimiento/$1/$2');
         }
 
         // Rutas adicionales para receta (gestión de imágenes)
