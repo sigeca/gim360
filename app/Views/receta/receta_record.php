@@ -15,6 +15,22 @@
                 'currentId' => $receta['idreceta']
             ]) ?>
 
+            <!-- Mensajes Flash de Sesión -->
+            <?php if (session()->getFlashdata('success')): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    <?= session()->getFlashdata('success') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+            <?php if (session()->getFlashdata('error')): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    <?= session()->getFlashdata('error') ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
             <!-- Ficha Principal de la Receta -->
             <div class="card card-custom bg-white border-top border-4 border-warning shadow-sm mb-4">
                 <div class="card-header bg-white py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom">
@@ -184,6 +200,101 @@
                         </div>
                     </div>
 
+                    <!-- Galería e Imágenes de la Receta -->
+                    <div class="card border border-warning-subtle shadow-sm mb-4">
+                        <div class="card-header bg-warning bg-opacity-10 py-3 d-flex flex-wrap justify-content-between align-items-center gap-2 border-bottom border-warning-subtle">
+                            <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                <i class="bi bi-images text-warning me-2 fs-5"></i>Galería e Imágenes de la Receta
+                                <span class="badge bg-warning text-dark border border-warning ms-2"><?= count($imagenes ?? []) ?></span>
+                            </h6>
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="<?= base_url('imagenreceta/listar?idreceta=' . $receta['idreceta']) ?>" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-list-task me-1"></i> Gestionar en módulo
+                                </a>
+                                <button type="button" class="btn btn-sm btn-warning text-dark fw-bold" data-bs-toggle="modal" data-bs-target="#modalAsignarImagen">
+                                    <i class="bi bi-plus-circle me-1"></i> Asignar Imagen
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-3">
+                            <?php if (empty($imagenes)): ?>
+                                <div class="text-center py-4 bg-light rounded-3 border">
+                                    <i class="bi bi-images text-secondary fs-1 d-block mb-2"></i>
+                                    <h6 class="fw-bold text-secondary mb-1">Sin imágenes asignadas</h6>
+                                    <p class="text-muted small mb-3">Esta receta aún no cuenta con fotografías o recursos visuales asociados.</p>
+                                    <button type="button" class="btn btn-sm btn-outline-warning text-dark fw-bold" data-bs-toggle="modal" data-bs-target="#modalAsignarImagen">
+                                        <i class="bi bi-plus-lg me-1"></i> Asociar primera imagen
+                                    </button>
+                                </div>
+                            <?php else: ?>
+                                <div class="row g-3">
+                                    <?php foreach ($imagenes as $img): ?>
+                                        <div class="col-sm-6 col-md-4">
+                                            <div class="card h-100 border shadow-sm">
+                                                <div class="p-2 text-center bg-light border-bottom position-relative" style="height: 150px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                                                    <?php if ($img['archivoExiste'] && !empty($img['urlImagen'])): ?>
+                                                        <img src="<?= $img['urlImagen'] ?>" 
+                                                             onerror="this.onerror=null; this.src='<?= !empty($img['urlFallback']) ? $img['urlFallback'] : base_url('imagen/imagen/' . esc($img['imagen_nombre'])) ?>';"
+                                                             alt="<?= esc($img['imagen_nombre']) ?>" 
+                                                             class="img-fluid rounded" 
+                                                             style="max-height: 135px; width: auto; object-fit: contain;">
+                                                    <?php else: ?>
+                                                        <div class="text-muted small">
+                                                            <i class="bi bi-image fs-1 text-secondary d-block"></i>
+                                                            <span>Sin archivo físico</span>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                </div>
+                                                <div class="card-body p-2 d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <span class="d-block font-monospace small fw-bold text-dark text-truncate" title="<?= esc($img['imagen_nombre']) ?>">
+                                                            <?= esc($img['imagen_nombre']) ?>
+                                                        </span>
+                                                        <div class="d-flex align-items-center justify-content-between mt-1">
+                                                            <span class="badge bg-secondary-subtle text-secondary border font-monospace" style="font-size: 0.65rem;">
+                                                                <?= strtoupper(esc($img['formato_nombre'] ?: 'IMG')) ?>
+                                                            </span>
+                                                            <small class="text-muted font-monospace" style="font-size: 0.7rem;">
+                                                                <i class="bi bi-folder me-1 text-warning"></i><?= esc($img['directorio_ruta'] ?: 'repositorio/imagen') ?>
+                                                            </small>
+                                                        </div>
+                                                        <?php if (!empty($img['imagen_descripcion'])): ?>
+                                                            <p class="text-secondary small mt-1 mb-0 text-truncate" style="font-size: 0.75rem;" title="<?= esc($img['imagen_descripcion']) ?>">
+                                                                <?= esc($img['imagen_descripcion']) ?>
+                                                            </p>
+                                                        <?php endif; ?>
+                                                    </div>
+
+                                                    <div class="d-flex justify-content-between align-items-center mt-2 pt-2 border-top">
+                                                        <div class="btn-group btn-group-sm">
+                                                            <?php if (!empty($img['urlImagen'])): ?>
+                                                                <a href="<?= $img['urlImagen'] ?>" target="_blank" class="btn btn-outline-primary btn-sm py-0 px-2" title="Abrir imagen original">
+                                                                    <i class="bi bi-box-arrow-up-right"></i>
+                                                                </a>
+                                                            <?php endif; ?>
+                                                            <a href="<?= base_url('imagen/actual/' . $img['idimagen']) ?>" class="btn btn-outline-secondary btn-sm py-0 px-2" title="Ver ficha en Imágenes">
+                                                                <i class="bi bi-eye"></i>
+                                                            </a>
+                                                            <a href="<?= base_url('imagenreceta/actual/' . $img['idimagenreceta']) ?>" class="btn btn-outline-info btn-sm py-0 px-2" title="Ver vínculo">
+                                                                <i class="bi bi-link-45deg"></i>
+                                                            </a>
+                                                        </div>
+                                                        <form action="<?= base_url('receta/quitarImagen/' . $receta['idreceta'] . '/' . $img['idimagen']) ?>" method="post" class="d-inline" onsubmit="return confirm('¿Desvincular esta imagen de la receta?');">
+                                                            <?= csrf_field() ?>
+                                                            <button type="submit" class="btn btn-outline-danger btn-sm py-0 px-2" title="Quitar de esta receta">
+                                                                <i class="bi bi-x-lg"></i>
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
                 </div>
 
                 <div class="card-footer bg-light py-3 px-4 d-flex justify-content-between align-items-center">
@@ -193,6 +304,54 @@
                     <a href="<?= base_url('receta/add') ?>" class="btn btn-sm btn-outline-success">
                         <i class="bi bi-plus-circle me-1"></i>Registrar otra receta
                     </a>
+                </div>
+            </div>
+
+            <!-- Modal para Asignar Imagen a la Receta -->
+            <div class="modal fade" id="modalAsignarImagen" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <form action="<?= base_url('receta/asignarImagen/' . $receta['idreceta']) ?>" method="post">
+                            <?= csrf_field() ?>
+                            <div class="modal-header bg-warning bg-opacity-25 border-bottom border-warning-subtle">
+                                <h5 class="modal-title fw-bold text-dark">
+                                    <i class="bi bi-images text-warning me-2"></i>Asignar Imagen a la Receta
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-4">
+                                <p class="text-muted small mb-3">
+                                    Seleccione una imagen del repositorio institucional de Gim360 para ilustrar esta receta:
+                                </p>
+
+                                <div class="mb-3">
+                                    <label for="idimagenSelect" class="form-label fw-bold">Imagen del Catálogo <span class="text-danger">*</span></label>
+                                    <select name="idimagen" id="idimagenSelect" class="form-select font-monospace" required>
+                                        <option value="">-- Seleccionar imagen disponible --</option>
+                                        <?php if (!empty($todasImagenes)): ?>
+                                            <?php foreach ($todasImagenes as $img): ?>
+                                                <option value="<?= $img['idimagen'] ?>">
+                                                    #<?= $img['idimagen'] ?> - <?= esc($img['nombre']) ?> <?= !empty($img['descripcion']) ? ' (' . esc(mb_strimwidth($img['descripcion'], 0, 35, '...')) . ')' : '' ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        <?php endif; ?>
+                                    </select>
+                                </div>
+
+                                <div class="text-end">
+                                    <a href="<?= base_url('imagen/add') ?>" target="_blank" class="small text-decoration-none">
+                                        <i class="bi bi-upload me-1"></i>Subir nueva imagen al repositorio
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-warning text-dark fw-bold">
+                                    <i class="bi bi-check-circle me-1"></i> Vincular a Receta
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
 

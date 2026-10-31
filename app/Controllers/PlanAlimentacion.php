@@ -4,17 +4,20 @@ namespace App\Controllers;
 
 use App\Models\PlanAlimentacionModel;
 use App\Models\PersonaModel;
+use App\Models\ObjetivoNutricionalModel;
 use CodeIgniter\Exceptions\PageNotFoundException;
 
 class PlanAlimentacion extends BaseController
 {
     protected PlanAlimentacionModel $planModel;
     protected PersonaModel $personaModel;
+    protected ObjetivoNutricionalModel $objetivoModel;
 
     public function __construct()
     {
-        $this->planModel    = new PlanAlimentacionModel();
-        $this->personaModel = new PersonaModel();
+        $this->planModel     = new PlanAlimentacionModel();
+        $this->personaModel  = new PersonaModel();
+        $this->objetivoModel = new ObjetivoNutricionalModel();
     }
 
     public function index($id = null)
@@ -107,13 +110,17 @@ class PlanAlimentacion extends BaseController
     public function add()
     {
         $idpersonaPreselected = $this->request->getGet('idpersona');
+        $idobjetivoPreselected = $this->request->getGet('idobjetivonutricional');
         $personas = $this->personaModel->orderBy('apellidos', 'ASC')->orderBy('nombres', 'ASC')->findAll();
+        $objetivos = $this->objetivoModel->getObjetivos();
 
         $data = [
-            'title'                => 'Registrar Plan de Alimentación',
-            'personas'             => $personas,
-            'idpersonaPreselected' => $idpersonaPreselected,
-            'module'               => 'planalimentacion',
+            'title'                 => 'Registrar Plan de Alimentación',
+            'personas'              => $personas,
+            'objetivos'             => $objetivos,
+            'idpersonaPreselected'  => $idpersonaPreselected,
+            'idobjetivoPreselected' => $idobjetivoPreselected,
+            'module'                => 'planalimentacion',
         ];
 
         return view('planalimentacion/planalimentacion_form', $data);
@@ -122,11 +129,12 @@ class PlanAlimentacion extends BaseController
     public function save()
     {
         $rules = [
-            'idpersona'   => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
-            'nombre'      => 'required|min_length[3]|max_length[150]',
-            'fechainicio' => 'required|valid_date',
-            'fechafin'    => 'permit_empty|valid_date',
-            'objetivo'    => 'permit_empty',
+            'idpersona'             => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
+            'idobjetivonutricional' => 'permit_empty|is_natural_no_zero|is_not_unique[objetivonutricional.idobjetivonutricional]',
+            'nombre'                => 'required|min_length[3]|max_length[150]',
+            'fechainicio'           => 'required|valid_date',
+            'fechafin'              => 'permit_empty|valid_date',
+            'objetivo'              => 'permit_empty',
         ];
 
         $messages = [
@@ -134,6 +142,10 @@ class PlanAlimentacion extends BaseController
                 'required'           => 'Debe seleccionar una persona.',
                 'is_natural_no_zero' => 'Persona seleccionada no válida.',
                 'is_not_unique'      => 'La persona seleccionada no existe en el sistema.',
+            ],
+            'idobjetivonutricional' => [
+                'is_natural_no_zero' => 'Objetivo nutricional seleccionado no válido.',
+                'is_not_unique'      => 'El objetivo nutricional seleccionado no existe.',
             ],
             'nombre' => [
                 'required'   => 'El nombre del plan de alimentación es obligatorio.',
@@ -154,7 +166,7 @@ class PlanAlimentacion extends BaseController
         }
 
         $fechaInicio = $this->request->getPost('fechainicio');
-        $fechaFin    = trim($this->request->getPost('fechafin')) ?: null;
+        $fechaFin    = trim((string)$this->request->getPost('fechafin')) ?: null;
 
         if (!empty($fechaFin) && $fechaFin < $fechaInicio) {
             return redirect()->back()->withInput()->with('errors', [
@@ -162,12 +174,24 @@ class PlanAlimentacion extends BaseController
             ]);
         }
 
+        $idobjetivo = $this->request->getPost('idobjetivonutricional');
+        $idobjetivo = (!empty($idobjetivo) && is_numeric($idobjetivo)) ? (int)$idobjetivo : null;
+        $objetivoTexto = trim((string)$this->request->getPost('objetivo'));
+
+        if (empty($objetivoTexto) && !empty($idobjetivo)) {
+            $objRecord = $this->objetivoModel->find($idobjetivo);
+            if ($objRecord && !empty($objRecord['nombre'])) {
+                $objetivoTexto = $objRecord['nombre'];
+            }
+        }
+
         $id = $this->planModel->insert([
-            'idpersona'   => (int)$this->request->getPost('idpersona'),
-            'nombre'      => trim($this->request->getPost('nombre')),
-            'fechainicio' => $fechaInicio,
-            'fechafin'    => $fechaFin,
-            'objetivo'    => trim($this->request->getPost('objetivo')) ?: null,
+            'idpersona'             => (int)$this->request->getPost('idpersona'),
+            'idobjetivonutricional' => $idobjetivo,
+            'nombre'                => trim($this->request->getPost('nombre')),
+            'fechainicio'           => $fechaInicio,
+            'fechafin'              => $fechaFin,
+            'objetivo'              => !empty($objetivoTexto) ? $objetivoTexto : null,
         ]);
 
         return redirect()->to(base_url('planalimentacion/actual/' . $id))->with('success', 'Plan de alimentación registrado exitosamente.');
@@ -180,13 +204,15 @@ class PlanAlimentacion extends BaseController
             throw PageNotFoundException::forPageNotFound("Plan de alimentación no encontrado.");
         }
 
-        $personas = $this->personaModel->orderBy('apellidos', 'ASC')->orderBy('nombres', 'ASC')->findAll();
+        $personas  = $this->personaModel->orderBy('apellidos', 'ASC')->orderBy('nombres', 'ASC')->findAll();
+        $objetivos = $this->objetivoModel->getObjetivos();
 
         $data = [
-            'title'    => 'Editar Plan de Alimentación: ' . $plan['nombre'],
-            'plan'     => $plan,
-            'personas' => $personas,
-            'module'   => 'planalimentacion',
+            'title'     => 'Editar Plan de Alimentación: ' . $plan['nombre'],
+            'plan'      => $plan,
+            'personas'  => $personas,
+            'objetivos' => $objetivos,
+            'module'    => 'planalimentacion',
         ];
 
         return view('planalimentacion/planalimentacion_edit', $data);
@@ -200,11 +226,12 @@ class PlanAlimentacion extends BaseController
         }
 
         $rules = [
-            'idpersona'   => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
-            'nombre'      => 'required|min_length[3]|max_length[150]',
-            'fechainicio' => 'required|valid_date',
-            'fechafin'    => 'permit_empty|valid_date',
-            'objetivo'    => 'permit_empty',
+            'idpersona'             => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
+            'idobjetivonutricional' => 'permit_empty|is_natural_no_zero|is_not_unique[objetivonutricional.idobjetivonutricional]',
+            'nombre'                => 'required|min_length[3]|max_length[150]',
+            'fechainicio'           => 'required|valid_date',
+            'fechafin'              => 'permit_empty|valid_date',
+            'objetivo'              => 'permit_empty',
         ];
 
         $messages = [
@@ -212,6 +239,10 @@ class PlanAlimentacion extends BaseController
                 'required'           => 'Debe seleccionar una persona.',
                 'is_natural_no_zero' => 'Persona seleccionada no válida.',
                 'is_not_unique'      => 'La persona seleccionada no existe en el sistema.',
+            ],
+            'idobjetivonutricional' => [
+                'is_natural_no_zero' => 'Objetivo nutricional seleccionado no válido.',
+                'is_not_unique'      => 'El objetivo nutricional seleccionado no existe.',
             ],
             'nombre' => [
                 'required'   => 'El nombre del plan de alimentación es obligatorio.',
@@ -232,7 +263,7 @@ class PlanAlimentacion extends BaseController
         }
 
         $fechaInicio = $this->request->getPost('fechainicio');
-        $fechaFin    = trim($this->request->getPost('fechafin')) ?: null;
+        $fechaFin    = trim((string)$this->request->getPost('fechafin')) ?: null;
 
         if (!empty($fechaFin) && $fechaFin < $fechaInicio) {
             return redirect()->back()->withInput()->with('errors', [
@@ -240,12 +271,24 @@ class PlanAlimentacion extends BaseController
             ]);
         }
 
+        $idobjetivo = $this->request->getPost('idobjetivonutricional');
+        $idobjetivo = (!empty($idobjetivo) && is_numeric($idobjetivo)) ? (int)$idobjetivo : null;
+        $objetivoTexto = trim((string)$this->request->getPost('objetivo'));
+
+        if (empty($objetivoTexto) && !empty($idobjetivo)) {
+            $objRecord = $this->objetivoModel->find($idobjetivo);
+            if ($objRecord && !empty($objRecord['nombre'])) {
+                $objetivoTexto = $objRecord['nombre'];
+            }
+        }
+
         $this->planModel->update($id, [
-            'idpersona'   => (int)$this->request->getPost('idpersona'),
-            'nombre'      => trim($this->request->getPost('nombre')),
-            'fechainicio' => $fechaInicio,
-            'fechafin'    => $fechaFin,
-            'objetivo'    => trim($this->request->getPost('objetivo')) ?: null,
+            'idpersona'             => (int)$this->request->getPost('idpersona'),
+            'idobjetivonutricional' => $idobjetivo,
+            'nombre'                => trim($this->request->getPost('nombre')),
+            'fechainicio'           => $fechaInicio,
+            'fechafin'              => $fechaFin,
+            'objetivo'              => !empty($objetivoTexto) ? $objetivoTexto : null,
         ]);
 
         return redirect()->to(base_url('planalimentacion/actual/' . $id))->with('success', 'Plan de alimentación actualizado exitosamente.');

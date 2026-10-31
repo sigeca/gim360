@@ -30,6 +30,9 @@
                         </div>
                     </form>
 
+                    <a href="<?= base_url('imagenreceta') ?>" class="btn btn-outline-warning text-dark btn-sm">
+                        <i class="bi bi-images me-1"></i> Imágenes de Recetas
+                    </a>
                     <a href="<?= base_url('receta/add') ?>" class="btn btn-success btn-sm">
                         <i class="bi bi-plus-circle me-1"></i> Nueva Receta
                     </a>
@@ -67,9 +70,31 @@
                                 <tr>
                                     <td class="ps-4 fw-bold text-muted">#<?= $r['idreceta'] ?></td>
                                     <td>
-                                        <div class="fw-bold text-dark fs-6 d-flex align-items-center">
-                                            <i class="bi bi-egg-fried text-warning me-2"></i>
-                                            <?= esc($r['nombre']) ?>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <?php if (!empty($r['primera_imagen']) && $r['primera_imagen']['archivoExiste']): ?>
+                                                <div class="rounded border overflow-hidden bg-light flex-shrink-0" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                                                    <img src="<?= $r['primera_imagen']['urlImagen'] ?>" 
+                                                         onerror="this.onerror=null; this.src='<?= !empty($r['primera_imagen']['urlFallback']) ? $r['primera_imagen']['urlFallback'] : base_url('imagen/imagen/' . esc($r['primera_imagen']['imagen_nombre'])) ?>';"
+                                                         alt="<?= esc($r['nombre']) ?>" 
+                                                         style="max-height: 42px; max-width: 42px; object-fit: contain;">
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="rounded border bg-light text-warning flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                                                    <i class="bi bi-book-half fs-5"></i>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div>
+                                                <a href="<?= base_url('receta/actual/' . $r['idreceta']) ?>" class="fw-bold text-dark text-decoration-none">
+                                                    <?= esc($r['nombre']) ?>
+                                                </a>
+                                                <?php if (!empty($r['total_imagenes']) && $r['total_imagenes'] > 0): ?>
+                                                    <div>
+                                                        <a href="<?= base_url('imagenreceta/listar?idreceta=' . $r['idreceta']) ?>" class="badge bg-warning-subtle text-dark border border-warning text-decoration-none" style="font-size: 0.65rem;">
+                                                            <i class="bi bi-images me-1 text-warning"></i><?= $r['total_imagenes'] ?> <?= $r['total_imagenes'] == 1 ? 'imagen' : 'imágenes' ?>
+                                                        </a>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>

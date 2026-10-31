@@ -238,14 +238,16 @@ $isRecetaComponenteActive = (strpos($uri, 'recetacomponentenutricional') === 0 |
 $isGrupoAlimentoActive = (strpos($uri, 'grupoalimento') === 0 || strpos($uri, 'grupo-alimento') === 0 || strpos($uri, 'gruposalimentos') === 0);
 $isAlimentoActive = (strpos($uri, 'alimento') === 0 && strpos($uri, 'grupoalimento') === false && strpos($uri, 'grupo-alimento') === false && strpos($uri, 'alimentoreceta') === false && strpos($uri, 'alimento-receta') === false && strpos($uri, 'alimentocomponente') === false && strpos($uri, 'alimento-componente') === false);
 $isPlanAlimentacionActive = (strpos($uri, 'planalimentacion') === 0 || strpos($uri, 'plan-alimentacion') === 0 || strpos($uri, 'planesalimentacion') === 0);
-$isRecetaActive = (strpos($uri, 'receta') === 0 || strpos($uri, 'recetas') === 0) && strpos($uri, 'alimentoreceta') === false && strpos($uri, 'alimento-receta') === false && strpos($uri, 'recetacomponente') === false && strpos($uri, 'receta-componente') === false;
+$isObjetivoNutricionalActive = (strpos($uri, 'objetivonutricional') === 0 || strpos($uri, 'objetivo-nutricional') === 0 || strpos($uri, 'objetivosnutricionales') === 0);
+$isRecetaActive = (strpos($uri, 'receta') === 0 || strpos($uri, 'recetas') === 0) && strpos($uri, 'alimentoreceta') === false && strpos($uri, 'alimento-receta') === false && strpos($uri, 'recetacomponente') === false && strpos($uri, 'receta-componente') === false && strpos($uri, 'imagenreceta') === false;
+$isImagenRecetaActive = (strpos($uri, 'imagenreceta') === 0 || strpos($uri, 'imagen-receta') === 0 || strpos($uri, 'imagenesrecetas') === 0);
 $isUnidadAlimentoActive = (strpos($uri, 'unidadalimento') === 0 || strpos($uri, 'unidad-alimento') === 0 || strpos($uri, 'unidadesalimento') === 0);
 $isAlimentoRecetaActive = (strpos($uri, 'alimentoreceta') === 0 || strpos($uri, 'alimento-receta') === 0);
 $isTipoComidaActive = (strpos($uri, 'tipocomida') === 0 || strpos($uri, 'tipo-comida') === 0 || strpos($uri, 'tiposcomida') === 0);
 $isComidaActive = (strpos($uri, 'comida') === 0 || strpos($uri, 'comidas') === 0) && strpos($uri, 'tipocomida') === false;
 $isVisitaActive  = (strpos($uri, 'visitasgim') === 0);
 $isUsuarioActive = (strpos($uri, 'usuario') === 0);
-$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isPerfilNutricionalActive || $isComponenteNutricionalActive || $isImagenComponenteActive || $isAlimentoComponenteActive || $isRecetaComponenteActive || $isGrupoAlimentoActive || $isAlimentoActive || $isPlanAlimentacionActive || $isComidaActive || $isRecetaActive || $isUnidadAlimentoActive || $isAlimentoRecetaActive || $isTipoComidaActive || $isVisitaActive || $isUsuarioActive;
+$groupPersonasOpen = $isPersonaActive || $isClienteActive || $isPerfilNutricionalActive || $isComponenteNutricionalActive || $isImagenComponenteActive || $isImagenRecetaActive || $isAlimentoComponenteActive || $isRecetaComponenteActive || $isGrupoAlimentoActive || $isAlimentoActive || $isPlanAlimentacionActive || $isObjetivoNutricionalActive || $isComidaActive || $isRecetaActive || $isUnidadAlimentoActive || $isAlimentoRecetaActive || $isTipoComidaActive || $isVisitaActive || $isUsuarioActive;
 
 $isEquiposActive = (strpos($uri, 'equipo') === 0 && strpos($uri, 'ejercicioequipo') === false && strpos($uri, 'ejercicio-equipo') === false && strpos($uri, 'equipomusculo') === false && strpos($uri, 'equipo-musculo') === false && strpos($uri, 'disponibilidadequipo') === false && strpos($uri, 'disponibilidad-equipo') === false) || (strpos($uri, 'equipos') === 0);
 $isEquipoMusculoActive = (strpos($uri, 'equipomusculo') === 0 || strpos($uri, 'equipo-musculo') === 0);
@@ -375,6 +377,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                             <i class="bi bi-journal-medical text-success"></i>
                             <span>Planes de Alimentación</span>
                         </a>
+                        <a href="<?= base_url('objetivonutricional') ?>" class="submenu-link <?= $isObjetivoNutricionalActive ? 'active' : '' ?>">
+                            <i class="bi bi-bullseye text-warning"></i>
+                            <span>Objetivos Nutricionales</span>
+                        </a>
                         <a href="<?= base_url('comida') ?>" class="submenu-link <?= $isComidaActive ? 'active' : '' ?>">
                             <i class="bi bi-calendar2-heart text-success"></i>
                             <span>Comidas en Planes</span>
@@ -382,6 +388,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('receta') ?>" class="submenu-link <?= $isRecetaActive ? 'active' : '' ?>">
                             <i class="bi bi-book-half text-warning"></i>
                             <span>Recetas Saludables</span>
+                        </a>
+                        <a href="<?= base_url('imagenreceta') ?>" class="submenu-link <?= $isImagenRecetaActive ? 'active' : '' ?>">
+                            <i class="bi bi-images text-warning"></i>
+                            <span>Imágenes de Recetas</span>
                         </a>
                         <a href="<?= base_url('recetacomponentenutricional') ?>" class="submenu-link <?= $isRecetaComponenteActive ? 'active' : '' ?>">
                             <i class="bi bi-pie-chart text-warning"></i>

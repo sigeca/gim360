@@ -104,7 +104,14 @@
                                         </span>
                                     </td>
                                     <td class="text-secondary small" style="max-width: 280px;">
-                                        <?= !empty($pl['objetivo']) ? esc($pl['objetivo']) : '<span class="text-muted fst-italic">Sin objetivo registrado</span>' ?>
+                                        <?php if (!empty($pl['objetivonutricional_nombre'])): ?>
+                                            <div class="mb-1">
+                                                <a href="<?= base_url('objetivonutricional/actual/' . $pl['idobjetivonutricional']) ?>" class="badge bg-warning-subtle text-dark border border-warning text-decoration-none">
+                                                    <i class="bi bi-bullseye text-warning me-1"></i><?= esc($pl['objetivonutricional_nombre']) ?>
+                                                </a>
+                                            </div>
+                                        <?php endif; ?>
+                                        <?= !empty($pl['objetivo']) ? esc($pl['objetivo']) : '<span class="text-muted fst-italic">Sin observaciones</span>' ?>
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="btn-group btn-group-sm">

@@ -126,6 +126,9 @@ class RecetaModel extends Model
             $min = !empty($rec['tiempopreparacion']) ? (int)$rec['tiempopreparacion'] : null;
             $rec['tiempo_texto']     = self::formatTiempo($min);
             $rec['categoria_tiempo'] = self::getCategoriaTiempo($min);
+            $rec['imagenes']         = $this->getImagenesByReceta((int)$rec['idreceta']);
+            $rec['total_imagenes']   = count($rec['imagenes']);
+            $rec['primera_imagen']   = !empty($rec['imagenes']) ? $rec['imagenes'][0] : null;
         }
 
         return $records;
@@ -141,7 +144,50 @@ class RecetaModel extends Model
             $min = !empty($rec['tiempopreparacion']) ? (int)$rec['tiempopreparacion'] : null;
             $rec['tiempo_texto']     = self::formatTiempo($min);
             $rec['categoria_tiempo'] = self::getCategoriaTiempo($min);
+            $rec['imagenes']         = $this->getImagenesByReceta((int)$rec['idreceta']);
+            $rec['total_imagenes']   = count($rec['imagenes']);
         }
         return $rec;
+    }
+
+    /**
+     * Obtiene las imágenes asociadas a una receta con resolución de URLs y archivo físico
+     */
+    public function getImagenesByReceta(int $idreceta): array
+    {
+        try {
+            $builder = $this->db->table('imagenreceta ir')
+                ->select('ir.idimagenreceta,
+                          i.idimagen,
+                          i.nombre AS imagen_nombre,
+                          i.descripcion AS imagen_descripcion,
+                          i.palabrasclave,
+                          i.licencia,
+                          fi.nombre AS formato_nombre,
+                          d.nombre AS directorio_nombre,
+                          d.ruta AS directorio_ruta')
+                ->join('imagen i', 'i.idimagen = ir.idimagen', 'inner')
+                ->join('directorio d', 'd.iddirectorio = i.iddirectorio', 'left')
+                ->join('formatoimagen fi', 'fi.idformatoimagen = i.idformatoimagen', 'left')
+                ->where('ir.idreceta', $idreceta)
+                ->orderBy('ir.idimagenreceta', 'ASC');
+
+            $imagenes = $builder->get()->getResultArray();
+
+            $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+
+            foreach ($imagenes as &$img) {
+                $dirRuta = !empty($img['directorio_ruta']) ? trim($img['directorio_ruta'], '/\\') : 'repositorio/imagen';
+                $cleanName = !empty($img['imagen_nombre']) ? basename(trim($img['imagen_nombre'])) : '';
+                $targetFile = $baseDir . '/' . $dirRuta . '/' . $cleanName;
+                $img['archivoExiste'] = !empty($cleanName) && file_exists($targetFile);
+                $img['urlImagen']     = !empty($cleanName) ? base_url($dirRuta . '/' . $cleanName) : null;
+                $img['urlFallback']   = !empty($cleanName) ? base_url('imagen/imagen/' . $cleanName) : null;
+            }
+
+            return $imagenes;
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 }

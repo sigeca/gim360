@@ -112,14 +112,26 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <th class="table-light text-muted align-top">Objetivo del Plan</th>
+                                            <th class="table-light text-muted">Objetivo Nutricional</th>
+                                            <td>
+                                                <?php if (!empty($plan['idobjetivonutricional']) && !empty($plan['objetivonutricional_nombre'])): ?>
+                                                    <a href="<?= base_url('objetivonutricional/actual/' . $plan['idobjetivonutricional']) ?>" class="badge bg-warning-subtle text-dark border border-warning text-decoration-none py-2 px-3 fw-bold">
+                                                        <i class="bi bi-bullseye text-warning me-1"></i><?= esc($plan['objetivonutricional_nombre']) ?>
+                                                    </a>
+                                                <?php else: ?>
+                                                    <span class="text-muted small fst-italic">Sin clasificar</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted align-top">Detalles / Observaciones</th>
                                             <td>
                                                 <?php if (!empty($plan['objetivo'])): ?>
                                                     <div class="p-3 bg-light rounded border-start border-3 border-success text-secondary small">
-                                                        <i class="bi bi-bullseye text-success me-1"></i><?= nl2br(esc($plan['objetivo'])) ?>
+                                                        <i class="bi bi-journal-text text-success me-1"></i><?= nl2br(esc($plan['objetivo'])) ?>
                                                     </div>
                                                 <?php else: ?>
-                                                    <span class="text-muted fst-italic">Sin objetivo específico registrado.</span>
+                                                    <span class="text-muted fst-italic">Sin observaciones registradas.</span>
                                                 <?php endif; ?>
                                             </td>
                                         </tr>

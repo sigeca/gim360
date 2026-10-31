@@ -102,14 +102,41 @@
                         </div>
                     </div>
 
-                    <!-- Objetivo -->
+                    <!-- Objetivo Nutricional Catalogado -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="idobjetivonutricional" class="form-label fw-bold mb-0">
+                                Objetivo Nutricional
+                            </label>
+                            <a href="<?= base_url('objetivonutricional/add') ?>" target="_blank" class="small text-decoration-none text-success">
+                                <i class="bi bi-plus-circle me-1"></i>Gestionar Objetivos
+                            </a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-bullseye text-warning"></i></span>
+                            <select name="idobjetivonutricional" id="idobjetivonutricional" class="form-select <?= session('errors.idobjetivonutricional') ? 'is-invalid' : '' ?>">
+                                <option value="">-- Seleccionar objetivo predeterminado (Opcional) --</option>
+                                <?php 
+                                    $currObj = old('idobjetivonutricional', $plan['idobjetivonutricional'] ?? '');
+                                    foreach ($objetivos as $obj): 
+                                ?>
+                                    <option value="<?= $obj['idobjetivonutricional'] ?>" <?= ((string)$currObj === (string)$obj['idobjetivonutricional']) ? 'selected' : '' ?>>
+                                        <?= esc($obj['nombre']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-text text-muted">Objetivo catalogado vinculado al plan.</div>
+                    </div>
+
+                    <!-- Objetivo / Observaciones -->
                     <div class="mb-4">
                         <label for="objetivo" class="form-label fw-semibold">
-                            Objetivo Nutricional
+                            Detalles / Observaciones del Objetivo
                         </label>
                         <textarea name="objetivo" 
                                   id="objetivo" 
-                                  rows="4" 
+                                  rows="3" 
                                   class="form-control <?= session('errors.objetivo') ? 'is-invalid' : '' ?>" 
                                   placeholder="Metas calóricas, recomposición corporal, reducción de grasa..."><?= old('objetivo', $plan['objetivo']) ?></textarea>
                     </div>

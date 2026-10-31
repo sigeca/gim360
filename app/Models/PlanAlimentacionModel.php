@@ -14,6 +14,7 @@ class PlanAlimentacionModel extends Model
     protected $returnType       = 'array';
     protected $allowedFields    = [
         'idpersona',
+        'idobjetivonutricional',
         'nombre',
         'fechainicio',
         'fechafin',
@@ -21,11 +22,12 @@ class PlanAlimentacionModel extends Model
     ];
 
     protected $validationRules = [
-        'idpersona'   => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
-        'nombre'      => 'required|min_length[3]|max_length[150]',
-        'fechainicio' => 'required|valid_date',
-        'fechafin'    => 'permit_empty|valid_date',
-        'objetivo'    => 'permit_empty',
+        'idpersona'             => 'required|is_natural_no_zero|is_not_unique[persona.idpersona]',
+        'idobjetivonutricional' => 'permit_empty|is_natural_no_zero',
+        'nombre'                => 'required|min_length[3]|max_length[150]',
+        'fechainicio'           => 'required|valid_date',
+        'fechafin'              => 'permit_empty|valid_date',
+        'objetivo'              => 'permit_empty',
     ];
 
     protected $validationMessages = [
@@ -85,13 +87,14 @@ class PlanAlimentacionModel extends Model
     }
 
     /**
-     * Obtiene el listado de planes de alimentación con datos de la persona
+     * Obtiene el listado de planes de alimentación con datos de la persona y objetivo nutricional
      */
     public function getPlanesWithPersona(?string $search = null, ?int $idpersona = null): array
     {
-        $builder = $this->select('planalimentacion.*, persona.cedula, persona.apellidos, persona.nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre')
+        $builder = $this->select('planalimentacion.*, persona.cedula, persona.apellidos, persona.nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre, objetivonutricional.nombre AS objetivonutricional_nombre')
                         ->join('persona', 'persona.idpersona = planalimentacion.idpersona', 'inner')
                         ->join('sexo', 'sexo.idsexo = persona.idsexo', 'left')
+                        ->join('objetivonutricional', 'objetivonutricional.idobjetivonutricional = planalimentacion.idobjetivonutricional', 'left')
                         ->orderBy('planalimentacion.fechainicio', 'DESC')
                         ->orderBy('planalimentacion.idplanalimentacion', 'DESC');
 
@@ -103,6 +106,7 @@ class PlanAlimentacionModel extends Model
             $builder->groupStart()
                     ->like('planalimentacion.nombre', $search)
                     ->orLike('planalimentacion.objetivo', $search)
+                    ->orLike('objetivonutricional.nombre', $search)
                     ->orLike('persona.cedula', $search)
                     ->orLike('persona.apellidos', $search)
                     ->orLike('persona.nombres', $search)
@@ -125,14 +129,15 @@ class PlanAlimentacionModel extends Model
     }
 
     /**
-     * Obtiene un plan con detalles completos de la persona
+     * Obtiene un plan con detalles completos de la persona y objetivo nutricional
      */
     public function getPlanWithDetails(int $id): ?array
     {
-        $rec = $this->select('planalimentacion.*, persona.cedula, persona.apellidos, persona.nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre, cliente.idcliente')
+        $rec = $this->select('planalimentacion.*, persona.cedula, persona.apellidos, persona.nombres, persona.fechanacimiento, sexo.nombre AS sexo_nombre, cliente.idcliente, objetivonutricional.nombre AS objetivonutricional_nombre')
                     ->join('persona', 'persona.idpersona = planalimentacion.idpersona', 'inner')
                     ->join('sexo', 'sexo.idsexo = persona.idsexo', 'left')
                     ->join('cliente', 'cliente.idpersona = persona.idpersona', 'left')
+                    ->join('objetivonutricional', 'objetivonutricional.idobjetivonutricional = planalimentacion.idobjetivonutricional', 'left')
                     ->where('planalimentacion.idplanalimentacion', $id)
                     ->first();
 
@@ -148,9 +153,11 @@ class PlanAlimentacionModel extends Model
      */
     public function getPlanesByPersona(int $idpersona): array
     {
-        $records = $this->where('idpersona', $idpersona)
-                        ->orderBy('fechainicio', 'DESC')
-                        ->orderBy('idplanalimentacion', 'DESC')
+        $records = $this->select('planalimentacion.*, objetivonutricional.nombre AS objetivonutricional_nombre')
+                        ->join('objetivonutricional', 'objetivonutricional.idobjetivonutricional = planalimentacion.idobjetivonutricional', 'left')
+                        ->where('planalimentacion.idpersona', $idpersona)
+                        ->orderBy('planalimentacion.fechainicio', 'DESC')
+                        ->orderBy('planalimentacion.idplanalimentacion', 'DESC')
                         ->findAll();
 
         foreach ($records as &$rec) {

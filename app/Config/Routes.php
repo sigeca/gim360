@@ -35,6 +35,9 @@ $modulos = [
     'planalimentacion'   => 'PlanAlimentacion',
     'plan-alimentacion'  => 'PlanAlimentacion',
     'planesalimentacion' => 'PlanAlimentacion',
+    'objetivonutricional'             => 'ObjetivoNutricional',
+    'objetivo-nutricional'            => 'ObjetivoNutricional',
+    'objetivosnutricionales'          => 'ObjetivoNutricional',
     'receta'             => 'Receta',
     'recetas'            => 'Receta',
     'unidadalimento'     => 'UnidadAlimento',
@@ -51,6 +54,9 @@ $modulos = [
     'imagencomponentenutricional'     => 'ImagenComponenteNutricional',
     'imagen-componente-nutricional'   => 'ImagenComponenteNutricional',
     'imagencomponente'                => 'ImagenComponenteNutricional',
+    'imagenreceta'                    => 'ImagenReceta',
+    'imagen-receta'                   => 'ImagenReceta',
+    'imagenesrecetas'                 => 'ImagenReceta',
     'tipocomida'         => 'TipoComida',
     'tipo-comida'        => 'TipoComida',
     'tiposcomida'        => 'TipoComida',
@@ -131,6 +137,12 @@ foreach ($modulos as $slug => $controller) {
         if ($controller === 'ComponenteNutricional') {
             $routes->post('asignarImagen/(:num)', 'ComponenteNutricional::asignarImagen/$1');
             $routes->post('quitarImagen/(:num)/(:num)', 'ComponenteNutricional::quitarImagen/$1/$2');
+        }
+
+        // Rutas adicionales para receta (gestión de imágenes)
+        if ($controller === 'Receta') {
+            $routes->post('asignarImagen/(:num)', 'Receta::asignarImagen/$1');
+            $routes->post('quitarImagen/(:num)/(:num)', 'Receta::quitarImagen/$1/$2');
         }
 
         // Rutas adicionales para persona

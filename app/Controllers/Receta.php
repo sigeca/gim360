@@ -28,21 +28,30 @@ class Receta extends BaseController
             $receta = $first ? $this->recetaModel->getRecetaWithDetails((int)$first['idreceta']) : null;
         }
 
-        $ingredientes = [];
-        $componentes  = [];
+        $ingredientes  = [];
+        $componentes   = [];
+        $imagenes      = [];
+        $todasImagenes = [];
         if ($receta) {
+            $idreceta = (int)$receta['idreceta'];
             $arModel  = new \App\Models\AlimentoRecetaModel();
             $rcnModel = new \App\Models\RecetaComponenteNutricionalModel();
-            $ingredientes = $arModel->getIngredientesByReceta((int)$receta['idreceta']);
-            $componentes  = $rcnModel->getComponentesByReceta((int)$receta['idreceta']);
+            $ingredientes  = $arModel->getIngredientesByReceta($idreceta);
+            $componentes   = $rcnModel->getComponentesByReceta($idreceta);
+            $imagenes      = $this->recetaModel->getImagenesByReceta($idreceta);
+
+            $imagenModel   = new \App\Models\ImagenModel();
+            $todasImagenes = $imagenModel->getImagenes();
         }
 
         $data = [
-            'title'        => 'Ficha de Receta' . ($receta ? ': ' . $receta['nombre'] : ''),
-            'receta'       => $receta,
-            'ingredientes' => $ingredientes,
-            'componentes'  => $componentes,
-            'module'       => 'receta',
+            'title'         => 'Ficha de Receta' . ($receta ? ': ' . $receta['nombre'] : ''),
+            'receta'        => $receta,
+            'ingredientes'  => $ingredientes,
+            'componentes'   => $componentes,
+            'imagenes'      => $imagenes,
+            'todasImagenes' => $todasImagenes,
+            'module'        => 'receta',
         ];
 
         return view('receta/receta_record', $data);
@@ -217,5 +226,55 @@ class Receta extends BaseController
         } catch (\Exception $e) {
             return redirect()->to(base_url('receta/actual/' . $id))->with('error', 'No se puede eliminar la receta: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Asignación rápida de una imagen a esta receta
+     */
+    public function asignarImagen($idreceta)
+    {
+        $idimagen = (int)$this->request->getPost('idimagen');
+        if (empty($idimagen)) {
+            return redirect()->to(base_url('receta/actual/' . $idreceta))
+                             ->with('error', 'Debe seleccionar una imagen para asociar.');
+        }
+
+        $irModel = new \App\Models\ImagenRecetaModel();
+        $exists = $irModel->where('idreceta', (int)$idreceta)
+                          ->where('idimagen', $idimagen)
+                          ->first();
+
+        if ($exists) {
+            return redirect()->to(base_url('receta/actual/' . $idreceta))
+                             ->with('error', 'La imagen seleccionada ya se encuentra asociada a esta receta.');
+        }
+
+        $irModel->insert([
+            'idreceta' => (int)$idreceta,
+            'idimagen' => $idimagen,
+        ]);
+
+        return redirect()->to(base_url('receta/actual/' . $idreceta))
+                         ->with('success', 'Imagen asociada a la receta correctamente.');
+    }
+
+    /**
+     * Quitar una imagen de esta receta
+     */
+    public function quitarImagen($idreceta, $idimagen)
+    {
+        $irModel = new \App\Models\ImagenRecetaModel();
+        $record = $irModel->where('idreceta', (int)$idreceta)
+                          ->where('idimagen', (int)$idimagen)
+                          ->first();
+
+        if ($record) {
+            $irModel->delete($record['idimagenreceta']);
+            return redirect()->to(base_url('receta/actual/' . $idreceta))
+                             ->with('success', 'Imagen desvinculada de la receta exitosamente.');
+        }
+
+        return redirect()->to(base_url('receta/actual/' . $idreceta))
+                         ->with('error', 'No se encontró la relación a eliminar.');
     }
 }
