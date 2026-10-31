@@ -124,4 +124,45 @@ class ComponenteNutricionalModel extends Model
 
         return $results;
     }
+
+    /**
+     * Obtiene las imágenes asociadas a este componente nutricional
+     */
+    public function getImagenesByComponente(int $idcomponente): array
+    {
+        try {
+            $builder = $this->db->table('imagencomponentenutricional icn')
+                ->select('icn.idimagencomponentenutricional,
+                          i.idimagen,
+                          i.nombre AS imagen_nombre,
+                          i.descripcion AS imagen_descripcion,
+                          i.palabrasclave,
+                          i.licencia,
+                          fi.nombre AS formato_nombre,
+                          d.nombre AS directorio_nombre,
+                          d.ruta AS directorio_ruta')
+                ->join('imagen i', 'i.idimagen = icn.idimagen', 'inner')
+                ->join('directorio d', 'd.iddirectorio = i.iddirectorio', 'left')
+                ->join('formatoimagen fi', 'fi.idformatoimagen = i.idformatoimagen', 'left')
+                ->where('icn.idcomponentenutricional', $idcomponente)
+                ->orderBy('icn.idimagencomponentenutricional', 'ASC');
+
+            $imagenes = $builder->get()->getResultArray();
+
+            $baseDir = defined('ROOTPATH') ? rtrim(ROOTPATH, '/\\') : dirname(__DIR__, 2);
+
+            foreach ($imagenes as &$img) {
+                $dirRuta = !empty($img['directorio_ruta']) ? trim($img['directorio_ruta'], '/\\') : 'repositorio/imagen';
+                $cleanName = !empty($img['imagen_nombre']) ? basename(trim($img['imagen_nombre'])) : '';
+                $targetFile = $baseDir . '/' . $dirRuta . '/' . $cleanName;
+                $img['archivoExiste'] = !empty($cleanName) && file_exists($targetFile);
+                $img['urlImagen']     = !empty($cleanName) ? base_url($dirRuta . '/' . $cleanName) : null;
+                $img['urlFallback']   = !empty($cleanName) ? base_url('imagen/imagen/' . $cleanName) : null;
+            }
+
+            return $imagenes;
+        } catch (\Throwable $e) {
+            return [];
+        }
+    }
 }

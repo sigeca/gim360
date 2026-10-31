@@ -46,6 +46,7 @@
                     <thead class="table-light">
                         <tr>
                             <th class="ps-4" style="width: 80px;">ID</th>
+                            <th style="width: 75px;">Imagen</th>
                             <th>Nombre del Componente</th>
                             <th>Descripción / Función</th>
                             <th class="text-end pe-4" style="width: 180px;">Acciones</th>
@@ -54,7 +55,7 @@
                     <tbody>
                         <?php if (empty($componentes)): ?>
                             <tr>
-                                <td colspan="4" class="text-center py-5 text-muted">
+                                <td colspan="5" class="text-center py-5 text-muted">
                                     <i class="bi bi-inbox fs-1 d-block mb-2"></i>
                                     No se encontraron componentes nutricionales registrados.
                                 </td>
@@ -64,9 +65,25 @@
                                 <tr>
                                     <td class="ps-4 fw-bold text-muted">#<?= $c['idcomponentenutricional'] ?></td>
                                     <td>
+                                        <?php if (!empty($c['primera_imagen']) && !empty($c['primera_imagen']['urlImagen'])): ?>
+                                            <img src="<?= $c['primera_imagen']['urlImagen'] ?>" 
+                                                 onerror="this.onerror=null; this.src='<?= !empty($c['primera_imagen']['urlFallback']) ? $c['primera_imagen']['urlFallback'] : base_url('imagen/imagen/' . esc($c['primera_imagen']['imagen_nombre'])) ?>';"
+                                                 alt="Thumb" class="rounded border shadow-sm" style="width: 44px; height: 44px; object-fit: cover;">
+                                        <?php else: ?>
+                                            <div class="rounded bg-light border d-flex align-items-center justify-content-center text-muted" style="width: 44px; height: 44px;">
+                                                <i class="bi bi-pie-chart text-secondary"></i>
+                                            </div>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td>
                                         <div class="fw-bold text-dark fs-6 d-flex align-items-center">
                                             <i class="bi bi-dot text-info fs-3"></i>
                                             <?= esc($c['nombre']) ?>
+                                            <?php if (!empty($c['total_imagenes']) && $c['total_imagenes'] > 0): ?>
+                                                <span class="badge bg-info-subtle text-info border border-info-subtle ms-2" title="<?= $c['total_imagenes'] ?> imágenes asociadas">
+                                                    <i class="bi bi-images me-1"></i><?= $c['total_imagenes'] ?>
+                                                </span>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                     <td class="text-secondary small" style="max-width: 450px;">

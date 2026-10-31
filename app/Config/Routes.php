@@ -48,6 +48,9 @@ $modulos = [
     'recetacomponentenutricional'     => 'RecetaComponenteNutricional',
     'receta-componente-nutricional'   => 'RecetaComponenteNutricional',
     'recetacomponente'                => 'RecetaComponenteNutricional',
+    'imagencomponentenutricional'     => 'ImagenComponenteNutricional',
+    'imagen-componente-nutricional'   => 'ImagenComponenteNutricional',
+    'imagencomponente'                => 'ImagenComponenteNutricional',
     'tipocomida'         => 'TipoComida',
     'tipo-comida'        => 'TipoComida',
     'tiposcomida'        => 'TipoComida',
@@ -123,6 +126,12 @@ foreach ($modulos as $slug => $controller) {
         $routes->post('update/(:num)', "{$controller}::update/$1");
         $routes->post('delete/(:num)', "{$controller}::delete/$1");
         $routes->post('quitar/(:num)', "{$controller}::delete/$1");
+
+        // Rutas adicionales para componentenutricional
+        if ($controller === 'ComponenteNutricional') {
+            $routes->post('asignarImagen/(:num)', 'ComponenteNutricional::asignarImagen/$1');
+            $routes->post('quitarImagen/(:num)/(:num)', 'ComponenteNutricional::quitarImagen/$1/$2');
+        }
 
         // Rutas adicionales para persona
         if ($controller === 'Persona') {

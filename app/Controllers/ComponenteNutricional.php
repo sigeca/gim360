@@ -36,18 +36,26 @@ class ComponenteNutricional extends BaseController
 
         $alimentos = [];
         $recetas   = [];
+        $imagenes  = [];
+        $todasImagenes = [];
         if ($componente) {
             $idcomp    = (int)$componente['idcomponentenutricional'];
             $alimentos = $this->componenteModel->getAlimentosByComponente($idcomp);
             $recetas   = $this->componenteModel->getRecetasByComponente($idcomp);
+            $imagenes  = $this->componenteModel->getImagenesByComponente($idcomp);
+
+            $imagenModel = new \App\Models\ImagenModel();
+            $todasImagenes = $imagenModel->getImagenes();
         }
 
         $data = [
-            'title'      => 'Ficha de Componente Nutricional' . ($componente ? ': ' . $componente['nombre'] : ''),
-            'componente' => $componente,
-            'alimentos'  => $alimentos,
-            'recetas'    => $recetas,
-            'module'     => 'componentenutricional',
+            'title'         => 'Ficha de Componente Nutricional' . ($componente ? ': ' . $componente['nombre'] : ''),
+            'componente'    => $componente,
+            'alimentos'     => $alimentos,
+            'recetas'       => $recetas,
+            'imagenes'      => $imagenes,
+            'todasImagenes' => $todasImagenes,
+            'module'        => 'componentenutricional',
         ];
 
         return view('componentenutricional/componentenutricional_record', $data);
@@ -96,6 +104,12 @@ class ComponenteNutricional extends BaseController
     {
         $search = $this->request->getGet('q');
         $componentes = $this->componenteModel->getComponentes($search);
+
+        foreach ($componentes as &$comp) {
+            $imgs = $this->componenteModel->getImagenesByComponente((int)$comp['idcomponentenutricional']);
+            $comp['total_imagenes'] = count($imgs);
+            $comp['primera_imagen'] = !empty($imgs) ? $imgs[0] : null;
+        }
 
         $data = [
             'title'       => 'Catálogo de Componentes Nutricionales',
@@ -227,5 +241,55 @@ class ComponenteNutricional extends BaseController
             return redirect()->to(base_url('componentenutricional/actual/' . $id))
                              ->with('error', 'No se puede eliminar el registro: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Asignación rápida de una imagen a este componente
+     */
+    public function asignarImagen($idcomponente)
+    {
+        $idimagen = (int)$this->request->getPost('idimagen');
+        if (empty($idimagen)) {
+            return redirect()->to(base_url('componentenutricional/actual/' . $idcomponente))
+                             ->with('error', 'Debe seleccionar una imagen para asociar.');
+        }
+
+        $icnModel = new \App\Models\ImagenComponenteNutricionalModel();
+        $exists = $icnModel->where('idcomponentenutricional', (int)$idcomponente)
+                           ->where('idimagen', $idimagen)
+                           ->first();
+
+        if ($exists) {
+            return redirect()->to(base_url('componentenutricional/actual/' . $idcomponente))
+                             ->with('error', 'La imagen seleccionada ya se encuentra asociada a este componente.');
+        }
+
+        $icnModel->insert([
+            'idcomponentenutricional' => (int)$idcomponente,
+            'idimagen'                => $idimagen,
+        ]);
+
+        return redirect()->to(base_url('componentenutricional/actual/' . $idcomponente))
+                         ->with('success', 'Imagen asociada al componente nutricional correctamente.');
+    }
+
+    /**
+     * Quitar una imagen de este componente
+     */
+    public function quitarImagen($idcomponente, $idimagen)
+    {
+        $icnModel = new \App\Models\ImagenComponenteNutricionalModel();
+        $record = $icnModel->where('idcomponentenutricional', (int)$idcomponente)
+                           ->where('idimagen', (int)$idimagen)
+                           ->first();
+
+        if ($record) {
+            $icnModel->delete($record['idimagencomponentenutricional']);
+            return redirect()->to(base_url('componentenutricional/actual/' . $idcomponente))
+                             ->with('success', 'Imagen desvinculada del componente exitosamente.');
+        }
+
+        return redirect()->to(base_url('componentenutricional/actual/' . $idcomponente))
+                         ->with('error', 'No se encontró la relación a eliminar.');
     }
 }
