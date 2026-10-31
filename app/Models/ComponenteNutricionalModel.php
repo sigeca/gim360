@@ -53,4 +53,75 @@ class ComponenteNutricionalModel extends Model
 
         return $builder->findAll();
     }
+
+    /**
+     * Obtiene los alimentos asociados a un componente nutricional
+     */
+    public function getAlimentosByComponente(int $idcomponente): array
+    {
+        return $this->db->table('alimentocomponentenutricional acn')
+            ->select('acn.idalimentocomponentenutricional,
+                      a.idalimento, 
+                      a.nombre AS alimento_nombre, 
+                      a.descripcion AS alimento_descripcion, 
+                      a.idgrupo, 
+                      ga.nombre AS grupo_nombre')
+            ->join('alimento a', 'a.idalimento = acn.idalimento', 'inner')
+            ->join('grupoalimento ga', 'ga.idgrupoalimento = a.idgrupo', 'left')
+            ->where('acn.idcomponentenutricional', $idcomponente)
+            ->orderBy('a.nombre', 'ASC')
+            ->get()
+            ->getResultArray();
+    }
+
+    /**
+     * Obtiene las recetas que contienen alimentos con este componente nutricional
+     * o que están asociadas directamente a él
+     */
+    public function getRecetasByComponente(int $idcomponente): array
+    {
+        $sql = "SELECT 
+                    r.idreceta,
+                    r.nombre AS receta_nombre,
+                    r.porciones,
+                    r.tiempopreparacion,
+                    MAX(rcn.idrecetacomponentenutricional) AS idrecetacomponentenutricional,
+                    GROUP_CONCAT(DISTINCT CONCAT(a.idalimento, ':', a.nombre) ORDER BY a.nombre SEPARATOR '||') AS alimentos_info,
+                    COUNT(DISTINCT a.idalimento) AS total_alimentos_con_componente
+                FROM receta r
+                LEFT JOIN recetacomponentenutricional rcn 
+                    ON rcn.idreceta = r.idreceta AND rcn.idcomponentenutricional = ?
+                LEFT JOIN (
+                    alimentoreceta ar
+                    JOIN alimentocomponentenutricional acn 
+                        ON acn.idalimento = ar.idalimento AND acn.idcomponentenutricional = ?
+                    JOIN alimento a 
+                        ON a.idalimento = ar.idalimento
+                ) ON ar.idreceta = r.idreceta
+                WHERE rcn.idcomponentenutricional IS NOT NULL OR acn.idcomponentenutricional IS NOT NULL
+                GROUP BY r.idreceta, r.nombre, r.porciones, r.tiempopreparacion
+                ORDER BY r.nombre ASC";
+
+        $results = $this->db->query($sql, [$idcomponente, $idcomponente])->getResultArray();
+
+        foreach ($results as &$row) {
+            $row['alimentos'] = [];
+            if (!empty($row['alimentos_info'])) {
+                $items = explode('||', $row['alimentos_info']);
+                foreach ($items as $item) {
+                    $parts = explode(':', $item, 2);
+                    if (count($parts) === 2) {
+                        $row['alimentos'][] = [
+                            'idalimento' => (int)$parts[0],
+                            'nombre'     => $parts[1]
+                        ];
+                    }
+                }
+            }
+            $row['es_directa'] = !empty($row['idrecetacomponentenutricional']);
+            $row['por_ingredientes'] = (int)$row['total_alimentos_con_componente'] > 0;
+        }
+
+        return $results;
+    }
 }

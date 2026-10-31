@@ -101,7 +101,7 @@ class AlimentoComponenteNutricional extends BaseController
             'alimentos'              => $this->alimentoModel->orderBy('nombre', 'ASC')->findAll(),
             'componentes'            => $this->componenteModel->orderBy('nombre', 'ASC')->findAll(),
             'preselectedAlimento'    => $this->request->getGet('idalimento'),
-            'preselectedComponente' => $this->request->getGet('idcomponente'),
+            'preselectedComponente' => $this->request->getGet('idcomponente') ?: $this->request->getGet('idcomponentenutricional'),
             'module'                 => 'alimentocomponentenutricional',
         ];
 

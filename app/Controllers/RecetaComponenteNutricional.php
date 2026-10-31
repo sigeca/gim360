@@ -101,7 +101,7 @@ class RecetaComponenteNutricional extends BaseController
             'recetas'                => $this->recetaModel->orderBy('nombre', 'ASC')->findAll(),
             'componentes'            => $this->componenteModel->orderBy('nombre', 'ASC')->findAll(),
             'preselectedReceta'      => $this->request->getGet('idreceta'),
-            'preselectedComponente' => $this->request->getGet('idcomponente'),
+            'preselectedComponente' => $this->request->getGet('idcomponente') ?: $this->request->getGet('idcomponentenutricional'),
             'module'                 => 'recetacomponentenutricional',
         ];
 

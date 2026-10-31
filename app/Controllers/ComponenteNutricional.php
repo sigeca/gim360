@@ -34,9 +34,19 @@ class ComponenteNutricional extends BaseController
             $componente = $first ?: null;
         }
 
+        $alimentos = [];
+        $recetas   = [];
+        if ($componente) {
+            $idcomp    = (int)$componente['idcomponentenutricional'];
+            $alimentos = $this->componenteModel->getAlimentosByComponente($idcomp);
+            $recetas   = $this->componenteModel->getRecetasByComponente($idcomp);
+        }
+
         $data = [
             'title'      => 'Ficha de Componente Nutricional' . ($componente ? ': ' . $componente['nombre'] : ''),
             'componente' => $componente,
+            'alimentos'  => $alimentos,
+            'recetas'    => $recetas,
             'module'     => 'componentenutricional',
         ];
 
