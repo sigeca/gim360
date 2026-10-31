@@ -57,6 +57,9 @@ $modulos = [
     'imagenreceta'                    => 'ImagenReceta',
     'imagen-receta'                   => 'ImagenReceta',
     'imagenesrecetas'                 => 'ImagenReceta',
+    'imagenalimento'                  => 'ImagenAlimento',
+    'imagen-alimento'                 => 'ImagenAlimento',
+    'imagenesalimentos'               => 'ImagenAlimento',
     'tipocomida'         => 'TipoComida',
     'tipo-comida'        => 'TipoComida',
     'tiposcomida'        => 'TipoComida',
@@ -143,6 +146,12 @@ foreach ($modulos as $slug => $controller) {
         if ($controller === 'Receta') {
             $routes->post('asignarImagen/(:num)', 'Receta::asignarImagen/$1');
             $routes->post('quitarImagen/(:num)/(:num)', 'Receta::quitarImagen/$1/$2');
+        }
+
+        // Rutas adicionales para alimento (gestión de imágenes)
+        if ($controller === 'Alimento') {
+            $routes->post('asignarImagen/(:num)', 'Alimento::asignarImagen/$1');
+            $routes->post('quitarImagen/(:num)/(:num)', 'Alimento::quitarImagen/$1/$2');
         }
 
         // Rutas adicionales para persona
@@ -259,6 +268,8 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('cliente/(:num)/progreso', 'GimApiController::getClienteProgreso/$1');
 
     // Control Nutricional y Antropométrico
+    $routes->get('objetivosnutricionales', 'GimApiController::getObjetivosNutricionales');
+    $routes->get('objetivonutricional', 'GimApiController::getObjetivosNutricionales');
     $routes->get('perfilnutricional', 'GimApiController::getPerfilesNutricionales');
     $routes->get('perfilnutricional/(:num)', 'GimApiController::getPerfilNutricionalDetail/$1');
     $routes->get('persona/(:num)/nutricion', 'GimApiController::getPersonaNutricion/$1');

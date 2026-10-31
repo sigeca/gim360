@@ -41,6 +41,9 @@
                         </div>
                     </form>
 
+                    <a href="<?= base_url('imagenalimento') ?>" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-images me-1"></i> Asignar Imágenes
+                    </a>
                     <a href="<?= base_url('alimento/add' . (!empty($selectedGrupo) ? '?idgrupo=' . $selectedGrupo : '')) ?>" class="btn btn-success btn-sm">
                         <i class="bi bi-plus-circle me-1"></i> Nuevo Alimento
                     </a>
@@ -76,9 +79,31 @@
                                 <tr>
                                     <td class="ps-4 fw-bold text-muted">#<?= $a['idalimento'] ?></td>
                                     <td>
-                                        <div class="fw-bold text-dark fs-6 d-flex align-items-center">
-                                            <i class="bi bi-check2-circle text-success me-2"></i>
-                                            <?= esc($a['nombre']) ?>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <?php if (!empty($a['primera_imagen']) && $a['primera_imagen']['archivoExiste']): ?>
+                                                <div class="rounded border overflow-hidden bg-light flex-shrink-0" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;">
+                                                    <img src="<?= $a['primera_imagen']['urlImagen'] ?>" 
+                                                         onerror="this.onerror=null; this.src='<?= !empty($a['primera_imagen']['urlFallback']) ? $a['primera_imagen']['urlFallback'] : base_url('imagen/imagen/' . esc($a['primera_imagen']['imagen_nombre'])) ?>';"
+                                                         alt="<?= esc($a['nombre']) ?>" 
+                                                         style="max-height: 42px; max-width: 42px; object-fit: contain;">
+                                                </div>
+                                            <?php else: ?>
+                                                <div class="rounded border bg-light text-success flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;">
+                                                    <i class="bi bi-apple fs-5"></i>
+                                                </div>
+                                            <?php endif; ?>
+                                            <div>
+                                                <a href="<?= base_url('alimento/actual/' . $a['idalimento']) ?>" class="fw-bold text-dark text-decoration-none">
+                                                    <?= esc($a['nombre']) ?>
+                                                </a>
+                                                <?php if (!empty($a['total_imagenes']) && $a['total_imagenes'] > 0): ?>
+                                                    <div>
+                                                        <a href="<?= base_url('imagenalimento/listar?idalimento=' . $a['idalimento']) ?>" class="badge bg-success-subtle text-success border border-success text-decoration-none" style="font-size: 0.65rem;">
+                                                            <i class="bi bi-images me-1 text-success"></i><?= $a['total_imagenes'] ?> <?= $a['total_imagenes'] == 1 ? 'imagen' : 'imágenes' ?>
+                                                        </a>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>

@@ -405,6 +405,24 @@ class GimApiController extends ResourceController
     }
 
     /**
+     * GET /api/objetivosnutricionales
+     * GET /api/objetivonutricional
+     */
+    public function getObjetivosNutricionales()
+    {
+        $search = $this->request->getGet('q');
+        $objModel = new \App\Models\ObjetivoNutricionalModel();
+        $objetivos = $objModel->getObjetivos($search);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Objetivos nutricionales obtenidos correctamente',
+            'data'    => $objetivos,
+            'total'   => count($objetivos),
+        ]);
+    }
+
+    /**
      * GET /api/componentesnutricionales
      * GET /api/componentenutricional
      */
@@ -841,11 +859,12 @@ class GimApiController extends ResourceController
         }
 
         $id = $planModel->insert([
-            'idpersona'   => (int)$json['idpersona'],
-            'nombre'      => trim($json['nombre']),
-            'fechainicio' => $fechaInicio,
-            'fechafin'    => $fechaFin,
-            'objetivo'    => isset($json['objetivo']) ? (trim($json['objetivo']) ?: null) : null,
+            'idpersona'             => (int)$json['idpersona'],
+            'idobjetivonutricional' => !empty($json['idobjetivonutricional']) ? (int)$json['idobjetivonutricional'] : null,
+            'nombre'                => trim($json['nombre']),
+            'fechainicio'           => $fechaInicio,
+            'fechafin'              => $fechaFin,
+            'objetivo'              => isset($json['objetivo']) ? (trim($json['objetivo']) ?: null) : null,
         ]);
 
         $nuevo = $planModel->getPlanWithDetails($id);
@@ -879,6 +898,7 @@ class GimApiController extends ResourceController
 
         $data = [];
         if (isset($json['nombre'])) $data['nombre'] = trim($json['nombre']);
+        if (array_key_exists('idobjetivonutricional', $json)) $data['idobjetivonutricional'] = !empty($json['idobjetivonutricional']) ? (int)$json['idobjetivonutricional'] : null;
         if (isset($json['fechainicio'])) $data['fechainicio'] = trim($json['fechainicio']);
         if (array_key_exists('fechafin', $json)) $data['fechafin'] = !empty($json['fechafin']) ? trim($json['fechafin']) : null;
         if (array_key_exists('objetivo', $json)) $data['objetivo'] = !empty($json['objetivo']) ? trim($json['objetivo']) : null;

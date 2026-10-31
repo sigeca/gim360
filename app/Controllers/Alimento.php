@@ -31,17 +31,24 @@ class Alimento extends BaseController
             $alimento = $first ? $this->alimentoModel->getAlimentoWithDetails((int)$first['idalimento']) : null;
         }
 
-        $componentes = [];
+        $componentes   = [];
+        $imagenes      = [];
+        $todasImagenes = [];
         if ($alimento) {
-            $acnModel = new \App\Models\AlimentoComponenteNutricionalModel();
-            $componentes = $acnModel->getComponentesByAlimento((int)$alimento['idalimento']);
+            $acnModel      = new \App\Models\AlimentoComponenteNutricionalModel();
+            $componentes   = $acnModel->getComponentesByAlimento((int)$alimento['idalimento']);
+            $imagenes      = $this->alimentoModel->getImagenesByAlimento((int)$alimento['idalimento']);
+            $imagenModel   = new \App\Models\ImagenModel();
+            $todasImagenes = $imagenModel->getImagenes();
         }
 
         $data = [
-            'title'       => 'Ficha de Alimento' . ($alimento ? ': ' . $alimento['nombre'] : ''),
-            'alimento'    => $alimento,
-            'componentes' => $componentes,
-            'module'      => 'alimento',
+            'title'         => 'Ficha de Alimento' . ($alimento ? ': ' . $alimento['nombre'] : ''),
+            'alimento'      => $alimento,
+            'componentes'   => $componentes,
+            'imagenes'      => $imagenes,
+            'todasImagenes' => $todasImagenes,
+            'module'        => 'alimento',
         ];
 
         return view('alimento/alimento_record', $data);
@@ -214,5 +221,55 @@ class Alimento extends BaseController
         } catch (\Exception $e) {
             return redirect()->to(base_url('alimento/actual/' . $id))->with('error', 'No se puede eliminar el alimento: ' . $e->getMessage());
         }
+    }
+
+    /**
+     * Asignación rápida de una imagen a este alimento
+     */
+    public function asignarImagen($idalimento)
+    {
+        $idimagen = (int)$this->request->getPost('idimagen');
+        if (empty($idimagen)) {
+            return redirect()->to(base_url('alimento/actual/' . $idalimento))
+                             ->with('error', 'Debe seleccionar una imagen para asociar.');
+        }
+
+        $iaModel = new \App\Models\ImagenAlimentoModel();
+        $exists  = $iaModel->where('idalimento', (int)$idalimento)
+                           ->where('idimagen', $idimagen)
+                           ->first();
+
+        if ($exists) {
+            return redirect()->to(base_url('alimento/actual/' . $idalimento))
+                             ->with('error', 'La imagen seleccionada ya se encuentra asociada a este alimento.');
+        }
+
+        $iaModel->insert([
+            'idalimento' => (int)$idalimento,
+            'idimagen'   => $idimagen,
+        ]);
+
+        return redirect()->to(base_url('alimento/actual/' . $idalimento))
+                         ->with('success', 'Imagen asociada al alimento correctamente.');
+    }
+
+    /**
+     * Quitar una imagen de este alimento
+     */
+    public function quitarImagen($idalimento, $idimagen)
+    {
+        $iaModel = new \App\Models\ImagenAlimentoModel();
+        $record  = $iaModel->where('idalimento', (int)$idalimento)
+                           ->where('idimagen', (int)$idimagen)
+                           ->first();
+
+        if ($record) {
+            $iaModel->delete($record['idimagenalimento']);
+            return redirect()->to(base_url('alimento/actual/' . $idalimento))
+                             ->with('success', 'Imagen desvinculada del alimento exitosamente.');
+        }
+
+        return redirect()->to(base_url('alimento/actual/' . $idalimento))
+                         ->with('error', 'No se encontró la relación a eliminar.');
     }
 }
