@@ -351,6 +351,9 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('programas', 'GimApiController::getProgramas');
     $routes->get('programa/(:num)', 'GimApiController::getProgramaDetail/$1');
     $routes->post('programacliente', 'GimApiController::asignarProgramaCliente');
+    $routes->post('programacliente/(:num)/estado', 'GimApiController::actualizarEstadoProgramaCliente/$1');
+    $routes->put('programacliente/(:num)/estado', 'GimApiController::actualizarEstadoProgramaCliente/$1');
+    $routes->post('programacliente/estado/(:num)', 'GimApiController::actualizarEstadoProgramaCliente/$1');
     $routes->get('rutinas', 'GimApiController::getRutinas');
     $routes->get('rutina/(:num)', 'GimApiController::getRutinaDetail/$1');
     $routes->post('rutina/(:num)/plan', 'GimApiController::agregarPlanRutina/$1');

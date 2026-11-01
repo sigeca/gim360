@@ -134,12 +134,19 @@ class ProgramaCliente extends BaseController
             return redirect()->back()->withInput()->with('error', 'Error al particularizar el programa: ' . $e->getMessage());
         }
 
+        $idEstado = (int)$this->request->getPost('idestadoprogramacliente');
+
+        // Si se establece como Activo (1), pausar cualquier otro programa activo del cliente
+        if ($idEstado === 1) {
+            $this->programaClienteModel->desactivarOtrosProgramasActivos($idCliente);
+        }
+
         $id = $this->programaClienteModel->insert([
             'idcliente'               => $idCliente,
             'idprogramaentrenamiento' => $idProgModelo,
             'idprogramapersonalizado' => $idProgPersonalizado,
             'fechainicio'             => $fechaInicio,
-            'idestadoprogramacliente' => (int)$this->request->getPost('idestadoprogramacliente'),
+            'idestadoprogramacliente' => $idEstado,
         ]);
 
         return redirect()->to(base_url('programacliente/actual/' . $id))->with('success', 'Programa modelo particularizado y asignado al cliente exitosamente.');
@@ -182,11 +189,19 @@ class ProgramaCliente extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idClientePost = (int)$this->request->getPost('idcliente');
+        $idEstadoPost  = (int)$this->request->getPost('idestadoprogramacliente');
+
+        // Si se establece como Activo (1), pausar cualquier otro programa activo del cliente excluyendo este
+        if ($idEstadoPost === 1) {
+            $this->programaClienteModel->desactivarOtrosProgramasActivos($idClientePost, (int)$id);
+        }
+
         $this->programaClienteModel->update($id, [
-            'idcliente'               => (int)$this->request->getPost('idcliente'),
+            'idcliente'               => $idClientePost,
             'idprogramaentrenamiento' => (int)$this->request->getPost('idprogramaentrenamiento'),
             'fechainicio'             => $this->request->getPost('fechainicio'),
-            'idestadoprogramacliente' => (int)$this->request->getPost('idestadoprogramacliente'),
+            'idestadoprogramacliente' => $idEstadoPost,
         ]);
 
         return redirect()->to(base_url('programacliente/actual/' . $id))->with('success', 'Programa de cliente actualizado exitosamente.');

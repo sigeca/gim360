@@ -244,4 +244,27 @@ class ProgramaClienteModel extends Model
                     ->orderBy('programacliente.idprogramacliente', 'DESC')
                     ->findAll();
     }
+
+    /**
+     * Desactiva otros programas activos del cliente poniendo su estado a 'Pausado' (4)
+     * para garantizar que el cliente solo tenga un programa activo a la vez.
+     *
+     * @param int $idCliente
+     * @param int|null $idExcluir ID del programa cliente que se mantendrá activo
+     * @param int $nuevoEstado Estado al que se cambiarán los otros (4 = Pausado)
+     * @return int Cantidad de registros actualizados
+     */
+    public function desactivarOtrosProgramasActivos(int $idCliente, ?int $idExcluir = null, int $nuevoEstado = 4): int
+    {
+        $builder = $this->db->table($this->table)
+                            ->where('idcliente', $idCliente)
+                            ->where('idestadoprogramacliente', 1);
+
+        if ($idExcluir !== null && $idExcluir > 0) {
+            $builder->where('idprogramacliente !=', $idExcluir);
+        }
+
+        $builder->update(['idestadoprogramacliente' => $nuevoEstado]);
+        return $this->db->affectedRows();
+    }
 }

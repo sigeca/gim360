@@ -134,14 +134,20 @@ class GimApiController extends ResourceController
             return $this->failNotFound("Cliente no encontrado con ID: {$id}");
         }
 
+        $soloActivos = !$this->request->getGet('todos');
         $progModel = new ProgramaClienteModel();
-        $programas = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, estadoprogramacliente.nombre as estado_nombre')
-                               ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
-                               ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
-                               ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
-                               ->where('programacliente.idcliente', $id)
-                               ->orderBy('programacliente.idprogramacliente', 'DESC')
-                               ->findAll();
+        $progBuilder = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, estadoprogramacliente.nombre as estado_nombre')
+                                 ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
+                                 ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                                 ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
+                                 ->where('programacliente.idcliente', $id);
+
+        if ($soloActivos) {
+            $progBuilder->where('programacliente.idestadoprogramacliente', 1);
+        }
+
+        $programas = $progBuilder->orderBy('programacliente.idprogramacliente', 'DESC')
+                                 ->findAll();
 
         $visitasModel = new VisitasGimModel();
         $ultimasVisitas = $visitasModel->where('idcliente', $id)
@@ -190,15 +196,22 @@ class GimApiController extends ResourceController
             return $this->failNotFound('ID de cliente no proporcionado');
         }
 
+        $soloActivos = !$this->request->getGet('todos');
         $progModel = new ProgramaClienteModel();
-        $programas = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, motivoentrenamiento.objetivo as motivo_objetivo, estadoprogramacliente.nombre as estado_nombre, rangoedad.nombre as rango_nombre, rangoedad.edadminima as rango_edadminima, rangoedad.edadmaxima as rango_edadmaxima')
-                               ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
-                               ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
-                               ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
-                               ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
-                               ->where('programacliente.idcliente', $id)
-                               ->orderBy('programacliente.fechainicio', 'DESC')
-                               ->findAll();
+        $builder = $progModel->select('programacliente.*, programaentrenamiento.nombre as programa_nombre, motivoentrenamiento.nombre as motivo_nombre, motivoentrenamiento.objetivo as motivo_objetivo, estadoprogramacliente.nombre as estado_nombre, rangoedad.nombre as rango_nombre, rangoedad.edadminima as rango_edadminima, rangoedad.edadmaxima as rango_edadmaxima')
+                             ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
+                             ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
+                             ->join('estadoprogramacliente', 'estadoprogramacliente.idestadoprogramacliente = programacliente.idestadoprogramacliente', 'inner')
+                             ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
+                             ->where('programacliente.idcliente', $id);
+
+        if ($soloActivos) {
+            $builder->where('programacliente.idestadoprogramacliente', 1);
+        }
+
+        $programas = $builder->orderBy('programacliente.fechainicio', 'DESC')
+                             ->orderBy('programacliente.idprogramacliente', 'DESC')
+                             ->findAll();
 
         $rutinaProgModel = new RutinaProgramaModel();
         $rutinaPersModel = new \App\Models\RutinaPersonalizadaModel();
@@ -2281,6 +2294,7 @@ class GimApiController extends ResourceController
                 $firstProg = $db->table('programaentrenamiento')->orderBy('idprogramaentrenamiento', 'ASC')->get()->getRowArray();
                 if ($firstProg) {
                     $progClienteModel = new ProgramaClienteModel();
+                    $progClienteModel->desactivarOtrosProgramasActivos($idCliente);
                     $idProgramaCliente = (int)$progClienteModel->insert([
                         'idcliente'               => $idCliente,
                         'idprogramaentrenamiento' => (int)$firstProg['idprogramaentrenamiento'],
@@ -2399,6 +2413,11 @@ class GimApiController extends ResourceController
             return $this->failServerError('Error al particularizar el programa de entrenamiento: ' . $e->getMessage());
         }
 
+        // Si el estado es Activo (1), pausar cualquier otro programa activo previo del cliente
+        if ($idEstado === 1) {
+            $progClienteModel->desactivarOtrosProgramasActivos($idCliente);
+        }
+
         $id = $progClienteModel->insert([
             'idcliente'               => $idCliente,
             'idprogramaentrenamiento' => $idPrograma,
@@ -2417,6 +2436,45 @@ class GimApiController extends ResourceController
             'status'  => 201,
             'message' => 'Programa de entrenamiento particularizado y asignado correctamente al cliente',
             'data'    => $created,
+        ]);
+    }
+
+    /**
+     * PUT/POST /api/programacliente/{id}/estado
+     * Update the state of a client's program.
+     * If setting state to 1 (Activo), any other active program for that client is deactivated (set to 4 - Pausado).
+     */
+    public function actualizarEstadoProgramaCliente($id = null)
+    {
+        if (empty($id)) {
+            return $this->failNotFound('ID de programa cliente no proporcionado');
+        }
+
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $idEstado = !empty($input['idestadoprogramacliente']) ? (int)$input['idestadoprogramacliente'] : 0;
+
+        if ($idEstado <= 0) {
+            return $this->failValidationErrors('Debe proporcionar un idestadoprogramacliente válido.');
+        }
+
+        $progClienteModel = new ProgramaClienteModel();
+        $prog = $progClienteModel->find($id);
+        if (!$prog) {
+            return $this->failNotFound('Programa asignado al cliente no encontrado');
+        }
+
+        $idCliente = (int)$prog['idcliente'];
+        if ($idEstado === 1) {
+            $progClienteModel->desactivarOtrosProgramasActivos($idCliente, (int)$id);
+        }
+
+        $progClienteModel->update($id, ['idestadoprogramacliente' => $idEstado]);
+        $updated = $progClienteModel->getProgramaClienteWithDetails($id);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Estado del programa de cliente actualizado correctamente',
+            'data'    => $updated,
         ]);
     }
 
