@@ -607,11 +607,14 @@ CREATE TABLE IF NOT EXISTS `receta` (
   `instrucciones` text DEFAULT NULL,
   `porciones` int(11) DEFAULT 1,
   `tiempopreparacion` int(11) DEFAULT NULL,
+  `video` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`idreceta`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 
+ALTER TABLE `receta` ADD COLUMN IF NOT EXISTS `video` varchar(300) DEFAULT NULL AFTER `tiempopreparacion`;
+
 CREATE OR REPLACE VIEW `Receta` AS
-SELECT `idreceta`, `nombre`, `instrucciones`, `porciones`, `tiempopreparacion`
+SELECT `idreceta`, `nombre`, `instrucciones`, `porciones`, `tiempopreparacion`, `video`
 FROM `receta`;
 
 INSERT IGNORE INTO `receta` (`idreceta`, `nombre`, `instrucciones`, `porciones`, `tiempopreparacion`) VALUES

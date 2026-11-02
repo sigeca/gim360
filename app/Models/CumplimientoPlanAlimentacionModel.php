@@ -60,7 +60,8 @@ class CumplimientoPlanAlimentacionModel extends Model
                               r.nombre AS receta_nombre, 
                               r.porciones, 
                               r.tiempopreparacion, 
-                              r.instrucciones')
+                              r.instrucciones,
+                              r.video AS receta_video')
                     ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'left')
                     ->join('persona p', 'p.idpersona = pa.idpersona', 'left')
                     ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
@@ -83,7 +84,8 @@ class CumplimientoPlanAlimentacionModel extends Model
                                   c.horarecomendada, 
                                   tc.nombre AS tipocomida_nombre, 
                                   r.nombre AS receta_nombre, 
-                                  r.porciones')
+                                  r.porciones,
+                                  r.video AS receta_video')
                         ->join('planalimentacion pa', 'pa.idplanalimentacion = cumplimientoplanalimentacion.idplanalimentacion', 'left')
                         ->join('persona p', 'p.idpersona = pa.idpersona', 'left')
                         ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
@@ -133,7 +135,8 @@ class CumplimientoPlanAlimentacionModel extends Model
                               tc.nombre AS tipocomida_nombre, 
                               r.nombre AS receta_nombre, 
                               r.porciones, 
-                              r.tiempopreparacion')
+                              r.tiempopreparacion,
+                              r.video AS receta_video')
                     ->join('comida c', 'c.idcomida = cumplimientoplanalimentacion.idcomida', 'left')
                     ->join('tipocomida tc', 'tc.idtipocomida = c.idtipocomida', 'left')
                     ->join('receta r', 'r.idreceta = c.idreceta', 'left')

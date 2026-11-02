@@ -41,7 +41,7 @@ class RecetaComponenteNutricionalModel extends Model
     public function getRecordWithDetails(int $id): ?array
     {
         return $this->select('recetacomponentenutricional.*, 
-                              r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion,
+                              r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.video AS receta_video,
                               cn.nombre AS componente_nombre, cn.descripcion AS componente_descripcion')
                     ->join('receta r', 'r.idreceta = recetacomponentenutricional.idreceta', 'inner')
                     ->join('componentenutricional cn', 'cn.idcomponentenutricional = recetacomponentenutricional.idcomponentenutricional', 'inner')
@@ -68,7 +68,7 @@ class RecetaComponenteNutricionalModel extends Model
     public function getRecetasByComponente(int $idcomponente): array
     {
         return $this->select('recetacomponentenutricional.*, 
-                              r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion')
+                              r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.video AS receta_video')
                     ->join('receta r', 'r.idreceta = recetacomponentenutricional.idreceta', 'inner')
                     ->where('recetacomponentenutricional.idcomponentenutricional', $idcomponente)
                     ->orderBy('r.nombre', 'ASC')
@@ -81,7 +81,7 @@ class RecetaComponenteNutricionalModel extends Model
     public function getRecordsWithDetails(?string $search = null, ?int $idreceta = null, ?int $idcomponente = null): array
     {
         $builder = $this->select('recetacomponentenutricional.*, 
-                                  r.nombre AS receta_nombre, r.porciones,
+                                  r.nombre AS receta_nombre, r.porciones, r.video AS receta_video,
                                   cn.nombre AS componente_nombre, cn.descripcion AS componente_descripcion')
                         ->join('receta r', 'r.idreceta = recetacomponentenutricional.idreceta', 'inner')
                         ->join('componentenutricional cn', 'cn.idcomponentenutricional = recetacomponentenutricional.idcomponentenutricional', 'inner')

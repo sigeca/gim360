@@ -81,6 +81,11 @@
                                             <a href="<?= base_url('receta/actual/' . $comida['idreceta']) ?>" class="fs-6 fw-bold text-decoration-none text-primary">
                                                 <i class="bi bi-book me-1"></i><?= esc($comida['receta_nombre']) ?>
                                             </a>
+                                            <?php if (!empty($comida['receta_video'])): ?>
+                                                <a href="<?= esc($comida['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-2" title="Ver video de la receta en YouTube">
+                                                    <i class="bi bi-youtube me-1"></i>Video
+                                                </a>
+                                            <?php endif; ?>
                                             <div class="small text-muted mt-1">
                                                 Rinde <?= esc($comida['porciones'] ?? 1) ?> porción(es) • Prep: <?= esc($comida['tiempopreparacion'] ? $comida['tiempopreparacion'] . ' min' : 'No especificado') ?>
                                             </div>

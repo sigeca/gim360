@@ -87,6 +87,11 @@
                                                 <a href="<?= base_url('receta/actual/' . $r['idreceta']) ?>" class="fw-bold text-dark text-decoration-none">
                                                     <?= esc($r['nombre']) ?>
                                                 </a>
+                                                <?php if (!empty($r['video'])): ?>
+                                                    <a href="<?= esc($r['video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                        <i class="bi bi-youtube me-1"></i>Video
+                                                    </a>
+                                                <?php endif; ?>
                                                 <?php if (!empty($r['total_imagenes']) && $r['total_imagenes'] > 0): ?>
                                                     <div>
                                                         <a href="<?= base_url('imagenreceta/listar?idreceta=' . $r['idreceta']) ?>" class="badge bg-warning-subtle text-dark border border-warning text-decoration-none" style="font-size: 0.65rem;">

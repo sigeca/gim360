@@ -1020,12 +1020,14 @@ class GimApiController extends ResourceController
 
         $porciones = isset($json['porciones']) && is_numeric($json['porciones']) ? (int)$json['porciones'] : 1;
         $tiempo    = isset($json['tiempopreparacion']) && is_numeric($json['tiempopreparacion']) ? (int)$json['tiempopreparacion'] : null;
+        $video     = isset($json['video']) ? (trim($json['video']) ?: null) : null;
 
         $id = $recetaModel->insert([
             'nombre'            => trim($json['nombre']),
             'instrucciones'     => isset($json['instrucciones']) ? (trim($json['instrucciones']) ?: null) : null,
             'porciones'         => $porciones,
             'tiempopreparacion' => $tiempo,
+            'video'             => $video,
         ]);
 
         $nueva = $recetaModel->getRecetaWithDetails($id);

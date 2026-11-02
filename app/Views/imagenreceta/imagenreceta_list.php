@@ -150,6 +150,11 @@
                                             <i class="bi bi-book-half text-warning me-1 fs-5"></i>
                                             <?= esc($r['receta_nombre']) ?>
                                         </a>
+                                        <?php if (!empty($r['receta_video'])): ?>
+                                            <a href="<?= esc($r['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                <i class="bi bi-youtube me-1"></i>Video
+                                            </a>
+                                        <?php endif; ?>
                                         <div class="small text-muted">
                                             <?= esc($r['receta_porciones'] ?? 1) ?> porción(es) 
                                             <?= !empty($r['receta_tiempopreparacion']) ? '• ' . esc($r['receta_tiempopreparacion']) . ' min' : '' ?>

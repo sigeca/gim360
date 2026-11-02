@@ -69,7 +69,7 @@ class AlimentoRecetaModel extends Model
      */
     public function getRecetasByAlimento(int $idalimento): array
     {
-        return $this->select('alimentoreceta.*, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
+        return $this->select('alimentoreceta.*, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.video AS receta_video, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
                     ->join('receta r', 'r.idreceta = alimentoreceta.idreceta', 'inner')
                     ->join('unidadalimento u', 'u.idunidadalimento = alimentoreceta.idunidadalimento', 'inner')
                     ->where('alimentoreceta.idalimento', $idalimento)
@@ -82,7 +82,7 @@ class AlimentoRecetaModel extends Model
      */
     public function getRecordWithDetails(int $id): ?array
     {
-        return $this->select('alimentoreceta.*, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, a.nombre AS alimento_nombre, ga.nombre AS grupo_nombre, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
+        return $this->select('alimentoreceta.*, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.video AS receta_video, a.nombre AS alimento_nombre, ga.nombre AS grupo_nombre, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
                     ->join('receta r', 'r.idreceta = alimentoreceta.idreceta', 'inner')
                     ->join('alimento a', 'a.idalimento = alimentoreceta.idalimento', 'inner')
                     ->join('grupoalimento ga', 'ga.idgrupoalimento = a.idgrupo', 'left')
@@ -96,7 +96,7 @@ class AlimentoRecetaModel extends Model
      */
     public function getRecordsWithDetails(?string $search = null, ?int $idreceta = null, ?int $idalimento = null): array
     {
-        $builder = $this->select('alimentoreceta.*, r.nombre AS receta_nombre, a.nombre AS alimento_nombre, ga.nombre AS grupo_nombre, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
+        $builder = $this->select('alimentoreceta.*, r.nombre AS receta_nombre, r.video AS receta_video, a.nombre AS alimento_nombre, ga.nombre AS grupo_nombre, u.nombre AS unidad_nombre, u.abreviatura AS unidad_abreviatura')
                         ->join('receta r', 'r.idreceta = alimentoreceta.idreceta', 'inner')
                         ->join('alimento a', 'a.idalimento = alimentoreceta.idalimento', 'inner')
                         ->join('grupoalimento ga', 'ga.idgrupoalimento = a.idgrupo', 'left')

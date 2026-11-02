@@ -95,6 +95,11 @@
                                             <a href="<?= base_url('receta/actual/' . $rel['idreceta']) ?>" class="badge bg-warning text-dark text-decoration-none px-3 py-2 fs-6">
                                                 <i class="bi bi-book-half me-1"></i><?= esc($rel['receta_nombre']) ?>
                                             </a>
+                                            <?php if (!empty($rel['receta_video'])): ?>
+                                                <a href="<?= esc($rel['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-2 px-3 py-2 fs-6" title="Ver video de la receta en YouTube">
+                                                    <i class="bi bi-youtube me-1"></i>Video
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                     <tr>

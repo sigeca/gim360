@@ -236,6 +236,11 @@
                                                 <a href="<?= base_url('receta/actual/' . $cm['idreceta']) ?>" class="fw-bold text-decoration-none text-primary">
                                                     <i class="bi bi-book me-1"></i><?= esc($cm['receta_nombre']) ?>
                                                 </a>
+                                                <?php if (!empty($cm['receta_video'])): ?>
+                                                    <a href="<?= esc($cm['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                        <i class="bi bi-youtube me-1"></i>Video
+                                                    </a>
+                                                <?php endif; ?>
                                             </td>
                                             <td><?= esc($cm['porciones'] ?? 1) ?> porc.</td>
                                             <td class="text-secondary small">

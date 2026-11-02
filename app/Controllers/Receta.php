@@ -113,6 +113,7 @@ class Receta extends BaseController
             'instrucciones'     => 'permit_empty',
             'porciones'         => 'permit_empty|is_natural_no_zero|less_than[100]',
             'tiempopreparacion' => 'permit_empty|is_natural|less_than[1440]',
+            'video'             => 'permit_empty|max_length[300]',
         ];
 
         $messages = [
@@ -129,6 +130,9 @@ class Receta extends BaseController
                 'is_natural' => 'El tiempo de preparación debe ser un número entero en minutos (0 o más).',
                 'less_than'  => 'El tiempo no puede superar los 1440 minutos.',
             ],
+            'video' => [
+                'max_length' => 'La URL del video no puede superar los 300 caracteres.',
+            ],
         ];
 
         if (!$this->validate($rules, $messages)) {
@@ -137,12 +141,14 @@ class Receta extends BaseController
 
         $porciones = $this->request->getPost('porciones');
         $tiempo    = $this->request->getPost('tiempopreparacion');
+        $video     = trim($this->request->getPost('video'));
 
         $id = $this->recetaModel->insert([
             'nombre'            => trim($this->request->getPost('nombre')),
             'instrucciones'     => trim($this->request->getPost('instrucciones')) ?: null,
             'porciones'         => (!empty($porciones) && is_numeric($porciones)) ? (int)$porciones : 1,
             'tiempopreparacion' => ($tiempo !== '' && $tiempo !== null && is_numeric($tiempo)) ? (int)$tiempo : null,
+            'video'             => !empty($video) ? $video : null,
         ]);
 
         return redirect()->to(base_url('receta/actual/' . $id))->with('success', 'Receta registrada exitosamente.');
@@ -176,6 +182,7 @@ class Receta extends BaseController
             'instrucciones'     => 'permit_empty',
             'porciones'         => 'permit_empty|is_natural_no_zero|less_than[100]',
             'tiempopreparacion' => 'permit_empty|is_natural|less_than[1440]',
+            'video'             => 'permit_empty|max_length[300]',
         ];
 
         $messages = [
@@ -192,6 +199,9 @@ class Receta extends BaseController
                 'is_natural' => 'El tiempo de preparación debe ser un número entero en minutos (0 o más).',
                 'less_than'  => 'El tiempo no puede superar los 1440 minutos.',
             ],
+            'video' => [
+                'max_length' => 'La URL del video no puede superar los 300 caracteres.',
+            ],
         ];
 
         if (!$this->validate($rules, $messages)) {
@@ -200,12 +210,14 @@ class Receta extends BaseController
 
         $porciones = $this->request->getPost('porciones');
         $tiempo    = $this->request->getPost('tiempopreparacion');
+        $video     = trim($this->request->getPost('video'));
 
         $this->recetaModel->update($id, [
             'nombre'            => trim($this->request->getPost('nombre')),
             'instrucciones'     => trim($this->request->getPost('instrucciones')) ?: null,
             'porciones'         => (!empty($porciones) && is_numeric($porciones)) ? (int)$porciones : 1,
             'tiempopreparacion' => ($tiempo !== '' && $tiempo !== null && is_numeric($tiempo)) ? (int)$tiempo : null,
+            'video'             => !empty($video) ? $video : null,
         ]);
 
         return redirect()->to(base_url('receta/actual/' . $id))->with('success', 'Receta actualizada exitosamente.');

@@ -85,6 +85,29 @@
                         </div>
                     </div>
 
+                    <!-- URL de Video Tutorial / Demostración en YouTube -->
+                    <div class="mb-3">
+                        <label for="video" class="form-label fw-bold">
+                            URL de Video de Preparación (YouTube)
+                        </label>
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-youtube text-danger"></i></span>
+                            <input type="url" 
+                                   class="form-control <?= session('errors.video') ? 'is-invalid' : '' ?>" 
+                                   id="video" 
+                                   name="video" 
+                                   value="<?= old('video', $receta['video'] ?? '') ?>" 
+                                   placeholder="https://www.youtube.com/watch?v=... o https://youtu.be/..." 
+                                   maxlength="300">
+                            <?php if (!empty($receta['video'])): ?>
+                                <a href="<?= esc($receta['video']) ?>" target="_blank" class="btn btn-outline-danger" title="Ver video actual en YouTube">
+                                    <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            <?php endif; ?>
+                        </div>
+                        <div class="form-text text-muted">Enlace opcional de YouTube con el video tutorial del paso a paso o preparación de la receta.</div>
+                    </div>
+
                     <!-- Instrucciones -->
                     <div class="mb-4">
                         <label for="instrucciones" class="form-label fw-semibold">

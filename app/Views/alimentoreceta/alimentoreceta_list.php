@@ -90,6 +90,11 @@
                                         <a href="<?= base_url('receta/actual/' . $rg['idreceta']) ?>" class="fw-bold text-dark text-decoration-none">
                                             <i class="bi bi-book text-warning me-1"></i><?= esc($rg['receta_nombre']) ?>
                                         </a>
+                                        <?php if (!empty($rg['receta_video'])): ?>
+                                            <a href="<?= esc($rg['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                <i class="bi bi-youtube me-1"></i>Video
+                                            </a>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <a href="<?= base_url('alimento/actual/' . $rg['idalimento']) ?>" class="fw-semibold text-success text-decoration-none">

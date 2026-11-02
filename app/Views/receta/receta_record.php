@@ -42,6 +42,11 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center gap-2">
+                        <?php if (!empty($receta['video'])): ?>
+                            <a href="<?= esc($receta['video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger px-3 py-2 fs-6 text-decoration-none shadow-sm" title="Ver video de la receta en YouTube">
+                                <i class="bi bi-youtube me-1"></i>Video Disponible
+                            </a>
+                        <?php endif; ?>
                         <?php $cat = $receta['categoria_tiempo']; ?>
                         <span class="badge <?= $cat['badge_class'] ?> px-3 py-2 fs-6 shadow-sm">
                             <i class="bi <?= $cat['icono'] ?> me-1"></i><?= $cat['etiqueta'] ?>
@@ -163,6 +168,45 @@
                             <?php endif; ?>
                         </div>
                     </div>
+
+                    <!-- Video Tutorial / Demostración Culinaria -->
+                    <?php if (!empty($receta['video'])): ?>
+                        <?php 
+                            $embedUrl = $receta['youtube_embed_url'] ?? null;
+                            if (!$embedUrl && preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/|youtube\.com/shorts/)([^"&?/\s]{11})%i', $receta['video'], $match)) {
+                                $embedUrl = 'https://www.youtube.com/embed/' . $match[1];
+                            }
+                        ?>
+                        <div class="card border border-danger-subtle shadow-sm mb-4">
+                            <div class="card-header bg-danger bg-opacity-10 py-3 border-bottom border-danger-subtle d-flex justify-content-between align-items-center">
+                                <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                                    <i class="bi bi-youtube text-danger me-2 fs-5"></i>Video Demostrativo y Preparación Culinaria
+                                </h6>
+                                <a href="<?= esc($receta['video']) ?>" target="_blank" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-box-arrow-up-right me-1"></i> Ver en YouTube
+                                </a>
+                            </div>
+                            <div class="card-body p-4">
+                                <?php if ($embedUrl): ?>
+                                    <div class="ratio ratio-16x9 rounded-3 shadow-sm overflow-hidden mb-3">
+                                        <iframe src="<?= $embedUrl ?>" title="Video de <?= esc($receta['nombre']) ?>" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 p-3 bg-light rounded-3 border">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-play-circle-fill text-danger fs-4"></i>
+                                        <div>
+                                            <span class="fw-semibold text-dark">Enlace del video tutorial:</span>
+                                            <small class="d-block text-muted font-monospace"><?= esc($receta['video']) ?></small>
+                                        </div>
+                                    </div>
+                                    <a href="<?= esc($receta['video']) ?>" target="_blank" class="btn btn-outline-danger btn-sm">
+                                        <i class="bi bi-youtube me-1"></i>Abrir video
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endif; ?>
 
                     <!-- Componentes Nutricionales de la Receta -->
                     <div class="card border border-info-subtle shadow-sm mb-4">

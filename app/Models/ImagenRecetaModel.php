@@ -47,7 +47,8 @@ class ImagenRecetaModel extends Model
                                  d.nombre AS directorio_nombre, d.ruta AS directorio_ruta,
                                  fi.nombre AS formato_nombre,
                                  r.nombre AS receta_nombre, r.instrucciones AS receta_instrucciones,
-                                 r.porciones AS receta_porciones, r.tiempopreparacion AS receta_tiempopreparacion')
+                                 r.porciones AS receta_porciones, r.tiempopreparacion AS receta_tiempopreparacion,
+                                 r.video AS receta_video')
                        ->join('imagen i', 'i.idimagen = imagenreceta.idimagen', 'inner')
                        ->join('directorio d', 'd.iddirectorio = i.iddirectorio', 'left')
                        ->join('formatoimagen fi', 'fi.idformatoimagen = i.idformatoimagen', 'left')
@@ -113,7 +114,7 @@ class ImagenRecetaModel extends Model
     {
         return $this->select('imagenreceta.*, 
                               r.nombre AS receta_nombre, r.porciones AS receta_porciones,
-                              r.tiempopreparacion AS receta_tiempopreparacion')
+                              r.tiempopreparacion AS receta_tiempopreparacion, r.video AS receta_video')
                     ->join('receta r', 'r.idreceta = imagenreceta.idreceta', 'inner')
                     ->where('imagenreceta.idimagen', $idimagen)
                     ->orderBy('r.nombre', 'ASC')
@@ -129,7 +130,7 @@ class ImagenRecetaModel extends Model
                                   i.nombre AS imagen_nombre, i.descripcion AS imagen_descripcion, 
                                   d.ruta AS directorio_ruta, fi.nombre AS formato_nombre,
                                   r.nombre AS receta_nombre, r.porciones AS receta_porciones,
-                                  r.tiempopreparacion AS receta_tiempopreparacion')
+                                  r.tiempopreparacion AS receta_tiempopreparacion, r.video AS receta_video')
                         ->join('imagen i', 'i.idimagen = imagenreceta.idimagen', 'inner')
                         ->join('directorio d', 'd.iddirectorio = i.iddirectorio', 'left')
                         ->join('formatoimagen fi', 'fi.idformatoimagen = i.idformatoimagen', 'left')

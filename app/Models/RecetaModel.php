@@ -17,6 +17,7 @@ class RecetaModel extends Model
         'instrucciones',
         'porciones',
         'tiempopreparacion',
+        'video',
     ];
 
     protected $validationRules = [
@@ -24,6 +25,7 @@ class RecetaModel extends Model
         'instrucciones'     => 'permit_empty',
         'porciones'         => 'permit_empty|is_natural_no_zero|less_than[100]',
         'tiempopreparacion' => 'permit_empty|is_natural|less_than[1440]',
+        'video'             => 'permit_empty|max_length[300]',
     ];
 
     protected $validationMessages = [
@@ -39,6 +41,9 @@ class RecetaModel extends Model
         'tiempopreparacion' => [
             'is_natural' => 'El tiempo de preparación debe ser un número entero en minutos (0 o más).',
             'less_than'  => 'El tiempo de preparación no puede exceder las 24 horas (1440 minutos).',
+        ],
+        'video' => [
+            'max_length' => 'La URL del video no puede superar los 300 caracteres.',
         ],
     ];
 
@@ -102,6 +107,22 @@ class RecetaModel extends Model
     }
 
     /**
+     * Extrae la URL embebida de YouTube si la URL del video es de YouTube
+     */
+    public static function getYoutubeEmbedUrl(?string $url): ?string
+    {
+        if (empty($url)) {
+            return null;
+        }
+
+        if (preg_match('%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/|youtube\.com/shorts/)([^"&?/\s]{11})%i', $url, $match)) {
+            return 'https://www.youtube.com/embed/' . $match[1];
+        }
+
+        return null;
+    }
+
+    /**
      * Obtiene el listado de recetas con buscador opcional
      */
     public function getRecetas(?string $search = null): array
@@ -124,11 +145,12 @@ class RecetaModel extends Model
         $records = $builder->findAll();
         foreach ($records as &$rec) {
             $min = !empty($rec['tiempopreparacion']) ? (int)$rec['tiempopreparacion'] : null;
-            $rec['tiempo_texto']     = self::formatTiempo($min);
-            $rec['categoria_tiempo'] = self::getCategoriaTiempo($min);
-            $rec['imagenes']         = $this->getImagenesByReceta((int)$rec['idreceta']);
-            $rec['total_imagenes']   = count($rec['imagenes']);
-            $rec['primera_imagen']   = !empty($rec['imagenes']) ? $rec['imagenes'][0] : null;
+            $rec['tiempo_texto']      = self::formatTiempo($min);
+            $rec['categoria_tiempo']  = self::getCategoriaTiempo($min);
+            $rec['youtube_embed_url'] = self::getYoutubeEmbedUrl($rec['video'] ?? null);
+            $rec['imagenes']          = $this->getImagenesByReceta((int)$rec['idreceta']);
+            $rec['total_imagenes']    = count($rec['imagenes']);
+            $rec['primera_imagen']    = !empty($rec['imagenes']) ? $rec['imagenes'][0] : null;
         }
 
         return $records;
@@ -142,10 +164,11 @@ class RecetaModel extends Model
         $rec = $this->find($id);
         if ($rec) {
             $min = !empty($rec['tiempopreparacion']) ? (int)$rec['tiempopreparacion'] : null;
-            $rec['tiempo_texto']     = self::formatTiempo($min);
-            $rec['categoria_tiempo'] = self::getCategoriaTiempo($min);
-            $rec['imagenes']         = $this->getImagenesByReceta((int)$rec['idreceta']);
-            $rec['total_imagenes']   = count($rec['imagenes']);
+            $rec['tiempo_texto']      = self::formatTiempo($min);
+            $rec['categoria_tiempo']  = self::getCategoriaTiempo($min);
+            $rec['youtube_embed_url'] = self::getYoutubeEmbedUrl($rec['video'] ?? null);
+            $rec['imagenes']          = $this->getImagenesByReceta((int)$rec['idreceta']);
+            $rec['total_imagenes']    = count($rec['imagenes']);
         }
         return $rec;
     }

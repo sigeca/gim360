@@ -56,7 +56,7 @@ class ComidaModel extends Model
      */
     public function getComidasByPlan(int $idplan): array
     {
-        return $this->select('comida.*, ds.nombre AS diasemana_nombre, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
+        return $this->select('comida.*, ds.nombre AS diasemana_nombre, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones, r.video AS receta_video')
                     ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')
                     ->join('tipocomida tc', 'tc.idtipocomida = comida.idtipocomida', 'left')
                     ->join('receta r', 'r.idreceta = comida.idreceta', 'left')
@@ -72,7 +72,7 @@ class ComidaModel extends Model
      */
     public function getRecordWithDetails(int $id): ?array
     {
-        return $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, pa.idpersona, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones')
+        return $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, pa.idpersona, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.instrucciones, r.video AS receta_video')
                     ->join('planalimentacion pa', 'pa.idplanalimentacion = comida.idplanalimentacion', 'inner')
                     ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
                     ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')
@@ -87,7 +87,7 @@ class ComidaModel extends Model
      */
     public function getRecordsWithDetails(?string $search = null, ?int $idplan = null, ?int $idtipocomida = null, ?int $idreceta = null, ?int $iddiasemana = null): array
     {
-        $builder = $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion')
+        $builder = $this->select('comida.*, ds.nombre AS diasemana_nombre, pa.nombre AS plan_nombre, p.cedula, p.nombres, p.apellidos, tc.nombre AS tipocomida_nombre, r.nombre AS receta_nombre, r.porciones, r.tiempopreparacion, r.video AS receta_video')
                         ->join('planalimentacion pa', 'pa.idplanalimentacion = comida.idplanalimentacion', 'inner')
                         ->join('persona p', 'p.idpersona = pa.idpersona', 'inner')
                         ->join('diasemana ds', 'ds.iddiasemana = comida.iddiasemana', 'left')

@@ -32,6 +32,21 @@ SET character_set_client = utf8mb4;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `AlimentoComponenteNutricional`
+--
+
+DROP TABLE IF EXISTS `AlimentoComponenteNutricional`;
+/*!50001 DROP VIEW IF EXISTS `AlimentoComponenteNutricional`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `AlimentoComponenteNutricional` AS SELECT
+ NULL AS `idalimentocomponentenutricional`,
+ NULL AS `idalimentocomponentenuetricional`,
+ NULL AS `idalimento`,
+ NULL AS `idcomponentenutricional` */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `AlimentoReceta`
 --
 
@@ -58,9 +73,39 @@ SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `Comida` AS SELECT
  NULL AS `idcomida`,
  NULL AS `idplanalimentacion`,
+ NULL AS `iddiasemana`,
  NULL AS `idtipocomida`,
  NULL AS `idreceta`,
  NULL AS `horarecomendada` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ComponenteNutricional`
+--
+
+DROP TABLE IF EXISTS `ComponenteNutricional`;
+/*!50001 DROP VIEW IF EXISTS `ComponenteNutricional`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ComponenteNutricional` AS SELECT
+ NULL AS `idcomponentenutricional`,
+ NULL AS `nombre`,
+ NULL AS `descripcion` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `CumplimientoPlanAlimentacion`
+--
+
+DROP TABLE IF EXISTS `CumplimientoPlanAlimentacion`;
+/*!50001 DROP VIEW IF EXISTS `CumplimientoPlanAlimentacion`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `CumplimientoPlanAlimentacion` AS SELECT
+ NULL AS `idcumplimientoplanalimentacion`,
+ NULL AS `idplanalimentacion`,
+ NULL AS `idcomida`,
+ NULL AS `fechahora` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -74,6 +119,22 @@ SET character_set_client = utf8mb4;
 /*!50001 CREATE VIEW `DiaSemana` AS SELECT
  NULL AS `iddiasemana`,
  NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `Directorio`
+--
+
+DROP TABLE IF EXISTS `Directorio`;
+/*!50001 DROP VIEW IF EXISTS `Directorio`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `Directorio` AS SELECT
+ NULL AS `iddirectorio`,
+ NULL AS `nombre`,
+ NULL AS `ruta`,
+ NULL AS `descripcion`,
+ NULL AS `idordenador` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -131,6 +192,19 @@ SET character_set_client = utf8mb4;
 SET character_set_client = @saved_cs_client;
 
 --
+-- Temporary table structure for view `FormatoImagen`
+--
+
+DROP TABLE IF EXISTS `FormatoImagen`;
+/*!50001 DROP VIEW IF EXISTS `FormatoImagen`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `FormatoImagen` AS SELECT
+ NULL AS `idformatoimagen`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Temporary table structure for view `GrupoAlimento`
 --
 
@@ -142,6 +216,69 @@ SET character_set_client = utf8mb4;
  NULL AS `idgrupoalimento`,
  NULL AS `nombre`,
  NULL AS `descripcion` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `Imagen`
+--
+
+DROP TABLE IF EXISTS `Imagen`;
+/*!50001 DROP VIEW IF EXISTS `Imagen`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `Imagen` AS SELECT
+ NULL AS `idimagen`,
+ NULL AS `nombre`,
+ NULL AS `idformatoimagen`,
+ NULL AS `fechacaptura`,
+ NULL AS `descripcion`,
+ NULL AS `palabrasclave`,
+ NULL AS `licencia`,
+ NULL AS `fechacreacion`,
+ NULL AS `idordenador`,
+ NULL AS `iddirectorio` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ImagenAlimento`
+--
+
+DROP TABLE IF EXISTS `ImagenAlimento`;
+/*!50001 DROP VIEW IF EXISTS `ImagenAlimento`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ImagenAlimento` AS SELECT
+ NULL AS `idimagenalimento`,
+ NULL AS `idimagen`,
+ NULL AS `idalimento` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ImagenComponenteNutricional`
+--
+
+DROP TABLE IF EXISTS `ImagenComponenteNutricional`;
+/*!50001 DROP VIEW IF EXISTS `ImagenComponenteNutricional`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ImagenComponenteNutricional` AS SELECT
+ NULL AS `idimagencomponentenutricional`,
+ NULL AS `idimagen`,
+ NULL AS `idcomponentenutricional` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ImagenReceta`
+--
+
+DROP TABLE IF EXISTS `ImagenReceta`;
+/*!50001 DROP VIEW IF EXISTS `ImagenReceta`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ImagenReceta` AS SELECT
+ NULL AS `idimagenreceta`,
+ NULL AS `idimagen`,
+ NULL AS `idreceta` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -171,6 +308,32 @@ SET character_set_client = utf8mb4;
  NULL AS `idmusculoejecicio`,
  NULL AS `idejercicio`,
  NULL AS `idmusculo` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `ObjetivoNutricional`
+--
+
+DROP TABLE IF EXISTS `ObjetivoNutricional`;
+/*!50001 DROP VIEW IF EXISTS `ObjetivoNutricional`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `ObjetivoNutricional` AS SELECT
+ NULL AS `idobjetivonutricional`,
+ NULL AS `nombre` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `Ordenador`
+--
+
+DROP TABLE IF EXISTS `Ordenador`;
+/*!50001 DROP VIEW IF EXISTS `Ordenador`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `Ordenador` AS SELECT
+ NULL AS `idordenador`,
+ NULL AS `nombre` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -287,7 +450,22 @@ SET character_set_client = utf8mb4;
  NULL AS `nombre`,
  NULL AS `instrucciones`,
  NULL AS `porciones`,
- NULL AS `tiempopreparacion` */;
+ NULL AS `tiempopreparacion`,
+ NULL AS `video` */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary table structure for view `RecetaComponenteNutricional`
+--
+
+DROP TABLE IF EXISTS `RecetaComponenteNutricional`;
+/*!50001 DROP VIEW IF EXISTS `RecetaComponenteNutricional`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8mb4;
+/*!50001 CREATE VIEW `RecetaComponenteNutricional` AS SELECT
+ NULL AS `idrecetacomponentenutricional`,
+ NULL AS `idreceta`,
+ NULL AS `idcomponentenutricional` */;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -374,7 +552,7 @@ CREATE TABLE `alimento` (
   PRIMARY KEY (`idalimento`),
   KEY `fk_alimento_grupo` (`idgrupo`),
   CONSTRAINT `fk_alimento_grupo` FOREIGN KEY (`idgrupo`) REFERENCES `grupoalimento` (`idgrupoalimento`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -406,8 +584,197 @@ INSERT INTO `alimento` VALUES
 (20,7,'Aceite de Oliva Virgen Extra','Ácido oleico y polifenoles antiinflamatorios para la salud cardiovascular.'),
 (21,7,'Frutos Secos (Almendras, Nueces)','Aporte de grasas saludables, magnesio, vitamina E y energía saciante.'),
 (22,8,'Proteína de Suero (Whey Protein)','Aislado o concentrado proteico de rápida asimilación con leucina para síntesis proteica.'),
-(23,8,'Creatina Monohidrato','Suplemento con mayor evidencia para ganancia de fuerza, potencia y volumen muscular.');
+(23,8,'Creatina Monohidrato','Suplemento con mayor evidencia para ganancia de fuerza, potencia y volumen muscular.'),
+(24,1,'Pescado Albacora','Pescado azul rico en proteínas de alto valor biológico, ácidos grasos esenciales omega-3 (EPA y DHA), potasio, fósforo, magnesio y vitaminas del complejo B (especialmente B12).'),
+(25,3,'Yuca','Tubérculo rico en almidones complejos y carbohidratos de absorción gradual, libre de gluten, con fibra dietética, potasio, magnesio y vitamina C.'),
+(26,6,'Cebolla Colorada','Hortaliza rica en quercetina, compuestos sulfurados antioxidantes, potasio y vitamina C, con propiedades antiinflamatorias y diuréticas.'),
+(27,6,'Tomate Riñón','Hortaliza rica en licopeno (carotenoide antioxidante), vitamina C, potasio y ácido fólico, favorecedora de la salud cardiovascular.'),
+(28,6,'Pimiento Verde','Hortaliza rica en vitamina C, antioxidantes, agua y fibra vegetal, de mínimo aporte calórico.'),
+(29,6,'Ajo','Hortaliza con alicina y fitoquímicos azufrados de probada acción antioxidante, antimicrobiana y reguladora de la tensión.'),
+(30,6,'Cilantro Fresco','Hierba aromática rica en fitonutrientes, flavonoides digestivos, vitamina C, vitamina K y minerales como hierro y potasio.'),
+(31,6,'Comino Molido','Especia aromática rica en aceites esenciales, terpenos, hierro y magnesio que estimula la secreción de enzimas digestivas.'),
+(32,7,'Achiote (Pasta o Aceite)','Condimento natural a base de semillas de Bixa orellana rico en bixina, norbixina (carotenoides) y tocotrienoles protectores.'),
+(33,5,'Limón','Fruto cítrico con elevada concentración de vitamina C y ácido cítrico que estimula la absorción de hierro y balance electrolítico.'),
+(34,8,'Agua Purificada','Agua potable purificada esencial para la hidratación celular, equilibrio hidroelectrolítico y vehículo indispensable en la cocción de alimentos sin aporte calórico.'),
+(35,2,'Mantequilla','Derivado lácteo graso rico en ácidos grasos de rápida disponibilidad energética, vitamina A, vitamina D y calcio, que aporta suavidad y palatabilidad a las preparaciones.'),
+(36,6,'Sal Común / Sal Marina','Mineral esencial compuesto por cloruro de sodio, indispensable para el balance osmótico, conducción de impulsos nerviosos y realce del sabor.'),
+(37,3,'Plátano Verde (Patacón)','Plátano verde rico en carbohidratos complejos y almidón resistente que proporciona energía sostenida, además de un alto contenido de potasio y fibra dietética que contribuye al funcionamiento muscular.'),
+(38,2,'Queso Fresco','Queso tierno artesanal de humedad intermedia, excelente fuente de proteínas de alto valor biológico, calcio biodisponible para la salud ósea, fósforo, grasas lácteas y sodio.'),
+(39,1,'Huevo Frito','Huevo de gallina preparado en sartén con ligera fritura, rico en proteína completa de altísima biodisponibilidad, colina indispensable para el sistema nervioso, grasas saludables y vitaminas B12 y D.'),
+(40,7,'Aceite Vegetal para Cocinar','Aceite vegetal para cocción y fritura, fuente concentrada de energía, ácidos grasos insaturados y vehículo para la absorción de vitaminas liposolubles.'),
+(41,1,'Gallina Criolla','Carne de ave de corral criada de manera tradicional, con mayor densidad de colágeno, proteínas de alto valor biológico, aminoácidos esenciales, hierro, zinc, fósforo y vitaminas del complejo B (especialmente B12 y niacina), aportando un caldo concentrado, nutritivo y revitalizante.'),
+(42,6,'Cebolla Blanca (de Rama)','Hortaliza aromática rica en compuestos azufrados antioxidantes, flavonoides, potasio y vitamina C, fundamental para aportar aroma y sabor característico a caldos y sopas tradicionales.');
 /*!40000 ALTER TABLE `alimento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `alimentocomponentenutricional`
+--
+
+DROP TABLE IF EXISTS `alimentocomponentenutricional`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `alimentocomponentenutricional` (
+  `idalimentocomponentenutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `idalimentocomponentenuetricional` int(11) GENERATED ALWAYS AS (`idalimentocomponentenutricional`) VIRTUAL,
+  `idalimento` int(11) NOT NULL,
+  `idcomponentenutricional` int(11) NOT NULL,
+  PRIMARY KEY (`idalimentocomponentenutricional`),
+  UNIQUE KEY `uk_alimento_componente` (`idalimento`,`idcomponentenutricional`),
+  KEY `fk_acn_alimento` (`idalimento`),
+  KEY `fk_acn_componente` (`idcomponentenutricional`),
+  CONSTRAINT `fk_acn_alimento` FOREIGN KEY (`idalimento`) REFERENCES `alimento` (`idalimento`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_acn_componente` FOREIGN KEY (`idcomponentenutricional`) REFERENCES `componentenutricional` (`idcomponentenutricional`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=142 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `alimentocomponentenutricional`
+--
+
+LOCK TABLES `alimentocomponentenutricional` WRITE;
+/*!40000 ALTER TABLE `alimentocomponentenutricional` DISABLE KEYS */;
+INSERT INTO `alimentocomponentenutricional` VALUES
+(1,1,1,1),
+(2,2,1,10),
+(3,3,1,11),
+(4,4,1,19),
+(5,5,2,1),
+(6,6,2,3),
+(7,7,2,18),
+(8,8,2,19),
+(9,9,3,1),
+(10,10,3,6),
+(11,11,3,10),
+(12,12,4,1),
+(13,13,4,14),
+(14,14,4,15),
+(15,15,4,20),
+(16,16,4,19),
+(17,17,5,1),
+(18,18,5,2),
+(19,19,5,12),
+(20,20,6,1),
+(21,21,6,12),
+(22,22,6,10),
+(23,23,7,1),
+(24,24,7,2),
+(25,25,7,12),
+(26,26,7,18),
+(27,27,8,2),
+(28,28,8,7),
+(29,29,8,13),
+(30,30,8,1),
+(31,31,9,2),
+(32,32,9,9),
+(33,33,10,2),
+(34,34,10,11),
+(35,35,10,7),
+(36,36,24,1),
+(37,37,24,3),
+(38,38,24,6),
+(39,39,24,9),
+(40,40,24,10),
+(41,41,24,11),
+(42,42,24,13),
+(43,43,24,14),
+(44,44,24,16),
+(45,45,24,18),
+(46,46,24,19),
+(47,47,25,2),
+(48,48,25,7),
+(49,49,25,9),
+(50,50,25,11),
+(51,51,25,13),
+(52,52,25,17),
+(53,53,26,2),
+(54,54,26,7),
+(55,55,26,8),
+(56,56,26,11),
+(57,57,26,17),
+(58,58,27,2),
+(59,59,27,7),
+(60,60,27,11),
+(61,61,27,17),
+(62,62,28,2),
+(63,63,28,7),
+(64,64,28,11),
+(65,65,28,17),
+(66,66,29,11),
+(67,67,29,13),
+(68,68,29,14),
+(69,69,29,15),
+(70,70,29,16),
+(71,71,30,7),
+(72,72,30,11),
+(73,73,30,14),
+(74,74,30,17),
+(75,75,31,7),
+(76,76,31,13),
+(77,77,31,14),
+(78,78,32,3),
+(79,79,32,5),
+(80,80,32,9),
+(81,81,33,7),
+(82,82,33,11),
+(83,83,33,17),
+(84,84,9,1),
+(85,85,9,7),
+(86,86,9,10),
+(87,87,9,11),
+(88,88,9,13),
+(89,89,9,14),
+(90,90,9,16),
+(91,91,34,10),
+(92,92,34,11),
+(93,93,34,12),
+(94,94,34,13),
+(95,95,35,3),
+(96,96,35,4),
+(97,97,35,9),
+(98,98,35,12),
+(99,99,35,18),
+(100,100,36,10),
+(103,103,37,2),
+(104,104,37,7),
+(105,105,37,9),
+(106,106,37,11),
+(107,107,37,13),
+(108,108,38,1),
+(109,109,38,3),
+(110,110,38,4),
+(111,111,38,9),
+(112,112,38,10),
+(113,113,38,12),
+(114,114,38,16),
+(115,115,39,1),
+(116,116,39,3),
+(117,117,39,9),
+(118,118,39,18),
+(119,119,39,19),
+(120,120,40,3),
+(121,121,40,5),
+(122,122,40,6),
+(123,123,40,9),
+(124,124,41,1),
+(125,125,41,3),
+(126,126,41,4),
+(127,127,41,9),
+(128,128,41,10),
+(129,129,41,11),
+(130,130,41,12),
+(131,131,41,13),
+(132,132,41,14),
+(133,133,41,15),
+(134,134,41,16),
+(135,135,41,19),
+(136,136,42,2),
+(137,137,42,7),
+(138,138,42,9),
+(139,139,42,10),
+(140,140,42,11),
+(141,141,42,17);
+/*!40000 ALTER TABLE `alimentocomponentenutricional` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -430,7 +797,7 @@ CREATE TABLE `alimentoreceta` (
   CONSTRAINT `fk_ar_alimento` FOREIGN KEY (`idalimento`) REFERENCES `alimento` (`idalimento`) ON UPDATE CASCADE,
   CONSTRAINT `fk_ar_receta` FOREIGN KEY (`idreceta`) REFERENCES `receta` (`idreceta`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ar_unidad` FOREIGN KEY (`idunidadalimento`) REFERENCES `unidadalimento` (`idunidadalimento`) ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -450,7 +817,36 @@ INSERT INTO `alimentoreceta` VALUES
 (8,3,18,250.00,3),
 (9,3,15,1.00,8),
 (10,3,5,35.00,1),
-(11,3,22,1.00,9);
+(11,3,22,1.00,9),
+(12,6,24,500.00,1),
+(13,6,25,1000.00,1),
+(14,6,26,2.00,8),
+(15,6,27,2.00,8),
+(16,6,28,1.00,8),
+(17,6,29,2.00,8),
+(18,6,30,1.00,8),
+(19,6,31,1.00,5),
+(20,6,32,1.00,5),
+(21,6,33,2.00,8),
+(22,7,9,200.00,1),
+(23,7,34,500.00,3),
+(24,7,35,1.00,6),
+(25,7,36,2.00,1),
+(26,8,37,100.00,1),
+(27,8,38,30.00,1),
+(28,8,39,1.00,8),
+(29,8,40,1.00,6),
+(30,8,36,1.00,1),
+(31,9,41,1350.00,1),
+(32,9,25,600.00,1),
+(33,9,26,1.00,8),
+(34,9,29,4.00,8),
+(35,9,42,1.00,8),
+(36,9,30,1.00,8),
+(37,9,31,0.50,6),
+(38,9,36,5.00,1),
+(39,9,40,1.00,5),
+(40,9,34,2750.00,3);
 /*!40000 ALTER TABLE `alimentoreceta` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -506,6 +902,7 @@ DROP TABLE IF EXISTS `comida`;
 CREATE TABLE `comida` (
   `idcomida` int(11) NOT NULL AUTO_INCREMENT,
   `idplanalimentacion` int(11) NOT NULL,
+  `iddiasemana` int(11) DEFAULT NULL,
   `idtipocomida` int(11) NOT NULL,
   `idreceta` int(11) NOT NULL,
   `horarecomendada` time DEFAULT NULL,
@@ -513,6 +910,8 @@ CREATE TABLE `comida` (
   KEY `fk_comida_plan` (`idplanalimentacion`),
   KEY `fk_comida_tipo` (`idtipocomida`),
   KEY `fk_comida_receta` (`idreceta`),
+  KEY `fk_comida_diasemana` (`iddiasemana`),
+  CONSTRAINT `fk_comida_diasemana` FOREIGN KEY (`iddiasemana`) REFERENCES `diasemana` (`iddiasemana`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_comida_plan` FOREIGN KEY (`idplanalimentacion`) REFERENCES `planalimentacion` (`idplanalimentacion`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_comida_receta` FOREIGN KEY (`idreceta`) REFERENCES `receta` (`idreceta`) ON UPDATE CASCADE,
   CONSTRAINT `fk_comida_tipo` FOREIGN KEY (`idtipocomida`) REFERENCES `tipocomida` (`idtipocomida`) ON UPDATE CASCADE
@@ -526,15 +925,61 @@ CREATE TABLE `comida` (
 LOCK TABLES `comida` WRITE;
 /*!40000 ALTER TABLE `comida` DISABLE KEYS */;
 INSERT INTO `comida` VALUES
-(1,1,1,1,'07:30:00'),
-(2,1,3,2,'13:00:00'),
-(3,1,6,3,'17:30:00'),
-(4,1,7,4,'20:30:00'),
-(5,2,1,3,'08:00:00'),
-(6,2,3,2,'13:30:00'),
-(7,2,7,4,'20:00:00'),
-(9,4,1,3,'08:42:00');
+(1,1,1,1,1,'07:30:00'),
+(2,1,1,3,2,'13:00:00'),
+(3,1,1,6,3,'17:30:00'),
+(4,1,1,7,4,'20:30:00'),
+(5,2,1,1,3,'08:00:00'),
+(6,2,1,3,2,'13:30:00'),
+(7,2,1,7,4,'20:00:00'),
+(9,4,1,1,3,'08:42:00');
 /*!40000 ALTER TABLE `comida` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `componentenutricional`
+--
+
+DROP TABLE IF EXISTS `componentenutricional`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `componentenutricional` (
+  `idcomponentenutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  PRIMARY KEY (`idcomponentenutricional`),
+  UNIQUE KEY `uk_componentenutricional_nombre` (`nombre`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `componentenutricional`
+--
+
+LOCK TABLES `componentenutricional` WRITE;
+/*!40000 ALTER TABLE `componentenutricional` DISABLE KEYS */;
+INSERT INTO `componentenutricional` VALUES
+(1,'Proteínas','Macronutriente fundamental para la síntesis de tejido muscular, recuperación y regeneración celular.'),
+(2,'Carbohidratos Totales','Principal fuente de combustible energético del organismo y reserva de glucógeno muscular y hepático.'),
+(3,'Grasas Totales (Lípidos)','Macronutriente esencial para la producción hormonal, absorción de vitaminas liposolubles y reserva de energía.'),
+(4,'Grasas Saturadas','Ácidos grasos presentes en productos animales y aceites tropicales; su consumo debe ser moderado.'),
+(5,'Grasas Monoinsaturadas','Grasas saludables presentes en aceite de oliva, aguacate y frutos secos que protegen la salud cardiovascular.'),
+(6,'Grasas Poliinsaturadas','Ácidos grasos esenciales (como Omega-3 y Omega-6) requeridos para el control de inflamación y salud cerebral.'),
+(7,'Fibra Dietética','Carbohidrato no digerible clave para el tránsito gastrointestinal, saciedad y control glucémico.'),
+(8,'Azúcares','Carbohidratos simples de rápida asimilación; aportan energía inmediata.'),
+(9,'Calorías / Valor Energético','Energía aportada por los nutrientes (expresada generalmente en kcal) requerida para las funciones basales y el entrenamiento.'),
+(10,'Sodio','Electrolito esencial para el equilibrio osmótico, transmisión del impulso nervioso y contracción muscular.'),
+(11,'Potasio','Electrolito que previene calambres, equilibra los niveles de líquidos y apoya la salud cardiovascular.'),
+(12,'Calcio','Mineral indispensable para la densidad mineral ósea, contracción muscular y señalización celular.'),
+(13,'Magnesio','Mineral involucrado en más de 300 reacciones enzimáticas, síntesis proteica, relajación muscular y descanso.'),
+(14,'Hierro','Componente clave de la hemoglobina y mioglobina para el transporte de oxígeno a los tejidos musculares.'),
+(15,'Zinc','Mineral cofactor de la inmunidad, síntesis de testosterona y cicatrización de tejidos.'),
+(16,'Fósforo','Mineral esencial que participa en la formación ósea y en la molécula energética de ATP.'),
+(17,'Vitamina C','Antioxidante hidrosoluble que estimula el sistema inmunológico y la producción de colágeno.'),
+(18,'Vitamina D','Vitamina liposoluble y prohormona vital para la absorción de calcio, fuerza muscular y sistema inmunitario.'),
+(19,'Vitamina B12','Crucial para la producción de glóbulos rojos, metabolismo energético y funcionamiento del sistema nervioso.'),
+(20,'Creatina','Compuesto nitrogenado que eleva las reservas intramusculares de fosfocreatina para esfuerzos de alta intensidad.');
+/*!40000 ALTER TABLE `componentenutricional` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -568,6 +1013,40 @@ INSERT INTO `correo` VALUES
 (4,3,'juandiego.castillo@yahoo.com','2024-03-20'),
 (8,7,'educaysoft@gmail.com','2026-10-06');
 /*!40000 ALTER TABLE `correo` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cumplimientoplanalimentacion`
+--
+
+DROP TABLE IF EXISTS `cumplimientoplanalimentacion`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `cumplimientoplanalimentacion` (
+  `idcumplimientoplanalimentacion` int(11) NOT NULL AUTO_INCREMENT,
+  `idplanalimentacion` int(11) NOT NULL,
+  `idcomida` int(11) NOT NULL,
+  `fechahora` datetime NOT NULL,
+  PRIMARY KEY (`idcumplimientoplanalimentacion`),
+  KEY `fk_cumplimiento_plan` (`idplanalimentacion`),
+  KEY `fk_cumplimiento_comida` (`idcomida`),
+  KEY `idx_cumplimiento_fechahora` (`fechahora`),
+  CONSTRAINT `fk_cumplimiento_comida` FOREIGN KEY (`idcomida`) REFERENCES `comida` (`idcomida`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_cumplimiento_plan` FOREIGN KEY (`idplanalimentacion`) REFERENCES `planalimentacion` (`idplanalimentacion`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cumplimientoplanalimentacion`
+--
+
+LOCK TABLES `cumplimientoplanalimentacion` WRITE;
+/*!40000 ALTER TABLE `cumplimientoplanalimentacion` DISABLE KEYS */;
+INSERT INTO `cumplimientoplanalimentacion` VALUES
+(1,1,1,'2026-10-31 15:50:38'),
+(2,2,5,'2026-10-31 15:50:38'),
+(3,4,9,'2026-10-31 15:50:38');
+/*!40000 ALTER TABLE `cumplimientoplanalimentacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -632,6 +1111,38 @@ INSERT INTO `direccion` VALUES
 (3,3,'Cdla. Los Ceibos, Manzana 14 Solar 8'),
 (7,7,'tachina');
 /*!40000 ALTER TABLE `direccion` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `directorio`
+--
+
+DROP TABLE IF EXISTS `directorio`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `directorio` (
+  `iddirectorio` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  `ruta` varchar(200) DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `idordenador` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`iddirectorio`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `directorio`
+--
+
+LOCK TABLES `directorio` WRITE;
+/*!40000 ALTER TABLE `directorio` DISABLE KEYS */;
+INSERT INTO `directorio` VALUES
+(1,'Imagenes Gim360','repositorio/imagen','Directorio de almacenamiento de imágenes',1),
+(2,'Equipos','repositorio/images/equipment','Directorio de imágenes de equipos y máquinas',1),
+(3,'Músculos','repositorio/images/muscles','Directorio de imágenes anatómicas de músculos',1),
+(4,'Ejercicios','repositorio/ejercicios','Directorio de imágenes y animaciones de ejercicios',1),
+(5,'Motivos','repositorio/motivos','Directorio de imágenes de motivos de entrenamiento',1);
+/*!40000 ALTER TABLE `directorio` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -2296,6 +2807,35 @@ INSERT INTO `estadoprogramacliente` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `formatoimagen`
+--
+
+DROP TABLE IF EXISTS `formatoimagen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `formatoimagen` (
+  `idformatoimagen` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`idformatoimagen`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `formatoimagen`
+--
+
+LOCK TABLES `formatoimagen` WRITE;
+/*!40000 ALTER TABLE `formatoimagen` DISABLE KEYS */;
+INSERT INTO `formatoimagen` VALUES
+(1,'jpg'),
+(2,'png'),
+(3,'webp'),
+(4,'gif'),
+(5,'jpeg');
+/*!40000 ALTER TABLE `formatoimagen` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `genero`
 --
 
@@ -2389,6 +2929,177 @@ INSERT INTO `grupoalimento` VALUES
 (7,'Grasas y Aceites Saludables','Aguacate, aceite de oliva virgen extra, frutos secos. Ácidos grasos monoinsaturados y poliinsaturados esenciales para el sistema hormonal.'),
 (8,'Suplementación Deportiva','Proteína de suero (whey), creatina, aminoácidos, multivitamínicos y electrolitos para complementar la dieta.');
 /*!40000 ALTER TABLE `grupoalimento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `imagen`
+--
+
+DROP TABLE IF EXISTS `imagen`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `imagen` (
+  `idimagen` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(255) DEFAULT NULL,
+  `idformatoimagen` int(11) DEFAULT NULL,
+  `fechacaptura` datetime DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `palabrasclave` text DEFAULT NULL,
+  `licencia` varchar(50) DEFAULT NULL,
+  `fechacreacion` timestamp NULL DEFAULT NULL,
+  `idordenador` int(11) DEFAULT NULL,
+  `iddirectorio` int(11) DEFAULT NULL,
+  PRIMARY KEY (`idimagen`)
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `imagen`
+--
+
+LOCK TABLES `imagen` WRITE;
+/*!40000 ALTER TABLE `imagen` DISABLE KEYS */;
+INSERT INTO `imagen` VALUES
+(1,'20261030_215804-00001.png',2,'2026-10-31 21:58:04','Proteinas','proteinas','Propietaria','2026-10-31 02:05:22',1,1),
+(2,'20261030_224529-00002.png',2,'2026-10-31 22:45:29','Carbohidratos','Carbohidratos','Propietaria','2026-10-31 02:51:25',1,1),
+(3,'20261031_123025-00003.jpg',1,'2026-10-31 12:30:25','Arroz blanco','arroz blanco','Libre','2026-10-31 03:39:18',1,1),
+(4,'20261031_143000-00004.jpg',1,'2026-10-31 14:30:00','Encebollado de pescado tradicional ecuatoriano servido en tazón con chifles y limón','encebollado,pescado,albacora,ecuador,receta,gastronomia','Libre','2026-10-31 19:30:00',1,1),
+(5,'20261031_143001-00005.png',2,'2026-10-31 14:30:01','Ficha e infografía de la receta Encebollado de Pescado Albacora con ingredientes y preparación','encebollado,receta,infografia,ingredientes,preparacion','Propietaria','2026-10-31 19:30:01',1,1),
+(6,'20261031_143002-00006.jpg',1,'2026-10-31 14:30:02','Lomo fresco de pescado albacora de alta calidad nutricional','albacora,pescado,proteina,omega3,ingrediente','Libre','2026-10-31 19:30:02',1,1),
+(7,'20261031_143003-00007.jpg',1,'2026-10-31 14:30:03','Yuca fresca entera y en trozos para cocción','yuca,tuberculo,carbohidratos,energia,ingrediente','Libre','2026-10-31 19:30:03',1,1),
+(8,'20261031_143004-00008.jpg',1,'2026-10-31 14:30:04','Cebolla colorada fresca entera y en rodajas','cebolla,colorada,morada,antioxidante,ingrediente','Libre','2026-10-31 19:30:04',1,1),
+(9,'20261031_171500-00009.jpg',1,'2026-10-31 17:15:00','Plato de arroz blanco cocido esponjoso humeante servido en tazón de cerámica artesanal con cilantro','arroz,blanco,cocido,receta,guarnicion,carbohidrato','Libre','2026-10-31 22:15:00',1,1),
+(10,'20261031_171501-00010.png',2,'2026-10-31 17:15:01','Ficha e infografía de la receta Arroz Blanco Cocido con ingredientes y preparación paso a paso','arroz,receta,infografia,ingredientes,preparacion,cocina','Propietaria','2026-10-31 22:15:01',1,1),
+(11,'20261031_171502-00011.jpg',1,'2026-10-31 17:15:02','Bloque de mantequilla fresca artesanal sobre tabla de madera para cocinar','mantequilla,lacteo,grasa,cocina,ingrediente','Libre','2026-10-31 22:15:02',1,1),
+(12,'20261031_171503-00012.jpg',1,'2026-10-31 17:15:03','Sal marina pura en cuenco rústico de madera con cuchara dosificadora','sal,mineral,sodio,condimento,ingrediente','Libre','2026-10-31 22:15:03',1,1),
+(13,'20261031_171504-00013.jpg',1,'2026-10-31 17:15:04','Vaso de agua pura y fresca cristalina con gotas de condensación','agua,hidratacion,liquido,pureza,ingrediente','Libre','2026-10-31 22:15:04',1,1),
+(14,'20261101_181500-00014.jpg',1,'2026-11-01 18:15:00','Plato tradicional de patacones dorados y crujientes servidos con queso fresco artesanal y huevo frito','patacon,patacones,queso,huevo,desayuno,platano verde,receta','Libre','2026-11-01 23:15:00',1,1),
+(15,'20261101_181501-00015.png',2,'2026-11-01 18:15:01','Ficha e infografía nutricional de Patacones con Queso y Huevo Frito con porciones y macronutrientes','patacon,receta,infografia,nutricion,calorias,proteinas,carbohidratos,grasas','Propietaria','2026-11-01 23:15:01',1,1),
+(16,'20261101_181502-00016.jpg',1,'2026-11-01 18:15:02','Porción de patacones crujientes a base de plátano verde, rica fuente de energía y potasio','patacon,platano verde,carbohidratos,potasio,fibra,ingrediente','Libre','2026-11-01 23:15:02',1,1),
+(17,'20261101_181503-00017.jpg',1,'2026-11-01 18:15:03','Huevo frito con yema tierna, fuente de proteína completa de alto valor biológico y colina','huevo,huevo frito,proteina,colina,vitamina b12,vitamina d,ingrediente','Libre','2026-11-01 23:15:03',1,1),
+(18,'20261101_181504-00018.jpg',1,'2026-11-01 18:15:04','Bastones de queso fresco artesanal rico en calcio, fósforo y proteínas lácteas','queso,queso fresco,calcio,fosforo,proteina,lacteo,ingrediente','Libre','2026-11-01 23:15:04',1,1),
+(19,'20261101_191500-00019.jpg',1,'2026-11-01 19:15:00','Plato tradicional de caldo de gallina criolla con yuca humeante, presa de gallina tierna, hierbas frescas y caldo dorado','caldo,gallina criolla,yuca,sopa,ecuador,almuerzo,receta tradicional','Libre','2026-11-02 00:15:00',1,1),
+(20,'20261101_191501-00020.png',2,'2026-11-01 19:15:01','Ficha e infografía completa de la receta Caldo de Gallina Criolla con Yuca con ingredientes, pasos de preparación y valor nutricional','caldo de gallina,receta,infografia,ingredientes,preparacion,nutricion','Propietaria','2026-11-02 00:15:01',1,1),
+(21,'20261101_191502-00021.jpg',1,'2026-11-01 19:15:02','Gallina criolla entera fresca de campo, proteína de alto valor biológico y colágeno para caldos reconstituyentes','gallina,gallina criolla,carne de ave,proteina,colageno,ingrediente','Libre','2026-11-02 00:15:02',1,1),
+(22,'20261101_191503-00022.jpg',1,'2026-11-01 19:15:03','Rama de cebolla blanca fresca y aromática para condimentar caldos y sopas','cebolla blanca,cebollin,cebolla de rama,aromatico,hortaliza,ingrediente','Libre','2026-11-02 00:15:03',1,1);
+/*!40000 ALTER TABLE `imagen` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `imagenalimento`
+--
+
+DROP TABLE IF EXISTS `imagenalimento`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `imagenalimento` (
+  `idimagenalimento` int(11) NOT NULL AUTO_INCREMENT,
+  `idimagen` int(11) NOT NULL,
+  `idalimento` int(11) NOT NULL,
+  PRIMARY KEY (`idimagenalimento`),
+  UNIQUE KEY `uk_imagen_alimento` (`idimagen`,`idalimento`),
+  KEY `fk_ia_imagen` (`idimagen`),
+  KEY `fk_ia_alimento` (`idalimento`),
+  CONSTRAINT `fk_ia_alimento` FOREIGN KEY (`idalimento`) REFERENCES `alimento` (`idalimento`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ia_imagen` FOREIGN KEY (`idimagen`) REFERENCES `imagen` (`idimagen`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `imagenalimento`
+--
+
+LOCK TABLES `imagenalimento` WRITE;
+/*!40000 ALTER TABLE `imagenalimento` DISABLE KEYS */;
+INSERT INTO `imagenalimento` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,9),
+(4,6,24),
+(5,7,25),
+(6,8,26),
+(8,11,35),
+(9,12,36),
+(7,13,34),
+(10,16,37),
+(12,17,39),
+(11,18,38),
+(13,21,41),
+(14,22,42);
+/*!40000 ALTER TABLE `imagenalimento` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `imagencomponentenutricional`
+--
+
+DROP TABLE IF EXISTS `imagencomponentenutricional`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `imagencomponentenutricional` (
+  `idimagencomponentenutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `idimagen` int(11) NOT NULL,
+  `idcomponentenutricional` int(11) NOT NULL,
+  PRIMARY KEY (`idimagencomponentenutricional`),
+  UNIQUE KEY `uk_imagen_componentenutricional` (`idimagen`,`idcomponentenutricional`),
+  KEY `fk_icn_imagen` (`idimagen`),
+  KEY `fk_icn_componentenutricional` (`idcomponentenutricional`),
+  CONSTRAINT `fk_icn_componentenutricional` FOREIGN KEY (`idcomponentenutricional`) REFERENCES `componentenutricional` (`idcomponentenutricional`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_icn_imagen` FOREIGN KEY (`idimagen`) REFERENCES `imagen` (`idimagen`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `imagencomponentenutricional`
+--
+
+LOCK TABLES `imagencomponentenutricional` WRITE;
+/*!40000 ALTER TABLE `imagencomponentenutricional` DISABLE KEYS */;
+INSERT INTO `imagencomponentenutricional` VALUES
+(1,1,1),
+(2,2,2),
+(3,3,1);
+/*!40000 ALTER TABLE `imagencomponentenutricional` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `imagenreceta`
+--
+
+DROP TABLE IF EXISTS `imagenreceta`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `imagenreceta` (
+  `idimagenreceta` int(11) NOT NULL AUTO_INCREMENT,
+  `idimagen` int(11) NOT NULL,
+  `idreceta` int(11) NOT NULL,
+  PRIMARY KEY (`idimagenreceta`),
+  UNIQUE KEY `uk_imagen_receta` (`idimagen`,`idreceta`),
+  KEY `fk_ir_imagen` (`idimagen`),
+  KEY `fk_ir_receta` (`idreceta`),
+  CONSTRAINT `fk_ir_imagen` FOREIGN KEY (`idimagen`) REFERENCES `imagen` (`idimagen`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_ir_receta` FOREIGN KEY (`idreceta`) REFERENCES `receta` (`idreceta`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `imagenreceta`
+--
+
+LOCK TABLES `imagenreceta` WRITE;
+/*!40000 ALTER TABLE `imagenreceta` DISABLE KEYS */;
+INSERT INTO `imagenreceta` VALUES
+(1,1,1),
+(2,2,2),
+(3,4,6),
+(4,5,6),
+(5,9,7),
+(6,10,7),
+(7,14,8),
+(8,15,8),
+(9,19,9),
+(10,20,9);
+/*!40000 ALTER TABLE `imagenreceta` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -4221,6 +4932,61 @@ INSERT INTO `musculoejercicio` VALUES
 UNLOCK TABLES;
 
 --
+-- Table structure for table `objetivonutricional`
+--
+
+DROP TABLE IF EXISTS `objetivonutricional`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `objetivonutricional` (
+  `idobjetivonutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(500) NOT NULL,
+  PRIMARY KEY (`idobjetivonutricional`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `objetivonutricional`
+--
+
+LOCK TABLES `objetivonutricional` WRITE;
+/*!40000 ALTER TABLE `objetivonutricional` DISABLE KEYS */;
+INSERT INTO `objetivonutricional` VALUES
+(1,'Pérdida de Grasa y Definición Muscular'),
+(2,'Aumento de Masa Muscular (Hipertrofia / Superávit Calórico)'),
+(3,'Mantenimiento y Recomposición Corporal'),
+(4,'Rendimiento Deportivo y Resistencia'),
+(5,'Salud Cardiovascular y Control Metabólico'),
+(6,'Fuerza Máxima y Potencia');
+/*!40000 ALTER TABLE `objetivonutricional` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `ordenador`
+--
+
+DROP TABLE IF EXISTS `ordenador`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ordenador` (
+  `idordenador` int(11) NOT NULL AUTO_INCREMENT,
+  `nombre` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`idordenador`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ordenador`
+--
+
+LOCK TABLES `ordenador` WRITE;
+/*!40000 ALTER TABLE `ordenador` DISABLE KEYS */;
+INSERT INTO `ordenador` VALUES
+(1,'Servidor Local gim360');
+/*!40000 ALTER TABLE `ordenador` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `perfilnutricional`
 --
 
@@ -4335,12 +5101,15 @@ DROP TABLE IF EXISTS `planalimentacion`;
 CREATE TABLE `planalimentacion` (
   `idplanalimentacion` int(11) NOT NULL AUTO_INCREMENT,
   `idpersona` int(11) NOT NULL,
+  `idobjetivonutricional` int(11) DEFAULT NULL,
   `nombre` varchar(150) NOT NULL,
   `fechainicio` date NOT NULL,
   `fechafin` date DEFAULT NULL,
   `objetivo` text DEFAULT NULL,
   PRIMARY KEY (`idplanalimentacion`),
   KEY `fk_planalimentacion_persona` (`idpersona`),
+  KEY `fk_plan_objetivonutricional` (`idobjetivonutricional`),
+  CONSTRAINT `fk_plan_objetivonutricional` FOREIGN KEY (`idobjetivonutricional`) REFERENCES `objetivonutricional` (`idobjetivonutricional`) ON DELETE SET NULL ON UPDATE CASCADE,
   CONSTRAINT `fk_planalimentacion_persona` FOREIGN KEY (`idpersona`) REFERENCES `persona` (`idpersona`) ON UPDATE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -4352,10 +5121,10 @@ CREATE TABLE `planalimentacion` (
 LOCK TABLES `planalimentacion` WRITE;
 /*!40000 ALTER TABLE `planalimentacion` DISABLE KEYS */;
 INSERT INTO `planalimentacion` VALUES
-(1,1,'Plan de Definición y Rendimiento Físico','2026-10-01','2026-12-31','Reducción progresiva de porcentaje graso corporal manteniendo masa muscular magra y optimizando el rendimiento atlético.'),
-(2,2,'Plan de Tonificación y Recomposición Corporal','2026-09-15','2026-11-30','Aumento de ingesta de proteínas de alto valor biológico, balance calórico equilibrado y control de micronutrientes.'),
-(3,3,'Plan Hipertrofia y Superávit Calórico','2026-10-15','2027-01-15','Superávit calórico controlado (+350 kcal) para estimular hipertrofia muscular y recuperación post-entrenamiento de fuerza.'),
-(4,7,'Plan de Fuerza y Acondicionamiento','2026-10-23',NULL,'Aumento de fuerza general con balance de macronutrientes');
+(1,1,1,'Plan de Definición y Rendimiento Físico','2026-10-01','2026-12-31','Reducción progresiva de porcentaje graso corporal manteniendo masa muscular magra y optimizando el rendimiento atlético.'),
+(2,2,3,'Plan de Tonificación y Recomposición Corporal','2026-09-15','2026-11-30','Aumento de ingesta de proteínas de alto valor biológico, balance calórico equilibrado y control de micronutrientes.'),
+(3,3,2,'Plan Hipertrofia y Superávit Calórico','2026-10-15','2027-01-15','Superávit calórico controlado (+350 kcal) para estimular hipertrofia muscular y recuperación post-entrenamiento de fuerza.'),
+(4,7,6,'Plan de Fuerza y Acondicionamiento','2026-10-23',NULL,'Aumento de fuerza general con balance de macronutrientes');
 /*!40000 ALTER TABLE `planalimentacion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -4583,20 +5352,20 @@ CREATE TABLE `programacliente` (
 LOCK TABLES `programacliente` WRITE;
 /*!40000 ALTER TABLE `programacliente` DISABLE KEYS */;
 INSERT INTO `programacliente` VALUES
-(1,1,1,1,'2026-01-15',1),
+(1,1,1,1,'2026-01-15',4),
 (2,2,2,1,'2026-02-01',1),
-(3,3,3,2,'2026-03-10',1),
-(4,5,4,6,'2026-04-05',1),
+(3,3,3,2,'2026-03-10',4),
+(4,5,4,6,'2026-04-05',4),
 (5,12,5,6,'2026-10-15',1),
 (6,13,6,7,'2026-10-16',1),
 (7,14,7,8,'2026-10-16',1),
 (8,1,8,2,'2026-10-20',1),
-(9,1,NULL,10,'2026-10-21',1),
+(9,1,NULL,10,'2026-10-21',4),
 (10,1,9,10,'2026-10-21',1),
-(15,5,14,11,'2026-10-22',1),
+(15,5,14,11,'2026-10-22',4),
 (18,6,17,12,'2026-10-22',1),
 (19,1,18,11,'2026-10-22',1),
-(21,1,20,13,'2026-10-22',1),
+(21,1,20,13,'2026-10-22',4),
 (22,1,21,13,'2026-10-22',1),
 (29,1,28,14,'2026-10-22',1),
 (30,1,29,16,'2026-10-23',1),
@@ -4790,8 +5559,9 @@ CREATE TABLE `receta` (
   `instrucciones` text DEFAULT NULL,
   `porciones` int(11) DEFAULT 1,
   `tiempopreparacion` int(11) DEFAULT NULL COMMENT 'Tiempo de preparación en minutos',
+  `video` varchar(300) DEFAULT NULL,
   PRIMARY KEY (`idreceta`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -4801,12 +5571,117 @@ CREATE TABLE `receta` (
 LOCK TABLES `receta` WRITE;
 /*!40000 ALTER TABLE `receta` DISABLE KEYS */;
 INSERT INTO `receta` VALUES
-(1,'Tortilla de Avena y Claras de Huevo','1. Batir 4 claras de huevo con 1 yema.\n2. Incorporar 40g de avena en hojuelas y una pizca de canela al gusto.\n3. Calentar una sartén antiadherente con 2 gotas de aceite de oliva virgen.\n4. Verter la mezcla y cocinar a fuego medio durante 3 minutos por cada lado hasta dorar.',1,10),
-(2,'Bowl de Pollo a la Plancha con Quinoa y Aguacate','1. Cocinar 100g de quinoa en agua con sal durante 15 minutos y escurrir.\n2. Sazonar 250g de pechuga de pollo con ajo, orégano, sal y pimienta.\n3. Cocinar el pollo a la plancha durante 5-6 minutos por lado a fuego medio-alto.\n4. Cortar en tiras y servir sobre la quinoa templada con rodajas de aguacate fresco y hojas de espinaca.',2,25),
-(3,'Batido Proteico Post-Entreno de Plátano y Avena','1. Colocar en el vaso de la licuadora 250ml de leche desnatada o bebida vegetal de almendras.\n2. Agregar 1 plátano maduro cortado en rodajas, 35g de avena en copos y 1 medida (scoop) de proteína de suero.\n3. Añadir 3 cubos de hielo y licuar a máxima potencia durante 60 segundos hasta lograr una textura suave y homogénea.',1,5),
-(4,'Salmón al Horno con Espárragos y Batata Asada','1. Precalentar el horno a 200°C.\n2. Lavar y cortar la batata en rodajas finas y distribuirlas en una bandeja con papel vegetal junto con los espárragos trigueros.\n3. Rociar con una cucharadita de aceite de oliva, sal marina y romero.\n4. Hornear durante 15 minutos, luego incorporar los lomos de salmón salpimentados y cocinar 12 a 15 minutos adicionales hasta que el pescado esté jugoso.',2,35),
-(5,'Yogur Griego con Nueces y Arándanos','Servir 150g de yogur griego natural, agregar un puñado de arándanos frescos y nueces picadas con un toque de miel pura.',1,5);
+(1,'Tortilla de Avena y Claras de Huevo','1. Batir 4 claras de huevo con 1 yema.\n2. Incorporar 40g de avena en hojuelas y una pizca de canela al gusto.\n3. Calentar una sartén antiadherente con 2 gotas de aceite de oliva virgen.\n4. Verter la mezcla y cocinar a fuego medio durante 3 minutos por cada lado hasta dorar.',1,10,'https://www.youtube.com/watch?v=42eX_20oX54'),
+(2,'Bowl de Pollo a la Plancha con Quinoa y Aguacate','1. Cocinar 100g de quinoa en agua con sal durante 15 minutos y escurrir.\n2. Sazonar 250g de pechuga de pollo con ajo, orégano, sal y pimienta.\n3. Cocinar el pollo a la plancha durante 5-6 minutos por lado a fuego medio-alto.\n4. Cortar en tiras y servir sobre la quinoa templada con rodajas de aguacate fresco y hojas de espinaca.',2,25,'https://www.youtube.com/watch?v=mD0Vl2mIuH4'),
+(3,'Batido Proteico Post-Entreno de Plátano y Avena','1. Colocar en el vaso de la licuadora 250ml de leche desnatada o bebida vegetal de almendras.\n2. Agregar 1 plátano maduro cortado en rodajas, 35g de avena en copos y 1 medida (scoop) de proteína de suero.\n3. Añadir 3 cubos de hielo y licuar a máxima potencia durante 60 segundos hasta lograr una textura suave y homogénea.',1,5,'https://www.youtube.com/watch?v=m53q4qH_L1k'),
+(4,'Salmón al Horno con Espárragos y Batata Asada','1. Precalentar el horno a 200°C.\n2. Lavar y cortar la batata en rodajas finas y distribuirlas en una bandeja con papel vegetal junto con los espárragos trigueros.\n3. Rociar con una cucharadita de aceite de oliva, sal marina y romero.\n4. Hornear durante 15 minutos, luego incorporar los lomos de salmón salpimentados y cocinar 12 a 15 minutos adicionales hasta que el pescado esté jugoso.',2,35,'https://www.youtube.com/watch?v=Z6zV5vEwT7Y'),
+(5,'Yogur Griego con Nueces y Arándanos','Servir 150g de yogur griego natural, agregar un puñado de arándanos frescos y nueces picadas con un toque de miel pura.',1,5,'https://www.youtube.com/watch?v=1F3h3nE8w8Y'),
+(6,'Encebollado de Pescado (Albacora)','1. Cocina la yuca en una olla con agua y sal hasta que esté suave. Retira, corta en trozos y reserva.\n2. En la misma olla, prepara un refrito con achiote, ajo, tomate y pimiento picados.\n3. Agrega agua, sal, comino y pimienta. Cocina por unos minutos.\n4. Incorpora el pescado albacora en trozos y cocina hasta que esté tierno.\n5. Aplasta ligeramente parte de la yuca en la sopa para espesar.\n6. Sirve caliente, acompañado de cebolla colorada encurtida con limón y cilantro picado.',4,45,'https://www.youtube.com/watch?v=8V7ZkH0_gD4'),
+(7,'Arroz Blanco Cocido','1. Lava el arroz hasta que el agua salga clara.\n2. En una olla, calienta el aceite o mantequilla y sofríe el arroz por 1 minuto.\n3. Agrega las 2 tazas de agua y la sal. Mezcla y deja hervir.\n4. Cuando hierva, baja el fuego, tapa la olla y cocina por 15-18 minutos, hasta que el agua se absorba.\n5. Consejo: Deja reposar el arroz tapado 5 minutos antes de servir, para que quede más suelto y esponjoso.',4,25,'https://www.youtube.com/watch?v=5U0h3_x2_j0'),
+(8,'Patacones con Queso','1. Pela el plátano verde y córtalo en rodajas de aproximadamente 2 cm de grosor.\n2. Calienta el aceite en una sartén a fuego medio y fríe los trozos de plátano durante 3 a 4 minutos por lado hasta que estén ligeramente dorados por fuera y tiernos por dentro.\n3. Retira los trozos de plátano y aplástalos inmediatamente sobre una tabla con una pataconera o la base de un vaso plano hasta formar discos (patacones).\n4. Vuelve a freír los patacones en el aceite caliente durante 1 a 2 minutos por lado hasta que queden crujientes y dorados. Escurre sobre papel absorbente y añade una pizca de sal.\n5. En la misma sartén o plancha caliente, fríe el huevo al gusto cuidando el punto de cocción de la yema.\n6. Corta el queso fresco en bastones o láminas uniformes.\n7. Sirve los patacones calientes y crujientes acompañados del queso fresco y el huevo frito recién preparado.',1,20,'https://www.youtube.com/watch?v=kY67Z3-5qR4'),
+(9,'Caldo de Gallina Criolla con Yuca','1. Lava la gallina, córtala en presas y colócala en una olla grande con 2,5 a 3 litros de agua. Lleva a ebullición y retira la espuma.\n2. En una sartén, sofríe en aceite la cebolla picada y el ajo machacado. Agrega el comino y mezcla.\n3. Incorpora el refrito a la olla con la gallina. Cocina a fuego medio por 60 a 90 minutos, hasta que la carne esté tierna.\n4. Añade la yuca en trozos y cocina 20 a 30 minutos más, hasta que esté suave.\n5. Rectifica la sal, agrega cilantro picado y cebolla blanca. Sirve caliente.',4,120,'https://www.youtube.com/watch?v=wXW01mGqP7s');
 /*!40000 ALTER TABLE `receta` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `recetacomponentenutricional`
+--
+
+DROP TABLE IF EXISTS `recetacomponentenutricional`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `recetacomponentenutricional` (
+  `idrecetacomponentenutricional` int(11) NOT NULL AUTO_INCREMENT,
+  `idreceta` int(11) NOT NULL,
+  `idcomponentenutricional` int(11) NOT NULL,
+  PRIMARY KEY (`idrecetacomponentenutricional`),
+  UNIQUE KEY `uk_receta_componente` (`idreceta`,`idcomponentenutricional`),
+  KEY `fk_rcn_receta` (`idreceta`),
+  KEY `fk_rcn_componente` (`idcomponentenutricional`),
+  CONSTRAINT `fk_rcn_componente` FOREIGN KEY (`idcomponentenutricional`) REFERENCES `componentenutricional` (`idcomponentenutricional`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `fk_rcn_receta` FOREIGN KEY (`idreceta`) REFERENCES `receta` (`idreceta`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=72 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `recetacomponentenutricional`
+--
+
+LOCK TABLES `recetacomponentenutricional` WRITE;
+/*!40000 ALTER TABLE `recetacomponentenutricional` DISABLE KEYS */;
+INSERT INTO `recetacomponentenutricional` VALUES
+(1,1,1),
+(2,1,2),
+(3,1,7),
+(4,2,1),
+(5,2,5),
+(6,2,7),
+(7,2,11),
+(8,3,1),
+(9,3,2),
+(11,3,9),
+(10,3,11),
+(12,4,1),
+(13,4,6),
+(14,4,7),
+(15,4,18),
+(16,5,1),
+(17,5,5),
+(18,5,12),
+(19,5,17),
+(20,6,1),
+(21,6,2),
+(22,6,3),
+(23,6,6),
+(24,6,7),
+(25,6,9),
+(26,6,10),
+(27,6,11),
+(28,6,13),
+(29,6,14),
+(30,6,16),
+(31,6,17),
+(32,6,19),
+(33,7,1),
+(34,7,2),
+(35,7,3),
+(36,7,7),
+(37,7,9),
+(38,7,10),
+(39,7,11),
+(40,7,12),
+(41,7,13),
+(42,7,14),
+(43,7,16),
+(44,8,1),
+(45,8,2),
+(46,8,3),
+(47,8,4),
+(48,8,7),
+(49,8,9),
+(50,8,10),
+(51,8,11),
+(52,8,12),
+(53,8,13),
+(54,8,16),
+(55,8,18),
+(56,8,19),
+(57,9,1),
+(58,9,2),
+(59,9,3),
+(60,9,4),
+(61,9,7),
+(62,9,9),
+(63,9,10),
+(64,9,11),
+(65,9,12),
+(66,9,13),
+(67,9,14),
+(68,9,15),
+(69,9,16),
+(70,9,17),
+(71,9,19);
+/*!40000 ALTER TABLE `recetacomponentenutricional` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -5474,6 +6349,24 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `AlimentoComponenteNutricional`
+--
+
+/*!50001 DROP VIEW IF EXISTS `AlimentoComponenteNutricional`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb3 */;
+/*!50001 SET character_set_results     = utf8mb3 */;
+/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `AlimentoComponenteNutricional` AS select `alimentocomponentenutricional`.`idalimentocomponentenutricional` AS `idalimentocomponentenutricional`,`alimentocomponentenutricional`.`idalimentocomponentenuetricional` AS `idalimentocomponentenuetricional`,`alimentocomponentenutricional`.`idalimento` AS `idalimento`,`alimentocomponentenutricional`.`idcomponentenutricional` AS `idcomponentenutricional` from `alimentocomponentenutricional` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `AlimentoReceta`
 --
 
@@ -5499,12 +6392,48 @@ UNLOCK TABLES;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
-/*!50001 SET character_set_client      = utf8mb3 */;
-/*!50001 SET character_set_results     = utf8mb3 */;
-/*!50001 SET collation_connection      = utf8mb3_general_ci */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `Comida` AS select `comida`.`idcomida` AS `idcomida`,`comida`.`idplanalimentacion` AS `idplanalimentacion`,`comida`.`idtipocomida` AS `idtipocomida`,`comida`.`idreceta` AS `idreceta`,`comida`.`horarecomendada` AS `horarecomendada` from `comida` */;
+/*!50001 VIEW `Comida` AS select `comida`.`idcomida` AS `idcomida`,`comida`.`idplanalimentacion` AS `idplanalimentacion`,`comida`.`iddiasemana` AS `iddiasemana`,`comida`.`idtipocomida` AS `idtipocomida`,`comida`.`idreceta` AS `idreceta`,`comida`.`horarecomendada` AS `horarecomendada` from `comida` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ComponenteNutricional`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ComponenteNutricional`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ComponenteNutricional` AS select `componentenutricional`.`idcomponentenutricional` AS `idcomponentenutricional`,`componentenutricional`.`nombre` AS `nombre`,`componentenutricional`.`descripcion` AS `descripcion` from `componentenutricional` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `CumplimientoPlanAlimentacion`
+--
+
+/*!50001 DROP VIEW IF EXISTS `CumplimientoPlanAlimentacion`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `CumplimientoPlanAlimentacion` AS select `cumplimientoplanalimentacion`.`idcumplimientoplanalimentacion` AS `idcumplimientoplanalimentacion`,`cumplimientoplanalimentacion`.`idplanalimentacion` AS `idplanalimentacion`,`cumplimientoplanalimentacion`.`idcomida` AS `idcomida`,`cumplimientoplanalimentacion`.`fechahora` AS `fechahora` from `cumplimientoplanalimentacion` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -5523,6 +6452,24 @@ UNLOCK TABLES;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `DiaSemana` AS select `diasemana`.`iddiasemana` AS `iddiasemana`,`diasemana`.`nombre` AS `nombre` from `diasemana` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `Directorio`
+--
+
+/*!50001 DROP VIEW IF EXISTS `Directorio`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `Directorio` AS select `directorio`.`iddirectorio` AS `iddirectorio`,`directorio`.`nombre` AS `nombre`,`directorio`.`ruta` AS `ruta`,`directorio`.`descripcion` AS `descripcion`,`directorio`.`idordenador` AS `idordenador` from `directorio` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -5600,6 +6547,24 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = @saved_col_connection */;
 
 --
+-- Final view structure for view `FormatoImagen`
+--
+
+/*!50001 DROP VIEW IF EXISTS `FormatoImagen`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `FormatoImagen` AS select `formatoimagen`.`idformatoimagen` AS `idformatoimagen`,`formatoimagen`.`nombre` AS `nombre` from `formatoimagen` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
 -- Final view structure for view `GrupoAlimento`
 --
 
@@ -5613,6 +6578,78 @@ UNLOCK TABLES;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `GrupoAlimento` AS select `grupoalimento`.`idgrupoalimento` AS `idgrupoalimento`,`grupoalimento`.`nombre` AS `nombre`,`grupoalimento`.`descripcion` AS `descripcion` from `grupoalimento` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `Imagen`
+--
+
+/*!50001 DROP VIEW IF EXISTS `Imagen`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `Imagen` AS select `imagen`.`idimagen` AS `idimagen`,`imagen`.`nombre` AS `nombre`,`imagen`.`idformatoimagen` AS `idformatoimagen`,`imagen`.`fechacaptura` AS `fechacaptura`,`imagen`.`descripcion` AS `descripcion`,`imagen`.`palabrasclave` AS `palabrasclave`,`imagen`.`licencia` AS `licencia`,`imagen`.`fechacreacion` AS `fechacreacion`,`imagen`.`idordenador` AS `idordenador`,`imagen`.`iddirectorio` AS `iddirectorio` from `imagen` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ImagenAlimento`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ImagenAlimento`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ImagenAlimento` AS select `imagenalimento`.`idimagenalimento` AS `idimagenalimento`,`imagenalimento`.`idimagen` AS `idimagen`,`imagenalimento`.`idalimento` AS `idalimento` from `imagenalimento` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ImagenComponenteNutricional`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ImagenComponenteNutricional`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ImagenComponenteNutricional` AS select `imagencomponentenutricional`.`idimagencomponentenutricional` AS `idimagencomponentenutricional`,`imagencomponentenutricional`.`idimagen` AS `idimagen`,`imagencomponentenutricional`.`idcomponentenutricional` AS `idcomponentenutricional` from `imagencomponentenutricional` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ImagenReceta`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ImagenReceta`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ImagenReceta` AS select `imagenreceta`.`idimagenreceta` AS `idimagenreceta`,`imagenreceta`.`idimagen` AS `idimagen`,`imagenreceta`.`idreceta` AS `idreceta` from `imagenreceta` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -5649,6 +6686,42 @@ UNLOCK TABLES;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
 /*!50001 VIEW `MusculoEjercicio` AS select `musculoejercicio`.`idmusculoejecicio` AS `idmusculoejecicio`,`musculoejercicio`.`idejercicio` AS `idejercicio`,`musculoejercicio`.`idmusculo` AS `idmusculo` from `musculoejercicio` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `ObjetivoNutricional`
+--
+
+/*!50001 DROP VIEW IF EXISTS `ObjetivoNutricional`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `ObjetivoNutricional` AS select `objetivonutricional`.`idobjetivonutricional` AS `idobjetivonutricional`,`objetivonutricional`.`nombre` AS `nombre` from `objetivonutricional` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `Ordenador`
+--
+
+/*!50001 DROP VIEW IF EXISTS `Ordenador`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `Ordenador` AS select `ordenador`.`idordenador` AS `idordenador`,`ordenador`.`nombre` AS `nombre` from `ordenador` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -5769,12 +6842,30 @@ UNLOCK TABLES;
 /*!50001 SET @saved_cs_client          = @@character_set_client */;
 /*!50001 SET @saved_cs_results         = @@character_set_results */;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `Receta` AS select `receta`.`idreceta` AS `idreceta`,`receta`.`nombre` AS `nombre`,`receta`.`instrucciones` AS `instrucciones`,`receta`.`porciones` AS `porciones`,`receta`.`tiempopreparacion` AS `tiempopreparacion`,`receta`.`video` AS `video` from `receta` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `RecetaComponenteNutricional`
+--
+
+/*!50001 DROP VIEW IF EXISTS `RecetaComponenteNutricional`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb3 */;
 /*!50001 SET character_set_results     = utf8mb3 */;
 /*!50001 SET collation_connection      = utf8mb3_general_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 /*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `Receta` AS select `receta`.`idreceta` AS `idreceta`,`receta`.`nombre` AS `nombre`,`receta`.`instrucciones` AS `instrucciones`,`receta`.`porciones` AS `porciones`,`receta`.`tiempopreparacion` AS `tiempopreparacion` from `receta` */;
+/*!50001 VIEW `RecetaComponenteNutricional` AS select `recetacomponentenutricional`.`idrecetacomponentenutricional` AS `idrecetacomponentenutricional`,`recetacomponentenutricional`.`idreceta` AS `idreceta`,`recetacomponentenutricional`.`idcomponentenutricional` AS `idcomponentenutricional` from `recetacomponentenutricional` */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -6094,4 +7185,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-10-26 21:54:19
+-- Dump completed on 2026-11-01 19:31:20

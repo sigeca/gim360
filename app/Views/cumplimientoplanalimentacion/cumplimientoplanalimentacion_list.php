@@ -97,6 +97,11 @@
                                     <td>
                                         <i class="bi bi-book me-1 text-primary"></i>
                                         <span class="fw-semibold"><?= esc($c['receta_nombre']) ?></span>
+                                        <?php if (!empty($c['receta_video'])): ?>
+                                            <a href="<?= esc($c['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                <i class="bi bi-youtube me-1"></i>Video
+                                            </a>
+                                        <?php endif; ?>
                                     </td>
                                     <td class="fw-bold text-dark">
                                         <i class="bi bi-calendar-check me-1 text-success"></i><?= esc($c['fechahora']) ?>

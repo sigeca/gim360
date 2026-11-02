@@ -78,6 +78,11 @@
                                         <a href="<?= base_url('receta/actual/' . $item['idreceta']) ?>" class="fw-bold text-dark text-decoration-none">
                                             <i class="bi bi-journal-text text-warning me-1"></i><?= esc($item['receta_nombre']) ?>
                                         </a>
+                                        <?php if (!empty($item['receta_video'])): ?>
+                                            <a href="<?= esc($item['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                <i class="bi bi-youtube me-1"></i>Video
+                                            </a>
+                                        <?php endif; ?>
                                     </td>
                                     <td>
                                         <span class="badge bg-light text-secondary border">
