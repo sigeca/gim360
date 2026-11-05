@@ -18,6 +18,10 @@ class EjecucionProgramaModel extends Model
         'fecha',
         'horainicio',
         'horafin',
+        'series',
+        'repeticiones',
+        'tiempodescanso',
+        'peso',
     ];
 
     protected $validationRules = [
@@ -26,6 +30,10 @@ class EjecucionProgramaModel extends Model
         'fecha'             => 'required|valid_date[Y-m-d]',
         'horainicio'        => 'required',
         'horafin'           => 'permit_empty',
+        'series'            => 'permit_empty|is_natural',
+        'repeticiones'      => 'permit_empty|is_natural',
+        'tiempodescanso'    => 'permit_empty|is_natural',
+        'peso'              => 'permit_empty|numeric',
     ];
 
     protected $validationMessages = [
@@ -43,6 +51,18 @@ class EjecucionProgramaModel extends Model
         ],
         'horainicio' => [
             'required' => 'La hora de inicio es obligatoria.',
+        ],
+        'series' => [
+            'is_natural' => 'El número de series debe ser un entero positivo o cero.',
+        ],
+        'repeticiones' => [
+            'is_natural' => 'El número de repeticiones debe ser un entero positivo o cero.',
+        ],
+        'tiempodescanso' => [
+            'is_natural' => 'El tiempo de descanso debe ser un número entero en segundos.',
+        ],
+        'peso' => [
+            'numeric' => 'El peso debe ser un valor numérico válido.',
         ],
     ];
 
@@ -126,5 +146,60 @@ class EjecucionProgramaModel extends Model
                     ->orderBy('ejecucionprograma.horainicio', 'DESC')
                     ->orderBy('ejecucionprograma.idejecucionprograma', 'DESC')
                     ->findAll();
+    }
+
+    /**
+     * Obtiene los valores predeterminados (series, repeticiones, tiempodescanso, peso)
+     * del plan de entrenamiento prescrito para un ejercicio dentro de un programa cliente.
+     */
+    public function getPlanDefaults(int $idprogramacliente, int $idejercicio): ?array
+    {
+        $db = \Config\Database::connect();
+        $progCliente = $db->table('programacliente')
+                          ->where('idprogramacliente', $idprogramacliente)
+                          ->get()
+                          ->getRowArray();
+        if (!$progCliente) {
+            return null;
+        }
+
+        // 1. Buscar en programa personalizado si aplica
+        if (!empty($progCliente['idprogramapersonalizado'])) {
+            $planPers = $db->table('rutinaplanpersonalizado rplp')
+                           ->select('pep.series, pep.repeticiones, pep.tiempodescanso, pep.peso')
+                           ->join('rutinapersonalizada rp', 'rp.idrutinapersonalizada = rplp.idrutinapersonalizada', 'inner')
+                           ->join('rutinaprogramapersonalizado rpp', 'rpp.idrutinapersonalizada = rp.idrutinapersonalizada', 'inner')
+                           ->join('planejerciciopersonalizado pep', 'pep.idplanpersonalizado = rplp.idplanpersonalizado', 'inner')
+                           ->where('rpp.idprogramapersonalizado', (int)$progCliente['idprogramapersonalizado'])
+                           ->where('pep.idejercicio', $idejercicio)
+                           ->get()
+                           ->getRowArray();
+            if ($planPers) {
+                return $planPers;
+            }
+        }
+
+        // 2. Buscar en programa de entrenamiento estándar
+        if (!empty($progCliente['idprogramaentrenamiento'])) {
+            $planStd = $db->table('rutinaprograma rp')
+                          ->select('pe.series, pe.repeticiones, pe.tiempodescanso, pe.peso')
+                          ->join('rutinaplan rpl', 'rpl.idrutinaejercicio = rp.idrutinaejercicio', 'inner')
+                          ->join('planejercicio pe', 'pe.idplanejercicio = rpl.idplanejercicio', 'inner')
+                          ->where('rp.idprogramaentrenamiento', (int)$progCliente['idprogramaentrenamiento'])
+                          ->where('pe.idejercicio', $idejercicio)
+                          ->get()
+                          ->getRowArray();
+            if ($planStd) {
+                return $planStd;
+            }
+        }
+
+        // 3. Fallback: buscar en cualquier planejercicio asociado a este ejercicio
+        $anyPlan = $db->table('planejercicio')
+                      ->select('series, repeticiones, tiempodescanso, peso')
+                      ->where('idejercicio', $idejercicio)
+                      ->get()
+                      ->getRowArray();
+        return $anyPlan ?: null;
     }
 }

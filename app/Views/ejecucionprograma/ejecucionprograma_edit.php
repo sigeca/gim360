@@ -60,6 +60,52 @@
                         </div>
                     </div>
 
+                    <div class="card bg-light border-0 p-3 mb-3 rounded-3">
+                        <span class="fw-bold text-dark small text-uppercase mb-2 d-block">
+                            <i class="bi bi-sliders text-warning me-1"></i> Parámetros de Esfuerzo y Carga del Plan
+                        </span>
+                        <div class="row g-3">
+                            <div class="col-6 col-md-3">
+                                <label for="series" class="form-label fw-semibold small">Series</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white"><i class="bi bi-stack"></i></span>
+                                    <input type="number" name="series" id="series" class="form-control" min="0" max="999" step="1"
+                                           placeholder="Ej. 4" value="<?= old('series', $ejecucion['series'] ?? '') ?>">
+                                </div>
+                                <div class="form-text small">Número de series</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="repeticiones" class="form-label fw-semibold small">Repeticiones</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white"><i class="bi bi-arrow-repeat"></i></span>
+                                    <input type="number" name="repeticiones" id="repeticiones" class="form-control" min="0" max="999" step="1"
+                                           placeholder="Ej. 12" value="<?= old('repeticiones', $ejecucion['repeticiones'] ?? '') ?>">
+                                </div>
+                                <div class="form-text small">Reps por serie</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="tiempodescanso" class="form-label fw-semibold small">Descanso (seg)</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white"><i class="bi bi-stopwatch"></i></span>
+                                    <input type="number" name="tiempodescanso" id="tiempodescanso" class="form-control" min="0" max="3600" step="1"
+                                           placeholder="Ej. 60" value="<?= old('tiempodescanso', $ejecucion['tiempodescanso'] ?? '') ?>">
+                                    <span class="input-group-text bg-white text-muted">s</span>
+                                </div>
+                                <div class="form-text small">Segundos descanso</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <label for="peso" class="form-label fw-semibold small">Peso (kg)</label>
+                                <div class="input-group input-group-sm">
+                                    <span class="input-group-text bg-white"><i class="bi bi-speedometer2"></i></span>
+                                    <input type="number" name="peso" id="peso" class="form-control" min="0" max="999.99" step="0.25"
+                                           placeholder="Ej. 20.00" value="<?= old('peso', isset($ejecucion['peso']) && $ejecucion['peso'] !== null ? number_format((float)$ejecucion['peso'], 2, '.', '') : '') ?>">
+                                    <span class="input-group-text bg-white text-muted">kg</span>
+                                </div>
+                                <div class="form-text small">Carga utilizada</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="d-flex justify-content-end gap-2 border-top pt-3 mt-2">
                         <a href="<?= base_url('ejecucionprograma/actual/' . $ejecucion['idejecucionprograma']) ?>" class="btn btn-light border px-4">Cancelar</a>
                         <button type="submit" class="btn btn-warning px-4 fw-bold text-dark">

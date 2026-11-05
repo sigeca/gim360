@@ -140,6 +140,11 @@ foreach ($modulos as $slug => $controller) {
         $routes->match(['GET', 'POST'], 'delete/(:num)', "{$controller}::delete/$1");
         $routes->match(['GET', 'POST'], 'quitar/(:num)', "{$controller}::delete/$1");
 
+        // Rutas adicionales para ejecucionprograma
+        if ($controller === 'EjecucionPrograma') {
+            $routes->get('plan-defaults', 'EjecucionPrograma::planDefaults');
+        }
+
         // Rutas adicionales para componentenutricional
         if ($controller === 'ComponenteNutricional') {
             $routes->post('asignarImagen/(:num)', 'ComponenteNutricional::asignarImagen/$1');

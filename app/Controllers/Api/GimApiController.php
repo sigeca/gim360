@@ -2323,13 +2323,34 @@ class GimApiController extends ResourceController
             $horaInicio = date('H:i:s', $nowTs - ($duracionMinutos * 60));
         }
 
+        $series         = (isset($input['series']) && $input['series'] !== '') ? (int)$input['series'] : null;
+        $repeticiones   = (isset($input['repeticiones']) && $input['repeticiones'] !== '') ? (int)$input['repeticiones'] : null;
+        $tiempodescanso = (isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '') ? (int)$input['tiempodescanso'] : null;
+        $peso           = (isset($input['peso']) && $input['peso'] !== '') ? (float)$input['peso'] : null;
+
         $ejecModel = new EjecucionProgramaModel();
+
+        // Si los campos de volumen/carga no fueron especificados en la petición, auto-completar desde el plan asignado
+        if ($series === null || $repeticiones === null || $tiempodescanso === null || $peso === null) {
+            $defaults = $ejecModel->getPlanDefaults($idProgramaCliente, $idEjercicio);
+            if ($defaults) {
+                if ($series === null && isset($defaults['series'])) $series = (int)$defaults['series'];
+                if ($repeticiones === null && isset($defaults['repeticiones'])) $repeticiones = (int)$defaults['repeticiones'];
+                if ($tiempodescanso === null && isset($defaults['tiempodescanso'])) $tiempodescanso = (int)$defaults['tiempodescanso'];
+                if ($peso === null && isset($defaults['peso'])) $peso = (float)$defaults['peso'];
+            }
+        }
+
         $id = $ejecModel->insert([
             'idprogramacliente' => $idProgramaCliente,
             'idejercicio'       => $idEjercicio,
             'fecha'             => $fecha,
             'horainicio'        => $horaInicio,
             'horafin'           => $horaFin,
+            'series'            => $series,
+            'repeticiones'      => $repeticiones,
+            'tiempodescanso'    => $tiempodescanso,
+            'peso'              => $peso,
         ]);
 
         if (!$id) {
@@ -2367,7 +2388,13 @@ class GimApiController extends ResourceController
         $input = $this->request->getJSON(true) ?: $this->request->getPost();
         $horaFin = !empty($input['horafin']) ? $input['horafin'] : date('H:i:s');
 
-        $ejecModel->update($id, ['horafin' => $horaFin]);
+        $updateData = ['horafin' => $horaFin];
+        if (isset($input['series']) && $input['series'] !== '') $updateData['series'] = (int)$input['series'];
+        if (isset($input['repeticiones']) && $input['repeticiones'] !== '') $updateData['repeticiones'] = (int)$input['repeticiones'];
+        if (isset($input['tiempodescanso']) && $input['tiempodescanso'] !== '') $updateData['tiempodescanso'] = (int)$input['tiempodescanso'];
+        if (isset($input['peso']) && $input['peso'] !== '') $updateData['peso'] = (float)$input['peso'];
+
+        $ejecModel->update($id, $updateData);
         $updated = $ejecModel->getEjecucionWithDetails($id);
         if ($updated) {
             $updated['imagen_url'] = $this->getImageUrl('ejercicio/imagen', $updated['ejercicio_imagen'] ?? null);

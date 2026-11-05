@@ -47,13 +47,17 @@
                         <th>Hora Inicio</th>
                         <th>Hora Fin</th>
                         <th>Duración</th>
+                        <th class="text-center">Series</th>
+                        <th class="text-center">Reps</th>
+                        <th class="text-center">Descanso</th>
+                        <th class="text-center">Peso</th>
                         <th class="text-end pe-4">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($ejecuciones)): ?>
                         <tr>
-                            <td colspan="8" class="text-center py-5 text-muted">No se encontraron registros de ejecución de programas.</td>
+                            <td colspan="12" class="text-center py-5 text-muted">No se encontraron registros de ejecución de programas.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($ejecuciones as $e): ?>
@@ -126,6 +130,34 @@
                                             echo '<small class="text-muted">-</small>';
                                         }
                                     ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($e['series']) && $e['series'] !== null && $e['series'] !== ''): ?>
+                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1"><?= esc($e['series']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($e['repeticiones']) && $e['repeticiones'] !== null && $e['repeticiones'] !== ''): ?>
+                                        <span class="fw-bold"><?= esc($e['repeticiones']) ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($e['tiempodescanso']) && $e['tiempodescanso'] !== null && $e['tiempodescanso'] !== ''): ?>
+                                        <span class="text-muted small"><?= esc($e['tiempodescanso']) ?>s</span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <?php if (isset($e['peso']) && $e['peso'] !== null && $e['peso'] !== ''): ?>
+                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1"><?= number_format((float)$e['peso'], 2) ?> kg</span>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group btn-group-sm">

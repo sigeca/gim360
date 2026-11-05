@@ -62,21 +62,31 @@ INSERT INTO `ejercicio` (`nombreespanol`, `nombreingles`, `descripcion`, `urlvid
 SELECT 'Pedaleo en Bicicleta Estática (Spinning)', 
        'Stationary Bike Cycling', 
        'Entrenamiento cardiovascular y de resistencia en bicicleta estática/spinning. Desarrolla potencia en el tren inferior (cuádriceps, glúteos, isquiotibiales y gemelos) con bajo impacto articular.', 
-       '', 
-       ''
+       'https://www.youtube.com/watch?v=kYJv8y6_D60', 
+       'bicicleta-estatica.webp'
 WHERE NOT EXISTS (
     SELECT 1 FROM `ejercicio` WHERE `nombreespanol` = 'Pedaleo en Bicicleta Estática (Spinning)'
 );
+
+-- Si ya existe, asegurar que tenga la imagen y video asignados
+UPDATE `ejercicio`
+SET `imagen` = 'bicicleta-estatica.webp',
+    `urlvideo` = 'https://www.youtube.com/watch?v=kYJv8y6_D60'
+WHERE `nombreespanol` = 'Pedaleo en Bicicleta Estática (Spinning)' AND (`imagen` = '' OR `imagen` IS NULL);
 
 INSERT INTO `ejercicio` (`nombreespanol`, `nombreingles`, `descripcion`, `urlvideo`, `imagen`)
 SELECT 'Sprint en Bicicleta de Aire (Air Bike HIIT)', 
        'Air Bike HIIT Sprints', 
        'Ejercicio metabólico de cuerpo entero en bicicleta de aire. Combina pedaleo potente con empuje y tirón sincronizado de brazos, reclutando piernas, pecho, espalda, hombros, brazos y core.', 
        '', 
-       ''
+       'air-bike.webp'
 WHERE NOT EXISTS (
     SELECT 1 FROM `ejercicio` WHERE `nombreespanol` = 'Sprint en Bicicleta de Aire (Air Bike HIIT)'
 );
+
+UPDATE `ejercicio`
+SET `imagen` = 'air-bike.webp'
+WHERE `nombreespanol` = 'Sprint en Bicicleta de Aire (Air Bike HIIT)' AND (`imagen` = '' OR `imagen` IS NULL);
 
 -- 4. Vincular ejercicios creados con los equipos respectivos en ejercicioequipo
 SET @id_ej_spinning = (SELECT `idejercicio` FROM `ejercicio` WHERE `nombreespanol` = 'Pedaleo en Bicicleta Estática (Spinning)' LIMIT 1);

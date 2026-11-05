@@ -111,6 +111,54 @@
                                             </td>
                                         </tr>
                                         <tr>
+                                            <th class="table-light text-muted">Series</th>
+                                            <td>
+                                                <?php if (isset($ejecucion['series']) && $ejecucion['series'] !== null && $ejecucion['series'] !== ''): ?>
+                                                    <span class="badge bg-primary-subtle text-primary border border-primary fs-6 px-3 py-1">
+                                                        <i class="bi bi-stack me-1"></i><?= esc($ejecucion['series']) ?> series
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted">Repeticiones</th>
+                                            <td>
+                                                <?php if (isset($ejecucion['repeticiones']) && $ejecucion['repeticiones'] !== null && $ejecucion['repeticiones'] !== ''): ?>
+                                                    <span class="badge bg-dark-subtle text-dark border border-secondary fs-6 px-3 py-1">
+                                                        <i class="bi bi-arrow-repeat me-1"></i><?= esc($ejecucion['repeticiones']) ?> reps / serie
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted">Tiempo de Descanso</th>
+                                            <td>
+                                                <?php if (isset($ejecucion['tiempodescanso']) && $ejecucion['tiempodescanso'] !== null && $ejecucion['tiempodescanso'] !== ''): ?>
+                                                    <span class="badge bg-warning-subtle text-dark border border-warning fs-6 px-3 py-1">
+                                                        <i class="bi bi-stopwatch me-1"></i><?= esc($ejecucion['tiempodescanso']) ?> segundos
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <th class="table-light text-muted">Peso Utilizado</th>
+                                            <td>
+                                                <?php if (isset($ejecucion['peso']) && $ejecucion['peso'] !== null && $ejecucion['peso'] !== ''): ?>
+                                                    <span class="badge bg-danger-subtle text-danger border border-danger fs-6 px-3 py-1 fw-bold">
+                                                        <i class="bi bi-speedometer2 me-1"></i><?= number_format((float)$ejecucion['peso'], 2) ?> kg
+                                                    </span>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                        <tr>
                                             <th class="table-light text-muted">Fecha</th>
                                             <td class="fs-6 fw-semibold text-dark">
                                                 <i class="bi bi-calendar3 text-primary me-2"></i><?= date('d/m/Y', strtotime($ejecucion['fecha'])) ?>

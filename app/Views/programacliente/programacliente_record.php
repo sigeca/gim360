@@ -320,7 +320,7 @@
                                                 </td>
                                                 <td class="text-end">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="<?= base_url('ejecucionprograma/add?idprogramacliente=' . $programaCliente['idprogramacliente'] . '&idejercicio=' . $pl['idejercicio']) ?>" class="btn btn-warning text-dark fw-semibold" title="Registrar Ejecución de este Ejercicio">
+                                                        <a href="<?= base_url('ejecucionprograma/add?idprogramacliente=' . $programaCliente['idprogramacliente'] . '&idejercicio=' . $pl['idejercicio'] . '&series=' . urlencode((string)($pl['plan_series'] ?? '')) . '&repeticiones=' . urlencode((string)($pl['plan_repeticiones'] ?? '')) . '&tiempodescanso=' . urlencode((string)($pl['plan_tiempodescanso'] ?? '')) . '&peso=' . urlencode((string)($pl['plan_peso'] ?? ''))) ?>" class="btn btn-warning text-dark fw-semibold" title="Registrar Ejecución de este Ejercicio">
                                                             <i class="bi bi-play-fill"></i> Ejecutar
                                                         </a>
                                                         <a href="<?= base_url('ejercicio/actual/' . $pl['idejercicio']) ?>" class="btn btn-outline-danger" title="Ver Ejercicio">
@@ -371,6 +371,10 @@
                                             <th>Hora Inicio</th>
                                             <th>Hora Fin</th>
                                             <th>Duración</th>
+                                            <th class="text-center">Series</th>
+                                            <th class="text-center">Reps</th>
+                                            <th class="text-center">Descanso</th>
+                                            <th class="text-center">Peso</th>
                                             <th class="text-end pe-3">Acciones</th>
                                         </tr>
                                     </thead>
@@ -420,6 +424,34 @@
                                                             echo '-';
                                                         }
                                                     ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if (isset($ejExec['series']) && $ejExec['series'] !== null && $ejExec['series'] !== ''): ?>
+                                                        <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1"><?= esc($ejExec['series']) ?></span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if (isset($ejExec['repeticiones']) && $ejExec['repeticiones'] !== null && $ejExec['repeticiones'] !== ''): ?>
+                                                        <span class="fw-bold"><?= esc($ejExec['repeticiones']) ?></span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if (isset($ejExec['tiempodescanso']) && $ejExec['tiempodescanso'] !== null && $ejExec['tiempodescanso'] !== ''): ?>
+                                                        <span class="text-muted small"><?= esc($ejExec['tiempodescanso']) ?>s</span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if (isset($ejExec['peso']) && $ejExec['peso'] !== null && $ejExec['peso'] !== ''): ?>
+                                                        <span class="badge bg-danger-subtle text-danger border border-danger px-2 py-1"><?= number_format((float)$ejExec['peso'], 2) ?> kg</span>
+                                                    <?php else: ?>
+                                                        <span class="text-muted small">-</span>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td class="text-end pe-3">
                                                     <div class="btn-group btn-group-sm">
