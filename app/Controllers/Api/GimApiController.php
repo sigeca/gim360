@@ -3075,4 +3075,69 @@ class GimApiController extends ResourceController
             'total'   => count($rangos),
         ]);
     }
+
+    /**
+     * GET /api/entretenimiento
+     */
+    public function getEntretenimientos()
+    {
+        $model = new \App\Models\EntretenimientoModel();
+        $items = $model->getEntretenimientosWithCounts($this->request->getGet('q'));
+        foreach ($items as &$item) {
+            $detail = $model->getEntretenimientoWithDetails((int)$item['identretenimiento']);
+            $item['musicas']  = $detail['musicas'] ?? [];
+            $item['videos']   = $detail['videos'] ?? [];
+            $item['juegos']   = $detail['juegos'] ?? [];
+            $item['podcasts'] = $detail['podcasts'] ?? [];
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Catálogo de entretenimiento obtenido correctamente',
+            'data'    => $items,
+            'total'   => count($items),
+        ]);
+    }
+
+    /**
+     * GET /api/entretenimiento/(:num)
+     */
+    public function getEntretenimientoDetail($id = null)
+    {
+        $model = new \App\Models\EntretenimientoModel();
+        $item = $model->getEntretenimientoWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Entretenimiento no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de entretenimiento obtenido correctamente',
+            'data'    => $item,
+        ]);
+    }
+
+    public function getMusicas()
+    {
+        $items = (new \App\Models\MusicaModel())->getMusicas($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    public function getVideos()
+    {
+        $items = (new \App\Models\VideoModel())->getVideos($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    public function getJuegos()
+    {
+        $items = (new \App\Models\JuegoModel())->getJuegos($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    public function getPodcasts()
+    {
+        $items = (new \App\Models\PodcastModel())->getPodcasts($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
 }

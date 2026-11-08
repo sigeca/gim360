@@ -119,6 +119,28 @@ $modulos = [
     'usuario'              => 'Usuario',
     'imagen'               => 'Imagen',
     'imagenes'             => 'Imagen',
+    'entretenimiento'        => 'Entretenimiento',
+    'entretenimientos'       => 'Entretenimiento',
+    'musica'                 => 'Musica',
+    'musicas'                => 'Musica',
+    'video'                  => 'Video',
+    'videos'                 => 'Video',
+    'juego'                  => 'Juego',
+    'juegos'                 => 'Juego',
+    'podcast'                => 'Podcast',
+    'podcasts'               => 'Podcast',
+    'entretenimientomusica'  => 'EntretenimientoMusica',
+    'entretenimiento-musica' => 'EntretenimientoMusica',
+    'musicaentretenimiento'  => 'EntretenimientoMusica',
+    'entretenimientovideo'   => 'EntretenimientoVideo',
+    'entretenimiento-video'  => 'EntretenimientoVideo',
+    'videoentretenimiento'   => 'EntretenimientoVideo',
+    'entretenimientojuego'   => 'EntretenimientoJuego',
+    'entretenimiento-juego'  => 'EntretenimientoJuego',
+    'juegoentretenimiento'   => 'EntretenimientoJuego',
+    'entretenimientopodcast' => 'EntretenimientoPodcast',
+    'entretenimiento-podcast'=> 'EntretenimientoPodcast',
+    'podcastentretenimiento' => 'EntretenimientoPodcast',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -395,5 +417,18 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->post('ejercicios-cliente', 'GimApiController::registrarEjecucionPrograma');
     $routes->post('visitas', 'GimApiController::registrarVisita');
     $routes->post('visitas/(:num)/checkout', 'GimApiController::checkoutVisita/$1');
+
+    // Sección de Entretenimiento (Música, Videos, Juegos, Podcasts y Relaciones)
+    $routes->get('entretenimiento', 'GimApiController::getEntretenimientos');
+    $routes->get('entretenimientos', 'GimApiController::getEntretenimientos');
+    $routes->get('entretenimiento/(:num)', 'GimApiController::getEntretenimientoDetail/$1');
+    $routes->get('musica', 'GimApiController::getMusicas');
+    $routes->get('musicas', 'GimApiController::getMusicas');
+    $routes->get('video', 'GimApiController::getVideos');
+    $routes->get('videos', 'GimApiController::getVideos');
+    $routes->get('juego', 'GimApiController::getJuegos');
+    $routes->get('juegos', 'GimApiController::getJuegos');
+    $routes->get('podcast', 'GimApiController::getPodcasts');
+    $routes->get('podcasts', 'GimApiController::getPodcasts');
 });
 

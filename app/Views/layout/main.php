@@ -292,6 +292,17 @@ $isECPActive = (strpos($uri, 'estadocivilpersona') === 0);
 $isGPActive = (strpos($uri, 'generopersona') === 0);
 $groupRelacionesOpen = $isECPActive || $isGPActive;
 
+$isEntretenimientoActive = (strpos($uri, 'entretenimiento') === 0 && strpos($uri, 'entretenimientomusica') === false && strpos($uri, 'entretenimiento-musica') === false && strpos($uri, 'entretenimientovideo') === false && strpos($uri, 'entretenimiento-video') === false && strpos($uri, 'entretenimientojuego') === false && strpos($uri, 'entretenimiento-juego') === false && strpos($uri, 'entretenimientopodcast') === false && strpos($uri, 'entretenimiento-podcast') === false);
+$isMusicaActive = (strpos($uri, 'musica') === 0 && strpos($uri, 'musicaentretenimiento') === false);
+$isVideoActive = (strpos($uri, 'video') === 0 && strpos($uri, 'videoentretenimiento') === false);
+$isJuegoActive = (strpos($uri, 'juego') === 0 && strpos($uri, 'juegoentretenimiento') === false);
+$isPodcastActive = (strpos($uri, 'podcast') === 0 && strpos($uri, 'podcastentretenimiento') === false);
+$isEntMusicaActive = (strpos($uri, 'entretenimientomusica') === 0 || strpos($uri, 'entretenimiento-musica') === 0 || strpos($uri, 'musicaentretenimiento') === 0);
+$isEntVideoActive = (strpos($uri, 'entretenimientovideo') === 0 || strpos($uri, 'entretenimiento-video') === 0 || strpos($uri, 'videoentretenimiento') === 0);
+$isEntJuegoActive = (strpos($uri, 'entretenimientojuego') === 0 || strpos($uri, 'entretenimiento-juego') === 0 || strpos($uri, 'juegoentretenimiento') === 0);
+$isEntPodcastActive = (strpos($uri, 'entretenimientopodcast') === 0 || strpos($uri, 'entretenimiento-podcast') === 0 || strpos($uri, 'podcastentretenimiento') === 0);
+$groupEntretenimientoOpen = $isEntretenimientoActive || $isMusicaActive || $isVideoActive || $isJuegoActive || $isPodcastActive || $isEntMusicaActive || $isEntVideoActive || $isEntJuegoActive || $isEntPodcastActive;
+
 $isDashboardActive = ($uri === '' || $uri === 'home');
 ?>
 
@@ -584,6 +595,62 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('ejecucionprograma') ?>" class="submenu-link <?= $isEjecucionProgramaActive ? 'active' : '' ?>">
                             <i class="bi bi-play-btn-fill text-warning"></i>
                             <span>Ejecución de Programa</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: ENTRETENIMIENTO -->
+            <div class="sidebar-item">
+                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupEntretenimientoOpen ? '' : 'collapsed' ?>" 
+                   data-bs-toggle="collapse" 
+                   href="#menuEntretenimientoCollapse" 
+                   role="button" 
+                   aria-expanded="<?= $groupEntretenimientoOpen ? 'true' : 'false' ?>"
+                   aria-controls="menuEntretenimientoCollapse">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-controller text-info fs-5"></i>
+                        <span>Entretenimiento</span>
+                    </div>
+                    <i class="bi bi-chevron-down arrow-indicator"></i>
+                </a>
+                <div class="collapse <?= $groupEntretenimientoOpen ? 'show' : '' ?>" id="menuEntretenimientoCollapse">
+                    <div class="sidebar-submenu">
+                        <a href="<?= base_url('entretenimiento') ?>" class="submenu-link <?= $isEntretenimientoActive ? 'active' : '' ?>">
+                            <i class="bi bi-stars text-primary"></i>
+                            <span>Entretenimiento</span>
+                        </a>
+                        <a href="<?= base_url('musica') ?>" class="submenu-link <?= $isMusicaActive ? 'active' : '' ?>">
+                            <i class="bi bi-music-note-beamed text-danger"></i>
+                            <span>Música</span>
+                        </a>
+                        <a href="<?= base_url('video') ?>" class="submenu-link <?= $isVideoActive ? 'active' : '' ?>">
+                            <i class="bi bi-camera-reels-fill text-primary"></i>
+                            <span>Videos</span>
+                        </a>
+                        <a href="<?= base_url('juego') ?>" class="submenu-link <?= $isJuegoActive ? 'active' : '' ?>">
+                            <i class="bi bi-joystick text-success"></i>
+                            <span>Juegos Tradicionales</span>
+                        </a>
+                        <a href="<?= base_url('podcast') ?>" class="submenu-link <?= $isPodcastActive ? 'active' : '' ?>">
+                            <i class="bi bi-mic-fill text-warning"></i>
+                            <span>Podcasts</span>
+                        </a>
+                        <a href="<?= base_url('entretenimientomusica') ?>" class="submenu-link <?= $isEntMusicaActive ? 'active' : '' ?>">
+                            <i class="bi bi-link-45deg text-danger"></i>
+                            <span>Entretenimiento - Música</span>
+                        </a>
+                        <a href="<?= base_url('entretenimientovideo') ?>" class="submenu-link <?= $isEntVideoActive ? 'active' : '' ?>">
+                            <i class="bi bi-link-45deg text-primary"></i>
+                            <span>Entretenimiento - Video</span>
+                        </a>
+                        <a href="<?= base_url('entretenimientojuego') ?>" class="submenu-link <?= $isEntJuegoActive ? 'active' : '' ?>">
+                            <i class="bi bi-link-45deg text-success"></i>
+                            <span>Entretenimiento - Juego</span>
+                        </a>
+                        <a href="<?= base_url('entretenimientopodcast') ?>" class="submenu-link <?= $isEntPodcastActive ? 'active' : '' ?>">
+                            <i class="bi bi-link-45deg text-warning"></i>
+                            <span>Entretenimiento - Podcast</span>
                         </a>
                     </div>
                 </div>

@@ -788,6 +788,10 @@ SELECT `idimagen`, `nombre`, `idformatoimagen`, `fechacaptura`, `descripcion`,
        `palabrasclave`, `licencia`, `fechacreacion`, `idordenador`, `iddirectorio`
 FROM `imagen`;
 ";
+            $entSqlFile = $projectDir . '/database_migration_entretenimiento.sql';
+            if (is_file($entSqlFile)) {
+                $migrationSql .= "\n" . file_get_contents($entSqlFile);
+            }
             try {
                 if ($conn->multi_query($migrationSql)) {
                     do {
@@ -819,7 +823,9 @@ FROM `imagen`;
             'disponibilidadequipo', 'rangoedad', 'ejecucionprograma',
             'trenmuscular', 'perfilnutricional', 'grupoalimento', 'alimento',
             'unidadalimento', 'receta', 'alimentoreceta', 'tipocomida', 'diasemana',
-            'planalimentacion', 'comida', 'componentenutricional', 'imagen', 'formatoimagen', 'ordenador', 'directorio'
+            'planalimentacion', 'comida', 'componentenutricional', 'imagen', 'formatoimagen', 'ordenador', 'directorio',
+            'entretenimiento', 'musica', 'video', 'juego', 'podcast',
+            'entretenimientomusica', 'entretenimientovideo', 'entretenimientojuego', 'entretenimientopodcast'
         ];
         $missingTables = array_diff($requiredTables, $existingTables);
 
