@@ -228,10 +228,11 @@ foreach ($modulos as $slug => $controller) {
             $routes->match(['GET', 'POST'], 'eliminar-cumplimiento/(:num)/(:num)', 'PlanAlimentacion::eliminarCumplimiento/$1/$2');
         }
 
-        // Rutas adicionales para receta (gestión de imágenes)
+        // Rutas adicionales para receta (gestión de imágenes y análisis IA de fotos)
         if ($controller === 'Receta') {
             $routes->post('asignarImagen/(:num)', 'Receta::asignarImagen/$1');
             $routes->post('quitarImagen/(:num)/(:num)', 'Receta::quitarImagen/$1/$2');
+            $routes->post('analizar-foto', 'Receta::analizarFoto');
         }
 
         // Rutas adicionales para alimento (gestión de imágenes)
