@@ -3237,4 +3237,163 @@ class GimApiController extends ResourceController
             'data'    => $detail,
         ]);
     }
+
+    /**
+     * GET /api/afecciones
+     */
+    public function getAfecciones()
+    {
+        $model = new \App\Models\AfeccionModel();
+        $items = $model->getAfeccionesWithCounts($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    /**
+     * GET /api/afeccion/(:num)
+     */
+    public function getAfeccionDetail($id = null)
+    {
+        $model = new \App\Models\AfeccionModel();
+        $item = $model->getAfeccionWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Afección no encontrada con ID: {$id}");
+        }
+        return $this->respond(['status' => 200, 'data' => $item]);
+    }
+
+    /**
+     * GET /api/medicamentos
+     */
+    public function getMedicamentos()
+    {
+        $model = new \App\Models\MedicamentoModel();
+        $items = $model->getMedicamentosWithCounts($this->request->getGet('q'));
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    /**
+     * GET /api/medicamento/(:num)
+     */
+    public function getMedicamentoDetail($id = null)
+    {
+        $model = new \App\Models\MedicamentoModel();
+        $item = $model->getMedicamentoWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Medicamento no encontrado con ID: {$id}");
+        }
+        return $this->respond(['status' => 200, 'data' => $item]);
+    }
+
+    /**
+     * GET /api/medicaciones
+     */
+    public function getMedicaciones()
+    {
+        $model = new \App\Models\MedicacionModel();
+        $idafeccion = $this->request->getGet('idafeccion');
+        $items = $model->getMedicacionesWithDetails($this->request->getGet('q'), $idafeccion ? (int)$idafeccion : null);
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    /**
+     * GET /api/medicacion/(:num)
+     */
+    public function getMedicacionDetail($id = null)
+    {
+        $model = new \App\Models\MedicacionModel();
+        $item = $model->getMedicacionWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Medicación no encontrada con ID: {$id}");
+        }
+        return $this->respond(['status' => 200, 'data' => $item]);
+    }
+
+    /**
+     * GET /api/mimedicacion
+     */
+    public function getMisMedicaciones()
+    {
+        $idpersona = $this->request->getGet('idpersona');
+        $idafeccion = $this->request->getGet('idafeccion');
+        $model = new \App\Models\MiMedicacionModel();
+        $items = $model->getMisMedicacionesWithDetails($this->request->getGet('q'), $idpersona ? (int)$idpersona : null, $idafeccion ? (int)$idafeccion : null);
+        return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
+    }
+
+    /**
+     * GET /api/mimedicacion/(:num)
+     */
+    public function getMiMedicacionDetail($id = null)
+    {
+        $model = new \App\Models\MiMedicacionModel();
+        $item = $model->getMiMedicacionWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Mi Medicación no encontrada con ID: {$id}");
+        }
+        return $this->respond(['status' => 200, 'data' => $item]);
+    }
+
+    /**
+     * POST /api/mimedicacion/personalizar
+     */
+    public function personalizarMedicacion()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $idmedicacion = $input['idmedicacion'] ?? null;
+        $idpersona = $input['idpersona'] ?? null;
+        $nombre = $input['nombre'] ?? null;
+        $descripcion = $input['descripcion'] ?? null;
+
+        if (empty($idmedicacion) || empty($idpersona)) {
+            return $this->failValidationError('idmedicacion e idpersona son campos obligatorios');
+        }
+
+        try {
+            $model = new \App\Models\MiMedicacionModel();
+            $id = $model->clonarDesdeMedicacion((int)$idmedicacion, (int)$idpersona, $nombre, $descripcion);
+            $detail = $model->getMiMedicacionWithDetails($id);
+
+            return $this->respondCreated([
+                'status'  => 201,
+                'message' => 'Mi Medicación personalizada creada exitosamente',
+                'data'    => $detail,
+            ]);
+        } catch (\Throwable $e) {
+            return $this->failServerError($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /api/mimedicacion
+     */
+    public function guardarMiMedicacion()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $idpersona = $input['idpersona'] ?? null;
+        $nombre = $input['nombre'] ?? null;
+
+        if (empty($idpersona) || empty($nombre)) {
+            return $this->failValidationError('idpersona y nombre son campos obligatorios');
+        }
+
+        $model = new \App\Models\MiMedicacionModel();
+        $id = $model->insert([
+            'idpersona'      => (int)$idpersona,
+            'idafeccion'     => !empty($input['idafeccion']) ? (int)$input['idafeccion'] : null,
+            'idmedicacion'   => !empty($input['idmedicacion']) ? (int)$input['idmedicacion'] : null,
+            'nombre'         => trim((string)$nombre),
+            'descripcion'    => !empty($input['descripcion']) ? trim((string)$input['descripcion']) : null,
+            'fechainicio'    => !empty($input['fechainicio']) ? $input['fechainicio'] : date('Y-m-d'),
+            'fechafin'       => !empty($input['fechafin']) ? $input['fechafin'] : null,
+            'medicotratante' => !empty($input['medicotratante']) ? trim((string)$input['medicotratante']) : null,
+            'estado'         => !empty($input['estado']) ? trim((string)$input['estado']) : 'Activa',
+        ]);
+
+        $detail = $model->getMiMedicacionWithDetails((int)$id);
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Tratamiento de Mi Medicación registrado correctamente',
+            'data'    => $detail,
+        ]);
+    }
 }

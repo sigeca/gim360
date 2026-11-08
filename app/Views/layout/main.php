@@ -308,6 +308,14 @@ $isMiEntVideoActive = (strpos($uri, 'mientretenimientovideo') === 0 || strpos($u
 $isMiEntJuegoActive = (strpos($uri, 'mientretenimientojuego') === 0 || strpos($uri, 'mi-entretenimiento-juego') === 0);
 $isMiEntPodcastActive = (strpos($uri, 'mientretenimientopodcast') === 0 || strpos($uri, 'mi-entretenimiento-podcast') === 0);
 
+$isAfeccionActive = (strpos($uri, 'afeccion') === 0 || strpos($uri, 'afecciones') === 0);
+$isMedicamentoActive = (strpos($uri, 'medicamento') === 0 || strpos($uri, 'medicamentos') === 0) && strpos($uri, 'medicacionmedicamento') === false && strpos($uri, 'mimedicacionmedicamento') === false;
+$isMedicacionActive = (strpos($uri, 'medicacion') === 0 || strpos($uri, 'medicaciones') === 0) && strpos($uri, 'medicacionmedicamento') === false && strpos($uri, 'mimedicacion') === false;
+$isMedMedicamentoActive = (strpos($uri, 'medicacionmedicamento') === 0 || strpos($uri, 'medicacion-medicamento') === 0);
+$isMiMedicacionActive = (strpos($uri, 'mimedicacion') === 0 || strpos($uri, 'mi-medicacion') === 0) && strpos($uri, 'mimedicacionmedicamento') === false;
+$isMiMedMedicamentoActive = (strpos($uri, 'mimedicacionmedicamento') === 0 || strpos($uri, 'mi-medicacion-medicamento') === 0);
+$groupSaludOpen = $isAfeccionActive || $isMedicamentoActive || $isMedicacionActive || $isMedMedicamentoActive || $isMiMedicacionActive || $isMiMedMedicamentoActive;
+
 $groupEntretenimientoOpen = $isEntretenimientoActive || $isMusicaActive || $isVideoActive || $isJuegoActive || $isPodcastActive || $isEntMusicaActive || $isEntVideoActive || $isEntJuegoActive || $isEntPodcastActive || $isMiEntretenimientoActive || $isMiEntMusicaActive || $isMiEntVideoActive || $isMiEntJuegoActive || $isMiEntPodcastActive;
 
 $isDashboardActive = ($uri === '' || $uri === 'home');
@@ -682,6 +690,54 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('mientretenimientopodcast') ?>" class="submenu-link <?= $isMiEntPodcastActive ? 'active' : '' ?>">
                             <i class="bi bi-mic text-warning"></i>
                             <span>Mis Podcasts</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORÍA: SALUD & MEDICAMENTOS -->
+            <div class="sidebar-item">
+                <a class="sidebar-link sidebar-dropdown-toggle <?= $groupSaludOpen ? '' : 'collapsed' ?>" 
+                   data-bs-toggle="collapse" 
+                   href="#menuSaludCollapse" 
+                   role="button" 
+                   aria-expanded="<?= $groupSaludOpen ? 'true' : 'false' ?>"
+                   aria-controls="menuSaludCollapse">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="bi bi-heart-pulse-fill text-danger fs-5"></i>
+                        <span>Salud & Medicación</span>
+                    </div>
+                    <i class="bi bi-chevron-down arrow-indicator"></i>
+                </a>
+                <div class="collapse <?= $groupSaludOpen ? 'show' : '' ?>" id="menuSaludCollapse">
+                    <div class="sidebar-submenu">
+                        <a href="<?= base_url('afeccion') ?>" class="submenu-link <?= $isAfeccionActive ? 'active' : '' ?>">
+                            <i class="bi bi-bandaid text-danger"></i>
+                            <span>Afecciones Médicas</span>
+                        </a>
+                        <a href="<?= base_url('medicamento') ?>" class="submenu-link <?= $isMedicamentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-capsule text-success"></i>
+                            <span>Medicamentos</span>
+                        </a>
+                        <a href="<?= base_url('medicacion') ?>" class="submenu-link <?= $isMedicacionActive ? 'active' : '' ?>">
+                            <i class="bi bi-prescription2 text-primary"></i>
+                            <span>Medicaciones Base</span>
+                        </a>
+                        <a href="<?= base_url('medicacionmedicamento') ?>" class="submenu-link <?= $isMedMedicamentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-diagram-3 text-info"></i>
+                            <span>Medicación - Medicamento</span>
+                        </a>
+
+                        <div class="dropdown-divider my-2 border-secondary opacity-25"></div>
+                        <div class="text-uppercase px-3 py-1 small fw-bold text-info" style="font-size: 0.72rem; letter-spacing: 0.5px;">Personalización</div>
+
+                        <a href="<?= base_url('mimedicacion') ?>" class="submenu-link <?= $isMiMedicacionActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-heart text-info"></i>
+                            <span>Mi Medicación</span>
+                        </a>
+                        <a href="<?= base_url('mimedicacionmedicamento') ?>" class="submenu-link <?= $isMiMedMedicamentoActive ? 'active' : '' ?>">
+                            <i class="bi bi-capsule-pill text-warning"></i>
+                            <span>Mis Medicamentos</span>
                         </a>
                     </div>
                 </div>

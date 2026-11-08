@@ -151,6 +151,18 @@ $modulos = [
     'mi-entretenimiento-juego'    => 'MiEntretenimientoJuego',
     'mientretenimientopodcast'   => 'MiEntretenimientoPodcast',
     'mi-entretenimiento-podcast'  => 'MiEntretenimientoPodcast',
+    'afeccion'                   => 'Afeccion',
+    'afecciones'                 => 'Afeccion',
+    'medicamento'                => 'Medicamento',
+    'medicamentos'               => 'Medicamento',
+    'medicacion'                 => 'Medicacion',
+    'medicaciones'               => 'Medicacion',
+    'medicacionmedicamento'      => 'MedicacionMedicamento',
+    'medicacion-medicamento'     => 'MedicacionMedicamento',
+    'mimedicacion'               => 'MiMedicacion',
+    'mi-medicacion'              => 'MiMedicacion',
+    'mimedicacionmedicamento'    => 'MiMedicacionMedicamento',
+    'mi-medicacion-medicamento'  => 'MiMedicacionMedicamento',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -185,6 +197,18 @@ foreach ($modulos as $slug => $controller) {
             $routes->post('agregarVideo/(:num)', 'MiEntretenimiento::agregarVideo/$1');
             $routes->post('agregarJuego/(:num)', 'MiEntretenimiento::agregarJuego/$1');
             $routes->post('agregarPodcast/(:num)', 'MiEntretenimiento::agregarPodcast/$1');
+        }
+
+        // Rutas adicionales para medicacion
+        if ($controller === 'Medicacion') {
+            $routes->post('agregarMedicamento/(:num)', 'Medicacion::agregarMedicamento/$1');
+        }
+
+        // Rutas adicionales para mimedicacion
+        if ($controller === 'MiMedicacion') {
+            $routes->match(['GET', 'POST'], 'personalizar', 'MiMedicacion::personalizar');
+            $routes->match(['GET', 'POST'], 'personalizar/(:num)', 'MiMedicacion::personalizar/$1');
+            $routes->post('agregarMedicamento/(:num)', 'MiMedicacion::agregarMedicamento/$1');
         }
 
         // Rutas adicionales para componentenutricional
@@ -456,5 +480,20 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('mientretenimiento/(:num)', 'GimApiController::getMiEntretenimientoDetail/$1');
     $routes->post('mientretenimiento/personalizar', 'GimApiController::personalizarEntretenimiento');
     $routes->post('mientretenimiento', 'GimApiController::guardarMiEntretenimiento');
+
+    // Salud, Medicamentos y Medicación
+    $routes->get('afeccion', 'GimApiController::getAfecciones');
+    $routes->get('afecciones', 'GimApiController::getAfecciones');
+    $routes->get('afeccion/(:num)', 'GimApiController::getAfeccionDetail/$1');
+    $routes->get('medicamento', 'GimApiController::getMedicamentos');
+    $routes->get('medicamentos', 'GimApiController::getMedicamentos');
+    $routes->get('medicamento/(:num)', 'GimApiController::getMedicamentoDetail/$1');
+    $routes->get('medicacion', 'GimApiController::getMedicaciones');
+    $routes->get('medicaciones', 'GimApiController::getMedicaciones');
+    $routes->get('medicacion/(:num)', 'GimApiController::getMedicacionDetail/$1');
+    $routes->get('mimedicacion', 'GimApiController::getMisMedicaciones');
+    $routes->get('mimedicacion/(:num)', 'GimApiController::getMiMedicacionDetail/$1');
+    $routes->post('mimedicacion/personalizar', 'GimApiController::personalizarMedicacion');
+    $routes->post('mimedicacion', 'GimApiController::guardarMiMedicacion');
 });
 
