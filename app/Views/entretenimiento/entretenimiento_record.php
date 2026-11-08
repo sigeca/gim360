@@ -34,7 +34,12 @@
                     <h5 class="fw-bold mb-0 text-dark d-flex align-items-center">
                         <i class="bi bi-controller text-primary me-2 fs-4"></i>Entretenimiento: <?= esc($entretenimiento['nombre']) ?>
                     </h5>
-                    <span class="badge bg-primary text-white fs-6">ID #<?= $entretenimiento['identretenimiento'] ?></span>
+                    <div class="d-flex align-items-center gap-2">
+                        <a href="<?= base_url('mientretenimiento/add?identretenimiento=' . $entretenimiento['identretenimiento']) ?>" class="btn btn-sm btn-info text-dark fw-bold shadow-sm" title="Guardar y personalizar esta lista para una persona">
+                            <i class="bi bi-person-check-fill me-1"></i>Personalizar en Mi Entretenimiento
+                        </a>
+                        <span class="badge bg-primary text-white fs-6">ID #<?= $entretenimiento['identretenimiento'] ?></span>
+                    </div>
                 </div>
 
                 <div class="card-body p-4">

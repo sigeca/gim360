@@ -40,7 +40,7 @@ class EntretenimientoModel extends Model
 
         try {
             $db = \Config\Database::connect();
-            if ($db->tableExists('entretenimiento') && $db->tableExists('entretenimientopodcast')) {
+            if ($db->tableExists('entretenimiento') && $db->tableExists('entretenimientopodcast') && $db->tableExists('mientretenimiento') && $db->tableExists('mientretenimientopodcast')) {
                 return;
             }
             $sqlFile = ROOTPATH . 'database_migration_entretenimiento.sql';
@@ -52,6 +52,24 @@ class EntretenimientoModel extends Model
                 if ($mysqli instanceof \mysqli) {
                     $sql = file_get_contents($sqlFile);
                     if ($mysqli->multi_query($sql)) {
+                        do {
+                            if ($res = $mysqli->store_result()) {
+                                $res->free();
+                            }
+                        } while ($mysqli->more_results() && $mysqli->next_result());
+                    }
+                }
+            }
+
+            $sqlMiFile = ROOTPATH . 'database_migration_mientretenimiento.sql';
+            if (!is_file($sqlMiFile)) {
+                $sqlMiFile = APPPATH . 'Models/sql/database_migration_mientretenimiento.sql';
+            }
+            if (is_file($sqlMiFile)) {
+                $mysqli = $db->connID;
+                if ($mysqli instanceof \mysqli) {
+                    $sqlMi = file_get_contents($sqlMiFile);
+                    if ($mysqli->multi_query($sqlMi)) {
                         do {
                             if ($res = $mysqli->store_result()) {
                                 $res->free();

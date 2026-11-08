@@ -3140,4 +3140,101 @@ class GimApiController extends ResourceController
         $items = (new \App\Models\PodcastModel())->getPodcasts($this->request->getGet('q'));
         return $this->respond(['status' => 200, 'data' => $items, 'total' => count($items)]);
     }
+
+    /**
+     * GET /api/mientretenimiento
+     */
+    public function getMisEntretenimientos()
+    {
+        $idpersona = $this->request->getGet('idpersona');
+        $q = $this->request->getGet('q');
+
+        $model = new \App\Models\MiEntretenimientoModel();
+        $items = $model->getMisEntretenimientosWithCounts($q, $idpersona ? (int)$idpersona : null);
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Listas de Mi Entretenimiento obtenidas correctamente',
+            'data'    => $items,
+            'total'   => count($items),
+        ]);
+    }
+
+    /**
+     * GET /api/mientretenimiento/(:num)
+     */
+    public function getMiEntretenimientoDetail($id = null)
+    {
+        $model = new \App\Models\MiEntretenimientoModel();
+        $item = $model->getMiEntretenimientoWithDetails((int)$id);
+        if (!$item) {
+            return $this->failNotFound("Mi Entretenimiento no encontrado con ID: {$id}");
+        }
+
+        return $this->respond([
+            'status'  => 200,
+            'message' => 'Detalle de Mi Entretenimiento obtenido correctamente',
+            'data'    => $item,
+        ]);
+    }
+
+    /**
+     * POST /api/mientretenimiento/personalizar
+     * Clona un entretenimiento base para una persona
+     */
+    public function personalizarEntretenimiento()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $identretenimiento = $input['identretenimiento'] ?? null;
+        $idpersona = $input['idpersona'] ?? null;
+        $nombre = $input['nombre'] ?? null;
+        $descripcion = $input['descripcion'] ?? null;
+
+        if (empty($identretenimiento) || empty($idpersona)) {
+            return $this->failValidationError('identretenimiento e idpersona son campos obligatorios');
+        }
+
+        try {
+            $model = new \App\Models\MiEntretenimientoModel();
+            $id = $model->clonarDesdeEntretenimiento((int)$identretenimiento, (int)$idpersona, $nombre, $descripcion);
+            $detail = $model->getMiEntretenimientoWithDetails($id);
+
+            return $this->respondCreated([
+                'status'  => 201,
+                'message' => 'Entretenimiento personalizado creado exitosamente',
+                'data'    => $detail,
+            ]);
+        } catch (\Throwable $e) {
+            return $this->failServerError($e->getMessage());
+        }
+    }
+
+    /**
+     * POST /api/mientretenimiento
+     */
+    public function guardarMiEntretenimiento()
+    {
+        $input = $this->request->getJSON(true) ?: $this->request->getPost();
+        $idpersona = $input['idpersona'] ?? null;
+        $nombre = $input['nombre'] ?? null;
+
+        if (empty($idpersona) || empty($nombre)) {
+            return $this->failValidationError('idpersona y nombre son campos obligatorios');
+        }
+
+        $model = new \App\Models\MiEntretenimientoModel();
+        $id = $model->insert([
+            'idpersona'         => (int)$idpersona,
+            'identretenimiento' => !empty($input['identretenimiento']) ? (int)$input['identretenimiento'] : null,
+            'nombre'            => trim((string)$nombre),
+            'descripcion'       => !empty($input['descripcion']) ? trim((string)$input['descripcion']) : null,
+        ]);
+
+        $detail = $model->getMiEntretenimientoWithDetails((int)$id);
+        return $this->respondCreated([
+            'status'  => 201,
+            'message' => 'Mi Entretenimiento registrado correctamente',
+            'data'    => $detail,
+        ]);
+    }
 }

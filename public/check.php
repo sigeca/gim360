@@ -440,10 +440,6 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
   `fecha` date NOT NULL,
   `horainicio` time NOT NULL,
   `horafin` time DEFAULT NULL,
-  `series` int(11) DEFAULT NULL,
-  `repeticiones` int(11) DEFAULT NULL,
-  `tiempodescanso` int(11) DEFAULT NULL,
-  `peso` decimal(8,2) DEFAULT NULL,
   PRIMARY KEY (`idejecucionprograma`),
   KEY `idx_ejecucionprograma_pc` (`idprogramacliente`),
   KEY `idx_ejecucionprograma_ejercicio` (`idejercicio`),
@@ -451,11 +447,6 @@ CREATE TABLE IF NOT EXISTS `ejecucionprograma` (
   CONSTRAINT `fk_ep_programacliente` FOREIGN KEY (`idprogramacliente`) REFERENCES `programacliente` (`idprogramacliente`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_ep_ejercicio` FOREIGN KEY (`idejercicio`) REFERENCES `ejercicio` (`idejercicio`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_spanish_ci;
-
-ALTER TABLE `ejecucionprograma` ADD COLUMN IF NOT EXISTS `series` INT(11) DEFAULT NULL AFTER `horafin`;
-ALTER TABLE `ejecucionprograma` ADD COLUMN IF NOT EXISTS `repeticiones` INT(11) DEFAULT NULL AFTER `series`;
-ALTER TABLE `ejecucionprograma` ADD COLUMN IF NOT EXISTS `tiempodescanso` INT(11) DEFAULT NULL AFTER `repeticiones`;
-ALTER TABLE `ejecucionprograma` ADD COLUMN IF NOT EXISTS `peso` DECIMAL(8,2) DEFAULT NULL AFTER `tiempodescanso`;
 
 ALTER TABLE `equipo` ADD COLUMN IF NOT EXISTS `video` VARCHAR(300) DEFAULT NULL AFTER `imagen`;
 
@@ -801,6 +792,10 @@ FROM `imagen`;
             if (is_file($entSqlFile)) {
                 $migrationSql .= "\n" . file_get_contents($entSqlFile);
             }
+            $miEntSqlFile = $projectDir . '/database_migration_mientretenimiento.sql';
+            if (is_file($miEntSqlFile)) {
+                $migrationSql .= "\n" . file_get_contents($miEntSqlFile);
+            }
             try {
                 if ($conn->multi_query($migrationSql)) {
                     do {
@@ -834,7 +829,8 @@ FROM `imagen`;
             'unidadalimento', 'receta', 'alimentoreceta', 'tipocomida', 'diasemana',
             'planalimentacion', 'comida', 'componentenutricional', 'imagen', 'formatoimagen', 'ordenador', 'directorio',
             'entretenimiento', 'musica', 'video', 'juego', 'podcast',
-            'entretenimientomusica', 'entretenimientovideo', 'entretenimientojuego', 'entretenimientopodcast'
+            'entretenimientomusica', 'entretenimientovideo', 'entretenimientojuego', 'entretenimientopodcast',
+            'mientretenimiento', 'mientretenimientomusica', 'mientretenimientovideo', 'mientretenimientojuego', 'mientretenimientopodcast'
         ];
         $missingTables = array_diff($requiredTables, $existingTables);
 

@@ -72,6 +72,7 @@
                                     </td>
                                     <td class="text-end pe-4">
                                         <div class="btn-group btn-group-sm">
+                                            <a href="<?= base_url('mientretenimiento/add?identretenimiento=' . $item['identretenimiento']) ?>" class="btn btn-outline-info" title="Personalizar en Mi Entretenimiento"><i class="bi bi-person-check"></i></a>
                                             <a href="<?= base_url('entretenimiento/actual/' . $item['identretenimiento']) ?>" class="btn btn-outline-primary" title="Ver ficha"><i class="bi bi-eye"></i></a>
                                             <a href="<?= base_url('entretenimiento/edit/' . $item['identretenimiento']) ?>" class="btn btn-outline-warning text-dark" title="Editar"><i class="bi bi-pencil-square"></i></a>
                                             <a href="<?= base_url('entretenimiento/delete/' . $item['identretenimiento']) ?>" class="btn btn-outline-danger" title="Eliminar" onclick="return confirm('¿Eliminar este entretenimiento?');"><i class="bi bi-trash"></i></a>

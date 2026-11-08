@@ -792,6 +792,10 @@ FROM `imagen`;
             if (is_file($entSqlFile)) {
                 $migrationSql .= "\n" . file_get_contents($entSqlFile);
             }
+            $miEntSqlFile = $projectDir . '/database_migration_mientretenimiento.sql';
+            if (is_file($miEntSqlFile)) {
+                $migrationSql .= "\n" . file_get_contents($miEntSqlFile);
+            }
             try {
                 if ($conn->multi_query($migrationSql)) {
                     do {
@@ -825,7 +829,8 @@ FROM `imagen`;
             'unidadalimento', 'receta', 'alimentoreceta', 'tipocomida', 'diasemana',
             'planalimentacion', 'comida', 'componentenutricional', 'imagen', 'formatoimagen', 'ordenador', 'directorio',
             'entretenimiento', 'musica', 'video', 'juego', 'podcast',
-            'entretenimientomusica', 'entretenimientovideo', 'entretenimientojuego', 'entretenimientopodcast'
+            'entretenimientomusica', 'entretenimientovideo', 'entretenimientojuego', 'entretenimientopodcast',
+            'mientretenimiento', 'mientretenimientomusica', 'mientretenimientovideo', 'mientretenimientojuego', 'mientretenimientopodcast'
         ];
         $missingTables = array_diff($requiredTables, $existingTables);
 

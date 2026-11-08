@@ -141,6 +141,16 @@ $modulos = [
     'entretenimientopodcast' => 'EntretenimientoPodcast',
     'entretenimiento-podcast'=> 'EntretenimientoPodcast',
     'podcastentretenimiento' => 'EntretenimientoPodcast',
+    'mientretenimiento'          => 'MiEntretenimiento',
+    'mi-entretenimiento'         => 'MiEntretenimiento',
+    'mientretenimientomusica'    => 'MiEntretenimientoMusica',
+    'mi-entretenimiento-musica'   => 'MiEntretenimientoMusica',
+    'mientretenimientovideo'     => 'MiEntretenimientoVideo',
+    'mi-entretenimiento-video'    => 'MiEntretenimientoVideo',
+    'mientretenimientojuego'     => 'MiEntretenimientoJuego',
+    'mi-entretenimiento-juego'    => 'MiEntretenimientoJuego',
+    'mientretenimientopodcast'   => 'MiEntretenimientoPodcast',
+    'mi-entretenimiento-podcast'  => 'MiEntretenimientoPodcast',
 ];
 
 foreach ($modulos as $slug => $controller) {
@@ -165,6 +175,16 @@ foreach ($modulos as $slug => $controller) {
         // Rutas adicionales para ejecucionprograma
         if ($controller === 'EjecucionPrograma') {
             $routes->get('plan-defaults', 'EjecucionPrograma::planDefaults');
+        }
+
+        // Rutas adicionales para mientretenimiento
+        if ($controller === 'MiEntretenimiento') {
+            $routes->match(['GET', 'POST'], 'personalizar', 'MiEntretenimiento::personalizar');
+            $routes->match(['GET', 'POST'], 'personalizar/(:num)', 'MiEntretenimiento::personalizar/$1');
+            $routes->post('agregarMusica/(:num)', 'MiEntretenimiento::agregarMusica/$1');
+            $routes->post('agregarVideo/(:num)', 'MiEntretenimiento::agregarVideo/$1');
+            $routes->post('agregarJuego/(:num)', 'MiEntretenimiento::agregarJuego/$1');
+            $routes->post('agregarPodcast/(:num)', 'MiEntretenimiento::agregarPodcast/$1');
         }
 
         // Rutas adicionales para componentenutricional
@@ -430,5 +450,11 @@ $routes->group('api', ['namespace' => 'App\Controllers\Api'], static function ($
     $routes->get('juegos', 'GimApiController::getJuegos');
     $routes->get('podcast', 'GimApiController::getPodcasts');
     $routes->get('podcasts', 'GimApiController::getPodcasts');
+
+    // Mi Entretenimiento Personalizado (por Persona)
+    $routes->get('mientretenimiento', 'GimApiController::getMisEntretenimientos');
+    $routes->get('mientretenimiento/(:num)', 'GimApiController::getMiEntretenimientoDetail/$1');
+    $routes->post('mientretenimiento/personalizar', 'GimApiController::personalizarEntretenimiento');
+    $routes->post('mientretenimiento', 'GimApiController::guardarMiEntretenimiento');
 });
 

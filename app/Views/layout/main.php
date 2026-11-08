@@ -292,16 +292,23 @@ $isECPActive = (strpos($uri, 'estadocivilpersona') === 0);
 $isGPActive = (strpos($uri, 'generopersona') === 0);
 $groupRelacionesOpen = $isECPActive || $isGPActive;
 
-$isEntretenimientoActive = (strpos($uri, 'entretenimiento') === 0 && strpos($uri, 'entretenimientomusica') === false && strpos($uri, 'entretenimiento-musica') === false && strpos($uri, 'entretenimientovideo') === false && strpos($uri, 'entretenimiento-video') === false && strpos($uri, 'entretenimientojuego') === false && strpos($uri, 'entretenimiento-juego') === false && strpos($uri, 'entretenimientopodcast') === false && strpos($uri, 'entretenimiento-podcast') === false);
-$isMusicaActive = (strpos($uri, 'musica') === 0 && strpos($uri, 'musicaentretenimiento') === false);
-$isVideoActive = (strpos($uri, 'video') === 0 && strpos($uri, 'videoentretenimiento') === false);
-$isJuegoActive = (strpos($uri, 'juego') === 0 && strpos($uri, 'juegoentretenimiento') === false);
-$isPodcastActive = (strpos($uri, 'podcast') === 0 && strpos($uri, 'podcastentretenimiento') === false);
+$isEntretenimientoActive = (strpos($uri, 'entretenimiento') === 0 && strpos($uri, 'mientretenimiento') === false && strpos($uri, 'mi-entretenimiento') === false && strpos($uri, 'entretenimientomusica') === false && strpos($uri, 'entretenimiento-musica') === false && strpos($uri, 'entretenimientovideo') === false && strpos($uri, 'entretenimiento-video') === false && strpos($uri, 'entretenimientojuego') === false && strpos($uri, 'entretenimiento-juego') === false && strpos($uri, 'entretenimientopodcast') === false && strpos($uri, 'entretenimiento-podcast') === false);
+$isMusicaActive = (strpos($uri, 'musica') === 0 && strpos($uri, 'musicaentretenimiento') === false && strpos($uri, 'mientretenimientomusica') === false);
+$isVideoActive = (strpos($uri, 'video') === 0 && strpos($uri, 'videoentretenimiento') === false && strpos($uri, 'mientretenimientovideo') === false);
+$isJuegoActive = (strpos($uri, 'juego') === 0 && strpos($uri, 'juegoentretenimiento') === false && strpos($uri, 'mientretenimientojuego') === false);
+$isPodcastActive = (strpos($uri, 'podcast') === 0 && strpos($uri, 'podcastentretenimiento') === false && strpos($uri, 'mientretenimientopodcast') === false);
 $isEntMusicaActive = (strpos($uri, 'entretenimientomusica') === 0 || strpos($uri, 'entretenimiento-musica') === 0 || strpos($uri, 'musicaentretenimiento') === 0);
 $isEntVideoActive = (strpos($uri, 'entretenimientovideo') === 0 || strpos($uri, 'entretenimiento-video') === 0 || strpos($uri, 'videoentretenimiento') === 0);
 $isEntJuegoActive = (strpos($uri, 'entretenimientojuego') === 0 || strpos($uri, 'entretenimiento-juego') === 0 || strpos($uri, 'juegoentretenimiento') === 0);
 $isEntPodcastActive = (strpos($uri, 'entretenimientopodcast') === 0 || strpos($uri, 'entretenimiento-podcast') === 0 || strpos($uri, 'podcastentretenimiento') === 0);
-$groupEntretenimientoOpen = $isEntretenimientoActive || $isMusicaActive || $isVideoActive || $isJuegoActive || $isPodcastActive || $isEntMusicaActive || $isEntVideoActive || $isEntJuegoActive || $isEntPodcastActive;
+
+$isMiEntretenimientoActive = (strpos($uri, 'mientretenimiento') === 0 || strpos($uri, 'mi-entretenimiento') === 0) && strpos($uri, 'mientretenimientomusica') === false && strpos($uri, 'mientretenimientovideo') === false && strpos($uri, 'mientretenimientojuego') === false && strpos($uri, 'mientretenimientopodcast') === false;
+$isMiEntMusicaActive = (strpos($uri, 'mientretenimientomusica') === 0 || strpos($uri, 'mi-entretenimiento-musica') === 0);
+$isMiEntVideoActive = (strpos($uri, 'mientretenimientovideo') === 0 || strpos($uri, 'mi-entretenimiento-video') === 0);
+$isMiEntJuegoActive = (strpos($uri, 'mientretenimientojuego') === 0 || strpos($uri, 'mi-entretenimiento-juego') === 0);
+$isMiEntPodcastActive = (strpos($uri, 'mientretenimientopodcast') === 0 || strpos($uri, 'mi-entretenimiento-podcast') === 0);
+
+$groupEntretenimientoOpen = $isEntretenimientoActive || $isMusicaActive || $isVideoActive || $isJuegoActive || $isPodcastActive || $isEntMusicaActive || $isEntVideoActive || $isEntJuegoActive || $isEntPodcastActive || $isMiEntretenimientoActive || $isMiEntMusicaActive || $isMiEntVideoActive || $isMiEntJuegoActive || $isMiEntPodcastActive;
 
 $isDashboardActive = ($uri === '' || $uri === 'home');
 ?>
@@ -651,6 +658,30 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('entretenimientopodcast') ?>" class="submenu-link <?= $isEntPodcastActive ? 'active' : '' ?>">
                             <i class="bi bi-link-45deg text-warning"></i>
                             <span>Entretenimiento - Podcast</span>
+                        </a>
+
+                        <div class="dropdown-divider my-2 border-secondary opacity-25"></div>
+                        <div class="text-uppercase px-3 py-1 small fw-bold text-info" style="font-size: 0.72rem; letter-spacing: 0.5px;">Personalización</div>
+
+                        <a href="<?= base_url('mientretenimiento') ?>" class="submenu-link <?= $isMiEntretenimientoActive ? 'active' : '' ?>">
+                            <i class="bi bi-person-heart text-info"></i>
+                            <span>Mi Entretenimiento</span>
+                        </a>
+                        <a href="<?= base_url('mientretenimientomusica') ?>" class="submenu-link <?= $isMiEntMusicaActive ? 'active' : '' ?>">
+                            <i class="bi bi-music-note-list text-danger"></i>
+                            <span>Mi Música</span>
+                        </a>
+                        <a href="<?= base_url('mientretenimientovideo') ?>" class="submenu-link <?= $isMiEntVideoActive ? 'active' : '' ?>">
+                            <i class="bi bi-camera-reels text-primary"></i>
+                            <span>Mis Videos</span>
+                        </a>
+                        <a href="<?= base_url('mientretenimientojuego') ?>" class="submenu-link <?= $isMiEntJuegoActive ? 'active' : '' ?>">
+                            <i class="bi bi-joystick text-success"></i>
+                            <span>Mis Juegos</span>
+                        </a>
+                        <a href="<?= base_url('mientretenimientopodcast') ?>" class="submenu-link <?= $isMiEntPodcastActive ? 'active' : '' ?>">
+                            <i class="bi bi-mic text-warning"></i>
+                            <span>Mis Podcasts</span>
                         </a>
                     </div>
                 </div>
