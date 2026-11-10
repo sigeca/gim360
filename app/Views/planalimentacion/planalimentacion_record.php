@@ -3,7 +3,7 @@
 <?= $this->section('content') ?>
 
 <div class="row justify-content-center">
-    <div class="col-lg-9">
+    <div class="col-lg-10">
 
         <?php if (empty($plan)): ?>
             <?= view('layout/empty_record', ['module' => 'planalimentacion']) ?>
@@ -176,96 +176,263 @@
                 </div>
             </div>
 
-            <!-- Estructura de Comidas Programadas en este Plan -->
+            <?php
+                // Configuración de los 7 días de la semana
+                $diasSemana = [
+                    1 => ['nombre' => 'Lunes',     'slug' => 'lunes'],
+                    2 => ['nombre' => 'Martes',    'slug' => 'martes'],
+                    3 => ['nombre' => 'Miércoles', 'slug' => 'miercoles'],
+                    4 => ['nombre' => 'Jueves',    'slug' => 'jueves'],
+                    5 => ['nombre' => 'Viernes',   'slug' => 'viernes'],
+                    6 => ['nombre' => 'Sábado',    'slug' => 'sabado'],
+                    7 => ['nombre' => 'Domingo',   'slug' => 'domingo'],
+                ];
+
+                // Agrupar comidas por día de la semana
+                $comidasPorDia = [];
+                foreach ($diasSemana as $diaId => $info) {
+                    $comidasPorDia[$diaId] = [];
+                }
+                $comidasOtras = [];
+
+                foreach ($comidas ?? [] as $cm) {
+                    $diaId = !empty($cm['iddiasemana']) ? (int)$cm['iddiasemana'] : 0;
+                    if (isset($comidasPorDia[$diaId])) {
+                        $comidasPorDia[$diaId][] = $cm;
+                    } else {
+                        $comidasOtras[] = $cm;
+                    }
+                }
+
+                // Determinar pestaña activa: primer día con comidas o Lunes (1)
+                $activeDiaId = 1;
+                foreach ($diasSemana as $diaId => $info) {
+                    if (!empty($comidasPorDia[$diaId])) {
+                        $activeDiaId = $diaId;
+                        break;
+                    }
+                }
+            ?>
+
+            <!-- Estructura de Comidas Programadas en este Plan Organizadas por Días de la Semana -->
             <div class="card card-custom bg-white shadow-sm mb-4">
-                <div class="card-header bg-white py-3 border-bottom d-flex justify-content-between align-items-center">
-                    <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
-                        <i class="bi bi-calendar2-heart text-success me-2 fs-5"></i>Comidas y Tiempos del Plan
-                        <span class="badge bg-success-subtle text-success border border-success ms-2"><?= count($comidas ?? []) ?></span>
-                    </h6>
-                    <a href="<?= base_url('comida/add?idplanalimentacion=' . $plan['idplanalimentacion']) ?>" class="btn btn-sm btn-success">
-                        <i class="bi bi-plus-circle me-1"></i> Programar Comida
-                    </a>
+                <div class="card-header bg-white pt-3 pb-0 border-bottom">
+                    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+                        <h6 class="fw-bold mb-0 text-dark d-flex align-items-center">
+                            <i class="bi bi-calendar2-heart text-success me-2 fs-5"></i>Comidas y Tiempos del Plan
+                            <span class="badge bg-success-subtle text-success border border-success ms-2"><?= count($comidas ?? []) ?> comidas</span>
+                        </h6>
+                        <a href="<?= base_url('comida/add?idplanalimentacion=' . $plan['idplanalimentacion']) ?>" class="btn btn-sm btn-success">
+                            <i class="bi bi-plus-circle me-1"></i> Programar Comida
+                        </a>
+                    </div>
+
+                    <!-- Pestañas de los días de la semana de Lunes a Domingo -->
+                    <ul class="nav nav-tabs card-header-tabs border-bottom-0" id="diasSemanaTabs" role="tablist">
+                        <?php foreach ($diasSemana as $diaId => $diaInfo): ?>
+                            <?php 
+                                $isActive = ($diaId === $activeDiaId);
+                                $cant = count($comidasPorDia[$diaId]);
+                            ?>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link <?= $isActive ? 'active fw-bold text-success' : 'text-secondary' ?>" 
+                                        id="tab-dia-<?= $diaInfo['slug'] ?>" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#pane-dia-<?= $diaInfo['slug'] ?>" 
+                                        type="button" 
+                                        role="tab" 
+                                        aria-controls="pane-dia-<?= $diaInfo['slug'] ?>" 
+                                        aria-selected="<?= $isActive ? 'true' : 'false' ?>">
+                                    <i class="bi bi-calendar-event me-1"></i><?= esc($diaInfo['nombre']) ?>
+                                    <span class="badge <?= $cant > 0 ? 'bg-success text-white' : 'bg-light text-muted border' ?> rounded-pill ms-1" style="font-size: 0.72rem;">
+                                        <?= $cant ?>
+                                    </span>
+                                </button>
+                            </li>
+                        <?php endforeach; ?>
+
+                        <?php if (!empty($comidasOtras)): ?>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link text-secondary" 
+                                        id="tab-dia-otros" 
+                                        data-bs-toggle="tab" 
+                                        data-bs-target="#pane-dia-otros" 
+                                        type="button" 
+                                        role="tab" 
+                                        aria-controls="pane-dia-otros" 
+                                        aria-selected="false">
+                                    <i class="bi bi-calendar-plus me-1"></i>Otros / Festivos
+                                    <span class="badge bg-warning text-dark rounded-pill ms-1" style="font-size: 0.72rem;">
+                                        <?= count($comidasOtras) ?>
+                                    </span>
+                                </button>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
                 </div>
                 <div class="card-body p-0">
-                    <?php if (empty($comidas)): ?>
-                        <div class="text-center py-4 text-muted">
-                            <i class="bi bi-calendar-x fs-2 d-block mb-2 text-secondary"></i>
-                            <p class="mb-2">Aún no se han estructurado comidas diarias para este plan de alimentación.</p>
-                            <a href="<?= base_url('comida/add?idplanalimentacion=' . $plan['idplanalimentacion']) ?>" class="btn btn-sm btn-outline-success">
-                                <i class="bi bi-plus-lg me-1"></i>Programar la primera comida
-                            </a>
-                        </div>
-                    <?php else: ?>
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
-                                <thead class="table-light">
-                                    <tr>
-                                        <th class="ps-4">Día Semana</th>
-                                        <th>Hora</th>
-                                        <th>Momento / Tipo</th>
-                                        <th>Receta Asignada</th>
-                                        <th>Porciones</th>
-                                        <th>Tiempo Prep.</th>
-                                        <th class="text-end pe-4">Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($comidas as $cm): ?>
-                                        <tr>
-                                            <td class="ps-4">
-                                                <span class="badge bg-primary-subtle text-primary border border-primary px-2 py-1 fw-semibold">
-                                                    <i class="bi bi-calendar3 me-1"></i><?= esc($cm['diasemana_nombre'] ?? 'Lunes') ?>
-                                                </span>
-                                            </td>
-                                            <td class="fw-bold text-dark">
-                                                <?php if (!empty($cm['horarecomendada'])): ?>
-                                                    <span class="badge bg-secondary text-white font-monospace">
-                                                        <i class="bi bi-alarm-fill me-1"></i><?= substr($cm['horarecomendada'], 0, 5) ?>
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-light text-muted border">Flexible</span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td>
-                                                <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">
-                                                    <?= esc($cm['tipocomida_nombre']) ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <a href="<?= base_url('receta/actual/' . $cm['idreceta']) ?>" class="fw-bold text-decoration-none text-primary">
-                                                    <i class="bi bi-book me-1"></i><?= esc($cm['receta_nombre']) ?>
-                                                </a>
-                                                <?php if (!empty($cm['receta_video'])): ?>
-                                                    <a href="<?= esc($cm['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
-                                                        <i class="bi bi-youtube me-1"></i>Video
-                                                    </a>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td><?= esc($cm['porciones'] ?? 1) ?> porc.</td>
-                                            <td class="text-secondary small">
-                                                <?= esc($cm['tiempopreparacion'] ? $cm['tiempopreparacion'] . ' min' : 'No especificado') ?>
-                                            </td>
-                                            <td class="text-end pe-4">
-                                                <a href="<?= base_url('planalimentacion/marcar-cumplimiento/' . $plan['idplanalimentacion'] . '/' . $cm['idcomida']) ?>" class="btn btn-xs btn-success text-white me-1" title="Registrar que se consumió esta comida ahora" onclick="return confirm('¿Registrar consumo de \'<?= esc($cm['receta_nombre']) ?>\' en este momento?');">
-                                                    <i class="bi bi-check-lg"></i> Cumplir
-                                                </a>
-                                                <a href="<?= base_url('comida/actual/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-primary" title="Ver ficha">
-                                                    <i class="bi bi-eye"></i>
-                                                </a>
-                                                <a href="<?= base_url('comida/edit/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-warning text-dark" title="Editar">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </a>
-                                                <a href="<?= base_url('comida/delete/' . $cm['idcomida'] . '?from_plan=1') ?>" class="btn btn-xs btn-outline-danger" title="Remover del plan" onclick="return confirm('¿Remover esta comida del plan?');">
-                                                    <i class="bi bi-x-lg"></i>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
-                        </div>
-                    <?php endif; ?>
+                    <div class="tab-content" id="diasSemanaContent">
+                        <?php foreach ($diasSemana as $diaId => $diaInfo): ?>
+                            <?php 
+                                $isActive = ($diaId === $activeDiaId);
+                                $listaDia = $comidasPorDia[$diaId];
+                            ?>
+                            <div class="tab-pane fade <?= $isActive ? 'show active' : '' ?>" 
+                                 id="pane-dia-<?= $diaInfo['slug'] ?>" 
+                                 role="tabpanel" 
+                                 aria-labelledby="tab-dia-<?= $diaInfo['slug'] ?>">
+                                
+                                <?php if (empty($listaDia)): ?>
+                                    <div class="text-center py-5 text-muted">
+                                        <i class="bi bi-cup-hot fs-2 d-block mb-2 text-secondary"></i>
+                                        <p class="mb-2">No hay comidas programadas para el día <strong><?= esc($diaInfo['nombre']) ?></strong>.</p>
+                                        <a href="<?= base_url('comida/add?idplanalimentacion=' . $plan['idplanalimentacion'] . '&iddiasemana=' . $diaId) ?>" class="btn btn-sm btn-outline-success">
+                                            <i class="bi bi-plus-lg me-1"></i> Programar comida para el <?= esc($diaInfo['nombre']) ?>
+                                        </a>
+                                    </div>
+                                <?php else: ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-hover align-middle mb-0">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="ps-4">Hora</th>
+                                                    <th>Momento / Tipo</th>
+                                                    <th>Receta Asignada</th>
+                                                    <th>Porción</th>
+                                                    <th>Tiempo Prep.</th>
+                                                    <th class="text-end pe-4">Acción</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php foreach ($listaDia as $cm): ?>
+                                                    <tr>
+                                                        <td class="ps-4 fw-bold text-dark">
+                                                            <?php if (!empty($cm['horarecomendada'])): ?>
+                                                                <span class="badge bg-secondary text-white font-monospace">
+                                                                    <i class="bi bi-alarm-fill me-1"></i><?= substr($cm['horarecomendada'], 0, 5) ?>
+                                                                </span>
+                                                            <?php else: ?>
+                                                                <span class="badge bg-light text-muted border">Flexible</span>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td>
+                                                            <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">
+                                                                <?= esc($cm['tipocomida_nombre']) ?>
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <a href="<?= base_url('receta/actual/' . $cm['idreceta']) ?>" class="fw-bold text-decoration-none text-primary">
+                                                                <i class="bi bi-book me-1"></i><?= esc($cm['receta_nombre']) ?>
+                                                            </a>
+                                                            <?php if (!empty($cm['receta_video'])): ?>
+                                                                <a href="<?= esc($cm['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                                    <i class="bi bi-youtube me-1"></i>Video
+                                                                </a>
+                                                            <?php endif; ?>
+                                                        </td>
+                                                        <td><span class="fw-semibold"><?= esc($cm['porciones'] ?? 1) ?></span> porc.</td>
+                                                        <td class="text-secondary small">
+                                                            <?= esc(!empty($cm['tiempopreparacion']) ? $cm['tiempopreparacion'] . ' min' : 'No especificado') ?>
+                                                        </td>
+                                                        <td class="text-end pe-4">
+                                                            <a href="<?= base_url('planalimentacion/marcar-cumplimiento/' . $plan['idplanalimentacion'] . '/' . $cm['idcomida']) ?>" class="btn btn-xs btn-success text-white me-1" title="Registrar que se consumió esta comida ahora" onclick="return confirm('¿Registrar consumo de \'<?= esc($cm['receta_nombre']) ?>\' en este momento?');">
+                                                                <i class="bi bi-check-lg"></i> Cumplir
+                                                            </a>
+                                                            <a href="<?= base_url('comida/actual/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-primary" title="Ver ficha">
+                                                                <i class="bi bi-eye"></i>
+                                                            </a>
+                                                            <a href="<?= base_url('comida/edit/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-warning text-dark" title="Editar">
+                                                                <i class="bi bi-pencil-square"></i>
+                                                            </a>
+                                                            <a href="<?= base_url('comida/delete/' . $cm['idcomida'] . '?from_plan=1') ?>" class="btn btn-xs btn-outline-danger" title="Remover del plan" onclick="return confirm('¿Remover esta comida del plan?');">
+                                                                <i class="bi bi-x-lg"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+
+                        <?php if (!empty($comidasOtras)): ?>
+                            <div class="tab-pane fade" 
+                                 id="pane-dia-otros" 
+                                 role="tabpanel" 
+                                 aria-labelledby="tab-dia-otros">
+                                <div class="table-responsive">
+                                    <table class="table table-hover align-middle mb-0">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="ps-4">Día / Estado</th>
+                                                <th>Hora</th>
+                                                <th>Momento / Tipo</th>
+                                                <th>Receta Asignada</th>
+                                                <th>Porción</th>
+                                                <th>Tiempo Prep.</th>
+                                                <th class="text-end pe-4">Acción</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <?php foreach ($comidasOtras as $cm): ?>
+                                                <tr>
+                                                    <td class="ps-4">
+                                                        <span class="badge bg-secondary-subtle text-secondary border">
+                                                            <?= esc($cm['diasemana_nombre'] ?? 'Sin día asignado') ?>
+                                                        </span>
+                                                    </td>
+                                                    <td class="fw-bold text-dark">
+                                                        <?php if (!empty($cm['horarecomendada'])): ?>
+                                                            <span class="badge bg-secondary text-white font-monospace">
+                                                                <i class="bi bi-alarm-fill me-1"></i><?= substr($cm['horarecomendada'], 0, 5) ?>
+                                                            </span>
+                                                        <?php else: ?>
+                                                            <span class="badge bg-light text-muted border">Flexible</span>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge bg-warning-subtle text-dark border border-warning px-2 py-1">
+                                                            <?= esc($cm['tipocomida_nombre']) ?>
+                                                        </span>
+                                                    </td>
+                                                    <td>
+                                                        <a href="<?= base_url('receta/actual/' . $cm['idreceta']) ?>" class="fw-bold text-decoration-none text-primary">
+                                                            <i class="bi bi-book me-1"></i><?= esc($cm['receta_nombre']) ?>
+                                                        </a>
+                                                        <?php if (!empty($cm['receta_video'])): ?>
+                                                            <a href="<?= esc($cm['receta_video']) ?>" target="_blank" class="badge bg-danger-subtle text-danger border border-danger-subtle text-decoration-none ms-1" title="Ver video de la receta en YouTube">
+                                                                <i class="bi bi-youtube me-1"></i>Video
+                                                            </a>
+                                                        <?php endif; ?>
+                                                    </td>
+                                                    <td><span class="fw-semibold"><?= esc($cm['porciones'] ?? 1) ?></span> porc.</td>
+                                                    <td class="text-secondary small">
+                                                        <?= esc(!empty($cm['tiempopreparacion']) ? $cm['tiempopreparacion'] . ' min' : 'No especificado') ?>
+                                                    </td>
+                                                    <td class="text-end pe-4">
+                                                        <a href="<?= base_url('planalimentacion/marcar-cumplimiento/' . $plan['idplanalimentacion'] . '/' . $cm['idcomida']) ?>" class="btn btn-xs btn-success text-white me-1" title="Registrar que se consumió esta comida ahora" onclick="return confirm('¿Registrar consumo de \'<?= esc($cm['receta_nombre']) ?>\' en este momento?');">
+                                                            <i class="bi bi-check-lg"></i> Cumplir
+                                                        </a>
+                                                        <a href="<?= base_url('comida/actual/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-primary" title="Ver ficha">
+                                                            <i class="bi bi-eye"></i>
+                                                        </a>
+                                                        <a href="<?= base_url('comida/edit/' . $cm['idcomida']) ?>" class="btn btn-xs btn-outline-warning text-dark" title="Editar">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+                                                        <a href="<?= base_url('comida/delete/' . $cm['idcomida'] . '?from_plan=1') ?>" class="btn btn-xs btn-outline-danger" title="Remover del plan" onclick="return confirm('¿Remover esta comida del plan?');">
+                                                            <i class="bi bi-x-lg"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <?php endforeach; ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
 
