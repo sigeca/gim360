@@ -32,15 +32,22 @@ class VisitasGim extends BaseController
         }
 
         $ejercicios = [];
-        if ($visita && !empty($visita['idcliente']) && !empty($visita['fecha'])) {
-            $ejercicios = $this->visitasGimModel->getEjerciciosByVisita((int)$visita['idcliente'], $visita['fecha']);
+        $programasCliente = [];
+        if ($visita && !empty($visita['idcliente'])) {
+            $programaClienteModel = new \App\Models\ProgramaClienteModel();
+            $programasCliente = $programaClienteModel->getProgramasByCliente((int)$visita['idcliente']);
+
+            if (!empty($visita['fecha'])) {
+                $ejercicios = $this->visitasGimModel->getEjerciciosByVisita((int)$visita['idcliente'], $visita['fecha']);
+            }
         }
 
         $data = [
-            'title'      => 'Ficha de Visita al Gimnasio',
-            'visita'     => $visita,
-            'ejercicios' => $ejercicios,
-            'module'     => 'visitasgim',
+            'title'            => 'Ficha de Visita al Gimnasio',
+            'visita'           => $visita,
+            'programasCliente' => $programasCliente,
+            'ejercicios'       => $ejercicios,
+            'module'           => 'visitasgim',
         ];
 
         return view('visitasgim/visitasgim_record', $data);

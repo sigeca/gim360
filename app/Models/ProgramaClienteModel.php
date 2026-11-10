@@ -234,7 +234,8 @@ class ProgramaClienteModel extends Model
                               rangoedad.edadmaxima AS rango_edadmaxima,
                               estadoprogramacliente.nombre AS estado_nombre,
                               (SELECT COUNT(*) FROM rutinaprograma WHERE rutinaprograma.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento) AS total_rutinas,
-                              (SELECT COUNT(*) FROM rutinaplan WHERE rutinaplan.idrutinaejercicio IN (SELECT rp.idrutinaejercicio FROM rutinaprograma rp WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento)) AS total_planes')
+                              (SELECT COUNT(*) FROM rutinaplan WHERE rutinaplan.idrutinaejercicio IN (SELECT rp.idrutinaejercicio FROM rutinaprograma rp WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento)) AS total_planes,
+                              (SELECT GROUP_CONCAT(r.nombre SEPARATOR ", ") FROM rutinaprograma rp JOIN rutinaejecicio r ON r.idrutinaejercicio = rp.idrutinaejercicio WHERE rp.idprogramaentrenamiento = programaentrenamiento.idprogramaentrenamiento) AS rutinas_nombres')
                     ->join('programaentrenamiento', 'programaentrenamiento.idprogramaentrenamiento = programacliente.idprogramaentrenamiento', 'inner')
                     ->join('motivoentrenamiento', 'motivoentrenamiento.idmotivoentrenamiento = programaentrenamiento.idmotivoentrenamiento', 'inner')
                     ->join('rangoedad', 'rangoedad.idrangoedad = programaentrenamiento.idrangoedad', 'left')
