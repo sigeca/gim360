@@ -31,10 +31,16 @@ class VisitasGim extends BaseController
             $visita = $last ? $this->visitasGimModel->getVisitaWithDetails($last['idvisitasgim']) : null;
         }
 
+        $ejercicios = [];
+        if ($visita && !empty($visita['idcliente']) && !empty($visita['fecha'])) {
+            $ejercicios = $this->visitasGimModel->getEjerciciosByVisita((int)$visita['idcliente'], $visita['fecha']);
+        }
+
         $data = [
-            'title'  => 'Ficha de Visita al Gimnasio',
-            'visita' => $visita,
-            'module' => 'visitasgim',
+            'title'      => 'Ficha de Visita al Gimnasio',
+            'visita'     => $visita,
+            'ejercicios' => $ejercicios,
+            'module'     => 'visitasgim',
         ];
 
         return view('visitasgim/visitasgim_record', $data);

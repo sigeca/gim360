@@ -70,4 +70,27 @@ class VisitasGimModel extends Model
                     ->orderBy('horaingreso', 'DESC')
                     ->findAll();
     }
+
+    /**
+     * Obtiene los ejercicios ejecutados por un cliente en una fecha específica (visita)
+     */
+    public function getEjerciciosByVisita(int $idcliente, string $fecha): array
+    {
+        $db = \Config\Database::connect();
+        return $db->table('ejecucionprograma ep')
+                  ->select('ep.*,
+                            ejercicio.idejercicio,
+                            ejercicio.nombreespanol,
+                            ejercicio.nombreingles,
+                            ejercicio.nombreespanol AS ejercicio_nombre,
+                            ejercicio.imagen AS ejercicio_imagen')
+                  ->join('programacliente pc', 'pc.idprogramacliente = ep.idprogramacliente', 'inner')
+                  ->join('ejercicio', 'ejercicio.idejercicio = ep.idejercicio', 'inner')
+                  ->where('pc.idcliente', $idcliente)
+                  ->where('ep.fecha', $fecha)
+                  ->orderBy('ep.horainicio', 'ASC')
+                  ->orderBy('ep.idejecucionprograma', 'ASC')
+                  ->get()
+                  ->getResultArray();
+    }
 }

@@ -202,4 +202,24 @@ class EjecucionProgramaModel extends Model
                       ->getRowArray();
         return $anyPlan ?: null;
     }
+
+    /**
+     * Obtiene los ejercicios ejecutados por un cliente en una fecha específica
+     */
+    public function getEjecucionesByClienteYFecha(int $idcliente, string $fecha): array
+    {
+        return $this->select('ejecucionprograma.*,
+                              ejercicio.idejercicio,
+                              ejercicio.nombreespanol,
+                              ejercicio.nombreingles,
+                              ejercicio.nombreespanol AS ejercicio_nombre,
+                              ejercicio.imagen AS ejercicio_imagen')
+                    ->join('programacliente', 'programacliente.idprogramacliente = ejecucionprograma.idprogramacliente', 'inner')
+                    ->join('ejercicio', 'ejercicio.idejercicio = ejecucionprograma.idejercicio', 'inner')
+                    ->where('programacliente.idcliente', $idcliente)
+                    ->where('ejecucionprograma.fecha', $fecha)
+                    ->orderBy('ejecucionprograma.horainicio', 'ASC')
+                    ->orderBy('ejecucionprograma.idejecucionprograma', 'ASC')
+                    ->findAll();
+    }
 }
