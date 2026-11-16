@@ -210,10 +210,23 @@
                     <!-- Planes de Ejercicio Asociados a las Rutinas del Programa -->
                     <?php
                         $ejecucionesPorEjercicio = [];
+                        $diasUnicosPorEjercicio = [];
+                        $diasSemanaActualPorEjercicio = [];
+                        $inicioSemanaActual = date('Y-m-d', strtotime('monday this week'));
+                        $finSemanaActual = date('Y-m-d', strtotime('sunday this week'));
+
                         if (!empty($programaCliente['ejecuciones'])) {
                             foreach ($programaCliente['ejecuciones'] as $ejExec) {
                                 $idEj = (int)$ejExec['idejercicio'];
                                 $ejecucionesPorEjercicio[$idEj] = ($ejecucionesPorEjercicio[$idEj] ?? 0) + 1;
+
+                                $fechaEj = !empty($ejExec['fecha']) ? substr((string)$ejExec['fecha'], 0, 10) : '';
+                                if ($fechaEj !== '') {
+                                    $diasUnicosPorEjercicio[$idEj][$fechaEj] = true;
+                                    if ($fechaEj >= $inicioSemanaActual && $fechaEj <= $finSemanaActual) {
+                                        $diasSemanaActualPorEjercicio[$idEj][$fechaEj] = true;
+                                    }
+                                }
                             }
                         }
 
@@ -227,10 +240,12 @@
                                 $diasCalc = (int)($plCalc['plan_diassemanas'] ?? 0);
                                 $metaCalc = ($semCalc > 0 && $diasCalc > 0) ? ($semCalc * $diasCalc) : 0;
                                 if ($metaCalc > 0) {
-                                    $hechasCalc = $ejecucionesPorEjercicio[$idEjCalc] ?? 0;
+                                    $diasHechosCalc = !empty($diasUnicosPorEjercicio[$idEjCalc])
+                                        ? count($diasUnicosPorEjercicio[$idEjCalc])
+                                        : ($ejecucionesPorEjercicio[$idEjCalc] ?? 0);
                                     $globalMeta += $metaCalc;
-                                    $globalHechasCapped += min($metaCalc, $hechasCalc);
-                                    $globalFaltan += max(0, $metaCalc - $hechasCalc);
+                                    $globalHechasCapped += min($metaCalc, $diasHechosCalc);
+                                    $globalFaltan += max(0, $metaCalc - $diasHechosCalc);
                                 }
                             }
                         }
@@ -253,13 +268,13 @@
                                     <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-1 small">
                                         <span class="fw-semibold text-dark">
                                             <i class="bi bi-graph-up-arrow text-primary me-1"></i>Avance General del Programa:
-                                            <strong class="text-primary"><?= $globalHechasCapped ?></strong> de <strong><?= $globalMeta ?></strong> sesiones completadas
+                                            <strong class="text-primary"><?= $globalHechasCapped ?></strong> de <strong><?= $globalMeta ?></strong> días completados
                                         </span>
                                         <span>
                                             <?php if ($globalFaltan === 0): ?>
                                                 <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>¡Programa Culminado! (100%)</span>
                                             <?php else: ?>
-                                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Faltan <?= $globalFaltan ?> sesiones (<?= $globalPct ?>%)</span>
+                                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Faltan <?= $globalFaltan ?> días (<?= $globalPct ?>%)</span>
                                             <?php endif; ?>
                                         </span>
                                     </div>
@@ -311,11 +326,19 @@
 
                                                 $idEjPlan = (int)$pl['idejercicio'];
                                                 $vecesHechas = $ejecucionesPorEjercicio[$idEjPlan] ?? 0;
+                                                $diasHechos = !empty($diasUnicosPorEjercicio[$idEjPlan])
+                                                    ? count($diasUnicosPorEjercicio[$idEjPlan])
+                                                    : $vecesHechas;
+                                                $diasSemanaHechos = !empty($diasSemanaActualPorEjercicio[$idEjPlan])
+                                                    ? count($diasSemanaActualPorEjercicio[$idEjPlan])
+                                                    : 0;
                                                 $semanasPlan = (int)($planDuracion ?? 0);
                                                 $diasPlan = (int)($pl['plan_diassemanas'] ?? 0);
                                                 $metaTotal = ($semanasPlan > 0 && $diasPlan > 0) ? ($semanasPlan * $diasPlan) : 0;
-                                                $faltanPlan = $metaTotal > 0 ? max(0, $metaTotal - $vecesHechas) : null;
-                                                $pctPlan = $metaTotal > 0 ? min(100, (int)round(($vecesHechas / $metaTotal) * 100)) : 0;
+                                                $faltanPlan = $metaTotal > 0 ? max(0, $metaTotal - $diasHechos) : null;
+                                                $pctPlan = $metaTotal > 0 ? min(100, (int)round(($diasHechos / $metaTotal) * 100)) : 0;
+                                                $faltanSemana = $diasPlan > 0 ? max(0, $diasPlan - $diasSemanaHechos) : null;
+                                                $pctSemana = $diasPlan > 0 ? min(100, (int)round(($diasSemanaHechos / $diasPlan) * 100)) : 0;
                                             ?>
                                             <tr>
                                                 <td>
@@ -381,21 +404,41 @@
                                                 <td class="text-center">
                                                     <?php if ($metaTotal > 0): ?>
                                                         <div class="d-flex justify-content-between align-items-center small mb-1 gap-1">
-                                                            <span class="fw-bold text-dark" title="Veces realizadas / Total planificado">
-                                                                <?= $vecesHechas ?> / <?= $metaTotal ?>
+                                                            <span class="fw-bold text-dark" title="Días realizados / Total de días programados">
+                                                                <?= $diasHechos ?> / <?= $metaTotal ?> días
                                                             </span>
                                                             <?php if ($faltanPlan === 0): ?>
-                                                                <span class="badge bg-success">Culminado</span>
+                                                                <span class="badge bg-success">¡Culminado!</span>
                                                             <?php else: ?>
-                                                                <span class="badge bg-warning text-dark">Faltan <?= $faltanPlan ?></span>
+                                                                <span class="badge bg-warning text-dark">Faltan <?= $faltanPlan ?> días</span>
                                                             <?php endif; ?>
                                                         </div>
                                                         <div class="progress" style="height: 6px;" title="<?= $pctPlan ?>% completado">
                                                             <div class="progress-bar <?= $faltanPlan === 0 ? 'bg-success' : 'bg-primary' ?>" role="progressbar" style="width: <?= $pctPlan ?>%;" aria-valuenow="<?= $pctPlan ?>" aria-valuemin="0" aria-valuemax="100"></div>
                                                         </div>
+                                                    <?php elseif ($diasPlan > 0): ?>
+                                                        <div class="d-flex justify-content-between align-items-center small mb-1 gap-1">
+                                                            <span class="fw-bold text-dark" title="Días realizados esta semana / Días por semana">
+                                                                Sem: <?= $diasSemanaHechos ?> / <?= $diasPlan ?> d
+                                                            </span>
+                                                            <?php if ($faltanSemana === 0): ?>
+                                                                <span class="badge bg-success">Sem. OK</span>
+                                                            <?php else: ?>
+                                                                <span class="badge bg-warning text-dark">Faltan <?= $faltanSemana ?> d/sem</span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <div class="progress mb-1" style="height: 6px;" title="<?= $pctSemana ?>% de la semana actual">
+                                                            <div class="progress-bar <?= $faltanSemana === 0 ? 'bg-success' : 'bg-info' ?>" role="progressbar" style="width: <?= $pctSemana ?>%;" aria-valuenow="<?= $pctSemana ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <div class="d-flex justify-content-between align-items-center" style="font-size: 0.72rem;">
+                                                            <span class="text-muted">Total: <?= $diasHechos ?> d</span>
+                                                            <a href="<?= $planEditUrl ?>" class="text-primary text-decoration-none" title="Definir duración en semanas para calcular el total del plan">
+                                                                + Semanas
+                                                            </a>
+                                                        </div>
                                                     <?php else: ?>
                                                         <span class="badge bg-secondary-subtle text-dark border">
-                                                            Hechas: <?= $vecesHechas ?>
+                                                            Hechos: <?= $diasHechos ?> días
                                                         </span>
                                                         <div class="text-muted" style="font-size: 0.7rem;">Sin meta definida</div>
                                                     <?php endif; ?>
