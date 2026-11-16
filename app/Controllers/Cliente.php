@@ -5,18 +5,27 @@ namespace App\Controllers;
 use App\Models\ClienteModel;
 use App\Models\PersonaModel;
 use App\Models\ProgramaClienteModel;
+use App\Models\PlanAlimentacionModel;
+use App\Models\MiMedicacionModel;
+use App\Models\MiEntretenimientoModel;
 
 class Cliente extends BaseController
 {
     protected ClienteModel $clienteModel;
     protected PersonaModel $personaModel;
     protected ProgramaClienteModel $programaClienteModel;
+    protected PlanAlimentacionModel $planAlimentacionModel;
+    protected MiMedicacionModel $miMedicacionModel;
+    protected MiEntretenimientoModel $miEntretenimientoModel;
 
     public function __construct()
     {
-        $this->clienteModel         = new ClienteModel();
-        $this->personaModel         = new PersonaModel();
-        $this->programaClienteModel = new ProgramaClienteModel();
+        $this->clienteModel           = new ClienteModel();
+        $this->personaModel           = new PersonaModel();
+        $this->programaClienteModel   = new ProgramaClienteModel();
+        $this->planAlimentacionModel  = new PlanAlimentacionModel();
+        $this->miMedicacionModel      = new MiMedicacionModel();
+        $this->miEntretenimientoModel = new MiEntretenimientoModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -42,16 +51,29 @@ class Cliente extends BaseController
                                                   ->first() : null;
         }
 
-        $programasCliente = [];
+        $programasCliente   = [];
+        $planesAlimentacion = [];
+        $misMedicaciones    = [];
+        $misEntretenimientos = [];
+
         if (!empty($cliente)) {
-            $programasCliente = $this->programaClienteModel->getProgramasByCliente((int)$cliente['idcliente']);
+            $idCliente = (int)$cliente['idcliente'];
+            $idPersona = (int)$cliente['idpersona'];
+
+            $programasCliente    = $this->programaClienteModel->getProgramasByCliente($idCliente);
+            $planesAlimentacion  = $this->planAlimentacionModel->getPlanesByPersona($idPersona);
+            $misMedicaciones     = $this->miMedicacionModel->getMisMedicacionesWithDetails(null, $idPersona);
+            $misEntretenimientos = $this->miEntretenimientoModel->getMisEntretenimientosWithCounts(null, $idPersona);
         }
 
         $data = [
-            'title'            => 'Ficha de Cliente',
-            'cliente'          => $cliente,
-            'programasCliente' => $programasCliente,
-            'module'           => 'cliente',
+            'title'               => 'Ficha de Cliente',
+            'cliente'             => $cliente,
+            'programasCliente'    => $programasCliente,
+            'planesAlimentacion'  => $planesAlimentacion,
+            'misMedicaciones'     => $misMedicaciones,
+            'misEntretenimientos' => $misEntretenimientos,
+            'module'              => 'cliente',
         ];
 
         return view('cliente/cliente_record', $data);
