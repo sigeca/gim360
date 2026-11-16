@@ -208,8 +208,36 @@
                     </div>
 
                     <!-- Planes de Ejercicio Asociados a las Rutinas del Programa -->
+                    <?php
+                        $ejecucionesPorEjercicio = [];
+                        if (!empty($programaCliente['ejecuciones'])) {
+                            foreach ($programaCliente['ejecuciones'] as $ejExec) {
+                                $idEj = (int)$ejExec['idejercicio'];
+                                $ejecucionesPorEjercicio[$idEj] = ($ejecucionesPorEjercicio[$idEj] ?? 0) + 1;
+                            }
+                        }
+
+                        $globalMeta = 0;
+                        $globalHechasCapped = 0;
+                        $globalFaltan = 0;
+                        if (!empty($programaCliente['planes'])) {
+                            foreach ($programaCliente['planes'] as $plCalc) {
+                                $idEjCalc = (int)$plCalc['idejercicio'];
+                                $semCalc = (int)($plCalc['duracionsemana'] ?? $plCalc['plan_duracionsemana'] ?? 0);
+                                $diasCalc = (int)($plCalc['plan_diassemanas'] ?? 0);
+                                $metaCalc = ($semCalc > 0 && $diasCalc > 0) ? ($semCalc * $diasCalc) : 0;
+                                if ($metaCalc > 0) {
+                                    $hechasCalc = $ejecucionesPorEjercicio[$idEjCalc] ?? 0;
+                                    $globalMeta += $metaCalc;
+                                    $globalHechasCapped += min($metaCalc, $hechasCalc);
+                                    $globalFaltan += max(0, $metaCalc - $hechasCalc);
+                                }
+                            }
+                        }
+                        $globalPct = $globalMeta > 0 ? min(100, (int)round(($globalHechasCapped / $globalMeta) * 100)) : 0;
+                    ?>
                     <div class="border-top pt-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
                             <h6 class="fw-bold text-dark mb-0">
                                 <i class="bi bi-card-checklist text-primary me-2"></i>Planes y Ejercicios Incluidos en el Programa
                                 <span class="badge bg-primary ms-2"><?= !empty($programaCliente['planes']) ? count($programaCliente['planes']) : 0 ?></span>
@@ -218,6 +246,29 @@
                                 <i class="bi bi-plus-circle me-1"></i>Vincular más rutinas
                             </a>
                         </div>
+
+                        <?php if ($globalMeta > 0): ?>
+                            <div class="card bg-light border mb-3">
+                                <div class="card-body py-2 px-3">
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-1 small">
+                                        <span class="fw-semibold text-dark">
+                                            <i class="bi bi-graph-up-arrow text-primary me-1"></i>Avance General del Programa:
+                                            <strong class="text-primary"><?= $globalHechasCapped ?></strong> de <strong><?= $globalMeta ?></strong> sesiones completadas
+                                        </span>
+                                        <span>
+                                            <?php if ($globalFaltan === 0): ?>
+                                                <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>¡Programa Culminado! (100%)</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>Faltan <?= $globalFaltan ?> sesiones (<?= $globalPct ?>%)</span>
+                                            <?php endif; ?>
+                                        </span>
+                                    </div>
+                                    <div class="progress" style="height: 8px;">
+                                        <div class="progress-bar <?= $globalFaltan === 0 ? 'bg-success' : 'bg-primary' ?>" role="progressbar" style="width: <?= $globalPct ?>%;" aria-valuenow="<?= $globalPct ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
 
                         <?php if (empty($programaCliente['planes'])): ?>
                             <div class="alert alert-info d-flex align-items-center gap-2 mb-0">
@@ -240,6 +291,7 @@
                                             <th class="text-center">Reps</th>
                                             <th class="text-center">Descanso</th>
                                             <th class="text-center">Peso</th>
+                                            <th class="text-center" style="min-width: 155px;"><i class="bi bi-check2-square text-success me-1"></i>Progreso</th>
                                             <th class="text-end">Acciones</th>
                                         </tr>
                                     </thead>
@@ -256,6 +308,14 @@
                                                 $planId = $isPersonalizado ? $pl['idplanpersonalizado'] : $pl['idplanejercicio'];
                                                 $planFechaInicio = $pl['fechainicio'] ?? $pl['plan_fechainicio'] ?? $programaCliente['fechainicio'] ?? null;
                                                 $planDuracion = $pl['duracionsemana'] ?? $pl['plan_duracionsemana'] ?? null;
+
+                                                $idEjPlan = (int)$pl['idejercicio'];
+                                                $vecesHechas = $ejecucionesPorEjercicio[$idEjPlan] ?? 0;
+                                                $semanasPlan = (int)($planDuracion ?? 0);
+                                                $diasPlan = (int)($pl['plan_diassemanas'] ?? 0);
+                                                $metaTotal = ($semanasPlan > 0 && $diasPlan > 0) ? ($semanasPlan * $diasPlan) : 0;
+                                                $faltanPlan = $metaTotal > 0 ? max(0, $metaTotal - $vecesHechas) : null;
+                                                $pctPlan = $metaTotal > 0 ? min(100, (int)round(($vecesHechas / $metaTotal) * 100)) : 0;
                                             ?>
                                             <tr>
                                                 <td>
@@ -317,6 +377,28 @@
                                                     <span class="badge bg-danger-subtle text-danger border border-danger">
                                                         <?= number_format((float)($pl['plan_peso'] ?? 0), 2) ?> kg
                                                     </span>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php if ($metaTotal > 0): ?>
+                                                        <div class="d-flex justify-content-between align-items-center small mb-1 gap-1">
+                                                            <span class="fw-bold text-dark" title="Veces realizadas / Total planificado">
+                                                                <?= $vecesHechas ?> / <?= $metaTotal ?>
+                                                            </span>
+                                                            <?php if ($faltanPlan === 0): ?>
+                                                                <span class="badge bg-success">Culminado</span>
+                                                            <?php else: ?>
+                                                                <span class="badge bg-warning text-dark">Faltan <?= $faltanPlan ?></span>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                        <div class="progress" style="height: 6px;" title="<?= $pctPlan ?>% completado">
+                                                            <div class="progress-bar <?= $faltanPlan === 0 ? 'bg-success' : 'bg-primary' ?>" role="progressbar" style="width: <?= $pctPlan ?>%;" aria-valuenow="<?= $pctPlan ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-secondary-subtle text-dark border">
+                                                            Hechas: <?= $vecesHechas ?>
+                                                        </span>
+                                                        <div class="text-muted" style="font-size: 0.7rem;">Sin meta definida</div>
+                                                    <?php endif; ?>
                                                 </td>
                                                 <td class="text-end">
                                                     <div class="btn-group btn-group-sm">
