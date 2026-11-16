@@ -298,7 +298,6 @@
                                     <thead class="table-light small">
                                         <tr>
                                             <th>Ejercicio</th>
-                                            <th>Rutina</th>
                                             <th class="text-center"><i class="bi bi-calendar-event text-primary me-1"></i>Inicio</th>
                                             <th class="text-center"><i class="bi bi-hourglass-split text-warning me-1"></i>Duración</th>
                                             <th class="text-center">Días/Sem</th>
@@ -362,11 +361,6 @@
                                                             </a>
                                                         </div>
                                                     </div>
-                                                </td>
-                                                <td>
-                                                    <span class="badge bg-light text-dark border">
-                                                        <i class="bi bi-calendar2-week text-info me-1"></i><?= esc($pl['rutina_nombre'] ?? 'General') ?>
-                                                    </span>
                                                 </td>
                                                 <!-- FECHA INICIO -->
                                                 <td class="text-center">
@@ -445,9 +439,6 @@
                                                 </td>
                                                 <td class="text-end">
                                                     <div class="btn-group btn-group-sm">
-                                                        <a href="<?= base_url('ejecucionprograma/add?idprogramacliente=' . $programaCliente['idprogramacliente'] . '&idejercicio=' . $pl['idejercicio'] . '&series=' . urlencode((string)($pl['plan_series'] ?? '')) . '&repeticiones=' . urlencode((string)($pl['plan_repeticiones'] ?? '')) . '&tiempodescanso=' . urlencode((string)($pl['plan_tiempodescanso'] ?? '')) . '&peso=' . urlencode((string)($pl['plan_peso'] ?? ''))) ?>" class="btn btn-warning text-dark fw-semibold" title="Registrar Ejecución de este Ejercicio">
-                                                            <i class="bi bi-play-fill"></i> Ejecutar
-                                                        </a>
                                                         <a href="<?= base_url('ejercicio/actual/' . $pl['idejercicio']) ?>" class="btn btn-outline-danger" title="Ver Ejercicio">
                                                             <i class="bi bi-fire"></i>
                                                         </a>
