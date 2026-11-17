@@ -38,6 +38,18 @@
                                     </td>
                                 </tr>
                                 <tr>
+                                    <th class="table-light text-muted">País</th>
+                                    <td>
+                                        <?php if (!empty($direccion['idpais']) && !empty($direccion['pais_nombre'])): ?>
+                                            <a href="<?= base_url('pais/actual/' . $direccion['idpais']) ?>" class="badge bg-primary-subtle text-primary border border-primary-subtle text-decoration-none px-3 py-2 fs-6">
+                                                <i class="bi bi-globe-americas me-1"></i><?= esc($direccion['pais_nombre']) ?>
+                                            </a>
+                                        <?php else: ?>
+                                            <span class="text-muted fst-italic">No especificado</span>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                                <tr>
                                     <th class="table-light text-muted">Persona Asignada</th>
                                     <td>
                                         <a href="<?= base_url('persona/actual/' . $direccion['idpersona']) ?>" class="fs-6 fw-semibold text-dark text-decoration-none">

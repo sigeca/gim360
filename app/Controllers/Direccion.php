@@ -4,16 +4,19 @@ namespace App\Controllers;
 
 use App\Models\DireccionModel;
 use App\Models\PersonaModel;
+use App\Models\PaisModel;
 
 class Direccion extends BaseController
 {
     protected DireccionModel $direccionModel;
     protected PersonaModel $personaModel;
+    protected PaisModel $paisModel;
 
     public function __construct()
     {
         $this->direccionModel = new DireccionModel();
         $this->personaModel   = new PersonaModel();
+        $this->paisModel      = new PaisModel();
     }
 
     // Vista Principal: Presenta un registro actual con toolbar de navegación
@@ -25,14 +28,16 @@ class Direccion extends BaseController
     public function actual($id = null)
     {
         if ($id) {
-            $direccion = $this->direccionModel->select('direccion.*, persona.cedula, persona.nombres AS persona_nombres')
+            $direccion = $this->direccionModel->select('direccion.*, persona.cedula, persona.nombres AS persona_nombres, pais.nombre AS pais_nombre')
                                               ->join('persona', 'persona.idpersona = direccion.idpersona', 'inner')
+                                              ->join('pais', 'pais.idpais = direccion.idpais', 'left')
                                               ->where('direccion.iddireccion', $id)
                                               ->first();
         } else {
             $last = $this->direccionModel->elultimo();
-            $direccion = $last ? $this->direccionModel->select('direccion.*, persona.cedula, persona.nombres AS persona_nombres')
+            $direccion = $last ? $this->direccionModel->select('direccion.*, persona.cedula, persona.nombres AS persona_nombres, pais.nombre AS pais_nombre')
                                                       ->join('persona', 'persona.idpersona = direccion.idpersona', 'inner')
+                                                      ->join('pais', 'pais.idpais = direccion.idpais', 'left')
                                                       ->where('direccion.iddireccion', $last['iddireccion'])
                                                       ->first() : null;
         }
@@ -94,6 +99,7 @@ class Direccion extends BaseController
         $data = [
             'title'                => 'Registrar Dirección',
             'personas'             => $this->personaModel->orderBy('nombres', 'ASC')->findAll(),
+            'paises'               => $this->paisModel->orderBy('nombre', 'ASC')->findAll(),
             'idpersonaPreselected' => $idpersonaPreselected,
             'module'               => 'direccion',
         ];
@@ -105,6 +111,7 @@ class Direccion extends BaseController
     {
         $rules = [
             'idpersona' => 'required|is_natural_no_zero',
+            'idpais'    => 'permit_empty|is_natural_no_zero',
             'direccion' => 'required|min_length[3]|max_length[255]',
         ];
 
@@ -112,8 +119,10 @@ class Direccion extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idpais = $this->request->getPost('idpais');
         $id = $this->direccionModel->insert([
             'idpersona' => $this->request->getPost('idpersona'),
+            'idpais'    => !empty($idpais) ? (int)$idpais : null,
             'direccion' => trim($this->request->getPost('direccion')),
         ]);
 
@@ -132,6 +141,7 @@ class Direccion extends BaseController
             'title'     => 'Editar Dirección #' . $id,
             'direccion' => $direccion,
             'personas'  => $this->personaModel->orderBy('nombres', 'ASC')->findAll(),
+            'paises'    => $this->paisModel->orderBy('nombre', 'ASC')->findAll(),
             'module'    => 'direccion',
         ];
 
@@ -147,6 +157,7 @@ class Direccion extends BaseController
 
         $rules = [
             'idpersona' => 'required|is_natural_no_zero',
+            'idpais'    => 'permit_empty|is_natural_no_zero',
             'direccion' => 'required|min_length[3]|max_length[255]',
         ];
 
@@ -154,8 +165,10 @@ class Direccion extends BaseController
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
+        $idpais = $this->request->getPost('idpais');
         $this->direccionModel->update($id, [
             'idpersona' => $this->request->getPost('idpersona'),
+            'idpais'    => !empty($idpais) ? (int)$idpais : null,
             'direccion' => trim($this->request->getPost('direccion')),
         ]);
 

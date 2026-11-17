@@ -32,6 +32,18 @@
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="idpais" class="form-label fw-semibold">País</label>
+                        <select name="idpais" id="idpais" class="form-select">
+                            <option value="">-- Seleccionar País --</option>
+                            <?php foreach ($paises as $pa): ?>
+                                <option value="<?= $pa['idpais'] ?>" <?= (old('idpais') == $pa['idpais']) ? 'selected' : '' ?>>
+                                    <?= esc($pa['nombre']) ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
                     <div class="mb-4">
                         <label for="direccion" class="form-label fw-semibold">Dirección Domiciliaria <span class="text-danger">*</span></label>
                         <textarea name="direccion" id="direccion" rows="3" class="form-control" placeholder="Ej: Av. Principal y Calle Secundaria #123, Barrio El Sol" required><?= old('direccion') ?></textarea>

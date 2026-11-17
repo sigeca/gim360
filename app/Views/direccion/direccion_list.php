@@ -21,7 +21,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-text bg-light border-end-0"><i class="bi bi-search text-muted"></i></span>
-                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por dirección, cédula o persona...">
+                    <input type="text" name="q" value="<?= esc($search ?? '') ?>" class="form-control border-start-0" placeholder="Buscar por dirección, país, cédula o persona...">
                 </div>
             </div>
             <div class="col-md-2 d-grid d-md-flex gap-2">
@@ -42,6 +42,7 @@
                     <tr>
                         <th class="ps-4">ID</th>
                         <th>Dirección Domiciliaria</th>
+                        <th>País</th>
                         <th>Persona Asignada</th>
                         <th>Cédula</th>
                         <th class="text-end pe-4">Acciones</th>
@@ -50,7 +51,7 @@
                 <tbody>
                     <?php if (empty($direcciones)): ?>
                         <tr>
-                            <td colspan="5" class="text-center py-5 text-muted">No se encontraron direcciones registradas.</td>
+                            <td colspan="6" class="text-center py-5 text-muted">No se encontraron direcciones registradas.</td>
                         </tr>
                     <?php else: ?>
                         <?php foreach ($direcciones as $d): ?>
@@ -58,6 +59,15 @@
                                 <td class="ps-4 fw-bold text-muted"><?= $d['iddireccion'] ?></td>
                                 <td class="fw-semibold text-dark">
                                     <i class="bi bi-geo-alt text-danger me-1"></i><?= esc($d['direccion']) ?>
+                                </td>
+                                <td>
+                                    <?php if (!empty($d['idpais']) && !empty($d['pais_nombre'])): ?>
+                                        <a href="<?= base_url('pais/actual/' . $d['idpais']) ?>" class="badge bg-primary-subtle text-primary border border-primary-subtle text-decoration-none">
+                                            <i class="bi bi-globe-americas me-1"></i><?= esc($d['pais_nombre']) ?>
+                                        </a>
+                                    <?php else: ?>
+                                        <span class="text-muted small">-</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <a href="<?= base_url('persona/actual/' . $d['idpersona']) ?>" class="text-decoration-none fw-semibold text-primary">

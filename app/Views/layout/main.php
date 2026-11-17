@@ -282,11 +282,12 @@ $isDireccionActive = (strpos($uri, 'direccion') === 0);
 $groupContactoOpen = $isCorreoActive || $isDireccionActive;
 
 $isSexoActive = (strpos($uri, 'sexo') === 0);
+$isPaisActive = (strpos($uri, 'pais') === 0);
 $isEstadoCivilActive = (strpos($uri, 'estadocivil') === 0 && strpos($uri, 'estadocivilpersona') === false);
 $isGeneroActive = (strpos($uri, 'genero') === 0 && strpos($uri, 'generopersona') === false);
 $isDiaSemanaActive = (strpos($uri, 'diasemana') === 0 || strpos($uri, 'dia-semana') === 0 || strpos($uri, 'dias-semana') === 0);
 $isImagenActive    = (strpos($uri, 'imagen') === 0 || strpos($uri, 'imagenes') === 0);
-$groupCatalogosOpen = $isSexoActive || $isEstadoCivilActive || $isGeneroActive || $isDiaSemanaActive || $isImagenActive;
+$groupCatalogosOpen = $isSexoActive || $isPaisActive || $isEstadoCivilActive || $isGeneroActive || $isDiaSemanaActive || $isImagenActive;
 
 $isECPActive = (strpos($uri, 'estadocivilpersona') === 0);
 $isGPActive = (strpos($uri, 'generopersona') === 0);
@@ -792,6 +793,10 @@ $isDashboardActive = ($uri === '' || $uri === 'home');
                         <a href="<?= base_url('sexo') ?>" class="submenu-link <?= $isSexoActive ? 'active' : '' ?>">
                             <i class="bi bi-gender-ambiguous text-danger"></i>
                             <span>Sexo</span>
+                        </a>
+                        <a href="<?= base_url('pais') ?>" class="submenu-link <?= $isPaisActive ? 'active' : '' ?>">
+                            <i class="bi bi-globe-americas text-primary"></i>
+                            <span>Países</span>
                         </a>
                         <a href="<?= base_url('estadocivil') ?>" class="submenu-link <?= $isEstadoCivilActive ? 'active' : '' ?>">
                             <i class="bi bi-heart text-danger"></i>
